@@ -17,7 +17,15 @@ class CreateUserService {
     );
 
     if (checkUserExists) {
-      throw new AppError('Já existe um usuário com este email!');
+      throw new AppError('Já existe um usuário com este email, faça o login!');
+    }
+
+    const checkUserDeleted = await this.usersRepository.findByEmailWithDeleted(
+      payload.email,
+    );
+
+    if (checkUserDeleted) {
+      return this.usersRepository.restore(checkUserDeleted.id, payload);
     }
 
     const user = await this.usersRepository.create(payload);

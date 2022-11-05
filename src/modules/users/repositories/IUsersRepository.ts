@@ -1,9 +1,13 @@
-import User from '../models/User';
 import ICreateUserDTO from '../dtos/ICreateUserDTO';
+import User from '../models/User';
 
 export default interface IUsersRepository {
   findById(id: string): Promise<User | null>;
   findByEmail(email: string): Promise<User | null>;
-  create(user: ICreateUserDTO): Promise<User>;
+  findByEmailWithDeleted(email: string): Promise<User | null>;
+  restore(id: string, payload: ICreateUserDTO): Promise<User>;
+  update(id: string, payload: ICreateUserDTO): Promise<User>;
+  create(payload: ICreateUserDTO): Promise<User>;
   save(user: User): Promise<User>;
+  softDelete(id: string): Promise<void>;
 }

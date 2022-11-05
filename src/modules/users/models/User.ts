@@ -4,6 +4,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  DeleteDateColumn,
   Timestamp,
 } from 'typeorm';
 
@@ -45,7 +46,7 @@ class User {
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Timestamp;
 
-  @Column('timestamp', { name: 'deleted_at', nullable: true })
+  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
   deletedAt: Timestamp;
 }
 
