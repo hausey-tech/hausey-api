@@ -1,7 +1,7 @@
 import { injectable, inject } from 'tsyringe';
 import IUsersRepository from '../repositories/IUsersRepository';
-import User from '../models/User';
 import AppError from '../../../shared/errors/AppError';
+import User from '../models/User';
 
 @injectable()
 class FindByIdService {

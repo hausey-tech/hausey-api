@@ -19,13 +19,9 @@
     "prettier"
   ],
   "rules": {
+    "no-underscore-dangle": "off",
     "prettier/prettier": "error",
-    "no-console": [
-      "warn",
-      {
-        "allow": ["error", "log"]
-      }
-    ],
+    "@typescript-eslint/camelcase": "off",
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -39,6 +35,12 @@
       "error",
       {
         "argsIgnorePattern": "_"
+      }
+    ],
+    "no-console": [
+      "warn",
+      {
+        "allow": ["error", "log"]
       }
     ]
   },
