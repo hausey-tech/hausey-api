@@ -17,6 +17,8 @@ class UsersController {
 
     const user = await createUserService.execute(payload);
 
+    delete user.password;
+
     return response.json(user);
   }
 
