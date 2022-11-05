@@ -1,0 +1,7 @@
+node_modules
+coverage
+.env
+staging.env
+prod.env
+dist
+.vscode
