@@ -6,10 +6,6 @@ import UpdateUserService from '../services/UpdateUserService';
 import DeleteUserService from '../services/DeleteUserService';
 
 class UsersController {
-  public async index(request: Request, response: Response): Promise<Response> {
-    return response.json({ message: 'Lista todos usuários!' });
-  }
-
   public async create(request: Request, response: Response): Promise<Response> {
     const payload = request.body;
 
@@ -23,7 +19,7 @@ class UsersController {
   }
 
   public async read(request: Request, response: Response): Promise<Response> {
-    const { id } = request.params;
+    const { id } = request.user;
 
     const findByIdService = container.resolve(FindByIdService);
 

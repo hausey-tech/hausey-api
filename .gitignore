@@ -4,4 +4,5 @@ coverage
 staging.env
 prod.env
 dist
-.vscode
+.vscode/*
+!.vscode/launch.json
