@@ -10,8 +10,12 @@ const create = {
 
 const update = {
   [Segments.BODY]: Joi.object().keys({
-    email: Joi.string().required(),
-    name: Joi.string().required(),
+    email: Joi.string(),
+    name: Joi.string(),
+    cpf: Joi.string(),
+    birthdate: Joi.string(),
+    sex: Joi.number().equal(0, 1, 2, 9),
+    phoneNumber: Joi.string(),
   }),
 };
 

@@ -28,17 +28,17 @@ class User {
   @Column('timestamp', { nullable: true })
   birthdate: Timestamp;
 
+  @Column('int', { nullable: true })
+  sex: number;
+
   @Column('varchar', { name: 'phone_number', nullable: true })
   phoneNumber: string;
 
-  @Column('varchar', { name: 'gender_id', nullable: true })
-  genderId: string;
+  // @Column('varchar', { name: 'city_id', nullable: true })
+  // cityId: string;
 
-  @Column('varchar', { name: 'city_id', nullable: true })
-  cityId: string;
-
-  @Column('varchar', { nullable: true })
-  nationality: string;
+  // @Column('varchar', { nullable: true })
+  // nationality: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Timestamp;
