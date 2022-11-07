@@ -1,12 +1,12 @@
 import { sign } from 'jsonwebtoken';
 import { injectable, inject } from 'tsyringe';
 
-import AppError from '../../../shared/errors/AppError';
-import authConfig from '../../../config/auth';
-import IHashProvider from '../../../shared/providers/HashProvider/models/IHashProvider';
+import AppError from '@shared/errors/AppError';
+import authConfig from '@config/auth';
+import IHashProvider from '@shared/infra/providers/HashProvider/entities/IHashProvider';
 
-import User from '../../users/models/User';
-import IUsersRepository from '../../users/repositories/IUsersRepository';
+import User from '../infra/typeorm/entities/User';
+import IUsersRepository from '../repositories/IUsersRepository';
 import ICreateSessionDTO from '../dtos/ICreateSessionDTO';
 
 interface IResponse {

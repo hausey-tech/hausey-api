@@ -5,13 +5,13 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "dev:server": "ts-node-dev --inspect --transpile-only --ignore node_modules src/shared/server.ts",
+    "dev:server": "ts-node-dev -r tsconfig-paths/register --inspect --transpile-only --ignore node_modules src/shared/infra/http/server.ts",
     "dev:docker": "docker-compose up -d",
     "typeorm": "ts-node-dev -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
-    "migration:create": "cross-env typeorm-ts-node-commonjs migration:create ./src/shared/database/migrations/$name",
-    "migration:generate": "cross-env typeorm-ts-node-commonjs migration:generate -d ./src/shared/database ./src/shared/database/migrations/$name",
-    "migration:run": "typeorm-ts-node-commonjs migration:run -d ./src/shared/database",
-    "migration:revert": "typeorm-ts-node-commonjs migration:revert -d ./src/shared/database"
+    "migration:create": "cross-env typeorm-ts-node-commonjs migration:create ./src/shared/infra/typeorm/migrations/$name",
+    "migration:generate": "cross-env typeorm-ts-node-commonjs migration:generate -d ./src/shared/infra/typeorm ./src/shared/infra/typeorm/migrations/$name",
+    "migration:run": "typeorm-ts-node-commonjs migration:run -d ./src/shared/infra/typeorm",
+    "migration:revert": "typeorm-ts-node-commonjs migration:revert -d ./src/shared/infra/typeorm"
   },
   "author": "<any/>",
   "license": "MIT",
@@ -43,6 +43,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.7.1",
     "ts-node-dev": "^2.0.0",
+    "tsconfig-paths": "^4.1.0",
     "typescript": "^4.8.4"
   }
 }

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
+
 import CreateUserService from '../services/CreateUserService';
 import FindByIdService from '../services/FindByIdService';
 import UpdateUserService from '../services/UpdateUserService';
@@ -18,7 +19,7 @@ class UsersController {
     return response.json(user);
   }
 
-  public async read(request: Request, response: Response): Promise<Response> {
+  public async show(request: Request, response: Response): Promise<Response> {
     const { id } = request.user;
 
     const findByIdService = container.resolve(FindByIdService);
@@ -39,10 +40,7 @@ class UsersController {
     return response.json(user);
   }
 
-  public async softDelete(
-    request: Request,
-    response: Response,
-  ): Promise<Response> {
+  public async delete(request: Request, response: Response): Promise<Response> {
     const { id } = request.params;
 
     const deleteUserService = container.resolve(DeleteUserService);
