@@ -25,8 +25,8 @@ class User {
   @Column('varchar', { nullable: true, unique: true })
   cpf: string;
 
-  @Column('timestamp', { nullable: true })
-  birthdate: Timestamp;
+  @Column('date', { nullable: true })
+  birthdate: Date;
 
   @Column('int', { nullable: true })
   sex: number;
