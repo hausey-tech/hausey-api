@@ -30,7 +30,7 @@ class UsersController {
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
-    const { id } = request.params;
+    const { id } = request.user;
     const payload = request.body;
 
     const updateUserService = container.resolve(UpdateUserService);

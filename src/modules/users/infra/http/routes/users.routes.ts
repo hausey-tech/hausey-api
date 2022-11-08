@@ -12,7 +12,12 @@ const usersController = new UsersController();
 
 usersRouter.post('/', celebrate(create), usersController.create);
 usersRouter.get('/', ensureAuthentication, usersController.show);
-usersRouter.patch('/:id', celebrate(update), usersController.update);
+usersRouter.patch(
+  '/',
+  ensureAuthentication,
+  celebrate(update),
+  usersController.update,
+);
 usersRouter.delete('/:id', usersController.delete);
 
 export default usersRouter;
