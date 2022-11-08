@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
-import Base from '@shared/infra/typeorm/entities/Base';
+import Base from '../../../../../shared/infra/typeorm/entities/Base';
 import Patient from './Patient';
 import Program from './Program';
 

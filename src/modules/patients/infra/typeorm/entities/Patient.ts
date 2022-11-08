@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 
-import Base from '@shared/infra/typeorm/entities/Base';
-import User from '@modules/users/infra/typeorm/entities/User';
+import Base from '../../../../../shared/infra/typeorm/entities/Base';
+import User from '../../../../users/infra/typeorm/entities/User';
 import Plan from './Plan';
 
 @Entity('patients')

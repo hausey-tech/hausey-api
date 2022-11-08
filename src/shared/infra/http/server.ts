@@ -1,9 +1,9 @@
 import 'reflect-metadata';
 import 'express-async-errors';
-import '@shared/container';
+import '../../container';
 import express from 'express';
 
-import errorHandler from '@shared/errors/errorHandler';
+import errorHandler from '../../errors/errorHandler';
 import routes from './routes';
 import { PostgresDataSource } from '../typeorm';
 

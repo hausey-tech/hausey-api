@@ -1,8 +1,8 @@
 import { Repository } from 'typeorm';
 
-import { PostgresDataSource } from '@shared/infra/typeorm';
+import { PostgresDataSource } from '../../../../../shared/infra/typeorm';
 
-import IPatientsRepository from '@modules/patients/repositories/IPatientsRepository';
+import IPatientsRepository from '../../../repositories/IPatientsRepository';
 import Patient from '../entities/Patient';
 
 class PatientsRepository implements IPatientsRepository {

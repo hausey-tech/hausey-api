@@ -1,15 +1,14 @@
 import { sign } from 'jsonwebtoken';
 import { injectable, inject } from 'tsyringe';
 
-import AppError from '@shared/errors/AppError';
-import authConfig from '@config/auth';
+import AppError from '../../../shared/errors/AppError';
+import authConfig from '../../../config/auth';
 
-import Professional from '@modules/professionals/infra/typeorm/entities/Professional';
-import Patient from '@modules/patients/infra/typeorm/entities/Patient';
-
-import IHashProvider from '@shared/infra/providers/HashProvider/entities/IHashProvider';
-import IProfessionalsRepository from '@modules/professionals/repositories/IProfessionalsRepository';
-import IPatientsRepository from '@modules/patients/repositories/IPatientsRepository';
+import IHashProvider from '../../../shared/infra/providers/HashProvider/entities/IHashProvider';
+import IProfessionalsRepository from '../../professionals/repositories/IProfessionalsRepository';
+import IPatientsRepository from '../../patients/repositories/IPatientsRepository';
+import Patient from '../../patients/infra/typeorm/entities/Patient';
+import Professional from '../../professionals/infra/typeorm/entities/Professional';
 import IUsersRepository from '../repositories/IUsersRepository';
 import ICreateSessionDTO from '../dtos/ICreateSessionDTO';
 
