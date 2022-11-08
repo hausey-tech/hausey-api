@@ -11,10 +11,12 @@ import Patient from '../../patients/infra/typeorm/entities/Patient';
 import Professional from '../../professionals/infra/typeorm/entities/Professional';
 import IUsersRepository from '../repositories/IUsersRepository';
 import ICreateSessionDTO from '../dtos/ICreateSessionDTO';
+import User from '../infra/typeorm/entities/User';
 
 interface IRoles {
   professional?: Professional;
   patient?: Patient;
+  user?: User;
 }
 interface IResponse extends IRoles {
   accessToken: string;
@@ -99,6 +101,9 @@ class CreateSessionService {
         throw new AppError('Esta funcionalidade ainda não foi implementada!');
 
       default:
+        data = {
+          user,
+        };
         break;
     }
 
