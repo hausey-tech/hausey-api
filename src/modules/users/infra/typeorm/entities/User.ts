@@ -1,18 +1,9 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-  DeleteDateColumn,
-  Timestamp,
-} from 'typeorm';
+import { Entity, Column } from 'typeorm';
+
+import Base from '@shared/infra/typeorm/entities/Base';
 
 @Entity('users')
-class User {
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+class User extends Base {
   @Column('varchar')
   name: string;
 
@@ -31,7 +22,7 @@ class User {
   @Column('int', { nullable: true })
   sex: number;
 
-  @Column('varchar', { name: 'phone_number', nullable: true })
+  @Column('varchar', { name: 'phone_number', nullable: true, unique: true })
   phoneNumber: string;
 
   // @Column('varchar', { name: 'city_id', nullable: true })
@@ -39,15 +30,6 @@ class User {
 
   // @Column('varchar', { nullable: true })
   // nationality: string;
-
-  @CreateDateColumn({ name: 'created_at' })
-  createdAt: Timestamp;
-
-  @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Timestamp;
-
-  @DeleteDateColumn({ name: 'deleted_at', nullable: true })
-  deletedAt: Timestamp;
 }
 
 export default User;
