@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import 'express-async-errors';
 import '../../container';
+import cors from 'cors';
 import express from 'express';
 
 import errorHandler from '../../errors/errorHandler';
@@ -8,11 +9,17 @@ import routes from './routes';
 import { PostgresDataSource } from '../typeorm';
 
 const app = express();
+const corsOptions = {
+  origin: '*',
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
 
 const start = async () => {
   try {
     await PostgresDataSource.initialize();
 
+    app.use(cors(corsOptions));
     app.use(express.json());
     app.use('/api', routes);
     app.use(errorHandler);
