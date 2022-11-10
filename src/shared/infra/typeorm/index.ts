@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { DataSource } from 'typeorm';
 
-export const rootPath = `${__dirname.slice(0, -21)}`;
+export const rootPath = `${__dirname}/../../../`;
 
 export const PostgresDataSource = new DataSource({
   type: 'postgres',
