@@ -4,7 +4,7 @@ import AppError from '../../../shared/errors/AppError';
 
 import IUsersRepository from '../repositories/IUsersRepository';
 import ICreateUserDTO from '../dtos/ICreateUserDTO';
-import User from '../infra/typeorm/entities/User';
+import User from '../entities/User';
 
 @injectable()
 class UpdateUserService {

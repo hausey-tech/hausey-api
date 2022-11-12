@@ -1,8 +1,8 @@
 import { Repository } from 'typeorm';
 
-import { PostgresDataSource } from '../../../../../shared/infra/typeorm';
+import { PostgresDataSource } from '../../../shared/typeorm';
 
-import IProfessionalsRepository from '../../../repositories/IProfessionalsRepository';
+import IProfessionalsRepository from './IProfessionalsRepository';
 import Professional from '../entities/Professional';
 
 class ProfessionalsRepository implements IProfessionalsRepository {

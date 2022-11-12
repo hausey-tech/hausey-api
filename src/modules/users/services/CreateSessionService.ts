@@ -4,14 +4,14 @@ import { injectable, inject } from 'tsyringe';
 import AppError from '../../../shared/errors/AppError';
 import authConfig from '../../../config/auth';
 
-import IHashProvider from '../../../shared/infra/providers/HashProvider/entities/IHashProvider';
+import IHashProvider from '../../../shared/providers/HashProvider/entities/IHashProvider';
 import IProfessionalsRepository from '../../professionals/repositories/IProfessionalsRepository';
 import IPatientsRepository from '../../patients/repositories/IPatientsRepository';
-import Patient from '../../patients/infra/typeorm/entities/Patient';
-import Professional from '../../professionals/infra/typeorm/entities/Professional';
+import Patient from '../../patients/entities/Patient';
+import Professional from '../../professionals/entities/Professional';
 import IUsersRepository from '../repositories/IUsersRepository';
 import ICreateSessionDTO from '../dtos/ICreateSessionDTO';
-import User from '../infra/typeorm/entities/User';
+import User from '../entities/User';
 
 interface IRoles {
   professional?: Professional;

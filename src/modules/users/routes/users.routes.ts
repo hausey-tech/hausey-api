@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { celebrate } from 'celebrate';
 
-import UsersController from '../../../controllers/UsersController';
+import UsersController from '../controllers/UsersController';
 
-import { create, update } from '../../celebrate/schemas/user';
+import { create, update } from '../celebrate-schemas/user';
 
 import ensureAuthentication from '../middlewares/ensureAuthentication';
 

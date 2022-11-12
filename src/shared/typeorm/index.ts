@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { DataSource } from 'typeorm';
 
-export const rootPath = `${__dirname}/../../../`;
+export const rootPath = `${__dirname}/../../`;
 
 export const PostgresDataSource = new DataSource({
   type: 'postgres',
@@ -10,6 +10,6 @@ export const PostgresDataSource = new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [`${rootPath}/modules/**/infra/typeorm/entities/*.{ts,js}`],
-  migrations: [`${rootPath}/shared/infra/typeorm/migrations/*.{ts,js}`],
+  entities: [`${rootPath}/modules/**/entities/*.{ts,js}`],
+  migrations: [`${rootPath}/shared/typeorm/migrations/*.{ts,js}`],
 });

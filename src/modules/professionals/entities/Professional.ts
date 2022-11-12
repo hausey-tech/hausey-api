@@ -1,7 +1,7 @@
 import { Entity, Column, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
 
-import Base from '../../../../../shared/infra/typeorm/entities/Base';
-import User from '../../../../users/infra/typeorm/entities/User';
+import Base from '../../../shared/typeorm/entities/Base';
+import User from '../../users/entities/User';
 import ProfessionalSpecialty from './ProfessionalSpecialty';
 import ProfessionalType from './ProfessionalType';
 

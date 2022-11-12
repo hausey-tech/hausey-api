@@ -1,6 +1,6 @@
 import { Entity, Column } from 'typeorm';
 
-import Base from '../../../../../shared/infra/typeorm/entities/Base';
+import Base from '../../../shared/typeorm/entities/Base';
 
 @Entity('professional_specialties')
 class ProfessionalSpecialty extends Base {

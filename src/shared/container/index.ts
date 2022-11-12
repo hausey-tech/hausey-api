@@ -1,14 +1,14 @@
 import { container } from 'tsyringe';
-import '../infra/providers';
+import '../providers';
 
-import UsersRepository from '../../modules/users/infra/typeorm/repositories/UsersRepository';
+import UsersRepository from '../../modules/users/repositories/UsersRepository';
 import IUsersRepository from '../../modules/users/repositories/IUsersRepository';
 
 import IProfessionalsRepository from '../../modules/professionals/repositories/IProfessionalsRepository';
-import ProfessionalsRepository from '../../modules/professionals/infra/typeorm/repositories/ProfessionalsRepository';
+import ProfessionalsRepository from '../../modules/professionals/repositories/ProfessionalsRepository';
 
 import IPatientsRepository from '../../modules/patients/repositories/IPatientsRepository';
-import PatientsRepository from '../../modules/patients/infra/typeorm/repositories/PatientsRepository';
+import PatientsRepository from '../../modules/patients/repositories/PatientsRepository';
 
 container.registerSingleton<IUsersRepository>(
   'UsersRepository',

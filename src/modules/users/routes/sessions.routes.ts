@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { celebrate } from 'celebrate';
 
-import { create } from '../../celebrate/schemas/session';
-import SessionsController from '../../../controllers/SessionsController';
+import { create } from '../celebrate-schemas/session';
+import SessionsController from '../controllers/SessionsController';
 
 const sessionsRouter = Router();
 const sessionsController = new SessionsController();

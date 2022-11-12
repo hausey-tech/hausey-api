@@ -1,11 +1,11 @@
 import { injectable, inject } from 'tsyringe';
 
-import IHashProvider from '../../../shared/infra/providers/HashProvider/entities/IHashProvider';
+import IHashProvider from '../../../shared/providers/HashProvider/entities/IHashProvider';
 import AppError from '../../../shared/errors/AppError';
 
 import IUsersRepository from '../repositories/IUsersRepository';
 import ICreateUserDTO from '../dtos/ICreateUserDTO';
-import User from '../infra/typeorm/entities/User';
+import User from '../entities/User';
 
 @injectable()
 class CreateUserService {
