@@ -1,11 +1,11 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 
-import Base from '../../../shared/typeorm/entities/Base';
-import User from '../../users/entities/User';
-import Plan from './Plan';
+import { Base } from '../../../shared/typeorm/entities';
+import { User } from '../../users/entities';
+import { Plan } from '.';
 
 @Entity('patients')
-class Patient extends Base {
+export class Patient extends Base {
   @Column('varchar', { name: 'user_id' })
   userId: string;
 
@@ -20,5 +20,3 @@ class Patient extends Base {
   @JoinColumn({ name: 'plan_id' })
   plan: Plan;
 }
-
-export default Patient;

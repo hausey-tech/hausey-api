@@ -1,11 +1,12 @@
 import 'reflect-metadata';
 import 'express-async-errors';
 import './container';
+
 import cors from 'cors';
 import express from 'express';
 
-import errorHandler from './errors/errorHandler';
-import routes from './routes';
+import { routes } from './routes';
+import { errorHandler } from './errors';
 import { PostgresDataSource } from './typeorm';
 
 const app = express();

@@ -1,6 +1,6 @@
 import { Joi, Segments } from 'celebrate';
 
-const create = {
+export const CreateUserSchema = {
   [Segments.BODY]: Joi.object().keys({
     email: Joi.string().required(),
     name: Joi.string().required(),
@@ -8,7 +8,7 @@ const create = {
   }),
 };
 
-const update = {
+export const UpdateUserSchema = {
   [Segments.BODY]: Joi.object().keys({
     email: Joi.string(),
     name: Joi.string(),
@@ -18,5 +18,3 @@ const update = {
     phoneNumber: Joi.string(),
   }),
 };
-
-export { create, update };

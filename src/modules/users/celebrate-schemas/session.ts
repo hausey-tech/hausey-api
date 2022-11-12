@@ -1,6 +1,6 @@
 import { Joi, Segments } from 'celebrate';
 
-const create = {
+export const CreateSessionSchema = {
   [Segments.BODY]: Joi.object().keys({
     email: Joi.string().required(),
     password: Joi.string().required(),
@@ -9,6 +9,3 @@ const create = {
       .equal('patient', 'professional', 'manager', 'debug'),
   }),
 };
-
-// eslint-disable-next-line import/prefer-default-export
-export { create };

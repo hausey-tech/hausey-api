@@ -6,7 +6,7 @@ import {
   Timestamp,
 } from 'typeorm';
 
-abstract class Base {
+export abstract class Base {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -19,5 +19,3 @@ abstract class Base {
   @DeleteDateColumn({ name: 'deleted_at' })
   deletedAt: Timestamp;
 }
-
-export default Base;

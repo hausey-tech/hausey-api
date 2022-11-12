@@ -1,10 +1,10 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
-import Base from '../../../shared/typeorm/entities/Base';
-import ProfessionalSpecialty from '../../professionals/entities/ProfessionalSpecialty';
+import { Base } from '../../../shared/typeorm/entities';
+import { ProfessionalSpecialty } from '../../professionals/entities';
 
 @Entity('programs')
-class Program extends Base {
+export class Program extends Base {
   @Column('varchar')
   name: string;
 
@@ -24,5 +24,3 @@ class Program extends Base {
   @JoinColumn({ name: 'professional_specialty_id' })
   professionalSpecialty: ProfessionalSpecialty;
 }
-
-export default Program;

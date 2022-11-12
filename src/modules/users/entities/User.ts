@@ -1,9 +1,9 @@
 import { Entity, Column } from 'typeorm';
 
-import Base from '../../../shared/typeorm/entities/Base';
+import { Base } from '../../../shared/typeorm/entities';
 
 @Entity('users')
-class User extends Base {
+export class User extends Base {
   @Column('varchar')
   name: string;
 
@@ -31,5 +31,3 @@ class User extends Base {
   // @Column('varchar', { nullable: true })
   // nationality: string;
 }
-
-export default User;

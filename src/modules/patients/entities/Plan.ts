@@ -1,9 +1,9 @@
 import { Column, Entity } from 'typeorm';
 
-import Base from '../../../shared/typeorm/entities/Base';
+import { Base } from '../../../shared/typeorm/entities';
 
 @Entity('plans')
-class Plan extends Base {
+export class Plan extends Base {
   @Column('varchar')
   name: string;
 
@@ -16,5 +16,3 @@ class Plan extends Base {
   @Column('int')
   discount: number;
 }
-
-export default Plan;

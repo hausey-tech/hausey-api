@@ -1,12 +1,11 @@
 import { Entity, Column, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
 
-import Base from '../../../shared/typeorm/entities/Base';
-import User from '../../users/entities/User';
-import ProfessionalSpecialty from './ProfessionalSpecialty';
-import ProfessionalType from './ProfessionalType';
+import { Base } from '../../../shared/typeorm/entities';
+import { User } from '../../users/entities';
+import { ProfessionalSpecialty, ProfessionalType } from '.';
 
 @Entity('professionals')
-class Professional extends Base {
+export class Professional extends Base {
   @Column('varchar', { name: 'user_id' })
   userId: string;
 
@@ -34,5 +33,3 @@ class Professional extends Base {
   @JoinColumn({ name: 'professional_type_id' })
   professionalType: ProfessionalType;
 }
-
-export default Professional;
