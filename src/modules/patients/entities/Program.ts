@@ -1,10 +1,10 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
-import { Base } from '../../../shared/typeorm/entities';
+import { BaseEntity } from '../../../shared/typeorm/entities';
 import { ProfessionalSpecialty } from '../../professionals/entities';
 
 @Entity('programs')
-export class Program extends Base {
+export class Program extends BaseEntity {
   @Column('varchar')
   name: string;
 

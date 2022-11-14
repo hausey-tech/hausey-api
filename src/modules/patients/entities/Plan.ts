@@ -1,9 +1,9 @@
 import { Column, Entity } from 'typeorm';
 
-import { Base } from '../../../shared/typeorm/entities';
+import { BaseEntity } from '../../../shared/typeorm/entities';
 
 @Entity('plans')
-export class Plan extends Base {
+export class Plan extends BaseEntity {
   @Column('varchar')
   name: string;
 
