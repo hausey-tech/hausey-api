@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 export * from './create-session';
 export * from './create-user';
 export * from './delete-user';

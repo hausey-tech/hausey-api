@@ -1,5 +1,8 @@
 module.exports = {
-  roots: ['<rootDir>/src'],
+  roots: [
+    '<rootDir>/src',
+    '<rootDir>/tests'
+  ],
   collectCoverageFrom: [
     '<rootDir>/src/**/*.ts',
     '!<rootDir>/src/**/index.ts',
