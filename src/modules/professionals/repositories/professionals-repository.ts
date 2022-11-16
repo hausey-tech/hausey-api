@@ -11,6 +11,10 @@ export class ProfessionalsRepository implements IProfessionalsRepository {
     this.ormRepository = PostgresDataSource.getRepository(Professional);
   }
 
+  public async findById(id: string): Promise<Professional | null> {
+    return this.ormRepository.findOne({ where: { id } });
+  }
+
   public async findByUserId(id: string): Promise<Professional | null> {
     return this.ormRepository.findOne({
       where: { userId: id },

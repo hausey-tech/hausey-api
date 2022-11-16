@@ -12,7 +12,7 @@ interface IAvailability {
 }
 
 @injectable()
-export class FindSlotsBySpecialty {
+export class FindSlotsBySpecialtyService {
   constructor(
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,
