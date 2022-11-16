@@ -1,8 +1,9 @@
 import { Repository } from 'typeorm';
 
-import { IUsersRepository, ICreateUserDTO } from '../contracts';
+import { IUsersRepository } from '../contracts/repositories/users';
+import { ICreateUserDTO } from '../contracts/dtos/create-user';
 import { PostgresDataSource } from '../../../shared/typeorm';
-import { User } from '../entities';
+import { User } from '../entities/user';
 
 export class UsersRepository implements IUsersRepository {
   private ormRepository: Repository<User>;

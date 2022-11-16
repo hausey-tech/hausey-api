@@ -1,9 +1,10 @@
 import { injectable, inject } from 'tsyringe';
 
-import { ISlotsRepository, ICreateSlotDTO } from '../contracts';
-import { IProfessionalsRepository } from '../../professionals/contracts';
-import { AppError } from '../../../shared/errors';
-import { Slot } from '../entities';
+import { ISlotsRepository } from '../contracts/repositories/slots';
+import { ICreateSlotDTO } from '../contracts/dtos/create-slot';
+import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
+import { AppError } from '../../../shared/errors/app-error';
+import { Slot } from '../entities/slot';
 
 @injectable()
 export class CreateSlotService {

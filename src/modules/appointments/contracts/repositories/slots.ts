@@ -1,4 +1,4 @@
-import { Slot } from '../../entities';
+import { Slot } from '../../entities/slot';
 import { ICreateSlotDTO } from '../dtos/create-slot';
 
 export interface ISlotsRepository {

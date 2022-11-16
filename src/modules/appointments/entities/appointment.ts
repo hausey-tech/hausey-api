@@ -1,8 +1,8 @@
 import { Entity, Column, Timestamp, ManyToOne, JoinColumn } from 'typeorm';
-import { Patient } from '../../patients/entities';
-import { Professional } from '../../professionals/entities';
 
-import { BaseEntity } from '../../../shared/typeorm/entities';
+import { Patient } from '../../patients/entities/patient';
+import { Professional } from '../../professionals/entities/professional';
+import { BaseEntity } from '../../../shared/typeorm/entities/base';
 
 @Entity('appointments')
 export class Appointment extends BaseEntity {

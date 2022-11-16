@@ -1,8 +1,8 @@
 import { Repository } from 'typeorm';
 
 import { PostgresDataSource } from '../../../shared/typeorm';
-import { IProfessionalsRepository } from '../contracts';
-import { Professional } from '../entities';
+import { IProfessionalsRepository } from '../contracts/repositories/professionals';
+import { Professional } from '../entities/professional';
 
 export class ProfessionalsRepository implements IProfessionalsRepository {
   private ormRepository: Repository<Professional>;

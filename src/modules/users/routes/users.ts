@@ -1,9 +1,9 @@
 import { Router } from 'express';
 import { celebrate } from 'celebrate';
 
-import { ensureAuthentication } from '../middlewares';
-import { CreateUserSchema, UpdateUserSchema } from '../celebrate-schemas';
-import { UsersController } from '../controllers';
+import { ensureAuthentication } from '../middlewares/ensure-authentication';
+import { CreateUserSchema, UpdateUserSchema } from '../celebrate-schemas/user';
+import { UsersController } from '../controllers/users';
 
 export const usersRouter = Router();
 const usersController = new UsersController();

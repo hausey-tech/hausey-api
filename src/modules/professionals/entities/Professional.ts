@@ -1,8 +1,9 @@
 import { Entity, Column, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
 
-import { BaseEntity } from '../../../shared/typeorm/entities';
-import { User } from '../../users/entities';
-import { ProfessionalSpecialty, ProfessionalType } from '.';
+import { BaseEntity } from '../../../shared/typeorm/entities/base';
+import { User } from '../../users/entities/user';
+import { ProfessionalSpecialty } from './professional-specialty';
+import { ProfessionalType } from './professional-type';
 
 @Entity('professionals')
 export class Professional extends BaseEntity {

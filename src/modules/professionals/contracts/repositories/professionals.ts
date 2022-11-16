@@ -1,4 +1,4 @@
-import { Professional } from '../../entities';
+import { Professional } from '../../entities/professional';
 
 export interface IProfessionalsRepository {
   findById(id: string): Promise<Professional | null>;

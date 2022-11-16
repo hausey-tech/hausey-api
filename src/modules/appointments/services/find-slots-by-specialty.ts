@@ -1,10 +1,11 @@
 import { injectable, inject } from 'tsyringe';
 import { addMinutes, isBefore, format } from 'date-fns';
 
-import { IAppointmentsRepository, ISlotsRepository } from '../contracts';
-import { IProfessionalsRepository } from '../../professionals/contracts';
-import { groupArrayByKey } from '../../../shared/utils';
-import { Slot } from '../entities';
+import { IAppointmentsRepository } from '../contracts/repositories/appointments';
+import { ISlotsRepository } from '../contracts/repositories/slots';
+import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
+import { groupArrayByKey } from '../../../shared/utils/group-array-by-key';
+import { Slot } from '../entities/slot';
 
 interface IAvailability {
   weekDay: number;

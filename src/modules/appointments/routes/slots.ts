@@ -1,9 +1,9 @@
 import { celebrate } from 'celebrate';
 import { Router } from 'express';
 
-import { FindSlotsSchema, CreateSlotSchema } from '../celebrate-schemas';
-import { ensureAuthentication } from '../../users/middlewares';
-import { SlotsController } from '../controllers';
+import { FindSlotsSchema, CreateSlotSchema } from '../celebrate-schemas/slot';
+import { ensureAuthentication } from '../../users/middlewares/ensure-authentication';
+import { SlotsController } from '../controllers/slots';
 
 export const slotsRouter = Router();
 const slotsController = new SlotsController();

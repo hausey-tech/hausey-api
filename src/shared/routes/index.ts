@@ -1,11 +1,10 @@
 import { Router } from 'express';
 
-import { usersRouter, sessionsRouter } from '../../modules/users/routes';
-import {
-  appointmentsRouter,
-  slotsRouter,
-} from '../../modules/appointments/routes';
-import { specialtiesRouter } from '../../modules/professionals/routes';
+import { usersRouter } from '../../modules/users/routes/users';
+import { sessionsRouter } from '../../modules/users/routes/sessions';
+import { appointmentsRouter } from '../../modules/appointments/routes/appointments';
+import { slotsRouter } from '../../modules/appointments/routes/slots';
+import { specialtiesRouter } from '../../modules/professionals/routes/specialties';
 
 export const routes = Router();
 

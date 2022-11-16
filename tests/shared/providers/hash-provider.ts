@@ -1,4 +1,4 @@
-import { IHashProvider } from '../../../src/shared/providers/HashProvider/entities';
+import { IHashProvider } from '../../../src/shared/providers/HashProvider/entities/hash-provider';
 
 export class HashProvider implements IHashProvider {
   generateHash(): Promise<string> {

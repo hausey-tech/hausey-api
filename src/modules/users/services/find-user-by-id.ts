@@ -1,8 +1,8 @@
 import { injectable, inject } from 'tsyringe';
 
-import { AppError } from '../../../shared/errors';
-import { IUsersRepository } from '../contracts';
-import { User } from '../entities';
+import { AppError } from '../../../shared/errors/app-error';
+import { IUsersRepository } from '../contracts/repositories/users';
+import { User } from '../entities/user';
 
 @injectable()
 export class FindUserByIdService {

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { isCelebrateError } from 'celebrate';
-import { AppError } from '.';
+import { AppError } from './app-error';
 
 export function errorHandler(
   err: Error,

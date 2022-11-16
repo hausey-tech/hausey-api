@@ -1,5 +1,5 @@
-import { ICreateUserDTO } from '../dtos';
-import { User } from '../../entities';
+import { ICreateUserDTO } from '../dtos/create-user';
+import { User } from '../../entities/user';
 
 export interface IUsersRepository {
   findById(id: string): Promise<User | null>;

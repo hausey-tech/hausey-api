@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import { FindSlotsBySpecialtyService, CreateSlotService } from '../services';
+import { FindSlotsBySpecialtyService } from '../services/find-slots-by-specialty';
+import { CreateSlotService } from '../services/create-slot';
 
 export class SlotsController {
   public async index(request: Request, response: Response): Promise<Response> {

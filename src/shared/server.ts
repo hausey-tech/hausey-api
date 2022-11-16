@@ -6,7 +6,7 @@ import cors from 'cors';
 import express from 'express';
 
 import { routes } from './routes';
-import { errorHandler } from './errors';
+import { errorHandler } from './errors/error-handler';
 import { PostgresDataSource } from './typeorm';
 
 const app = express();

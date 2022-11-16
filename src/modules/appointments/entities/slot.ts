@@ -1,7 +1,7 @@
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 
-import { BaseEntity } from '../../../shared/typeorm/entities';
-import { Professional } from '../../professionals/entities';
+import { BaseEntity } from '../../../shared/typeorm/entities/base';
+import { Professional } from '../../professionals/entities/professional';
 
 @Entity('slots')
 export class Slot extends BaseEntity {

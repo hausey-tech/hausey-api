@@ -1,7 +1,7 @@
 import { injectable, inject } from 'tsyringe';
 
-import { ISpecialtiesRepository } from '../contracts';
-import { ProfessionalSpecialty } from '../entities';
+import { ISpecialtiesRepository } from '../contracts/repositories/specialties';
+import { ProfessionalSpecialty } from '../entities/professional-specialty';
 
 @injectable()
 export class FindAllSpecialtiesService {

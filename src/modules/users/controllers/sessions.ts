@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import { CreateSessionService } from '../services';
+import { CreateSessionService } from '../services/create-session';
 
 export class SessionsController {
   public async create(request: Request, response: Response): Promise<Response> {

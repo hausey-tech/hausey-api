@@ -1,8 +1,8 @@
 import { Repository } from 'typeorm';
 
-import { IAppointmentsRepository } from '../contracts';
+import { IAppointmentsRepository } from '../contracts/repositories/appointments';
 import { PostgresDataSource } from '../../../shared/typeorm';
-import { Appointment } from '../entities';
+import { Appointment } from '../entities/appointment';
 
 export class AppointmentsRepository implements IAppointmentsRepository {
   private ormRepository: Repository<Appointment>;

@@ -1,18 +1,19 @@
 import { sign } from 'jsonwebtoken';
 import { injectable, inject } from 'tsyringe';
 
-import { IHashProvider } from '../../../shared/providers/HashProvider/entities';
-import { AppError } from '../../../shared/errors';
-import { authConfig } from '../../../config';
+import { IHashProvider } from '../../../shared/providers/HashProvider/entities/hash-provider';
+import { AppError } from '../../../shared/errors/app-error';
+import { authConfig } from '../../../config/auth';
+import { User } from '../entities/user';
 
-import { IProfessionalsRepository } from '../../professionals/contracts';
-import { Professional } from '../../professionals/entities';
+import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
+import { Professional } from '../../professionals/entities/professional';
 
-import { IPatientsRepository } from '../../patients/contracts';
-import { Patient } from '../../patients/entities';
+import { IPatientsRepository } from '../../patients/contracts/repositories/patients';
+import { Patient } from '../../patients/entities/patient';
 
-import { IUsersRepository, ICreateSessionDTO } from '../contracts';
-import { User } from '../entities';
+import { IUsersRepository } from '../contracts/repositories/users';
+import { ICreateSessionDTO } from '../contracts/dtos/create-session';
 
 interface IRoles {
   professional?: Professional;

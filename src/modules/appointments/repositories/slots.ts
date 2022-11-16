@@ -1,8 +1,9 @@
 import { Repository, In } from 'typeorm';
 
-import { ISlotsRepository, ICreateSlotDTO } from '../contracts';
+import { ISlotsRepository } from '../contracts/repositories/slots';
+import { ICreateSlotDTO } from '../contracts/dtos/create-slot';
 import { PostgresDataSource } from '../../../shared/typeorm';
-import { Slot } from '../entities';
+import { Slot } from '../entities/slot';
 
 export class SlotsRepository implements ISlotsRepository {
   private ormRepository: Repository<Slot>;
