@@ -11,6 +11,15 @@ import { ProfessionalsRepository } from '../../modules/professionals/repositorie
 import { IPatientsRepository } from '../../modules/patients/contracts';
 import { PatientsRepository } from '../../modules/patients/repositories';
 
+import {
+  IAppointmentsRepository,
+  ISlotsRepository,
+} from '../../modules/appointments/contracts';
+import {
+  AppointmentsRepository,
+  SlotsRepository,
+} from '../../modules/appointments/repositories';
+
 container.registerSingleton<IUsersRepository>(
   'UsersRepository',
   UsersRepository,
@@ -24,4 +33,14 @@ container.registerSingleton<IProfessionalsRepository>(
 container.registerSingleton<IPatientsRepository>(
   'PatientsRepository',
   PatientsRepository,
+);
+
+container.registerSingleton<IAppointmentsRepository>(
+  'AppointmentsRepository',
+  AppointmentsRepository,
+);
+
+container.registerSingleton<ISlotsRepository>(
+  'SlotsRepository',
+  SlotsRepository,
 );
