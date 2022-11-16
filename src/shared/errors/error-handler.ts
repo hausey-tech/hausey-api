@@ -16,10 +16,10 @@ export function errorHandler(
   }
 
   if (isCelebrateError(err)) {
-    const errorBody = err.details.get('body');
+    const error = err.details.get('body') || err.details.get('params');
     return response.status(400).json({
       status: 'error',
-      message: errorBody?.message,
+      message: error?.message,
     });
   }
 
