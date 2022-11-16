@@ -13,7 +13,7 @@
     "migration:generate": "cross-env yarn typeorm migration:generate -d ./src/shared/typeorm ./src/shared/typeorm/migrations/$name",
     "migration:run": "yarn typeorm migration:run -d ./src/shared/typeorm",
     "migration:revert": "yarn typeorm migration:revert -d ./src/shared/typeorm",
-    "test": "jest",
+    "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:verbose": "jest --passWithNoTests --runInBand",
     "test:unit": "yarn test --watch -c jest-unit-config.js",
     "test:integration": "yarn test --watch -c jest-integration-config.js",
