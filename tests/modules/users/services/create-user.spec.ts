@@ -2,7 +2,7 @@ import 'reflect-metadata';
 import { DataSource } from 'typeorm';
 
 import { CreateUserService } from '../../../../src/modules/users/services/create-user';
-import { UsersRepository } from '../repositories/users-repository';
+import { UsersRepository } from '../repositories/users';
 import { HashProvider } from '../../../shared/providers/hash-provider';
 import { User } from '../../../../src/modules/users/entities/user';
 import { makeFakeDb } from '../../../typeorm';

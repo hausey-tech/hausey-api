@@ -3,16 +3,16 @@ import { container } from 'tsyringe';
 import '../providers';
 
 import { IUsersRepository } from '../../modules/users/contracts/repositories/users';
-import { UsersRepository } from '../../modules/users/repositories/users-repository';
+import { UsersRepository } from '../../modules/users/repositories/users';
 
 import { IProfessionalsRepository } from '../../modules/professionals/contracts/repositories/professionals';
-import { ProfessionalsRepository } from '../../modules/professionals/repositories/professionals-repository';
+import { ProfessionalsRepository } from '../../modules/professionals/repositories/professionals';
 
 import { ISpecialtiesRepository } from '../../modules/professionals/contracts/repositories/specialties';
 import { SpecialtiesRepository } from '../../modules/professionals/repositories/specialties';
 
 import { IPatientsRepository } from '../../modules/patients/contracts/repositories/patients';
-import { PatientsRepository } from '../../modules/patients/repositories/patients-repository';
+import { PatientsRepository } from '../../modules/patients/repositories/patients';
 
 import { IAppointmentsRepository } from '../../modules/appointments/contracts/repositories/appointments';
 import { AppointmentsRepository } from '../../modules/appointments/repositories/appointments';
