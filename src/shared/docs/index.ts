@@ -1,5 +1,12 @@
-import { sessionsPath } from './paths';
-import { createSessionSchema, errorSchema, sessionSchema } from './schemas';
+import { sessionsPath, usersPath } from './paths';
+import {
+  errorSchema,
+  createSessionSchema,
+  sessionSchema,
+  createUserSchema,
+  userSchema,
+  bearerAuthSchema,
+} from './schemas';
 import { badRequest, unauthorized, notFound, serverError } from './components';
 
 export default {
@@ -23,18 +30,24 @@ export default {
       name: 'Sessions',
     },
     {
-      name: 'User',
+      name: 'Users',
     },
   ],
   paths: {
     '/sessions': sessionsPath,
+    '/users': usersPath,
   },
   schemas: {
+    error: errorSchema,
     createSession: createSessionSchema,
     session: sessionSchema,
-    error: errorSchema,
+    createUser: createUserSchema,
+    user: userSchema,
   },
   components: {
+    securitySchemes: {
+      bearerAuth: bearerAuthSchema,
+    },
     badRequest,
     unauthorized,
     serverError,
