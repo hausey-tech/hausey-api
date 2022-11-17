@@ -8,6 +8,7 @@ import { PostgresDataSource } from './typeorm';
 import { setupSwagger } from './utils/setup-swagger';
 import { setupMiddlewares } from './utils/setup-middlewares';
 import { setupRoutes } from './utils/setup-routes';
+import { setupErrorHandler } from './utils/setup-error-handler';
 
 const app = express();
 
@@ -18,6 +19,7 @@ const start = async () => {
     setupSwagger(app);
     setupMiddlewares(app);
     setupRoutes(app);
+    setupErrorHandler(app);
 
     app.listen(process.env.PORT, () =>
       console.log(`🚀 Server started on port ${process.env.PORT}!`),
