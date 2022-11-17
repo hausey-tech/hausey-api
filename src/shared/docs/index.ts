@@ -1,11 +1,12 @@
 import { sessionsPath, usersPath } from './paths';
 import {
   errorSchema,
+  bearerAuthSchema,
   createSessionSchema,
   sessionSchema,
+  updateUserSchema,
   createUserSchema,
   userSchema,
-  bearerAuthSchema,
 } from './schemas';
 import { badRequest, unauthorized, notFound, serverError } from './components';
 
@@ -35,13 +36,15 @@ export default {
   ],
   paths: {
     '/sessions': sessionsPath,
-    '/users': usersPath,
+    '/users': { ...usersPath, delete: undefined },
+    '/users/{id}': { delete: usersPath.delete },
   },
   schemas: {
     error: errorSchema,
     createSession: createSessionSchema,
     session: sessionSchema,
     createUser: createUserSchema,
+    updateUser: updateUserSchema,
     user: userSchema,
   },
   components: {

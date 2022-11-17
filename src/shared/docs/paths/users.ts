@@ -70,13 +70,18 @@ export const usersPath = {
     },
   },
   patch: {
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
     tags: ['Users'],
     summary: 'Update user infos',
     requestBody: {
       content: {
         'application/json': {
           schema: {
-            $ref: '#/schemas/createUser',
+            $ref: '#/schemas/updateUser',
           },
         },
       },
@@ -109,25 +114,20 @@ export const usersPath = {
   delete: {
     tags: ['Users'],
     summary: 'Delete user',
-    requestBody: {
-      content: {
-        'application/json': {
-          schema: {
-            $ref: '#/schemas/createUser',
-          },
+    parameters: [
+      {
+        in: 'path',
+        name: 'id',
+        schema: {
+          type: 'string',
         },
+        required: true,
+        description: 'UUID of the user to be deleted',
       },
-    },
+    ],
     responses: {
       200: {
         description: 'Success',
-        content: {
-          'application/json': {
-            schema: {
-              $ref: '#/schemas/user',
-            },
-          },
-        },
       },
       400: {
         $ref: '#/components/badRequest',
