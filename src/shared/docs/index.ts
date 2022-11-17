@@ -1,4 +1,9 @@
-import { sessionsPath, usersPath, appointmentsPath } from './paths';
+import {
+  sessionsPath,
+  usersPath,
+  appointmentsPath,
+  professionalsPath,
+} from './paths';
 import {
   errorSchema,
   bearerAuthSchema,
@@ -9,6 +14,7 @@ import {
   userSchema,
   slotSchema,
   appointmentSchema,
+  specialtySchema,
 } from './schemas';
 import { badRequest, unauthorized, notFound, serverError } from './components';
 
@@ -36,6 +42,9 @@ export default {
       name: 'Users',
     },
     {
+      name: 'Professionals',
+    },
+    {
       name: 'Appointments',
     },
   ],
@@ -43,6 +52,7 @@ export default {
     '/sessions': sessionsPath,
     '/users': { ...usersPath, delete: undefined },
     '/users/{id}': { delete: usersPath.delete },
+    '/professionals/specialties': professionalsPath.specialties,
     '/appointments/{id}': appointmentsPath,
     '/appointments/slots/{specialtyId}': appointmentsPath.slots,
   },
@@ -55,6 +65,7 @@ export default {
     user: userSchema,
     slot: slotSchema,
     appointment: appointmentSchema,
+    specialty: specialtySchema,
   },
   components: {
     securitySchemes: {
