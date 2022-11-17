@@ -1,0 +1,95 @@
+export const appointmentsPath = {
+  get: {
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
+    tags: ['Appointments'],
+    summary: 'Show appointment infos',
+    parameters: [
+      {
+        in: 'path',
+        name: 'id',
+        schema: {
+          type: 'string',
+        },
+        required: true,
+        description: 'Appointment UUID',
+      },
+    ],
+    responses: {
+      200: {
+        description: 'Success',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/schemas/appointment',
+            },
+          },
+        },
+      },
+      400: {
+        $ref: '#/components/badRequest',
+      },
+      401: {
+        $ref: '#/components/unauthorized',
+      },
+      404: {
+        $ref: '#/components/notFound',
+      },
+      500: {
+        $ref: '#/components/serverError',
+      },
+    },
+  },
+  slots: {
+    get: {
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      tags: ['Appointments'],
+      summary: 'Show slots by specialty id',
+      parameters: [
+        {
+          in: 'path',
+          name: 'specialtyId',
+          schema: {
+            type: 'string',
+          },
+          required: true,
+          description: 'Professional specialty UUID',
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Success',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: {
+                  $ref: '#/schemas/slot',
+                },
+              },
+            },
+          },
+        },
+        400: {
+          $ref: '#/components/badRequest',
+        },
+        401: {
+          $ref: '#/components/unauthorized',
+        },
+        404: {
+          $ref: '#/components/notFound',
+        },
+        500: {
+          $ref: '#/components/serverError',
+        },
+      },
+    },
+  },
+};

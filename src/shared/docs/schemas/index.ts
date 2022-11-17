@@ -5,3 +5,5 @@ export * from './create-user';
 export * from './user';
 export * from './bearer-auth';
 export * from './update-user';
+export * from './slot';
+export * from './appointment';

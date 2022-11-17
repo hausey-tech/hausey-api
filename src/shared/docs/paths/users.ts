@@ -112,6 +112,11 @@ export const usersPath = {
     },
   },
   delete: {
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
     tags: ['Users'],
     summary: 'Delete user',
     parameters: [
