@@ -20,6 +20,9 @@ import { AppointmentsRepository } from '../../modules/appointments/repositories/
 import { ISlotsRepository } from '../../modules/appointments/contracts/repositories/slots';
 import { SlotsRepository } from '../../modules/appointments/repositories/slots';
 
+import { IProgramsRepository } from '../../modules/programs/contracts/repositories/programs';
+import { ProgramsRepository } from '../../modules/programs/repositories/programs';
+
 container.registerSingleton<IUsersRepository>(
   'UsersRepository',
   UsersRepository,
@@ -48,4 +51,9 @@ container.registerSingleton<ISlotsRepository>(
 container.registerSingleton<ISpecialtiesRepository>(
   'SpecialtiesRepository',
   SpecialtiesRepository,
+);
+
+container.registerSingleton<IProgramsRepository>(
+  'ProgramsRepository',
+  ProgramsRepository,
 );
