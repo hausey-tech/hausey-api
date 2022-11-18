@@ -8,3 +8,5 @@ export * from './update-user';
 export * from './slot';
 export * from './appointment';
 export * from './specialty';
+export * from './program';
+export * from './base';

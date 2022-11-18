@@ -3,6 +3,7 @@ import {
   usersPath,
   appointmentsPath,
   professionalsPath,
+  programsPath,
 } from './paths';
 import {
   errorSchema,
@@ -15,6 +16,8 @@ import {
   slotSchema,
   appointmentSchema,
   specialtySchema,
+  programSchema,
+  baseSchema,
 } from './schemas';
 import { badRequest, unauthorized, notFound, serverError } from './components';
 
@@ -47,6 +50,9 @@ export default {
     {
       name: 'Appointments',
     },
+    {
+      name: 'Programs',
+    },
   ],
   paths: {
     '/sessions': sessionsPath,
@@ -55,8 +61,10 @@ export default {
     '/professionals/specialties': professionalsPath.specialties,
     '/appointments/{id}': appointmentsPath,
     '/appointments/slots/{specialtyId}': appointmentsPath.slots,
+    '/programs': programsPath,
   },
   schemas: {
+    base: baseSchema,
     error: errorSchema,
     createSession: createSessionSchema,
     session: sessionSchema,
@@ -66,6 +74,7 @@ export default {
     slot: slotSchema,
     appointment: appointmentSchema,
     specialty: specialtySchema,
+    program: programSchema,
   },
   components: {
     securitySchemes: {
