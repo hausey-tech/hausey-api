@@ -12,7 +12,4 @@ export class Plan extends BaseEntity {
 
   @Column('int')
   price: number;
-
-  @Column('int')
-  discount: number;
 }

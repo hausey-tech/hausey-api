@@ -2,16 +2,16 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 import { BaseEntity } from '../../../shared/typeorm/entities/base';
 import { ProfessionalType } from '../../professionals/entities/professional-type';
-import { Program } from './program';
+import { Plan } from './plan';
 
-@Entity('program_professional_type_discounts')
-export class ProgramProfessionalTypeDiscount extends BaseEntity {
-  @Column('varchar', { name: 'program_id' })
-  programId: string;
+@Entity('plan_professional_type_discounts')
+export class PlanProfessionalTypeDiscount extends BaseEntity {
+  @Column('varchar', { name: 'plan_id' })
+  planId: string;
 
-  @ManyToOne(() => Program)
-  @JoinColumn({ name: 'program_id' })
-  program: string;
+  @ManyToOne(() => Plan)
+  @JoinColumn({ name: 'plan_id' })
+  plan: string;
 
   @Column('varchar', { name: 'professional_type_id' })
   professionalTypeId: string;
