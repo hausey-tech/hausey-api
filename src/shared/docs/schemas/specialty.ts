@@ -1,20 +1,15 @@
 export const specialtySchema = {
-  type: 'object',
-  properties: {
-    id: {
-      type: 'integer',
+  allOf: [
+    {
+      $ref: '#/schemas/base',
     },
-    createdAt: {
-      type: 'string',
+    {
+      type: 'object',
+      properties: {
+        name: {
+          type: 'string',
+        },
+      },
     },
-    updatedAt: {
-      type: 'string',
-    },
-    deletedAt: {
-      type: 'string',
-    },
-    name: {
-      type: 'string',
-    },
-  },
+  ],
 };
