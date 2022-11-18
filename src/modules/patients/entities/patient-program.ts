@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 import { BaseEntity } from '../../../shared/typeorm/entities/base';
 import { Patient } from './patient';
-import { Program } from './program';
+import { Program } from '../../programs/entities/program';
 
 @Entity('patient_programs')
 export class PatientProgram extends BaseEntity {
