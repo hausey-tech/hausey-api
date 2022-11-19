@@ -11,3 +11,9 @@ appointmentsRouter.get(
   ensureAuthentication,
   appointmentsController.read,
 );
+
+appointmentsRouter.get(
+  '/prices/:professionalTypeId/:professionalSpecialtyId',
+  ensureAuthentication,
+  appointmentsController.checkPrice,
+);

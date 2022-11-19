@@ -1,10 +1,12 @@
 import { Repository } from 'typeorm';
 
 import { PostgresDataSource } from '../../../shared/typeorm';
-import { ISpecialtiesRepository } from '../contracts/repositories/specialties';
+import { IProfessionalSpecialtiesRepository } from '../contracts/repositories/professional-specialties';
 import { ProfessionalSpecialty } from '../entities/professional-specialty';
 
-export class SpecialtiesRepository implements ISpecialtiesRepository {
+export class ProfessionalSpecialtiesRepository
+  implements IProfessionalSpecialtiesRepository
+{
   private ormRepository: Repository<ProfessionalSpecialty>;
 
   constructor() {
@@ -15,5 +17,9 @@ export class SpecialtiesRepository implements ISpecialtiesRepository {
 
   public async findAll(): Promise<ProfessionalSpecialty[]> {
     return this.ormRepository.find();
+  }
+
+  public async findById(id: string): Promise<ProfessionalSpecialty> {
+    return this.ormRepository.findOne({ where: { id } });
   }
 }
