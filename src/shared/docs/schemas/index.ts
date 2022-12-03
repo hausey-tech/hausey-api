@@ -10,3 +10,5 @@ export * from './appointment';
 export * from './specialty';
 export * from './program';
 export * from './base';
+export * from './create-appointment';
+export * from './price';

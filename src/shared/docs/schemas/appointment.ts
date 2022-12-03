@@ -1,8 +1,27 @@
 export const appointmentSchema = {
-  type: 'object',
-  properties: {
-    appointmentId: {
-      type: 'string',
+  allOf: [
+    {
+      $ref: '#/schemas/base',
     },
-  },
+    {
+      type: 'object',
+      properties: {
+        professinalTypeId: {
+          type: 'string',
+        },
+        professionalSpecialtyId: {
+          type: 'string',
+        },
+        professionalId: {
+          type: 'string',
+        },
+        patientId: {
+          type: 'string',
+        },
+        date: {
+          type: 'string',
+        },
+      },
+    },
+  ],
 };

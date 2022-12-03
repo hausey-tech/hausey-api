@@ -18,6 +18,8 @@ import {
   specialtySchema,
   programSchema,
   baseSchema,
+  createAppointmentSchema,
+  priceSchema,
 } from './schemas';
 import { badRequest, unauthorized, notFound, serverError } from './components';
 
@@ -59,8 +61,18 @@ export default {
     '/users': { ...usersPath, delete: undefined },
     '/users/{id}': { delete: usersPath.delete },
     '/professionals/specialties': professionalsPath.specialties,
-    '/appointments/{id}': appointmentsPath,
-    '/appointments/slots/{specialtyId}': appointmentsPath.slots,
+    '/professionals/{typeId}/specialties': {
+      get: professionalsPath.specialties.byTypeId,
+    },
+    '/appointments': { ...appointmentsPath, get: undefined },
+    '/appointments/prices/{typeId}/{specialtyId}': appointmentsPath.prices,
+    '/appointments/{id}': { get: appointmentsPath.get },
+    '/appointments/slots/type/{typeId}': {
+      get: appointmentsPath.slots.byTypeId,
+    },
+    '/appointments/slots/specialty/{specialtyId}': {
+      get: appointmentsPath.slots.bySpecialtyId,
+    },
     '/programs': programsPath,
   },
   schemas: {
@@ -73,8 +85,10 @@ export default {
     user: userSchema,
     slot: slotSchema,
     appointment: appointmentSchema,
+    createAppointment: createAppointmentSchema,
     specialty: specialtySchema,
     program: programSchema,
+    price: priceSchema,
   },
   components: {
     securitySchemes: {
