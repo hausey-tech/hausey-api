@@ -13,7 +13,7 @@ export class Patient extends BaseEntity {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Column('varchar', { name: 'plan_id' })
+  @Column('varchar', { name: 'plan_id', nullable: true })
   planId: string;
 
   @ManyToOne(() => Plan)

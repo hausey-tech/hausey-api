@@ -7,7 +7,7 @@ export class Program extends BaseEntity {
   @Column('varchar')
   name: string;
 
-  @Column('varchar')
+  @Column('varchar', { nullable: true })
   description: string;
 
   @Column('int')
