@@ -19,6 +19,7 @@ interface IRoles {
   professional?: Professional;
   patient?: Patient;
   user?: User;
+  manager?: Record<string, unknown>;
 }
 interface IResponse extends IRoles {
   accessToken: string;
@@ -100,7 +101,10 @@ export class CreateSessionService {
         break;
 
       case 'manager':
-        throw new AppError('Esta funcionalidade ainda não foi implementada!');
+        data = {
+          manager: {},
+        };
+        break;
 
       default:
         data = {
