@@ -29,4 +29,12 @@ export class ProfessionalsRepository implements IProfessionalsRepository {
 
     return professionals;
   }
+
+  public async findByTypeId(id: string): Promise<Professional[]> {
+    const professionals = this.ormRepository.find({
+      where: { professionalTypeId: id },
+    });
+
+    return professionals;
+  }
 }

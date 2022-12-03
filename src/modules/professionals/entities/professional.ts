@@ -14,7 +14,7 @@ export class Professional extends BaseEntity {
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Column('varchar', { name: 'professional_specialty_id' })
+  @Column('varchar', { name: 'professional_specialty_id', nullable: true })
   professionalSpecialtyId: string;
 
   @ManyToOne(() => ProfessionalSpecialty)

@@ -68,6 +68,11 @@ export class CheckAppointmentPrice {
         await this.professionalSpecialtiesRepository.findById(
           professionalSpecialtyId,
         );
+      if (!professionalSpecialty) {
+        throw new AppError(
+          'Especialidade não encontrada, verifique e tente novamente!',
+        );
+      }
       price = professionalSpecialty.price;
     }
 
@@ -77,6 +82,11 @@ export class CheckAppointmentPrice {
       const professionalType = await this.professionalTypesRepository.findById(
         professionalTypeId,
       );
+      if (!professionalType) {
+        throw new AppError(
+          'Tipo de profissional não encontrado, verifique e tente novamente!',
+        );
+      }
       price = professionalType.price;
     }
 

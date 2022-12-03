@@ -22,4 +22,12 @@ export class ProfessionalSpecialtiesRepository
   public async findById(id: string): Promise<ProfessionalSpecialty> {
     return this.ormRepository.findOne({ where: { id } });
   }
+
+  public async findByProfessionalTypeId(
+    professionalTypeid: string,
+  ): Promise<ProfessionalSpecialty[]> {
+    return this.ormRepository.find({
+      where: { professionalTypeId: professionalTypeid },
+    });
+  }
 }

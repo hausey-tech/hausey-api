@@ -1,6 +1,12 @@
 import { Joi, Segments } from 'celebrate';
 
-export const FindSlotsSchema = {
+export const FindSlotsByTypeSchema = {
+  [Segments.PARAMS]: Joi.object().keys({
+    typeId: Joi.string().uuid(),
+  }),
+};
+
+export const FindSlotsBySpecialtySchema = {
   [Segments.PARAMS]: Joi.object().keys({
     specialtyId: Joi.string().uuid(),
   }),
