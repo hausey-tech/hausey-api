@@ -1,6 +1,8 @@
 import { injectable, inject, container } from 'tsyringe';
 
+import { IProfessionalSpecialtiesRepository } from '../contracts/repositories/professional-specialties';
 import { ICreateUserAndProfessionalDTO } from '../contracts/dtos/create-user-and-professional';
+import { IProfessionalTypesRepository } from '../contracts/repositories/professional-types';
 import { IProfessionalsRepository } from '../contracts/repositories/professionals';
 import { CreateUserService } from '../../users/services/create-user';
 import { Professional } from '../entities/professional';
@@ -11,6 +13,12 @@ export class CreateUserAndProfessionalService {
   constructor(
     @inject('ProfessionalsRepository')
     private professionalsRepository: IProfessionalsRepository,
+
+    @inject('ProfessionalTypesRepository')
+    private professionalTypesRepository: IProfessionalTypesRepository,
+
+    @inject('ProfessionalSpecialtiesRepository')
+    private professionalSpecialtiesRepository: IProfessionalSpecialtiesRepository,
   ) {}
 
   public async execute(
@@ -28,6 +36,27 @@ export class CreateUserAndProfessionalService {
       birthdate,
       specialtyRegistration,
     } = payload;
+
+    const professionalType = await this.professionalTypesRepository.findById(
+      professionalTypeId,
+    );
+
+    if (!professionalType) {
+      throw new AppError(
+        'O tipo de profissional informado não existe, verifique e tente novamente!',
+      );
+    }
+
+    const professionalSpecialty =
+      await this.professionalSpecialtiesRepository.findById(
+        professionalSpecialtyId,
+      );
+
+    if (!professionalSpecialty) {
+      throw new AppError(
+        'A especialidade informada não existe, verifique e tente novamente!',
+      );
+    }
 
     const createUserService = container.resolve(CreateUserService);
 
