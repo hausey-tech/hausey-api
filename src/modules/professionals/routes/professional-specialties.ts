@@ -16,7 +16,7 @@ professionalSpecialtiesRouter.get(
 );
 
 professionalSpecialtiesRouter.get(
-  '/:professionalTypeId/specialties',
+  '/specialties/:professionalTypeId',
   ensureAuthentication,
   celebrate(FindSpecialtiesByTypeSchema),
   professionalSpecialtiesController.indexByProfessionalType,
