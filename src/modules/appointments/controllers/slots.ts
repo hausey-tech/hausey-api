@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import { FindSlotsService } from '../services/find-slots';
+import { FindAvailableSlotsService } from '../services/find-available-slots';
 import { CreateSlotService } from '../services/create-slot';
 
 export class SlotsController {
@@ -9,15 +9,17 @@ export class SlotsController {
     const { uuid } = request.params;
     const { filterBy = 'specialty', days = 3 } = request.query;
 
-    const findSlotsService = container.resolve(FindSlotsService);
+    const findAvailableSlotsService = container.resolve(
+      FindAvailableSlotsService,
+    );
 
-    const slots = await findSlotsService.execute(
+    const availableSlots = await findAvailableSlotsService.execute(
       uuid,
       filterBy as string,
       days as number,
     );
 
-    return response.json(slots);
+    return response.json(availableSlots);
   }
 
   public async create(request: Request, response: Response): Promise<Response> {

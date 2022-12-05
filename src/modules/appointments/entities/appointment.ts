@@ -1,4 +1,4 @@
-import { Entity, Column, Timestamp, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 
 import { Patient } from '../../patients/entities/patient';
 import { ProfessionalType } from '../../professionals/entities/professional-type';
@@ -40,7 +40,7 @@ export class Appointment extends BaseEntity {
   // managerId: string;
 
   @Column('timestamp')
-  date: Timestamp;
+  date: Date;
 
   // @Column('int', { name: 'payment_id' })
   // paymentId: number;

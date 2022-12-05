@@ -3,7 +3,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
-  Timestamp,
 } from 'typeorm';
 
 export abstract class BaseEntity {
@@ -11,11 +10,11 @@ export abstract class BaseEntity {
   id: string;
 
   @CreateDateColumn({ name: 'created_at' })
-  createdAt: Timestamp;
+  createdAt: Date;
 
   @UpdateDateColumn({ name: 'updated_at' })
-  updatedAt: Timestamp;
+  updatedAt: Date;
 
   @DeleteDateColumn({ name: 'deleted_at' })
-  deletedAt: Timestamp;
+  deletedAt: Date;
 }
