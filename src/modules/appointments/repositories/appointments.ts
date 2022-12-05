@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
 import { PostgresDataSource } from '../../../shared/typeorm';
@@ -26,5 +26,32 @@ export class AppointmentsRepository implements IAppointmentsRepository {
 
   public async save(appointment: Appointment): Promise<Appointment> {
     return this.ormRepository.save(appointment);
+  }
+
+  public async findByTypeBetweenDates(
+    typeId: string,
+    dates: string[],
+  ): Promise<Appointment[]> {
+    const initial = dates[0];
+    const final = dates[dates.length - 1];
+
+    return this.ormRepository.find({
+      where: { date: Between(initial, final), professionalTypeId: typeId },
+    });
+  }
+
+  public async findBySpecialtyBetweenDates(
+    specialtyId: string,
+    dates: string[],
+  ): Promise<Appointment[]> {
+    const initial = dates[0];
+    const final = dates[dates.length - 1];
+
+    return this.ormRepository.find({
+      where: {
+        date: Between(initial, final),
+        professionalSpecialtyId: specialtyId,
+      },
+    });
   }
 }

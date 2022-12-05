@@ -6,4 +6,12 @@ export interface IAppointmentsRepository {
   softDelete(id: string): Promise<void>;
   create(payload: ICreateAppointmentDTO): Promise<Appointment>;
   save(appointment: Appointment): Promise<Appointment>;
+  findByTypeBetweenDates(
+    typeId: string,
+    dates: string[],
+  ): Promise<Appointment[]>;
+  findBySpecialtyBetweenDates(
+    specialtyId: string,
+    dates: string[],
+  ): Promise<Appointment[]>;
 }

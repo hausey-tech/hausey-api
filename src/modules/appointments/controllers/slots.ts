@@ -1,18 +1,21 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import { FindSlotsBySpecialtyService } from '../services/find-slots-by-specialty';
+import { FindSlotsService } from '../services/find-slots';
 import { CreateSlotService } from '../services/create-slot';
 
 export class SlotsController {
   public async index(request: Request, response: Response): Promise<Response> {
-    const { specialtyId } = request.params;
+    const { uuid } = request.params;
+    const { filterBy = 'specialty', days = 3 } = request.query;
 
-    const findSlotsBySpecialtyService = container.resolve(
-      FindSlotsBySpecialtyService,
+    const findSlotsService = container.resolve(FindSlotsService);
+
+    const slots = await findSlotsService.execute(
+      uuid,
+      filterBy as string,
+      days as number,
     );
-
-    const slots = await findSlotsBySpecialtyService.execute(specialtyId);
 
     return response.json(slots);
   }
