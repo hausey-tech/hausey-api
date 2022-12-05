@@ -1,4 +1,5 @@
 import { injectable, inject } from 'tsyringe';
+import { cpf as cpfValidator } from 'cpf-cnpj-validator';
 
 import { IUsersRepository } from '../contracts/repositories/users';
 import { ICreateUserDTO } from '../contracts/dtos/create-user';
@@ -17,7 +18,7 @@ export class CreateUserService {
   ) {}
 
   public async execute(payload: ICreateUserDTO): Promise<User> {
-    const { email, password } = payload;
+    const { email, cpf, password } = payload;
 
     const checkUserExists = await this.usersRepository.findByEmail(email);
 
@@ -28,6 +29,22 @@ export class CreateUserService {
     const checkUserDeleted = await this.usersRepository.findByEmailWithDeleted(
       email,
     );
+
+    if (cpf) {
+      const isCpfValid = cpfValidator.isValid(cpf);
+
+      if (!isCpfValid) {
+        throw new AppError('CPF inválido, verifique e tente novamente!');
+      }
+
+      const checkUserCpfExists = await this.usersRepository.findByCpf(cpf);
+
+      if (checkUserCpfExists) {
+        throw new AppError(
+          'Já existe um usuário com este CPF, verifique e tente novamente!',
+        );
+      }
+    }
 
     const hashedPassword = password
       ? await this.hashProvider.generateHash(password)

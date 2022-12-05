@@ -3,7 +3,6 @@ import { injectable, inject, container } from 'tsyringe';
 import { ICreateUserAndProfessionalDTO } from '../contracts/dtos/create-user-and-professional';
 import { IProfessionalsRepository } from '../contracts/repositories/professionals';
 import { CreateUserService } from '../../users/services/create-user';
-import { UpdateUserService } from '../../users/services/update-user';
 import { Professional } from '../entities/professional';
 import { AppError } from '../../../shared/errors/app-error';
 
@@ -32,19 +31,16 @@ export class CreateUserAndProfessionalService {
 
     const createUserService = container.resolve(CreateUserService);
 
-    const user = await createUserService.execute({ email, name });
-
-    const updateUserService = container.resolve(UpdateUserService);
-
-    await updateUserService.execute(user.id, {
+    const user = await createUserService.execute({
+      email,
+      name,
       cpf,
       phoneNumber,
       birthdate,
     });
 
-    const checkProfessionalExists = this.professionalsRepository.findByUserId(
-      user.id,
-    );
+    const checkProfessionalExists =
+      await this.professionalsRepository.findByUserId(user.id);
 
     if (checkProfessionalExists) {
       throw new AppError(

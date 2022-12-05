@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
+import { QueryFailedError } from 'typeorm';
 import { isCelebrateError } from 'celebrate';
+
 import { AppError } from './app-error';
 
 export function errorHandler(
@@ -26,7 +28,13 @@ export function errorHandler(
     });
   }
 
-  console.error(err);
+  if (err instanceof QueryFailedError) {
+    const error = err.driverError?.detail || err.message;
+    return response.status(400).json({
+      status: 'error',
+      message: error,
+    });
+  }
 
   return response.status(500).json({
     status: 'error',

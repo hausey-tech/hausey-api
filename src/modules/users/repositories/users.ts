@@ -24,6 +24,10 @@ export class UsersRepository implements IUsersRepository {
     return this.ormRepository.findOne({ where: { email }, withDeleted: true });
   }
 
+  public async findByCpf(cpf: string): Promise<User | null> {
+    return this.ormRepository.findOne({ where: { cpf } });
+  }
+
   public async restore(id: string, payload: ICreateUserDTO): Promise<User> {
     await this.ormRepository.restore(id);
     await this.ormRepository.update(id, payload);
