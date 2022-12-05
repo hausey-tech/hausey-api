@@ -120,17 +120,14 @@ export class FindAvailableSlotsService {
         if (filterBy === 'type') {
           appointments =
             await this.appointmentsRepository.findByTypeBetweenDates(uuid, [
-              setHours(parseISO(t.date), 0).toISOString(),
-              setHours(parseISO(t.date), 20).toISOString(),
+              setHours(parseISO(t.date), 0),
+              setHours(parseISO(t.date), 20),
             ]);
         } else if (filterBy === 'specialty') {
           appointments =
             await this.appointmentsRepository.findBySpecialtyBetweenDates(
               uuid,
-              [
-                setHours(parseISO(t.date), 0).toISOString(),
-                setHours(parseISO(t.date), 20).toISOString(),
-              ],
+              [setHours(parseISO(t.date), 0), setHours(parseISO(t.date), 20)],
             );
         }
         if (appointments.length > 0) {

@@ -30,7 +30,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
 
   public async findByTypeBetweenDates(
     typeId: string,
-    dates: string[],
+    dates: Date[],
   ): Promise<Appointment[]> {
     const initial = dates[0];
     const final = dates[dates.length - 1];
@@ -42,7 +42,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
 
   public async findBySpecialtyBetweenDates(
     specialtyId: string,
-    dates: string[],
+    dates: Date[],
   ): Promise<Appointment[]> {
     const initial = dates[0];
     const final = dates[dates.length - 1];
