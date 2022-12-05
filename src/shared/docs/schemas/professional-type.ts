@@ -1,4 +1,4 @@
-export const specialtySchema = {
+export const professionalTypeSchema = {
   allOf: [
     {
       $ref: '#/schemas/base',
@@ -6,9 +6,6 @@ export const specialtySchema = {
     {
       type: 'object',
       properties: {
-        professionalTypeId: {
-          type: 'string',
-        },
         name: {
           type: 'string',
         },

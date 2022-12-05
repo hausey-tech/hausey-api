@@ -12,3 +12,4 @@ export * from './program';
 export * from './base';
 export * from './create-appointment';
 export * from './price';
+export * from './professional-type';

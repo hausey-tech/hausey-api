@@ -1,4 +1,42 @@
 export const professionalsPath = {
+  types: {
+    get: {
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      tags: ['Professionals'],
+      summary: 'Show all types',
+      responses: {
+        200: {
+          description: 'Success',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: {
+                  $ref: '#/schemas/professionalType',
+                },
+              },
+            },
+          },
+        },
+        400: {
+          $ref: '#/components/badRequest',
+        },
+        401: {
+          $ref: '#/components/unauthorized',
+        },
+        404: {
+          $ref: '#/components/notFound',
+        },
+        500: {
+          $ref: '#/components/serverError',
+        },
+      },
+    },
+  },
   specialties: {
     get: {
       security: [

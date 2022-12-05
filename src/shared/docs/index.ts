@@ -20,6 +20,7 @@ import {
   baseSchema,
   createAppointmentSchema,
   priceSchema,
+  professionalTypeSchema,
 } from './schemas';
 import { badRequest, unauthorized, notFound, serverError } from './components';
 
@@ -60,6 +61,7 @@ export default {
     '/sessions': sessionsPath,
     '/users': { ...usersPath, delete: undefined },
     '/users/{id}': { delete: usersPath.delete },
+    '/professionals/types': professionalsPath.types,
     '/professionals/specialties': professionalsPath.specialties,
     '/professionals/specialties/{typeId}': {
       get: professionalsPath.specialties.byTypeId,
@@ -84,6 +86,7 @@ export default {
     specialty: specialtySchema,
     program: programSchema,
     price: priceSchema,
+    professionalType: professionalTypeSchema,
   },
   components: {
     securitySchemes: {
