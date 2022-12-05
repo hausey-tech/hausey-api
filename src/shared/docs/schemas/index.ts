@@ -13,3 +13,5 @@ export * from './base';
 export * from './create-appointment';
 export * from './price';
 export * from './professional-type';
+export * from './create-user-and-professional';
+export * from './professional';
