@@ -5,6 +5,7 @@ import { sessionsRouter } from '../../modules/users/routes/sessions';
 import { appointmentsRouter } from '../../modules/appointments/routes/appointments';
 import { slotsRouter } from '../../modules/appointments/routes/slots';
 import { professionalSpecialtiesRouter } from '../../modules/professionals/routes/professional-specialties';
+import { professionalTypesRouter } from '../../modules/professionals/routes/professional-types';
 import { programsRouter } from '../../modules/programs/routes/programs';
 import { plansRouter } from '../../modules/plans/routes/plans';
 
@@ -13,6 +14,10 @@ export const routes = Router();
 routes.use('/users', usersRouter);
 routes.use('/sessions', sessionsRouter);
 routes.use('/appointments', appointmentsRouter, slotsRouter);
-routes.use('/professionals', professionalSpecialtiesRouter);
+routes.use(
+  '/professionals',
+  professionalSpecialtiesRouter,
+  professionalTypesRouter,
+);
 routes.use('/programs', programsRouter);
 routes.use('/plans', plansRouter);
