@@ -1,7 +1,8 @@
 import { Repository } from 'typeorm';
 
-import { PostgresDataSource } from '../../../shared/typeorm';
 import { IProfessionalsRepository } from '../contracts/repositories/professionals';
+import { ICreateProfessionalDTO } from '../contracts/dtos/create-professional';
+import { PostgresDataSource } from '../../../shared/typeorm';
 import { Professional } from '../entities/professional';
 
 export class ProfessionalsRepository implements IProfessionalsRepository {
@@ -36,5 +37,13 @@ export class ProfessionalsRepository implements IProfessionalsRepository {
     });
 
     return professionals;
+  }
+
+  public async create(payload: ICreateProfessionalDTO): Promise<Professional> {
+    return this.ormRepository.create(payload);
+  }
+
+  public async save(professional: Professional): Promise<Professional> {
+    return this.ormRepository.save(professional);
   }
 }

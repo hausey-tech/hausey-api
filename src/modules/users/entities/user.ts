@@ -10,7 +10,7 @@ export class User extends BaseEntity {
   @Column('varchar', { unique: true })
   email: string;
 
-  @Column('varchar')
+  @Column('varchar', { nullable: true })
   password: string;
 
   @Column('varchar', { nullable: true, unique: true })

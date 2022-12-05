@@ -2,7 +2,7 @@ import { injectable, inject } from 'tsyringe';
 
 import { AppError } from '../../../shared/errors/app-error';
 import { IUsersRepository } from '../contracts/repositories/users';
-import { ICreateUserDTO } from '../contracts/dtos/create-user';
+import { IUpdateUserDTO } from '../contracts/dtos/update-user';
 import { User } from '../entities/user';
 
 @injectable()
@@ -12,7 +12,7 @@ export class UpdateUserService {
     private usersRepository: IUsersRepository,
   ) {}
 
-  public async execute(id: string, payload: ICreateUserDTO): Promise<User> {
+  public async execute(id: string, payload: IUpdateUserDTO): Promise<User> {
     const checkUserExists = await this.usersRepository.findById(id);
 
     if (!checkUserExists) {

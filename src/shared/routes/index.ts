@@ -6,6 +6,7 @@ import { appointmentsRouter } from '../../modules/appointments/routes/appointmen
 import { slotsRouter } from '../../modules/appointments/routes/slots';
 import { professionalSpecialtiesRouter } from '../../modules/professionals/routes/professional-specialties';
 import { professionalTypesRouter } from '../../modules/professionals/routes/professional-types';
+import { professionalsRouter } from '../../modules/professionals/routes/professionals';
 import { programsRouter } from '../../modules/programs/routes/programs';
 import { plansRouter } from '../../modules/plans/routes/plans';
 
@@ -18,6 +19,7 @@ routes.use(
   '/professionals',
   professionalSpecialtiesRouter,
   professionalTypesRouter,
+  professionalsRouter,
 );
 routes.use('/programs', programsRouter);
 routes.use('/plans', plansRouter);
