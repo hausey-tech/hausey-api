@@ -86,70 +86,43 @@ export const appointmentsPath = {
     },
   },
   slots: {
-    byTypeId: {
+    get: {
       security: [
         {
           bearerAuth: [],
         },
       ],
       tags: ['Appointments'],
-      summary: 'Show slots by type id',
+      summary: 'Show slots by type or specialty id',
       parameters: [
         {
           in: 'path',
-          name: 'typeId',
+          name: 'uuid',
           schema: {
             type: 'string',
           },
           required: true,
-          description: 'Professional type UUID',
+          description: 'Professional type or specialty UUID',
         },
-      ],
-      responses: {
-        200: {
-          description: 'Success',
-          content: {
-            'application/json': {
-              schema: {
-                type: 'array',
-                items: {
-                  $ref: '#/schemas/slot',
-                },
-              },
-            },
-          },
-        },
-        400: {
-          $ref: '#/components/badRequest',
-        },
-        401: {
-          $ref: '#/components/unauthorized',
-        },
-        404: {
-          $ref: '#/components/notFound',
-        },
-        500: {
-          $ref: '#/components/serverError',
-        },
-      },
-    },
-    bySpecialtyId: {
-      security: [
         {
-          bearerAuth: [],
-        },
-      ],
-      tags: ['Appointments'],
-      summary: 'Show slots by specialty id',
-      parameters: [
-        {
-          in: 'path',
-          name: 'specialtyId',
+          in: 'query',
+          name: 'filterBy',
           schema: {
             type: 'string',
+            enum: ['type', 'specialty'],
           },
-          required: true,
-          description: 'Professional specialty UUID',
+          required: false,
+          description:
+            'Defines if slots will be filtered by type or specialty (default: specialty)',
+        },
+        {
+          in: 'query',
+          name: 'days',
+          schema: {
+            type: 'integer',
+          },
+          required: false,
+          description: 'Defines number of returned days (default: 3)',
         },
       ],
       responses: {

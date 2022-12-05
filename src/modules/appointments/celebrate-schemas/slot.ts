@@ -6,7 +6,7 @@ export const FindSlotsSchema = {
   }),
   [Segments.QUERY]: Joi.object().keys({
     filterBy: Joi.string().equal('type', 'specialty'),
-    days: Joi.number().max(30),
+    days: Joi.number().min(1).max(30),
   }),
 };
 

@@ -1,8 +1,11 @@
 export const slotSchema = {
   type: 'object',
   properties: {
-    weekDay: {
-      type: 'integer',
+    formattedDate: {
+      type: 'string',
+    },
+    date: {
+      type: 'string',
     },
     slots: {
       type: 'array',

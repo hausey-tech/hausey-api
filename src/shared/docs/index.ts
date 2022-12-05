@@ -61,18 +61,13 @@ export default {
     '/users': { ...usersPath, delete: undefined },
     '/users/{id}': { delete: usersPath.delete },
     '/professionals/specialties': professionalsPath.specialties,
-    '/professionals/{typeId}/specialties': {
+    '/professionals/specialties/{typeId}': {
       get: professionalsPath.specialties.byTypeId,
     },
     '/appointments': { ...appointmentsPath, get: undefined },
     '/appointments/prices/{typeId}/{specialtyId}': appointmentsPath.prices,
     '/appointments/{id}': { get: appointmentsPath.get },
-    '/appointments/slots/type/{typeId}': {
-      get: appointmentsPath.slots.byTypeId,
-    },
-    '/appointments/slots/specialty/{specialtyId}': {
-      get: appointmentsPath.slots.bySpecialtyId,
-    },
+    '/appointments/slots/{uuid}': appointmentsPath.slots,
     '/programs': programsPath,
   },
   schemas: {
