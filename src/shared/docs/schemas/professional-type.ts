@@ -15,6 +15,9 @@ export const professionalTypeSchema = {
         price: {
           type: 'integer',
         },
+        hasSpecialties: {
+          type: 'boolean',
+        },
       },
     },
   ],
