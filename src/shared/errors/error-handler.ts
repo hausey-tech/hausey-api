@@ -36,6 +36,8 @@ export function errorHandler(
     });
   }
 
+  console.error(err);
+
   return response.status(500).json({
     status: 'error',
     message: 'Erro interno ao servidor',

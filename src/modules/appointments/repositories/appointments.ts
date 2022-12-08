@@ -1,4 +1,4 @@
-import { Between, Repository } from 'typeorm';
+import { Between, Repository, FindOptionsWhere, IsNull } from 'typeorm';
 
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
 import { PostgresDataSource } from '../../../shared/typeorm';
@@ -52,6 +52,27 @@ export class AppointmentsRepository implements IAppointmentsRepository {
         date: Between(initial, final),
         professionalSpecialtyId: specialtyId,
       },
+    });
+  }
+
+  public async findAll(withoutProfessional: string): Promise<Appointment[]> {
+    const where: FindOptionsWhere<Appointment> = {};
+
+    if (withoutProfessional === 'true') {
+      where.professionalId = IsNull();
+    }
+
+    return this.ormRepository.find({
+      where,
+      order: { date: 'asc' },
+      relations: [
+        'patient',
+        'patient.user',
+        'professionalType',
+        'professionalSpecialty',
+        'professional',
+        'professional.user',
+      ],
     });
   }
 }

@@ -1,10 +1,25 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
+import { FindAllAppointmentsService } from '../services/find-all-appointments';
 import { CheckAppointmentPrice } from '../services/check-appointment-price';
 import { CreateAppointmentService } from '../services/create-appointment';
 
 export class AppointmentsController {
+  public async index(request: Request, response: Response): Promise<Response> {
+    const { withoutProfessional } = request.query;
+
+    const findAllAppointmentsService = container.resolve(
+      FindAllAppointmentsService,
+    );
+
+    const appointments = await findAllAppointmentsService.execute(
+      withoutProfessional?.toString(),
+    );
+
+    return response.json(appointments);
+  }
+
   public async read(request: Request, response: Response): Promise<Response> {
     const { appointmentId } = request.params;
 

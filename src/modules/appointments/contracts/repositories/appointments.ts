@@ -11,4 +11,5 @@ export interface IAppointmentsRepository {
     specialtyId: string,
     dates: Date[],
   ): Promise<Appointment[]>;
+  findAll(withoutProfessional: string): Promise<Appointment[]>;
 }

@@ -8,6 +8,8 @@ import { CreateAppointmentSchema } from '../celebrate-schemas/appointment';
 export const appointmentsRouter = Router();
 const appointmentsController = new AppointmentsController();
 
+appointmentsRouter.get('/', ensureAuthentication, appointmentsController.index);
+
 appointmentsRouter.get(
   '/:appointmentId',
   ensureAuthentication,
