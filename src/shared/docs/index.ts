@@ -23,6 +23,7 @@ import {
   professionalTypeSchema,
   createUserAndProfessionalSchema,
   professionalSchema,
+  patientSchema,
 } from './schemas';
 import { badRequest, unauthorized, notFound, serverError } from './components';
 
@@ -69,9 +70,9 @@ export default {
     '/professionals/specialties/{typeId}': {
       get: professionalsPath.specialties.byTypeId,
     },
-    '/appointments': { ...appointmentsPath, get: undefined },
+    '/appointments': appointmentsPath,
     '/appointments/prices/{typeId}/{specialtyId}': appointmentsPath.prices,
-    '/appointments/{id}': { get: appointmentsPath.get },
+    '/appointments/{id}': appointmentsPath.withId,
     '/appointments/slots/{uuid}': appointmentsPath.slots,
     '/programs': programsPath,
   },
@@ -92,6 +93,7 @@ export default {
     professionalType: professionalTypeSchema,
     createUserAndProfessional: createUserAndProfessionalSchema,
     professional: professionalSchema,
+    patient: patientSchema,
   },
   components: {
     securitySchemes: {

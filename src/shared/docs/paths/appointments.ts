@@ -48,16 +48,17 @@ export const appointmentsPath = {
       },
     ],
     tags: ['Appointments'],
-    summary: 'Show appointment infos',
+    summary: 'Show all appointments',
     parameters: [
       {
-        in: 'path',
-        name: 'id',
+        in: 'query',
+        name: 'withoutProfessional',
         schema: {
-          type: 'string',
+          type: 'boolean',
         },
-        required: true,
-        description: 'Appointment UUID',
+        required: false,
+        description:
+          'Defines filter of appointments without professional (default: false)',
       },
     ],
     responses: {
@@ -66,7 +67,10 @@ export const appointmentsPath = {
         content: {
           'application/json': {
             schema: {
-              $ref: '#/schemas/appointment',
+              type: 'array',
+              items: {
+                $ref: '#/schemas/appointment',
+              },
             },
           },
         },
@@ -82,6 +86,52 @@ export const appointmentsPath = {
       },
       500: {
         $ref: '#/components/serverError',
+      },
+    },
+  },
+  withId: {
+    get: {
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      tags: ['Appointments'],
+      summary: 'Show appointment infos',
+      parameters: [
+        {
+          in: 'path',
+          name: 'id',
+          schema: {
+            type: 'string',
+          },
+          required: true,
+          description: 'Appointment UUID',
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Success',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/schemas/appointment',
+              },
+            },
+          },
+        },
+        400: {
+          $ref: '#/components/badRequest',
+        },
+        401: {
+          $ref: '#/components/unauthorized',
+        },
+        404: {
+          $ref: '#/components/notFound',
+        },
+        500: {
+          $ref: '#/components/serverError',
+        },
       },
     },
   },
