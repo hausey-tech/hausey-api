@@ -12,4 +12,7 @@ export class ProfessionalType extends BaseEntity {
 
   @Column('int', { nullable: true })
   price: number;
+
+  @Column('boolean', { name: 'has_specialties', default: false })
+  hasSpecialties: boolean;
 }

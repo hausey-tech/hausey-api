@@ -6,7 +6,7 @@ export const CreateUserAndProfessionalSchema = {
     email: Joi.string().email().required(),
     cpf: Joi.string().required(),
     professionalTypeId: Joi.string().uuid().required(),
-    professionalSpecialtyId: Joi.string().uuid().required(),
+    professionalSpecialtyId: Joi.string().uuid(),
     registrationUf: Joi.string().length(2).required(),
     registration: Joi.string().required(),
     phoneNumber: Joi.string().required(),
