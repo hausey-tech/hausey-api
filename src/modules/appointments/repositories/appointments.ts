@@ -75,4 +75,21 @@ export class AppointmentsRepository implements IAppointmentsRepository {
       ],
     });
   }
+
+  public async findByProfessional(
+    professionalId: string,
+  ): Promise<Appointment[]> {
+    return this.ormRepository.find({
+      where: { professionalId },
+      order: { date: 'asc' },
+      relations: [
+        'patient',
+        'patient.user',
+        'professionalType',
+        'professionalSpecialty',
+        'professional',
+        'professional.user',
+      ],
+    });
+  }
 }

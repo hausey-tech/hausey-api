@@ -4,6 +4,7 @@ import { usersRouter } from '../../modules/users/routes/users';
 import { sessionsRouter } from '../../modules/users/routes/sessions';
 import { appointmentsRouter } from '../../modules/appointments/routes/appointments';
 import { slotsRouter } from '../../modules/appointments/routes/slots';
+import { professionalsRouter as appointmentsProfessionalsRouter } from '../../modules/appointments/routes/professionals';
 import { professionalSpecialtiesRouter } from '../../modules/professionals/routes/professional-specialties';
 import { professionalTypesRouter } from '../../modules/professionals/routes/professional-types';
 import { professionalsRouter } from '../../modules/professionals/routes/professionals';
@@ -14,7 +15,12 @@ export const routes = Router();
 
 routes.use('/users', usersRouter);
 routes.use('/sessions', sessionsRouter);
-routes.use('/appointments', appointmentsRouter, slotsRouter);
+routes.use(
+  '/appointments',
+  appointmentsRouter,
+  slotsRouter,
+  appointmentsProfessionalsRouter,
+);
 routes.use(
   '/professionals',
   professionalSpecialtiesRouter,
