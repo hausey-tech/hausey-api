@@ -71,6 +71,8 @@ export default {
       get: professionalsPath.specialties.byTypeId,
     },
     '/appointments': appointmentsPath,
+    '/appointments/professionals/{professionalId}':
+      appointmentsPath.professionals,
     '/appointments/prices/{typeId}/{specialtyId}': appointmentsPath.prices,
     '/appointments/{id}': appointmentsPath.withId,
     '/appointments/slots/{uuid}': appointmentsPath.slots,

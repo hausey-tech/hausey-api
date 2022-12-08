@@ -262,4 +262,53 @@ export const appointmentsPath = {
       },
     },
   },
+  professionals: {
+    get: {
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      tags: ['Appointments'],
+      summary: 'Show appointments by professional id',
+      parameters: [
+        {
+          in: 'path',
+          name: 'professionalId',
+          schema: {
+            type: 'string',
+          },
+          required: true,
+          description: 'Professional UUID',
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Success',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: {
+                  $ref: '#/schemas/appointment',
+                },
+              },
+            },
+          },
+        },
+        400: {
+          $ref: '#/components/badRequest',
+        },
+        401: {
+          $ref: '#/components/unauthorized',
+        },
+        404: {
+          $ref: '#/components/notFound',
+        },
+        500: {
+          $ref: '#/components/serverError',
+        },
+      },
+    },
+  },
 };
