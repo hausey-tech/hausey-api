@@ -31,3 +31,7 @@ routes.use(
 routes.use('/patients', patientAnamnesesRouter);
 routes.use('/programs', programsRouter);
 routes.use('/plans', plansRouter);
+
+routes.get('/health-check', (req, res) => {
+  res.send({ status: 'ok' });
+});
