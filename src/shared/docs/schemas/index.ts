@@ -17,3 +17,5 @@ export * from './create-user-and-professional';
 export * from './professional';
 export * from './professional-specialty';
 export * from './patient';
+export * from './create-patient-anamnesis';
+export * from './patient-anamnesis';

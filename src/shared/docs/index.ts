@@ -4,6 +4,7 @@ import {
   appointmentsPath,
   professionalsPath,
   programsPath,
+  patientsPath,
 } from './paths';
 import {
   errorSchema,
@@ -24,6 +25,8 @@ import {
   createUserAndProfessionalSchema,
   professionalSchema,
   patientSchema,
+  createPatientAnamnesisSchema,
+  patientAnamnesisSchema,
 } from './schemas';
 import { badRequest, unauthorized, notFound, serverError } from './components';
 
@@ -51,6 +54,9 @@ export default {
       name: 'Users',
     },
     {
+      name: 'Patients',
+    },
+    {
       name: 'Professionals',
     },
     {
@@ -64,6 +70,7 @@ export default {
     '/sessions': sessionsPath,
     '/users': { ...usersPath, delete: undefined },
     '/users/{id}': { delete: usersPath.delete },
+    '/patients/anamneses': patientsPath.anamneses,
     '/professionals': professionalsPath,
     '/professionals/types': professionalsPath.types,
     '/professionals/specialties': professionalsPath.specialties,
@@ -96,6 +103,8 @@ export default {
     createUserAndProfessional: createUserAndProfessionalSchema,
     professional: professionalSchema,
     patient: patientSchema,
+    createPatientAnamnesis: createPatientAnamnesisSchema,
+    patientAnamnesis: patientAnamnesisSchema,
   },
   components: {
     securitySchemes: {
