@@ -43,7 +43,7 @@ export default {
   },
   servers: [
     {
-      url: '/api',
+      url: '/',
     },
   ],
   tags: [
