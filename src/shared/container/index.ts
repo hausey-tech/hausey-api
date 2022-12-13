@@ -20,6 +20,9 @@ import { PatientsRepository } from '../../modules/patients/repositories/patients
 import { IPatientProgramsRepository } from '../../modules/patients/contracts/repositories/patient-programs';
 import { PatientProgramsRepository } from '../../modules/patients/repositories/patient-programs';
 
+import { IPatientAnamnesesRepository } from '../../modules/patients/contracts/repositories/patient-anamneses';
+import { PatientAnamnesesRepository } from '../../modules/patients/repositories/patient-anamneses';
+
 import { IAppointmentsRepository } from '../../modules/appointments/contracts/repositories/appointments';
 import { AppointmentsRepository } from '../../modules/appointments/repositories/appointments';
 
@@ -62,6 +65,11 @@ container.registerSingleton<IPatientsRepository>(
 container.registerSingleton<IPatientProgramsRepository>(
   'PatientProgramsRepository',
   PatientProgramsRepository,
+);
+
+container.registerSingleton<IPatientAnamnesesRepository>(
+  'PatientAnamnesesRepository',
+  PatientAnamnesesRepository,
 );
 
 container.registerSingleton<IAppointmentsRepository>(

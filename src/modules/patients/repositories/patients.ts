@@ -17,4 +17,10 @@ export class PatientsRepository implements IPatientsRepository {
       relations: ['user', 'plan'],
     });
   }
+
+  public async findById(id: string): Promise<Patient | null> {
+    return this.ormRepository.findOne({
+      where: { id },
+    });
+  }
 }
