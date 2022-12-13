@@ -1,4 +1,4 @@
-import { Between, Repository, FindOptionsWhere, IsNull } from 'typeorm';
+import { Between, Repository, FindOptionsWhere, IsNull, Not } from 'typeorm';
 
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
 import { PostgresDataSource } from '../../../shared/typeorm';
@@ -60,6 +60,8 @@ export class AppointmentsRepository implements IAppointmentsRepository {
 
     if (withoutProfessional === 'true') {
       where.professionalId = IsNull();
+    } else if (withoutProfessional === 'false') {
+      where.professionalId = Not(IsNull());
     }
 
     return this.ormRepository.find({
