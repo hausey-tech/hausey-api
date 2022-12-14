@@ -2,8 +2,11 @@ import { celebrate } from 'celebrate';
 import { Router } from 'express';
 
 import { ensureAuthentication } from '../../users/middlewares/ensure-authentication';
-import { FindProfessionalAppointmentsSchema } from '../celebrate-schemas/professional';
 import { ProfessionalsController } from '../controllers/professional';
+import {
+  FindProfessionalAppointmentsSchema,
+  SetAppointmentProfessionalSchema,
+} from '../celebrate-schemas/professional';
 
 export const professionalsRouter = Router();
 const professionalsController = new ProfessionalsController();
@@ -13,4 +16,11 @@ professionalsRouter.get(
   ensureAuthentication,
   celebrate(FindProfessionalAppointmentsSchema),
   professionalsController.index,
+);
+
+professionalsRouter.post(
+  '/professionals',
+  ensureAuthentication,
+  celebrate(SetAppointmentProfessionalSchema),
+  professionalsController.setAppointmentProfessional,
 );
