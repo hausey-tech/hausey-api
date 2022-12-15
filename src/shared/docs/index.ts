@@ -5,6 +5,7 @@ import {
   professionalsPath,
   programsPath,
   patientsPath,
+  integrationsPath,
 } from './paths';
 import {
   errorSchema,
@@ -63,6 +64,9 @@ export default {
       name: 'Appointments',
     },
     {
+      name: 'Integrations',
+    },
+    {
       name: 'Programs',
     },
   ],
@@ -89,6 +93,7 @@ export default {
     '/appointments/{id}': appointmentsPath.withId,
     '/appointments/slots/{uuid}': appointmentsPath.slots,
     '/programs': programsPath,
+    '/integrations/twilio': integrationsPath.twilio,
   },
   schemas: {
     base: baseSchema,
