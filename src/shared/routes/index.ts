@@ -11,6 +11,7 @@ import { professionalsRouter } from '../../modules/professionals/routes/professi
 import { programsRouter } from '../../modules/programs/routes/programs';
 import { plansRouter } from '../../modules/plans/routes/plans';
 import { patientAnamnesesRouter } from '../../modules/patients/routes/patient-anamneses';
+import { twilioRouter } from '../../modules/integrations/routes/twilio';
 
 export const routes = Router();
 
@@ -31,6 +32,7 @@ routes.use(
 routes.use('/patients', patientAnamnesesRouter);
 routes.use('/programs', programsRouter);
 routes.use('/plans', plansRouter);
+routes.use('/integrations', twilioRouter);
 
 routes.get('/health-check', (req, res) => {
   res.send({ status: 'ok' });
