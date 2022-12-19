@@ -28,6 +28,8 @@ import {
   patientSchema,
   createPatientAnamnesisSchema,
   patientAnamnesisSchema,
+  createUserAndPatientSchema,
+  patientSessionSchema,
 } from './schemas';
 import { badRequest, unauthorized, notFound, serverError } from './components';
 
@@ -74,6 +76,7 @@ export default {
     '/sessions': sessionsPath,
     '/users': { ...usersPath, delete: undefined },
     '/users/{id}': { delete: usersPath.delete },
+    '/patients': patientsPath,
     '/patients/anamneses': patientsPath.anamneses,
     '/professionals': professionalsPath,
     '/professionals/types': professionalsPath.types,
@@ -115,6 +118,8 @@ export default {
     patient: patientSchema,
     createPatientAnamnesis: createPatientAnamnesisSchema,
     patientAnamnesis: patientAnamnesisSchema,
+    createUserAndPatient: createUserAndPatientSchema,
+    patientSession: patientSessionSchema,
   },
   components: {
     securitySchemes: {

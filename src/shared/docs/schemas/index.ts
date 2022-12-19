@@ -19,3 +19,5 @@ export * from './professional-specialty';
 export * from './patient';
 export * from './create-patient-anamnesis';
 export * from './patient-anamnesis';
+export * from './create-user-and-patient';
+export * from './patient-session';
