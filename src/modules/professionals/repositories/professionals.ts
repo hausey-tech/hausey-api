@@ -26,6 +26,7 @@ export class ProfessionalsRepository implements IProfessionalsRepository {
   public async findBySpecialtyId(id: string): Promise<Professional[]> {
     const professionals = this.ormRepository.find({
       where: { professionalSpecialtyId: id },
+      relations: ['user', 'professionalSpecialty', 'professionalType'],
     });
 
     return professionals;
@@ -34,6 +35,15 @@ export class ProfessionalsRepository implements IProfessionalsRepository {
   public async findByTypeId(id: string): Promise<Professional[]> {
     const professionals = this.ormRepository.find({
       where: { professionalTypeId: id },
+      relations: ['user', 'professionalSpecialty', 'professionalType'],
+    });
+
+    return professionals;
+  }
+
+  public async find(): Promise<Professional[]> {
+    const professionals = this.ormRepository.find({
+      relations: ['user', 'professionalSpecialty', 'professionalType'],
     });
 
     return professionals;

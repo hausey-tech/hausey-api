@@ -2,8 +2,21 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
 import { CreateUserAndProfessionalService } from '../services/create-user-and-professional';
+import { FindProfessionalsService } from '../services/find-professionals';
 
 export class ProfessionalsController {
+  public async index(request: Request, response: Response): Promise<Response> {
+    const payload = request.query;
+
+    const findProfessionalsService = container.resolve(
+      FindProfessionalsService,
+    );
+
+    const professionals = await findProfessionalsService.execute(payload);
+
+    return response.json(professionals);
+  }
+
   public async create(request: Request, response: Response): Promise<Response> {
     const payload = request.body;
 

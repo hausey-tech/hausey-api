@@ -14,3 +14,10 @@ export const CreateUserAndProfessionalSchema = {
     specialtyRegistration: Joi.string(),
   }),
 };
+
+export const FindProfessionalsSchema = {
+  [Segments.QUERY]: Joi.object().keys({
+    specialtyId: Joi.string(),
+    typeId: Joi.string(),
+  }),
+};
