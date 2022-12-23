@@ -97,7 +97,7 @@ export const appointmentsPath = {
         },
       ],
       tags: ['Appointments'],
-      summary: 'Show appointments by patient',
+      summary: 'Shows appointments by patient',
       responses: {
         200: {
           description: 'Success',
@@ -204,7 +204,7 @@ export const appointmentsPath = {
         },
       ],
       tags: ['Appointments'],
-      summary: 'Show appointment price based on type and specialty',
+      summary: 'Shows appointment price based on type and specialty',
       parameters: [
         {
           in: 'path',
@@ -262,7 +262,7 @@ export const appointmentsPath = {
         },
       ],
       tags: ['Appointments'],
-      summary: 'Show appointments by professional id',
+      summary: 'Shows appointments by professional id',
       parameters: [
         {
           in: 'path',
