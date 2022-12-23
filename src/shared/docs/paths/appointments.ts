@@ -89,7 +89,7 @@ export const appointmentsPath = {
       },
     },
   },
-  withId: {
+  patients: {
     get: {
       security: [
         {
@@ -97,25 +97,17 @@ export const appointmentsPath = {
         },
       ],
       tags: ['Appointments'],
-      summary: 'Show appointment infos',
-      parameters: [
-        {
-          in: 'path',
-          name: 'id',
-          schema: {
-            type: 'string',
-          },
-          required: true,
-          description: 'Appointment UUID',
-        },
-      ],
+      summary: 'Show appointments by patient',
       responses: {
         200: {
           description: 'Success',
           content: {
             'application/json': {
               schema: {
-                $ref: '#/schemas/appointment',
+                type: 'array',
+                items: {
+                  $ref: '#/schemas/appointment',
+                },
               },
             },
           },

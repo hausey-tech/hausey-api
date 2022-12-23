@@ -85,6 +85,7 @@ export default {
       get: professionalsPath.specialties.byTypeId,
     },
     '/appointments': appointmentsPath,
+    '/appointments/patients': appointmentsPath.patients,
     '/appointments/professionals/{professionalId}': {
       ...appointmentsPath.professionals,
       post: undefined,
@@ -93,7 +94,6 @@ export default {
       post: appointmentsPath.professionals.post,
     },
     '/appointments/prices/{typeId}/{specialtyId}': appointmentsPath.prices,
-    '/appointments/{id}': appointmentsPath.withId,
     '/appointments/slots/{uuid}': appointmentsPath.slots,
     '/programs': programsPath,
     '/integrations/twilio': integrationsPath.twilio,
