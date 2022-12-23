@@ -20,12 +20,6 @@ export class AppointmentsController {
     return response.json(appointments);
   }
 
-  public async read(request: Request, response: Response): Promise<Response> {
-    const { appointmentId } = request.params;
-
-    return response.json({ appointmentId });
-  }
-
   public async create(request: Request, response: Response): Promise<Response> {
     const { id } = request.user;
     const { professionalTypeId, professionalSpecialtyId, date } = request.body;

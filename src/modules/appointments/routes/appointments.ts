@@ -10,12 +10,6 @@ const appointmentsController = new AppointmentsController();
 
 appointmentsRouter.get('/', ensureAuthentication, appointmentsController.index);
 
-appointmentsRouter.get(
-  '/:appointmentId',
-  ensureAuthentication,
-  appointmentsController.read,
-);
-
 appointmentsRouter.post(
   '/',
   ensureAuthentication,
