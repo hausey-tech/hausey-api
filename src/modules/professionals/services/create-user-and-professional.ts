@@ -5,7 +5,9 @@ import { ICreateUserAndProfessionalDTO } from '../contracts/dtos/create-user-and
 import { IProfessionalTypesRepository } from '../contracts/repositories/professional-types';
 import { IProfessionalsRepository } from '../contracts/repositories/professionals';
 import { CreateUserService } from '../../users/services/create-user';
+import { CreateMemedUser } from '../../integrations/services/create-memed-user';
 import { Professional } from '../entities/professional';
+import { formatDate } from '../../../shared/utils/format-date';
 import { AppError } from '../../../shared/errors/app-error';
 
 @injectable()
@@ -86,7 +88,36 @@ export class CreateUserAndProfessionalService {
       specialtyRegistration,
     });
 
-    await this.professionalsRepository.save(professional);
+    const savedProfessional = await this.professionalsRepository.save(
+      professional,
+    );
+
+    try {
+      const createMemedUserService = container.resolve(CreateMemedUser);
+      const splittedName = user.name.split(' ');
+      const memedUser = await createMemedUserService.execute({
+        type: 'usuarios',
+        attributes: {
+          external_id: savedProfessional.id,
+          nome: splittedName[0],
+          sobrenome: splittedName[splittedName.length - 1],
+          data_nascimento: formatDate(user.birthdate.toString()),
+          cpf: user.cpf,
+          uf: savedProfessional.registrationUf,
+          crm: savedProfessional.registration,
+          email: user.email,
+        },
+      });
+      savedProfessional.memedStatus = memedUser?.user?.status;
+    } catch (err) {
+      savedProfessional.memedStatus = 'Erro ao criar usuário';
+      console.error(
+        'Erro ao criar usuário na Memed',
+        err?.response?.data?.errors[0].detail,
+      );
+    }
+
+    await this.professionalsRepository.save(savedProfessional);
 
     return this.professionalsRepository.findByUserId(user.id);
   }

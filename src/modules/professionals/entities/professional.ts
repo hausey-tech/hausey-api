@@ -33,4 +33,7 @@ export class Professional extends BaseEntity {
   @ManyToOne(() => ProfessionalType)
   @JoinColumn({ name: 'professional_type_id' })
   professionalType: ProfessionalType;
+
+  @Column('varchar', { name: 'memed_status', nullable: true })
+  memedStatus: string;
 }
