@@ -30,6 +30,8 @@ import {
   patientAnamnesisSchema,
   createUserAndPatientSchema,
   patientSessionSchema,
+  memedUserSchema,
+  createMemedUserSchema,
 } from './schemas';
 import { badRequest, unauthorized, notFound, serverError } from './components';
 
@@ -97,6 +99,14 @@ export default {
     '/appointments/slots/{uuid}': appointmentsPath.slots,
     '/programs': programsPath,
     '/integrations/twilio': integrationsPath.twilio,
+    '/integrations/memed/prescriptions/users': {
+      ...integrationsPath.memed.prescriptions.users,
+      get: undefined,
+    },
+    '/integrations/memed/prescriptions/users/{token}': {
+      get: integrationsPath.memed.prescriptions.users.get,
+    },
+    '/integrations/memed/users/{token}': integrationsPath.memed.users,
   },
   schemas: {
     base: baseSchema,
@@ -120,6 +130,8 @@ export default {
     patientAnamnesis: patientAnamnesisSchema,
     createUserAndPatient: createUserAndPatientSchema,
     patientSession: patientSessionSchema,
+    memedUser: memedUserSchema,
+    createMemedUser: createMemedUserSchema,
   },
   components: {
     securitySchemes: {

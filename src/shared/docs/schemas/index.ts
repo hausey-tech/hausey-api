@@ -21,3 +21,5 @@ export * from './create-patient-anamnesis';
 export * from './patient-anamnesis';
 export * from './create-user-and-patient';
 export * from './patient-session';
+export * from './memed-user';
+export * from './create-memed-user';
