@@ -31,6 +31,9 @@ export const createUserAndProfessionalSchema = {
     specialtyRegistration: {
       type: 'string',
     },
+    password: {
+      type: 'string',
+    },
   },
   required: [
     'name',

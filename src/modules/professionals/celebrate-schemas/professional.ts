@@ -12,6 +12,7 @@ export const CreateUserAndProfessionalSchema = {
     phoneNumber: Joi.string().required(),
     birthdate: Joi.string().required(),
     specialtyRegistration: Joi.string(),
+    password: Joi.string(),
   }),
 };
 

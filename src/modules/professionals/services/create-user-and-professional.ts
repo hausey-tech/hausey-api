@@ -37,6 +37,7 @@ export class CreateUserAndProfessionalService {
       phoneNumber,
       birthdate,
       specialtyRegistration,
+      password,
     } = payload;
 
     const professionalType = await this.professionalTypesRepository.findById(
@@ -68,6 +69,7 @@ export class CreateUserAndProfessionalService {
       cpf,
       phoneNumber,
       birthdate,
+      password,
     });
 
     const checkProfessionalExists =

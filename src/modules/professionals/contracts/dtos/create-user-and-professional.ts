@@ -9,4 +9,5 @@ export interface ICreateUserAndProfessionalDTO {
   phoneNumber: string;
   birthdate: string;
   specialtyRegistration: string;
+  password: string;
 }
