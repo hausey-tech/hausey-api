@@ -7,9 +7,19 @@ export const memedRouter = Router();
 const memedController = new MemedController();
 
 memedRouter.get(
-  '/memed/users/:token',
+  '/memed/prescriptions/users/:token',
   ensureAuthentication,
   memedController.search,
 );
 
-memedRouter.post('/memed/users', ensureAuthentication, memedController.create);
+memedRouter.post(
+  '/memed/prescriptions/users',
+  ensureAuthentication,
+  memedController.create,
+);
+
+memedRouter.get(
+  '/memed/users/:token',
+  ensureAuthentication,
+  memedController.getUserByToken,
+);
