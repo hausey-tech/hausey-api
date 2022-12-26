@@ -194,4 +194,47 @@ export const integrationsPath = {
       },
     },
   },
+  s3: {
+    get: {
+      // security: [
+      //   {
+      //     bearerAuth: [],
+      //   },
+      // ],
+      tags: ['Integrations'],
+      summary: 'Shows a file from S3',
+      parameters: [
+        {
+          in: 'path',
+          name: 'key',
+          schema: {
+            type: 'string',
+          },
+          required: true,
+          description: 'Key of the file in the S3 bucket',
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Success',
+          content: {
+            'image/*': {},
+            'application/pdf': {},
+          },
+        },
+        400: {
+          $ref: '#/components/badRequest',
+        },
+        401: {
+          $ref: '#/components/unauthorized',
+        },
+        404: {
+          $ref: '#/components/notFound',
+        },
+        500: {
+          $ref: '#/components/serverError',
+        },
+      },
+    },
+  },
 };

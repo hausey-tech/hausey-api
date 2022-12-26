@@ -97,6 +97,7 @@ export default {
     },
     '/appointments/prices/{typeId}/{specialtyId}': appointmentsPath.prices,
     '/appointments/slots/{uuid}': appointmentsPath.slots,
+    '/appointments/{appointmentId}/files': appointmentsPath.files,
     '/programs': programsPath,
     '/integrations/twilio': integrationsPath.twilio,
     '/integrations/memed/prescriptions/users': {
@@ -107,6 +108,7 @@ export default {
       get: integrationsPath.memed.prescriptions.users.get,
     },
     '/integrations/memed/users/{token}': integrationsPath.memed.users,
+    '/integrations/s3/files/{key}': integrationsPath.s3,
   },
   schemas: {
     base: baseSchema,
