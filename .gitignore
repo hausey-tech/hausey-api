@@ -6,3 +6,4 @@ prod.env
 dist
 .vscode/*
 !.vscode/launch.json
+tmp

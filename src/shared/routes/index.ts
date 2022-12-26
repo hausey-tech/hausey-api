@@ -21,6 +21,7 @@ import { patientAnamnesesRouter } from '../../modules/patients/routes/patient-an
 
 import { twilioRouter } from '../../modules/integrations/routes/twilio';
 import { memedRouter } from '../../modules/integrations/routes/memed';
+import { s3Router } from '../../modules/integrations/routes/s3';
 
 export const routes = Router();
 
@@ -42,7 +43,7 @@ routes.use(
 routes.use('/patients', patientsRouter, patientAnamnesesRouter);
 routes.use('/programs', programsRouter);
 routes.use('/plans', plansRouter);
-routes.use('/integrations', twilioRouter, memedRouter);
+routes.use('/integrations', twilioRouter, memedRouter, s3Router);
 
 routes.get('/health-check', (req, res) => {
   res.send({ status: 'ok' });
