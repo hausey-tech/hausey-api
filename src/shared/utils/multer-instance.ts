@@ -17,7 +17,7 @@ const fileFilter = (
 };
 
 const limits: multer.Options['limits'] = {
-  fileSize: 1000000,
+  fileSize: process.env.AWS_MAX_FILE_SIZE * 1024 * 1024,
   files: 5,
 };
 

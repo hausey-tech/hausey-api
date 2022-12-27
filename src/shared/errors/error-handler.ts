@@ -33,7 +33,7 @@ export function errorHandler(
     if (err.code === 'LIMIT_FILE_SIZE') {
       return response.status(400).json({
         status: 'error',
-        message: 'Arquivo muito grande, o tamanho máximo permitido é de 1 MB!',
+        message: `Arquivo muito grande, o tamanho máximo permitido é de ${process.env.AWS_MAX_FILE_SIZE} MB!`,
       });
     }
 
