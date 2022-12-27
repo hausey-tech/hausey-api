@@ -1,12 +1,10 @@
 import { Router } from 'express';
 import { celebrate } from 'celebrate';
-import multer from 'multer';
 
+import { CreateAppointmentSchema } from '../celebrate-schemas/appointment';
 import { AppointmentsController } from '../controllers/appointments';
 import { ensureAuthentication } from '../../users/middlewares/ensure-authentication';
-import { CreateAppointmentSchema } from '../celebrate-schemas/appointment';
-
-const upload = multer({ dest: 'tmp/' });
+import { upload } from '../../../shared/utils/multer-instance';
 
 export const appointmentsRouter = Router();
 const appointmentsController = new AppointmentsController();
@@ -29,7 +27,7 @@ appointmentsRouter.get(
 appointmentsRouter.post(
   '/:appointmentId/files',
   ensureAuthentication,
-  upload.single('file'),
+  upload.array('file'),
   appointmentsController.uploadFiles,
 );
 

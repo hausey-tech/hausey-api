@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { QueryFailedError } from 'typeorm';
 import { isCelebrateError } from 'celebrate';
+import multer from 'multer';
 
 import { AppError } from './app-error';
 
@@ -26,6 +27,29 @@ export function errorHandler(
       status: 'error',
       message: error?.message,
     });
+  }
+
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      return response.status(400).json({
+        status: 'error',
+        message: 'Arquivo muito grande, o tamanho máximo permitido é de 1 MB!',
+      });
+    }
+
+    if (err.code === 'LIMIT_FILE_COUNT') {
+      return response.status(400).json({
+        status: 'error',
+        message: 'Podem ser enviados apenas 5 arquivos por vez!',
+      });
+    }
+
+    if (err.code === 'LIMIT_UNEXPECTED_FILE') {
+      return response.status(400).json({
+        status: 'error',
+        message: 'Apenas imagens e PDFs são permitidos!',
+      });
+    }
   }
 
   if (err instanceof QueryFailedError) {

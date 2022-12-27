@@ -19,10 +19,14 @@ export class ListFilesFromS3 {
 
     try {
       const response = await s3Instance.send(command);
-      const files = response?.Contents.map(item => ({
-        name: 'teste.pdf',
-        url: `${baseUrl}/integrations/s3/files/${item.Key}`,
-      }));
+      const files = response?.Contents.map(item => {
+        const splittedKey = item.Key.split('/');
+        const name = splittedKey[splittedKey.length - 1].slice(37);
+        return {
+          name,
+          url: `${baseUrl}/integrations/s3/files/${item.Key}`,
+        };
+      });
       return files;
     } catch (err) {
       throw new AppError(

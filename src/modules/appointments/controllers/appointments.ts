@@ -64,12 +64,16 @@ export class AppointmentsController {
     request: Request,
     response: Response,
   ): Promise<Response> {
-    const { file } = request;
+    const { files } = request;
+
     const { appointmentId } = request.params;
 
     const uploadFileService = container.resolve(UploadFileToS3);
 
-    await uploadFileService.execute(file, `appointments/${appointmentId}`);
+    await uploadFileService.execute(
+      files as Express.Multer.File[],
+      `appointments/${appointmentId}`,
+    );
 
     return response.json({ message: 'Arquivo(s) enviado(s) com sucesso!' });
   }
