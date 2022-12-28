@@ -18,6 +18,7 @@ import { plansRouter } from '../../modules/plans/routes/plans';
 
 import { patientsRouter } from '../../modules/patients/routes/patients';
 import { patientAnamnesesRouter } from '../../modules/patients/routes/patient-anamneses';
+import { patientPrimaryDiagnosesRouter } from '../../modules/patients/routes/patient-primary-diagnoses';
 
 import { twilioRouter } from '../../modules/integrations/routes/twilio';
 import { memedRouter } from '../../modules/integrations/routes/memed';
@@ -40,7 +41,12 @@ routes.use(
   professionalTypesRouter,
   professionalsRouter,
 );
-routes.use('/patients', patientsRouter, patientAnamnesesRouter);
+routes.use(
+  '/patients',
+  patientsRouter,
+  patientAnamnesesRouter,
+  patientPrimaryDiagnosesRouter,
+);
 routes.use('/programs', programsRouter);
 routes.use('/plans', plansRouter);
 routes.use('/integrations', twilioRouter, memedRouter, s3Router);
