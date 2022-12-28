@@ -80,6 +80,7 @@ export default {
     '/users/{id}': { delete: usersPath.delete },
     '/patients': patientsPath,
     '/patients/anamneses': patientsPath.anamneses,
+    '/patients/primary-diagnoses': patientsPath.primaryDiagnoses,
     '/professionals': professionalsPath,
     '/professionals/types': professionalsPath.types,
     '/professionals/specialties': professionalsPath.specialties,
