@@ -1,16 +1,16 @@
 import { injectable, inject } from 'tsyringe';
 
-import { IPatientAnamnesesRepository } from '../contracts/repositories/patient-anamneses';
+import { IPatientPrimaryDiagnosesRepository } from '../contracts/repositories/patient-primary-diagnoses';
+import { PatientPrimaryDiagnosis } from '../entities/patient-primary-diagnosis';
 import { IPatientsRepository } from '../contracts/repositories/patients';
-import { PatientAnamnesis } from '../entities/patient-anamnesis';
 import { AppError } from '../../../shared/errors/app-error';
 import { Patient } from '../entities/patient';
 
 @injectable()
-export class ListPatientAnamnesesService {
+export class ListPatientPrimaryDiagnosesService {
   constructor(
-    @inject('PatientAnamnesesRepository')
-    private patientAnamnesesRepository: IPatientAnamnesesRepository,
+    @inject('PatientPrimaryDiagnosesRepository')
+    private patientPrimaryDiagnosesRepository: IPatientPrimaryDiagnosesRepository,
 
     @inject('PatientsRepository')
     private patientsRepository: IPatientsRepository,
@@ -19,7 +19,7 @@ export class ListPatientAnamnesesService {
   public async execute(payload: {
     id: string;
     type: 'patient' | 'user';
-  }): Promise<PatientAnamnesis[]> {
+  }): Promise<PatientPrimaryDiagnosis[]> {
     const { id, type } = payload;
     let patient: Patient;
 
@@ -35,6 +35,6 @@ export class ListPatientAnamnesesService {
       );
     }
 
-    return this.patientAnamnesesRepository.findByPatientId(patient.id);
+    return this.patientPrimaryDiagnosesRepository.findByPatientId(patient.id);
   }
 }
