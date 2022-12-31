@@ -13,7 +13,11 @@ export class PatientAnamnesesRepository implements IPatientAnamnesesRepository {
   }
 
   public async findByPatientId(patientId: string): Promise<PatientAnamnesis[]> {
-    return this.ormRepository.find({ where: { patientId } });
+    return this.ormRepository.find({
+      where: { patientId },
+      order: { createdAt: 'desc' },
+      relations: ['appointment'],
+    });
   }
 
   public async create(
