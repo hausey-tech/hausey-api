@@ -37,6 +37,53 @@ export const patientsPath = {
     },
   },
   anamneses: {
+    get: {
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      tags: ['Patients'],
+      summary: 'Shows all patient anamneses',
+      parameters: [
+        {
+          in: 'path',
+          name: 'patientId',
+          schema: {
+            type: 'string',
+          },
+          required: false,
+          description: 'Patient id',
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Success',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: {
+                  $ref: '#/schemas/patientAnamnesis',
+                },
+              },
+            },
+          },
+          400: {
+            $ref: '#/components/badRequest',
+          },
+          401: {
+            $ref: '#/components/unauthorized',
+          },
+          404: {
+            $ref: '#/components/notFound',
+          },
+          500: {
+            $ref: '#/components/serverError',
+          },
+        },
+      },
+    },
     post: {
       security: [
         {
