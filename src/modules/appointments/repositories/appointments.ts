@@ -74,6 +74,8 @@ export class AppointmentsRepository implements IAppointmentsRepository {
         'professionalSpecialty',
         'professional',
         'professional.user',
+        'anamnesis',
+        'primaryDiagnosis',
       ],
     });
   }
@@ -91,6 +93,8 @@ export class AppointmentsRepository implements IAppointmentsRepository {
         'professionalSpecialty',
         'professional',
         'professional.user',
+        'anamnesis',
+        'primaryDiagnosis',
       ],
     });
   }
@@ -106,6 +110,8 @@ export class AppointmentsRepository implements IAppointmentsRepository {
         'professionalSpecialty',
         'professional',
         'professional.user',
+        'anamnesis',
+        'primaryDiagnosis',
       ],
     });
   }

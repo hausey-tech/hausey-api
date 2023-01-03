@@ -1,10 +1,12 @@
-import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, OneToOne } from 'typeorm';
 
 import { Patient } from '../../patients/entities/patient';
 import { ProfessionalType } from '../../professionals/entities/professional-type';
 import { ProfessionalSpecialty } from '../../professionals/entities/professional-specialty';
 import { Professional } from '../../professionals/entities/professional';
 import { BaseEntity } from '../../../shared/typeorm/entities/base';
+import { Anamnesis } from './anamnesis';
+import { PrimaryDiagnosis } from './primary-diagnosis';
 
 @Entity('appointments')
 export class Appointment extends BaseEntity {
@@ -44,4 +46,18 @@ export class Appointment extends BaseEntity {
 
   // @Column('int', { name: 'payment_id' })
   // paymentId: number;
+
+  @Column('varchar', { name: 'anamnesis_id', nullable: true })
+  anamnesisId: string;
+
+  @OneToOne(() => Anamnesis)
+  @JoinColumn({ name: 'anamnesis_id' })
+  anamnesis: Anamnesis;
+
+  @Column('varchar', { name: 'primary_diagnosis_id', nullable: true })
+  primaryDiagnosisId: string;
+
+  @OneToOne(() => PrimaryDiagnosis)
+  @JoinColumn({ name: 'primary_diagnosis_id' })
+  primaryDiagnosis: PrimaryDiagnosis;
 }

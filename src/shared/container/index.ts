@@ -20,11 +20,11 @@ import { PatientsRepository } from '../../modules/patients/repositories/patients
 import { IPatientProgramsRepository } from '../../modules/patients/contracts/repositories/patient-programs';
 import { PatientProgramsRepository } from '../../modules/patients/repositories/patient-programs';
 
-import { IPatientAnamnesesRepository } from '../../modules/patients/contracts/repositories/patient-anamneses';
-import { PatientAnamnesesRepository } from '../../modules/patients/repositories/patient-anamneses';
+import { IAnamnesesRepository } from '../../modules/appointments/contracts/repositories/anamneses';
+import { AnamnesesRepository } from '../../modules/appointments/repositories/anamneses';
 
-import { IPatientPrimaryDiagnosesRepository } from '../../modules/patients/contracts/repositories/patient-primary-diagnoses';
-import { PatientPrimaryDiagnosesRepository } from '../../modules/patients/repositories/patient-primary-diagnoses';
+import { IPrimaryDiagnosesRepository } from '../../modules/appointments/contracts/repositories/primary-diagnoses';
+import { PrimaryDiagnosesRepository } from '../../modules/appointments/repositories/primary-diagnoses';
 
 import { IAppointmentsRepository } from '../../modules/appointments/contracts/repositories/appointments';
 import { AppointmentsRepository } from '../../modules/appointments/repositories/appointments';
@@ -70,14 +70,14 @@ container.registerSingleton<IPatientProgramsRepository>(
   PatientProgramsRepository,
 );
 
-container.registerSingleton<IPatientAnamnesesRepository>(
-  'PatientAnamnesesRepository',
-  PatientAnamnesesRepository,
+container.registerSingleton<IAnamnesesRepository>(
+  'AnamnesesRepository',
+  AnamnesesRepository,
 );
 
-container.registerSingleton<IPatientPrimaryDiagnosesRepository>(
-  'PatientPrimaryDiagnosesRepository',
-  PatientPrimaryDiagnosesRepository,
+container.registerSingleton<IPrimaryDiagnosesRepository>(
+  'PrimaryDiagnosesRepository',
+  PrimaryDiagnosesRepository,
 );
 
 container.registerSingleton<IAppointmentsRepository>(

@@ -7,6 +7,8 @@ import { appointmentsRouter } from '../../modules/appointments/routes/appointmen
 import { slotsRouter } from '../../modules/appointments/routes/slots';
 import { professionalsRouter as appointmentsProfessionalsRouter } from '../../modules/appointments/routes/professionals';
 import { patientsRouter as appointmentsPatientsRouter } from '../../modules/appointments/routes/patients';
+import { anamnesesRouter } from '../../modules/appointments/routes/anamneses';
+import { primaryDiagnosesRouter } from '../../modules/appointments/routes/primary-diagnoses';
 
 import { professionalSpecialtiesRouter } from '../../modules/professionals/routes/professional-specialties';
 import { professionalTypesRouter } from '../../modules/professionals/routes/professional-types';
@@ -17,8 +19,6 @@ import { programsRouter } from '../../modules/programs/routes/programs';
 import { plansRouter } from '../../modules/plans/routes/plans';
 
 import { patientsRouter } from '../../modules/patients/routes/patients';
-import { patientAnamnesesRouter } from '../../modules/patients/routes/patient-anamneses';
-import { patientPrimaryDiagnosesRouter } from '../../modules/patients/routes/patient-primary-diagnoses';
 
 import { twilioRouter } from '../../modules/integrations/routes/twilio';
 import { memedRouter } from '../../modules/integrations/routes/memed';
@@ -34,6 +34,8 @@ routes.use(
   slotsRouter,
   appointmentsProfessionalsRouter,
   appointmentsPatientsRouter,
+  anamnesesRouter,
+  primaryDiagnosesRouter,
 );
 routes.use(
   '/professionals',
@@ -41,12 +43,7 @@ routes.use(
   professionalTypesRouter,
   professionalsRouter,
 );
-routes.use(
-  '/patients',
-  patientsRouter,
-  patientAnamnesesRouter,
-  patientPrimaryDiagnosesRouter,
-);
+routes.use('/patients', patientsRouter);
 routes.use('/programs', programsRouter);
 routes.use('/plans', plansRouter);
 routes.use('/integrations', twilioRouter, memedRouter, s3Router);
