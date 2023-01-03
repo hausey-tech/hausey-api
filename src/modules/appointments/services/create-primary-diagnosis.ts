@@ -32,9 +32,12 @@ export class CreatePrimaryDiagnosisService {
     }
 
     if (appointment.primaryDiagnosisId) {
-      throw new AppError(
-        'Já existe um diagnóstico primário para esse agendamento, edite-o!',
+      const primaryDiagnosis = await this.primaryDiagnosesRepository.update(
+        appointment.primaryDiagnosisId,
+        description,
       );
+
+      return primaryDiagnosis;
     }
 
     const primaryDiagnosis = await this.primaryDiagnosesRepository.save(

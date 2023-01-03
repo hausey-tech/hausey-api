@@ -30,9 +30,12 @@ export class CreateAnamnesisService {
     }
 
     if (appointment.anamnesisId) {
-      throw new AppError(
-        'Já existe uma anamnese para esse agendamento, edite-a!',
+      const anamnesis = await this.anamnesesRepository.update(
+        appointment.anamnesisId,
+        description,
       );
+
+      return anamnesis;
     }
 
     const anamnesis = await this.anamnesesRepository.save(
