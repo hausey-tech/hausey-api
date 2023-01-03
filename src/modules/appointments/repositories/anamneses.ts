@@ -19,4 +19,14 @@ export class AnamnesesRepository implements IAnamnesesRepository {
   public async save(anamnesis: Anamnesis): Promise<Anamnesis> {
     return this.ormRepository.save(anamnesis);
   }
+
+  public async update(id: string, description: string): Promise<Anamnesis> {
+    const anamnesis = await this.findById(id);
+    anamnesis.description = description;
+    return this.ormRepository.save(anamnesis);
+  }
+
+  public async findById(id: string): Promise<Anamnesis> {
+    return this.ormRepository.findOne({ where: { id } });
+  }
 }

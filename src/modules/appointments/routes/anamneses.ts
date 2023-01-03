@@ -14,3 +14,10 @@ anamnesesRouter.post(
   celebrate(CreateAnamnesisSchema),
   anamnesesController.create,
 );
+
+anamnesesRouter.patch(
+  '/anamneses',
+  ensureAuthentication,
+  celebrate(CreateAnamnesisSchema),
+  anamnesesController.update,
+);

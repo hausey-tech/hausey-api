@@ -6,4 +6,6 @@ export interface IPrimaryDiagnosesRepository {
     primaryDiagnosis: ICreatePrimaryDiagnosisDTO,
   ): Promise<PrimaryDiagnosis>;
   save(primaryDiagnosis: PrimaryDiagnosis): Promise<PrimaryDiagnosis>;
+  update(id: string, description: string): Promise<PrimaryDiagnosis>;
+  findById(id: string): Promise<PrimaryDiagnosis>;
 }

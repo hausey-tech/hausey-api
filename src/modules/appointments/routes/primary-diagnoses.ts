@@ -14,3 +14,10 @@ primaryDiagnosesRouter.post(
   celebrate(CreatePrimaryDiagnosisSchema),
   primaryDiagnosesController.create,
 );
+
+primaryDiagnosesRouter.patch(
+  '/primary-diagnoses',
+  ensureAuthentication,
+  celebrate(CreatePrimaryDiagnosisSchema),
+  primaryDiagnosesController.update,
+);

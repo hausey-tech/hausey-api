@@ -23,4 +23,17 @@ export class PrimaryDiagnosesRepository implements IPrimaryDiagnosesRepository {
   ): Promise<PrimaryDiagnosis> {
     return this.ormRepository.save(primaryDiagnosis);
   }
+
+  public async update(
+    id: string,
+    description: string,
+  ): Promise<PrimaryDiagnosis> {
+    const primaryDiagnosis = await this.findById(id);
+    primaryDiagnosis.description = description;
+    return this.ormRepository.save(primaryDiagnosis);
+  }
+
+  public async findById(id: string): Promise<PrimaryDiagnosis> {
+    return this.ormRepository.findOne({ where: { id } });
+  }
 }
