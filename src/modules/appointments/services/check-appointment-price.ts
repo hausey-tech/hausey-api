@@ -45,11 +45,11 @@ export class CheckAppointmentPrice {
   ) {}
 
   public async execute(
-    userId: string,
+    patientId: string,
     professionalTypeId: string,
     professionalSpecialtyId: string,
   ): Promise<IPrices> {
-    const patient = await this.patientsRepository.findByUserId(userId);
+    const patient = await this.patientsRepository.findById(patientId);
 
     if (!patient) {
       throw new AppError(

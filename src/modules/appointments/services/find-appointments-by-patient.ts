@@ -15,8 +15,8 @@ export class FindAppointmentsByPatientService {
     private patientsRepository: IPatientsRepository,
   ) {}
 
-  public async execute(userId: string): Promise<Appointment[]> {
-    const patient = await this.patientsRepository.findByUserId(userId);
+  public async execute(id: string): Promise<Appointment[]> {
+    const patient = await this.patientsRepository.findById(id);
 
     if (!patient) {
       throw new AppError(

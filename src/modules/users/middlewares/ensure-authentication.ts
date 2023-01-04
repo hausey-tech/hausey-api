@@ -6,6 +6,7 @@ import { AppError } from '../../../shared/errors/app-error';
 
 interface ITokenPayload {
   id: string;
+  role: string;
   iat: number;
   exp: number;
 }
@@ -28,9 +29,9 @@ export const ensureAuthentication = (
   try {
     const decoded = verify(token, secret);
 
-    const { id } = decoded as ITokenPayload;
+    const { id, role } = decoded as ITokenPayload;
 
-    request.user = { id };
+    request.user = { id, role };
 
     return next();
   } catch {

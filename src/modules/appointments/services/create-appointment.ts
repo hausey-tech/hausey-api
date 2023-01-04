@@ -20,7 +20,7 @@ export class CreateAppointmentService {
     const { patientId, professionalTypeId, professionalSpecialtyId, date } =
       payload;
 
-    const patient = await this.patientsRepository.findByUserId(patientId);
+    const patient = await this.patientsRepository.findById(patientId);
 
     if (!patient) {
       throw new AppError(

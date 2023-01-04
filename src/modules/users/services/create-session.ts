@@ -60,18 +60,8 @@ export class CreateSessionService {
       throw new AppError('E-mail ou senha inválido(s)!', 401);
     }
 
-    const { secret, expiresIn, refreshExpiresIn } = authConfig.jwt;
-
-    const accessToken = sign({ id: user.id }, secret, {
-      expiresIn,
-    });
-    const refreshToken = sign({ id: user.id }, secret, {
-      expiresIn: refreshExpiresIn,
-    });
-
-    delete user.password;
-
     let data: IRoles;
+    let id: string;
 
     switch (role) {
       case 'professional':
@@ -80,38 +70,51 @@ export class CreateSessionService {
             user.id,
           ),
         };
-
         if (!data.professional) {
           throw new AppError(
             'Não há nenhum profissional vinculado a este usuário!',
           );
         }
+        id = data.professional.id;
         break;
 
       case 'patient':
         data = {
           patient: await this.patientsRepository.findByUserId(user.id),
         };
-
         if (!data.patient) {
           throw new AppError(
             'Não há nenhum paciente vinculado a este usuário!',
           );
         }
+        id = data.patient.id;
         break;
 
       case 'manager':
         data = {
           manager: {},
         };
+        // if (!data.manager) {
+        //   throw new AppError(
+        //     'Não há nenhuma secretária vinculada a este usuário!',
+        //   );
+        // }
+        // id = data.manager.id;
         break;
 
       default:
-        data = {
-          user,
-        };
-        break;
+        throw new AppError('Informe a função do usuário para efetuar o login!');
     }
+
+    const { secret, expiresIn, refreshExpiresIn } = authConfig.jwt;
+
+    const accessToken = sign({ id, role }, secret, {
+      expiresIn,
+    });
+
+    const refreshToken = sign({ id, role }, secret, {
+      expiresIn: refreshExpiresIn,
+    });
 
     return {
       accessToken,
