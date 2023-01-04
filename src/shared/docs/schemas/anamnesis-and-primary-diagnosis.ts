@@ -1,4 +1,4 @@
-export const patientAnamnesisSchema = {
+export const anamnesisAndPrimaryDiagnosisSchema = {
   allOf: [
     {
       $ref: '#/schemas/base',
@@ -6,12 +6,6 @@ export const patientAnamnesisSchema = {
     {
       type: 'object',
       properties: {
-        patientId: {
-          type: 'string',
-        },
-        appointmentId: {
-          type: 'string',
-        },
         description: {
           type: 'string',
         },
