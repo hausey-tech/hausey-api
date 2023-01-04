@@ -100,7 +100,7 @@ export const appointmentsPath = {
       summary: 'Shows appointments by patient',
       parameters: [
         {
-          in: 'path',
+          in: 'query',
           name: 'patientId',
           schema: {
             type: 'string',
