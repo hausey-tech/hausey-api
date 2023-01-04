@@ -98,6 +98,18 @@ export const appointmentsPath = {
       ],
       tags: ['Appointments'],
       summary: 'Shows appointments by patient',
+      parameters: [
+        {
+          in: 'path',
+          name: 'patientId',
+          schema: {
+            type: 'string',
+          },
+          required: false,
+          description:
+            'The patient id must be sent if the access token is from a non-patient user',
+        },
+      ],
       responses: {
         200: {
           description: 'Success',
