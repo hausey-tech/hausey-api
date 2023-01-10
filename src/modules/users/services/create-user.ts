@@ -60,10 +60,12 @@ export class CreateUserService {
 
     const user = await this.usersRepository.create({
       ...payload,
-      birthdate: formatDate({
-        date: payload.birthdate,
-        format: 'dd-MM-yyyy to yyyy-MM-dd',
-      }),
+      birthdate: payload.birthdate
+        ? formatDate({
+            date: payload.birthdate,
+            format: 'dd-MM-yyyy to yyyy-MM-dd',
+          })
+        : undefined,
       password: hashedPassword,
     });
 
