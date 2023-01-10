@@ -1,6 +1,6 @@
 interface Props {
   date: string;
-  format: 'yyyy-MM-dd to dd/MM/yyyy' | 'dd-MM-yyyy to yyyy-MM-dd';
+  format: 'yyyy-MM-dd to dd/MM/yyyy' | 'dd/MM/yyyy to yyyy-MM-dd';
 }
 
 export const formatDate = ({ date, format }: Props): string => {
@@ -16,8 +16,8 @@ export const formatDate = ({ date, format }: Props): string => {
 
       return `${day}/${month}/${year}`;
 
-    case 'dd-MM-yyyy to yyyy-MM-dd':
-      splittedDate = date.split('-');
+    case 'dd/MM/yyyy to yyyy-MM-dd':
+      splittedDate = date.split('/');
 
       [day, month, year] = splittedDate;
 
