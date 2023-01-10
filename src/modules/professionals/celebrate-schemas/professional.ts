@@ -10,7 +10,12 @@ export const CreateUserAndProfessionalSchema = {
     registrationUf: Joi.string().length(2).required(),
     registration: Joi.string().required(),
     phoneNumber: Joi.string().required(),
-    birthdate: Joi.string().required(),
+    birthdate: Joi.string()
+      .required()
+      // eslint-disable-next-line no-useless-escape
+      .regex(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, {
+        name: 'YYYY-MM-DD',
+      }),
     specialtyRegistration: Joi.string(),
     password: Joi.string(),
   }),
