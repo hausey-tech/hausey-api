@@ -23,3 +23,9 @@ memedRouter.get(
   ensureAuthentication,
   memedController.getUserByToken,
 );
+
+memedRouter.get(
+  '/memed/specialties',
+  ensureAuthentication,
+  memedController.listSpecialties,
+);

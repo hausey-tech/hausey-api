@@ -5,6 +5,7 @@ import { AppError } from '../../../shared/errors/app-error';
 import { GetMemedUserByToken } from '../services/get-memed-user-by-token';
 import { CreateMemedUser } from '../services/create-memed-user';
 import { SearchMemedUser } from '../services/search-memed-user';
+import { ListMemedSpecialties } from '../services/list-memed-specialties';
 
 export class MemedController {
   public async create(request: Request, response: Response): Promise<Response> {
@@ -56,6 +57,26 @@ export class MemedController {
     try {
       const user = await getMemedUserByTokenService.execute(token);
       return response.json(user);
+    } catch (err) {
+      const error =
+        err?.response?.data?.errors.length > 0
+          ? err?.response?.data?.errors[0]?.detail
+          : err.message;
+      const statusCode = err?.response?.status;
+
+      throw new AppError(error, statusCode);
+    }
+  }
+
+  public async listSpecialties(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const listMemedSpecialtiesService = container.resolve(ListMemedSpecialties);
+
+    try {
+      const specialties = await listMemedSpecialtiesService.execute();
+      return response.json(specialties);
     } catch (err) {
       const error =
         err?.response?.data?.errors.length > 0

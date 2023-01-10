@@ -20,4 +20,8 @@ export class ProfessionalTypesRepository
   public async findById(id: string): Promise<ProfessionalType> {
     return this.ormRepository.findOne({ where: { id } });
   }
+
+  public async findByName(name: string): Promise<ProfessionalType> {
+    return this.ormRepository.findOne({ where: { name } });
+  }
 }

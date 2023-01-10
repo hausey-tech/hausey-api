@@ -1,6 +1,7 @@
 import { Repository } from 'typeorm';
 
 import { PostgresDataSource } from '../../../shared/typeorm';
+import { CreateSpecialtyDTO } from '../contracts/dtos/create-specialty';
 import { IProfessionalSpecialtiesRepository } from '../contracts/repositories/professional-specialties';
 import { ProfessionalSpecialty } from '../entities/professional-specialty';
 
@@ -29,5 +30,17 @@ export class ProfessionalSpecialtiesRepository
     return this.ormRepository.find({
       where: { professionalTypeId: professionalTypeid },
     });
+  }
+
+  public async create(
+    specialty: CreateSpecialtyDTO,
+  ): Promise<ProfessionalSpecialty> {
+    return this.ormRepository.create(specialty);
+  }
+
+  public async save(
+    specialty: ProfessionalSpecialty,
+  ): Promise<ProfessionalSpecialty> {
+    return this.ormRepository.save(specialty);
   }
 }
