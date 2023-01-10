@@ -51,6 +51,10 @@ export class CreateSessionService {
       throw new AppError('E-mail ou senha inválido(s)!', 401);
     }
 
+    if (!user.password) {
+      throw new AppError('Este usuário não possui senha cadastrada!');
+    }
+
     const passwordMatched = await this.hashProvider.compareHash(
       password,
       user.password,
@@ -60,34 +64,33 @@ export class CreateSessionService {
       throw new AppError('E-mail ou senha inválido(s)!', 401);
     }
 
+    const { id } = user;
     let data: IRoles;
-    let id: string;
+    let roleId: string;
 
     switch (role) {
       case 'professional':
         data = {
-          professional: await this.professionalsRepository.findByUserId(
-            user.id,
-          ),
+          professional: await this.professionalsRepository.findByUserId(id),
         };
         if (!data.professional) {
           throw new AppError(
             'Não há nenhum profissional vinculado a este usuário!',
           );
         }
-        id = data.professional.id;
+        roleId = data.professional.id;
         break;
 
       case 'patient':
         data = {
-          patient: await this.patientsRepository.findByUserId(user.id),
+          patient: await this.patientsRepository.findByUserId(id),
         };
         if (!data.patient) {
           throw new AppError(
             'Não há nenhum paciente vinculado a este usuário!',
           );
         }
-        id = data.patient.id;
+        roleId = data.patient.id;
         break;
 
       case 'manager':
@@ -108,11 +111,11 @@ export class CreateSessionService {
 
     const { secret, expiresIn, refreshExpiresIn } = authConfig.jwt;
 
-    const accessToken = sign({ id, role }, secret, {
+    const accessToken = sign({ id, roleId, role }, secret, {
       expiresIn,
     });
 
-    const refreshToken = sign({ id, role }, secret, {
+    const refreshToken = sign({ id, roleId, role }, secret, {
       expiresIn: refreshExpiresIn,
     });
 

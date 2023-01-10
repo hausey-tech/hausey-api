@@ -23,7 +23,7 @@ export class AppointmentsController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const { id } = request.user;
+    const { roleId } = request.user;
     const { professionalTypeId, professionalSpecialtyId, date } = request.body;
 
     const createAppointmentService = container.resolve(
@@ -31,7 +31,7 @@ export class AppointmentsController {
     );
 
     const appointment = await createAppointmentService.execute({
-      patientId: id,
+      patientId: roleId,
       professionalTypeId,
       professionalSpecialtyId,
       date,
@@ -44,7 +44,7 @@ export class AppointmentsController {
     request: Request,
     response: Response,
   ): Promise<Response> {
-    const { id } = request.user;
+    const { roleId } = request.user;
     const { professionalTypeId, professionalSpecialtyId } = request.params;
 
     const checkAppointmentPriceService = container.resolve(
@@ -52,7 +52,7 @@ export class AppointmentsController {
     );
 
     const prices = await checkAppointmentPriceService.execute(
-      id,
+      roleId,
       professionalTypeId,
       professionalSpecialtyId,
     );

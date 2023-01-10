@@ -4,7 +4,6 @@ import { cpf as cpfValidator } from 'cpf-cnpj-validator';
 import { IUsersRepository } from '../contracts/repositories/users';
 import { ICreateUserDTO } from '../contracts/dtos/create-user';
 import { IHashProvider } from '../../../shared/providers/HashProvider/entities/hash-provider';
-import { formatDate } from '../../../shared/utils/format-date';
 import { AppError } from '../../../shared/errors/app-error';
 import { User } from '../entities/user';
 
@@ -60,12 +59,6 @@ export class CreateUserService {
 
     const user = await this.usersRepository.create({
       ...payload,
-      birthdate: payload.birthdate
-        ? formatDate({
-            date: payload.birthdate,
-            format: 'dd-MM-yyyy to yyyy-MM-dd',
-          })
-        : undefined,
       password: hashedPassword,
     });
 
