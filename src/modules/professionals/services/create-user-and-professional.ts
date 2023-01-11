@@ -106,7 +106,10 @@ export class CreateUserAndProfessionalService {
               external_id: savedProfessional.id,
               nome: splittedName[0],
               sobrenome: splittedName[splittedName.length - 1],
-              data_nascimento: formatDate(user.birthdate.toString()),
+              data_nascimento: formatDate({
+                date: user.birthdate.toString(),
+                format: 'yyyy-MM-dd to dd/MM/yyyy',
+              }),
               cpf: user.cpf,
               uf: savedProfessional.registrationUf,
               crm: savedProfessional.registration,

@@ -1,14 +1,29 @@
-/*
-  Recebe uma data no formato yyyy-MM-dd
-  e retorna no formateo dd/MM/yyyy
-*/
+interface Props {
+  date: string;
+  format: 'yyyy-MM-dd to dd/MM/yyyy' | 'dd/MM/yyyy to yyyy-MM-dd';
+}
 
-export const formatDate = (date: string): string => {
-  const splittedDate = date.split('-');
+export const formatDate = ({ date, format }: Props): string => {
+  let splittedDate: string[];
+  let day: string;
+  let month: string;
+  let year: string;
+  switch (format) {
+    case 'yyyy-MM-dd to dd/MM/yyyy':
+      splittedDate = date.split('-');
 
-  const day = splittedDate[2];
-  const month = splittedDate[1];
-  const year = splittedDate[0];
+      [year, month, day] = splittedDate;
 
-  return `${day}/${month}/${year}`;
+      return `${day}/${month}/${year}`;
+
+    case 'dd/MM/yyyy to yyyy-MM-dd':
+      splittedDate = date.split('/');
+
+      [day, month, year] = splittedDate;
+
+      return `${year}-${month}-${day}`;
+
+    default:
+      return '';
+  }
 };
