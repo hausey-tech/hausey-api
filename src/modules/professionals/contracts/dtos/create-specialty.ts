@@ -1,6 +1,6 @@
 export interface CreateSpecialtyDTO {
-  memed_id: string;
+  memedId: number;
   group: string;
   name: string;
-  professional_type_id: string;
+  professionalTypeId: string;
 }

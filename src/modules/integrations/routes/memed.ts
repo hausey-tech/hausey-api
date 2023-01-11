@@ -25,7 +25,7 @@ memedRouter.get(
 );
 
 memedRouter.get(
-  '/memed/specialties',
+  '/memed/import-specialties',
   ensureAuthentication,
-  memedController.listSpecialties,
+  memedController.importSpecialties,
 );

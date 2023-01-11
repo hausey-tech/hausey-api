@@ -9,4 +9,5 @@ export interface IProfessionalSpecialtiesRepository {
   ): Promise<ProfessionalSpecialty[]>;
   create(specialty: CreateSpecialtyDTO): Promise<ProfessionalSpecialty>;
   save(specialty: ProfessionalSpecialty): Promise<ProfessionalSpecialty>;
+  findByMemedId(memedId: number): Promise<ProfessionalSpecialty>;
 }

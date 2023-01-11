@@ -7,7 +7,7 @@ import { IProfessionalSpecialtiesRepository } from '../../professionals/contract
 import { CreateSpecialtyDTO } from '../../professionals/contracts/dtos/create-specialty';
 
 @injectable()
-export class ListMemedSpecialties {
+export class ImportMemedSpecialties {
   constructor(
     @inject('ProfessionalTypesRepository')
     private professionalTypesRepository: IProfessionalTypesRepository,
@@ -41,14 +41,31 @@ export class ListMemedSpecialties {
       }),
     );
 
-    const teste = await Promise.all(
-      formattedSpecialties.map(async specialty => {
+    const filteredSpecialties = await Promise.all(
+      formattedSpecialties.map(async (specialty: any) => {
+        if (
+          await this.professionalSpecialtiesRepository.findByMemedId(
+            specialty.memedId,
+          )
+        ) {
+          return null;
+        }
+        return specialty;
+      }),
+    );
+
+    const validSpecialties = filteredSpecialties.filter(
+      specialty => specialty !== null,
+    );
+
+    const createdSpecialties = await Promise.all(
+      validSpecialties.map(async specialty => {
         return this.professionalSpecialtiesRepository.save(
           await this.professionalSpecialtiesRepository.create(specialty),
         );
       }),
     );
 
-    return teste;
+    return createdSpecialties;
   }
 }

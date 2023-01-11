@@ -43,4 +43,8 @@ export class ProfessionalSpecialtiesRepository
   ): Promise<ProfessionalSpecialty> {
     return this.ormRepository.save(specialty);
   }
+
+  public async findByMemedId(memedId: number): Promise<ProfessionalSpecialty> {
+    return this.ormRepository.findOne({ where: { memedId } });
+  }
 }
