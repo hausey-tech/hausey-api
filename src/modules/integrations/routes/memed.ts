@@ -29,3 +29,9 @@ memedRouter.get(
   ensureAuthentication,
   memedController.importSpecialties,
 );
+
+memedRouter.delete(
+  '/memed/prescriptions/users/:id',
+  ensureAuthentication,
+  memedController.delete,
+);

@@ -6,6 +6,7 @@ import { GetMemedUserByToken } from '../services/get-memed-user-by-token';
 import { CreateMemedUser } from '../services/create-memed-user';
 import { SearchMemedUser } from '../services/search-memed-user';
 import { ImportMemedSpecialties } from '../services/import-memed-specialties';
+import { DeleteMemedUser } from '../services/delete-memed-user';
 
 export class MemedController {
   public async create(request: Request, response: Response): Promise<Response> {
@@ -84,6 +85,22 @@ export class MemedController {
         err?.response?.data?.errors.length > 0
           ? err?.response?.data?.errors[0]?.detail
           : err.message;
+      const statusCode = err?.response?.status;
+
+      throw new AppError(error, statusCode);
+    }
+  }
+
+  public async delete(request: Request, response: Response): Promise<Response> {
+    const { id } = request.params;
+
+    const deleteMemedUserService = container.resolve(DeleteMemedUser);
+
+    try {
+      await deleteMemedUserService.execute(id);
+      return response.json({ message: 'Usuário deletado com sucesso!' });
+    } catch (err) {
+      const error = err?.response?.data;
       const statusCode = err?.response?.status;
 
       throw new AppError(error, statusCode);
