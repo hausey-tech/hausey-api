@@ -50,12 +50,13 @@ export class CreateUserAndProfessionalService {
       );
     }
 
-    const professionalSpecialty =
-      await this.professionalSpecialtiesRepository.findById(
-        professionalSpecialtyId,
-      );
+    const professionalSpecialty = professionalSpecialtyId
+      ? await this.professionalSpecialtiesRepository.findById(
+          professionalSpecialtyId,
+        )
+      : null;
 
-    if (!professionalSpecialty) {
+    if (professionalSpecialtyId && !professionalSpecialty) {
       throw new AppError(
         'A especialidade informada não existe, verifique e tente novamente!',
       );
@@ -94,29 +95,40 @@ export class CreateUserAndProfessionalService {
       professional,
     );
 
-    try {
-      const createMemedUserService = container.resolve(CreateMemedUser);
-      const splittedName = user.name.split(' ');
-      const memedUser = await createMemedUserService.execute({
-        type: 'usuarios',
-        attributes: {
-          external_id: savedProfessional.id,
-          nome: splittedName[0],
-          sobrenome: splittedName[splittedName.length - 1],
-          data_nascimento: formatDate(user.birthdate.toString()),
-          cpf: user.cpf,
-          uf: savedProfessional.registrationUf,
-          crm: savedProfessional.registration,
-          email: user.email,
-        },
-      });
-      savedProfessional.memedStatus = memedUser?.user?.status;
-    } catch (err) {
-      savedProfessional.memedStatus = 'Erro ao criar usuário';
-      console.error(
-        'Erro ao criar usuário na Memed',
-        err?.response?.data?.errors[0].detail,
-      );
+    if (professionalSpecialtyId) {
+      try {
+        const createMemedUserService = container.resolve(CreateMemedUser);
+        const splittedName = user.name.split(' ');
+        const memedUser = await createMemedUserService.execute({
+          data: {
+            type: 'usuarios',
+            attributes: {
+              external_id: savedProfessional.id,
+              nome: splittedName[0],
+              sobrenome: splittedName[splittedName.length - 1],
+              data_nascimento: formatDate(user.birthdate.toString()),
+              cpf: user.cpf,
+              uf: savedProfessional.registrationUf,
+              crm: savedProfessional.registration,
+              email: user.email,
+            },
+          },
+          relationships: {
+            especialidade: {
+              data: {
+                id: professionalSpecialty.memedId,
+              },
+            },
+          },
+        });
+        savedProfessional.memedStatus = memedUser?.user?.status;
+      } catch (err) {
+        savedProfessional.memedStatus = 'Erro ao criar usuário';
+        console.error(
+          'Erro ao criar usuário na Memed',
+          err?.response?.data?.errors[0].detail,
+        );
+      }
     }
 
     await this.professionalsRepository.save(savedProfessional);
