@@ -17,7 +17,7 @@ export class ProfessionalSpecialtiesRepository
   }
 
   public async findAll(): Promise<ProfessionalSpecialty[]> {
-    return this.ormRepository.find();
+    return this.ormRepository.find({ order: { group: 'ASC' } });
   }
 
   public async findById(id: string): Promise<ProfessionalSpecialty> {
@@ -29,6 +29,7 @@ export class ProfessionalSpecialtiesRepository
   ): Promise<ProfessionalSpecialty[]> {
     return this.ormRepository.find({
       where: { professionalTypeId: professionalTypeid },
+      order: { group: 'ASC' },
     });
   }
 

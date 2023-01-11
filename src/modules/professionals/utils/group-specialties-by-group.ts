@@ -13,7 +13,7 @@ export interface FormattedSpecialty {
 export const groupSpecialtiesByGroup = (
   specialties: ProfessionalSpecialty[],
 ) => {
-  const groupedSpecialties: GroupedSpecialty[] = groupArrayByKey(
+  const groupedSpecialties: GroupedSpecialty = groupArrayByKey(
     specialties,
     'group',
   );
@@ -22,7 +22,9 @@ export const groupSpecialtiesByGroup = (
     groupedSpecialties,
   ).map(specialty => ({
     group: specialty,
-    specialties: groupedSpecialties[specialty],
+    specialties: groupedSpecialties[specialty].sort((a, b) =>
+      a.name.localeCompare(b.name),
+    ),
   }));
 
   return formattedSpecialties;
