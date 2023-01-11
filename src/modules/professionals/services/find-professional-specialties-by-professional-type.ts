@@ -2,8 +2,11 @@ import { injectable, inject } from 'tsyringe';
 
 import { IProfessionalSpecialtiesRepository } from '../contracts/repositories/professional-specialties';
 import { IProfessionalTypesRepository } from '../contracts/repositories/professional-types';
-import { ProfessionalSpecialty } from '../entities/professional-specialty';
 import { AppError } from '../../../shared/errors/app-error';
+import {
+  FormattedSpecialty,
+  groupSpecialtiesByGroup,
+} from '../utils/group-specialties-by-group';
 
 @injectable()
 export class FindProfessionalSpecialtiesByProfessionalTypeService {
@@ -16,7 +19,7 @@ export class FindProfessionalSpecialtiesByProfessionalTypeService {
 
   public async execute(
     professionalTypeId: string,
-  ): Promise<ProfessionalSpecialty[]> {
+  ): Promise<FormattedSpecialty[]> {
     const type = await this.professionalTypesRepository.findById(
       professionalTypeId,
     );
@@ -31,8 +34,13 @@ export class FindProfessionalSpecialtiesByProfessionalTypeService {
       throw new AppError('Esse tipo de profissional não tem especialidades!');
     }
 
-    return this.professionalSpecialtiesRepository.findByProfessionalTypeId(
-      professionalTypeId,
-    );
+    const specialties =
+      await this.professionalSpecialtiesRepository.findByProfessionalTypeId(
+        professionalTypeId,
+      );
+
+    const formattedSpecialty = groupSpecialtiesByGroup(specialties);
+
+    return formattedSpecialty;
   }
 }

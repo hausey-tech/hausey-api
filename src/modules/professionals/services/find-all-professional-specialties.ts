@@ -1,7 +1,10 @@
 import { injectable, inject } from 'tsyringe';
 
 import { IProfessionalSpecialtiesRepository } from '../contracts/repositories/professional-specialties';
-import { ProfessionalSpecialty } from '../entities/professional-specialty';
+import {
+  FormattedSpecialty,
+  groupSpecialtiesByGroup,
+} from '../utils/group-specialties-by-group';
 
 @injectable()
 export class FindAllProfessionalSpecialtiesService {
@@ -10,7 +13,11 @@ export class FindAllProfessionalSpecialtiesService {
     private professionalSpecialtiesRepository: IProfessionalSpecialtiesRepository,
   ) {}
 
-  public async execute(): Promise<ProfessionalSpecialty[]> {
-    return this.professionalSpecialtiesRepository.findAll();
+  public async execute(): Promise<FormattedSpecialty[]> {
+    const specialties = await this.professionalSpecialtiesRepository.findAll();
+
+    const formattedSpecialties = groupSpecialtiesByGroup(specialties);
+
+    return formattedSpecialties;
   }
 }
