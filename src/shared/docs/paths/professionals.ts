@@ -150,9 +150,17 @@ export const professionalsPath = {
           content: {
             'application/json': {
               schema: {
-                type: 'array',
-                items: {
-                  $ref: '#/schemas/specialty',
+                type: 'object',
+                properties: {
+                  group: {
+                    type: 'string',
+                  },
+                  specialties: {
+                    type: 'array',
+                    items: {
+                      $ref: '#/schemas/specialty',
+                    },
+                  },
                 },
               },
             },
@@ -197,9 +205,17 @@ export const professionalsPath = {
           content: {
             'application/json': {
               schema: {
-                type: 'array',
-                items: {
-                  $ref: '#/schemas/specialty',
+                type: 'object',
+                properties: {
+                  group: {
+                    type: 'string',
+                  },
+                  specialties: {
+                    type: 'array',
+                    items: {
+                      $ref: '#/schemas/specialty',
+                    },
+                  },
                 },
               },
             },

@@ -18,6 +18,12 @@ export const specialtySchema = {
         price: {
           type: 'integer',
         },
+        group: {
+          type: 'string',
+        },
+        memedId: {
+          type: 'string',
+        },
       },
     },
   ],
