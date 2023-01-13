@@ -1,5 +1,7 @@
 import { injectable, inject } from 'tsyringe';
 
+import { AppError } from '../../../shared/errors/app-error';
+import { formatMoney } from '../../../shared/utils/format-money';
 import { IPatientsRepository } from '../../patients/contracts/repositories/patients';
 import { IPatientProgramsRepository } from '../../patients/contracts/repositories/patient-programs';
 import { IProfessionalSpecialtiesRepository } from '../../professionals/contracts/repositories/professional-specialties';
@@ -8,12 +10,11 @@ import { IPlanProfessionalTypeDiscountsRepository } from '../../plans/contracts/
 import { IPlanProfessionalSpecialtyDiscountsRepository } from '../../plans/contracts/repositories/plan-professional-specialty-discounts';
 import { IProgramProfessionalTypeDiscountsRepository } from '../../programs/contracts/repositories/program-professional-type-discounts';
 import { IProgramProfessionalSpecialtyDiscountsRepository } from '../../programs/contracts/repositories/program-professional-specialty-discounts';
-import { AppError } from '../../../shared/errors/app-error';
 
 interface IPrices {
-  price: number;
-  discount: number;
-  total: number;
+  price: string;
+  discount: string;
+  total: string;
 }
 
 @injectable()
@@ -57,8 +58,6 @@ export class CheckAppointmentPrice {
       );
     }
 
-    const { planId, id } = patient;
-
     let price: number;
 
     // checa se tem specialtyId e se tiver pega o price
@@ -96,30 +95,34 @@ export class CheckAppointmentPrice {
       );
     }
 
+    const { planId, id } = patient;
+
     let discount = 0;
 
-    // checa o plano para a specialty
+    if (planId) {
+      // checa o plano para a specialty
 
-    const planSpecialtyDiscount =
-      await this.planProfessionalSpecialtyDiscountsRepository.findByPlanIdAndProfessionalSpecialtyId(
-        planId,
-        professionalSpecialtyId,
-      );
+      const planSpecialtyDiscount =
+        await this.planProfessionalSpecialtyDiscountsRepository.findByPlanIdAndProfessionalSpecialtyId(
+          planId,
+          professionalSpecialtyId,
+        );
 
-    if (planSpecialtyDiscount) {
-      discount += planSpecialtyDiscount.discount;
-    }
+      if (planSpecialtyDiscount) {
+        discount += planSpecialtyDiscount.discount;
+      }
 
-    // checa o plano para o type
+      // checa o plano para o type
 
-    const planTypeDiscount =
-      await this.planProfessionalTypeDiscountsRepository.findByPlanIdAndProfessionalTypeId(
-        planId,
-        professionalTypeId,
-      );
+      const planTypeDiscount =
+        await this.planProfessionalTypeDiscountsRepository.findByPlanIdAndProfessionalTypeId(
+          planId,
+          professionalTypeId,
+        );
 
-    if (planTypeDiscount) {
-      discount += planTypeDiscount.discount;
+      if (planTypeDiscount) {
+        discount += planTypeDiscount.discount;
+      }
     }
 
     // checa programas do paciente
@@ -157,6 +160,10 @@ export class CheckAppointmentPrice {
 
     // soma tudo e retorna o desconto
 
-    return { price, discount, total: price - discount };
+    return {
+      price: formatMoney(price),
+      discount: formatMoney(discount),
+      total: formatMoney(price - discount),
+    };
   }
 }
