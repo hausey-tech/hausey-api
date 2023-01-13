@@ -60,4 +60,7 @@ export class Appointment extends BaseEntity {
   @OneToOne(() => PrimaryDiagnosis)
   @JoinColumn({ name: 'primary_diagnosis_id' })
   primaryDiagnosis: PrimaryDiagnosis;
+
+  @Column('boolean', { nullable: true })
+  paid: boolean;
 }

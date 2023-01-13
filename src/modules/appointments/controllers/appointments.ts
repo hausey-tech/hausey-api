@@ -6,6 +6,7 @@ import { CheckAppointmentPrice } from '../services/check-appointment-price';
 import { CreateAppointmentService } from '../services/create-appointment';
 import { UploadFileToS3 } from '../../integrations/services/upload-file-to-s3';
 import { ListFilesFromS3 } from '../../integrations/services/list-files-from-s3';
+import { ToggleAppointmentPaidService } from '../services/toggle-appointment-paid';
 
 export class AppointmentsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -92,5 +93,22 @@ export class AppointmentsController {
     );
 
     return response.json(files);
+  }
+
+  public async togglePaid(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { appointmentId } = request.params;
+
+    const toggleAppointmentPaidService = container.resolve(
+      ToggleAppointmentPaidService,
+    );
+
+    const appointment = await toggleAppointmentPaidService.execute(
+      appointmentId,
+    );
+
+    return response.json(appointment);
   }
 }

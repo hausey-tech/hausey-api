@@ -36,3 +36,9 @@ appointmentsRouter.get(
   ensureAuthentication,
   appointmentsController.listFiles,
 );
+
+appointmentsRouter.get(
+  '/:appointmentId/payments/toggle-paid',
+  ensureAuthentication,
+  appointmentsController.togglePaid,
+);
