@@ -99,6 +99,8 @@ export default {
     '/appointments/{appointmentId}/files': appointmentsPath.files,
     '/appointments/anamneses': appointmentsPath.anamneses,
     '/appointments/primary-diagnoses': appointmentsPath.primaryDiagnoses,
+    '/appointments/{appointmentId}/payments/toggle-paid':
+      appointmentsPath.payments,
     '/programs': programsPath,
     '/integrations/twilio': integrationsPath.twilio,
     '/integrations/memed/prescriptions/users': {

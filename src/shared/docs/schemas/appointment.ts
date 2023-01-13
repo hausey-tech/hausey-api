@@ -30,6 +30,9 @@ export const appointmentSchema = {
         date: {
           type: 'string',
         },
+        paid: {
+          type: 'boolean',
+        },
       },
     },
   ],
