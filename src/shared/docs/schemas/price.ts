@@ -2,13 +2,13 @@ export const priceSchema = {
   type: 'object',
   properties: {
     price: {
-      type: 'integer',
+      type: 'string',
     },
     discount: {
-      type: 'integer',
+      type: 'string',
     },
     total: {
-      type: 'integer',
+      type: 'string',
     },
   },
 };
