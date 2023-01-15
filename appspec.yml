@@ -4,12 +4,12 @@ files:
   - source: /
     destination: /home/ec2-user/hausey-api
 hooks:
-  ApplicationStop:
-    - location: scripts/stop_service.sh
-      timeout: 300
-      runas: ec2-user
   AfterInstall:
     - location: scripts/install_dependencies.sh
+      timeout: 300
+      runas: ec2-user
+  ApplicationStop:
+    - location: scripts/stop_service.sh
       timeout: 300
       runas: ec2-user
   ApplicationStart:
