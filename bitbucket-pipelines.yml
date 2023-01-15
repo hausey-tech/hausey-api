@@ -1,8 +1,8 @@
 image: atlassian/default-image:2
 
 pipelines:
-  branches:
-      master:
+  custom:
+      production:
         - step:
             name: Build
             script:
