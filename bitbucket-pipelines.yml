@@ -1,15 +1,6 @@
 image: atlassian/default-image:2
 
 pipelines:
-  pull-requests:
-    "**":
-      - step:
-          max-time: 120
-          size: 1x
-          script:
-            - npm test
-          trigger: automatic
-
   branches:
       master:
         - step:
