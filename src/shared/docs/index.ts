@@ -101,6 +101,7 @@ export default {
     '/appointments/primary-diagnoses': appointmentsPath.primaryDiagnoses,
     '/appointments/{appointmentId}/payments/toggle-paid':
       appointmentsPath.payments,
+    '/appointments/specialties': appointmentsPath.specialties,
     '/programs': programsPath,
     '/integrations/twilio': integrationsPath.twilio,
     '/integrations/memed/prescriptions/users': {
