@@ -9,6 +9,7 @@ import { professionalsRouter as appointmentsProfessionalsRouter } from '../../mo
 import { patientsRouter as appointmentsPatientsRouter } from '../../modules/appointments/routes/patients';
 import { anamnesesRouter } from '../../modules/appointments/routes/anamneses';
 import { primaryDiagnosesRouter } from '../../modules/appointments/routes/primary-diagnoses';
+import { specialtiesRouter } from '../../modules/appointments/routes/specialties';
 
 import { professionalSpecialtiesRouter } from '../../modules/professionals/routes/professional-specialties';
 import { professionalTypesRouter } from '../../modules/professionals/routes/professional-types';
@@ -36,6 +37,7 @@ routes.use(
   appointmentsPatientsRouter,
   anamnesesRouter,
   primaryDiagnosesRouter,
+  specialtiesRouter,
 );
 routes.use(
   '/professionals',
