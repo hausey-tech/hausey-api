@@ -51,5 +51,5 @@ routes.use('/plans', plansRouter);
 routes.use('/integrations', twilioRouter, memedRouter, s3Router);
 
 routes.get('/health-check', (req, res) => {
-  res.send({ status: 'ok' });
+  res.send({ status: 'ok, codepipeline' });
 });
