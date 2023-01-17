@@ -40,3 +40,41 @@ pipelines:
                   IGNORE_APPLICATION_STOP_FAILURES: "true"
                   FILE_EXISTS_BEHAVIOR: "OVERWRITE"
                   WAIT: "true"
+      staging:
+        - step:
+            name: Build
+            script:
+              - zip -r staging.zip *
+            artifacts:
+              - staging.zip
+        - step:
+            name: Upload to S3
+            services:
+              - docker
+            script:
+              - pipe: atlassian/aws-code-deploy:0.3.2
+                variables:
+                  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                  AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                  S3_BUCKET: $S3_BUCKET_STAGING
+                  COMMAND: "upload"
+                  APPLICATION_NAME: $APPLICATION_NAME
+                  ZIP_FILE: "staging.zip"
+        - step:
+            name: Deploy with CodeDeploy
+            services:
+              - docker
+            script:
+              - pipe: atlassian/aws-code-deploy:0.3.2
+                variables:
+                  AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                  AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                  AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                  S3_BUCKET: $S3_BUCKET_STAGING
+                  COMMAND: "deploy"
+                  APPLICATION_NAME: $APPLICATION_NAME
+                  DEPLOYMENT_GROUP: $DEPLOYMENT_GROUP_STAGING
+                  IGNORE_APPLICATION_STOP_FAILURES: "true"
+                  FILE_EXISTS_BEHAVIOR: "OVERWRITE"
+                  WAIT: "true"
