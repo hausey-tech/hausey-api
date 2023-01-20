@@ -5,10 +5,12 @@ import './container';
 import express from 'express';
 
 import { PostgresDataSource } from './typeorm';
-import { setupSwagger } from './utils/setup-swagger';
-import { setupMiddlewares } from './utils/setup-middlewares';
-import { setupRoutes } from './utils/setup-routes';
-import { setupErrorHandler } from './utils/setup-error-handler';
+import {
+  setupSwagger,
+  setupMiddlewares,
+  setupRoutes,
+  setupErrorHandler,
+} from './utils';
 
 const app = express();
 
