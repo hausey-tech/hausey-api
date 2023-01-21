@@ -1,17 +1,11 @@
-import { userSchema } from './user';
-
 export const patientSchema = {
   allOf: [
     {
-      $ref: '#/schemas/base',
+      $ref: '#/schemas/user',
     },
     {
       type: 'object',
       properties: {
-        userId: {
-          type: 'string',
-        },
-        user: userSchema,
         planId: {
           type: 'string',
         },

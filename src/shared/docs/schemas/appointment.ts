@@ -1,5 +1,4 @@
-import { professionalSpecialtySchema } from './professional-specialty';
-import { professionalTypeSchema } from './professional-type';
+import { specialtySchema } from './specialty';
 import { professionalSchema } from './professional';
 import { patientSchema } from './patient';
 
@@ -11,14 +10,10 @@ export const appointmentSchema = {
     {
       type: 'object',
       properties: {
-        professinalTypeId: {
+        specialtyId: {
           type: 'string',
         },
-        professionalType: professionalTypeSchema,
-        professionalSpecialtyId: {
-          type: 'string',
-        },
-        professionalSpecialty: professionalSpecialtySchema,
+        specialty: specialtySchema,
         professionalId: {
           type: 'string',
         },

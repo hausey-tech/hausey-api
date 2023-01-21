@@ -12,16 +12,16 @@ export class PatientsRepository implements IPatientsRepository {
     this.ormRepository = PostgresDataSource.getRepository(Patient);
   }
 
-  public async findByUserId(id: string): Promise<Patient | null> {
-    return this.ormRepository.findOne({
-      where: { userId: id },
-      relations: ['user', 'plan'],
-    });
-  }
-
   public async findById(id: string): Promise<Patient | null> {
     return this.ormRepository.findOne({
       where: { id },
+    });
+  }
+
+  public async findByEmail(email: string): Promise<Patient | null> {
+    return this.ormRepository.findOne({
+      where: { email },
+      relations: ['plan'],
     });
   }
 

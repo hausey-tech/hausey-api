@@ -16,26 +16,17 @@ export class ProfessionalsRepository implements IProfessionalsRepository {
     return this.ormRepository.findOne({ where: { id } });
   }
 
-  public async findByUserId(id: string): Promise<Professional | null> {
+  public async findByEmail(email: string): Promise<Professional | null> {
     return this.ormRepository.findOne({
-      where: { userId: id },
-      relations: ['user', 'professionalSpecialty', 'professionalType'],
+      where: { email },
+      relations: ['specialty'],
     });
   }
 
   public async findBySpecialtyId(id: string): Promise<Professional[]> {
     const professionals = this.ormRepository.find({
-      where: { professionalSpecialtyId: id },
-      relations: ['user', 'professionalSpecialty', 'professionalType'],
-    });
-
-    return professionals;
-  }
-
-  public async findByTypeId(id: string): Promise<Professional[]> {
-    const professionals = this.ormRepository.find({
-      where: { professionalTypeId: id },
-      relations: ['user', 'professionalSpecialty', 'professionalType'],
+      where: { specialtyId: id },
+      relations: ['specialty'],
     });
 
     return professionals;

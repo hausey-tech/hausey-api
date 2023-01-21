@@ -2,7 +2,7 @@ import { celebrate } from 'celebrate';
 import { Router } from 'express';
 
 import { FindSlotsSchema, CreateSlotSchema } from '../celebrate-schemas/slot';
-import { ensureAuthentication } from '../../users/middlewares/ensure-authentication';
+import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
 import { SlotsController } from '../controllers/slots';
 
 export const slotsRouter = Router();

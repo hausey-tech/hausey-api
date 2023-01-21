@@ -1,6 +1,6 @@
 import { Router } from 'express';
 
-import { ensureAuthentication } from '../../users/middlewares/ensure-authentication';
+import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
 import { PatientsController } from '../controllers/patients';
 
 export const patientsRouter = Router();

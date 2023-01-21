@@ -6,9 +6,6 @@ export const specialtySchema = {
     {
       type: 'object',
       properties: {
-        professionalTypeId: {
-          type: 'string',
-        },
         name: {
           type: 'string',
         },

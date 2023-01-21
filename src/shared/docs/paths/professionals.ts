@@ -62,12 +62,12 @@ export const professionalsPath = {
       },
     ],
     tags: ['Professionals'],
-    summary: 'Create a new user and professional',
+    summary: 'Creates a professional',
     requestBody: {
       content: {
         'application/json': {
           schema: {
-            $ref: '#/schemas/createUserAndProfessional',
+            $ref: '#/schemas/createProfessional',
           },
         },
       },
@@ -97,44 +97,6 @@ export const professionalsPath = {
       },
     },
   },
-  types: {
-    get: {
-      security: [
-        {
-          bearerAuth: [],
-        },
-      ],
-      tags: ['Professionals'],
-      summary: 'Show all types',
-      responses: {
-        200: {
-          description: 'Success',
-          content: {
-            'application/json': {
-              schema: {
-                type: 'array',
-                items: {
-                  $ref: '#/schemas/professionalType',
-                },
-              },
-            },
-          },
-        },
-        400: {
-          $ref: '#/components/badRequest',
-        },
-        401: {
-          $ref: '#/components/unauthorized',
-        },
-        404: {
-          $ref: '#/components/notFound',
-        },
-        500: {
-          $ref: '#/components/serverError',
-        },
-      },
-    },
-  },
   specialties: {
     get: {
       security: [
@@ -144,61 +106,6 @@ export const professionalsPath = {
       ],
       tags: ['Professionals'],
       summary: 'Show all specialties',
-      responses: {
-        200: {
-          description: 'Success',
-          content: {
-            'application/json': {
-              schema: {
-                type: 'object',
-                properties: {
-                  group: {
-                    type: 'string',
-                  },
-                  specialties: {
-                    type: 'array',
-                    items: {
-                      $ref: '#/schemas/specialty',
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-        400: {
-          $ref: '#/components/badRequest',
-        },
-        401: {
-          $ref: '#/components/unauthorized',
-        },
-        404: {
-          $ref: '#/components/notFound',
-        },
-        500: {
-          $ref: '#/components/serverError',
-        },
-      },
-    },
-    byTypeId: {
-      security: [
-        {
-          bearerAuth: [],
-        },
-      ],
-      tags: ['Professionals'],
-      summary: 'Show specialties by professional type',
-      parameters: [
-        {
-          in: 'path',
-          name: 'typeId',
-          schema: {
-            type: 'string',
-          },
-          required: true,
-          description: 'UUID of the professional type',
-        },
-      ],
       responses: {
         200: {
           description: 'Success',

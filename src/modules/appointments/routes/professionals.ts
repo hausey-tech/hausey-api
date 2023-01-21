@@ -1,7 +1,7 @@
 import { celebrate } from 'celebrate';
 import { Router } from 'express';
 
-import { ensureAuthentication } from '../../users/middlewares/ensure-authentication';
+import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
 import { ProfessionalsController } from '../controllers/professionals';
 import {
   FindProfessionalAppointmentsSchema,

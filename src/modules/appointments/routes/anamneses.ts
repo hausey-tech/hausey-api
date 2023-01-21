@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { celebrate } from 'celebrate';
 
 import { CreateAnamnesisSchema } from '../celebrate-schemas/anamnesis';
-import { ensureAuthentication } from '../../users/middlewares/ensure-authentication';
+import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
 import { AnamnesesController } from '../controllers/anamneses';
 
 export const anamnesesRouter = Router();

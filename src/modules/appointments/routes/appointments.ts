@@ -3,7 +3,7 @@ import { celebrate } from 'celebrate';
 
 import { CreateAppointmentSchema } from '../celebrate-schemas/appointment';
 import { AppointmentsController } from '../controllers/appointments';
-import { ensureAuthentication } from '../../users/middlewares/ensure-authentication';
+import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
 import { upload } from '../../../shared/utils/multer-instance';
 
 export const appointmentsRouter = Router();

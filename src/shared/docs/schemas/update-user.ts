@@ -4,7 +4,7 @@ export const updateUserSchema = {
     name: {
       type: 'string',
     },
-    cpf: {
+    document: {
       type: 'string',
     },
     birthdate: {

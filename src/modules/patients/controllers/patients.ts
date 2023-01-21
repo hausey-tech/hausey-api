@@ -1,18 +1,16 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import { CreateUserAndPatientService } from '../services/create-user-and-patient';
-import { CreateSessionService } from '../../users/services/create-session';
+import { CreatePatientService } from '../services/create-patient';
+import { CreateSessionService } from '../../sessions/services/create-session';
 
 export class PatientsController {
   public async create(request: Request, response: Response): Promise<Response> {
     const payload = request.body;
 
-    const createUserAndPatientService = container.resolve(
-      CreateUserAndPatientService,
-    );
+    const createPatientService = container.resolve(CreatePatientService);
 
-    await createUserAndPatientService.execute(payload);
+    await createPatientService.execute(payload);
 
     const createSessionService = container.resolve(CreateSessionService);
 

@@ -1,5 +1,5 @@
 import { groupArrayByKey } from '../../../shared/utils/group-array-by-key';
-import { ProfessionalSpecialty } from '../entities/professional-specialty';
+import { ProfessionalSpecialty } from '../entities/specialty';
 
 interface GroupedSpecialty {
   [group: string]: ProfessionalSpecialty[];

@@ -1,7 +1,6 @@
 import { Router } from 'express';
 
-import { usersRouter } from '../../modules/users/routes/users';
-import { sessionsRouter } from '../../modules/users/routes/sessions';
+import { sessionsRouter } from '../../modules/sessions/routes/sessions';
 
 import { appointmentsRouter } from '../../modules/appointments/routes/appointments';
 import { slotsRouter } from '../../modules/appointments/routes/slots';
@@ -9,10 +8,9 @@ import { professionalsRouter as appointmentsProfessionalsRouter } from '../../mo
 import { patientsRouter as appointmentsPatientsRouter } from '../../modules/appointments/routes/patients';
 import { anamnesesRouter } from '../../modules/appointments/routes/anamneses';
 import { primaryDiagnosesRouter } from '../../modules/appointments/routes/primary-diagnoses';
-import { specialtiesRouter } from '../../modules/appointments/routes/specialties';
+import { specialtiesRouter as appointmentsSpecialtiesRouter } from '../../modules/appointments/routes/specialties';
 
-import { professionalSpecialtiesRouter } from '../../modules/professionals/routes/professional-specialties';
-import { professionalTypesRouter } from '../../modules/professionals/routes/professional-types';
+import { specialtiesRouter } from '../../modules/professionals/routes/specialties';
 import { professionalsRouter } from '../../modules/professionals/routes/professionals';
 
 import { programsRouter } from '../../modules/programs/routes/programs';
@@ -27,7 +25,6 @@ import { s3Router } from '../../modules/integrations/routes/s3';
 
 export const routes = Router();
 
-routes.use('/users', usersRouter);
 routes.use('/sessions', sessionsRouter);
 routes.use(
   '/appointments',
@@ -37,14 +34,9 @@ routes.use(
   appointmentsPatientsRouter,
   anamnesesRouter,
   primaryDiagnosesRouter,
-  specialtiesRouter,
+  appointmentsSpecialtiesRouter,
 );
-routes.use(
-  '/professionals',
-  professionalSpecialtiesRouter,
-  professionalTypesRouter,
-  professionalsRouter,
-);
+routes.use('/professionals', professionalsRouter, specialtiesRouter);
 routes.use('/patients', patientsRouter);
 routes.use('/programs', programsRouter);
 routes.use('/plans', plansRouter);

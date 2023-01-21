@@ -4,12 +4,9 @@ import { AppError } from '../../../shared/errors/app-error';
 import { formatMoney } from '../../../shared/utils/format-money';
 import { IPatientsRepository } from '../../patients/contracts/repositories/patients';
 import { IPatientProgramsRepository } from '../../patients/contracts/repositories/patient-programs';
-import { IProfessionalSpecialtiesRepository } from '../../professionals/contracts/repositories/professional-specialties';
-import { IProfessionalTypesRepository } from '../../professionals/contracts/repositories/professional-types';
-import { IPlanProfessionalTypeDiscountsRepository } from '../../plans/contracts/repositories/plan-professional-type-discounts';
-import { IPlanProfessionalSpecialtyDiscountsRepository } from '../../plans/contracts/repositories/plan-professional-specialty-discounts';
-import { IProgramProfessionalTypeDiscountsRepository } from '../../programs/contracts/repositories/program-professional-type-discounts';
-import { IProgramProfessionalSpecialtyDiscountsRepository } from '../../programs/contracts/repositories/program-professional-specialty-discounts';
+import { ISpecialtiesRepository } from '../../professionals/contracts/repositories/specialties';
+import { IPlanSpecialtyDiscountsRepository } from '../../plans/contracts/repositories/plan-specialty-discounts';
+import { IProgramSpecialtyDiscountsRepository } from '../../programs/contracts/repositories/program-specialty-discounts';
 
 interface IPrices {
   price: string;
@@ -26,29 +23,19 @@ export class CheckAppointmentPrice {
     @inject('PatientProgramsRepository')
     private patientProgramsRepository: IPatientProgramsRepository,
 
-    @inject('ProfessionalSpecialtiesRepository')
-    private professionalSpecialtiesRepository: IProfessionalSpecialtiesRepository,
+    @inject('SpecialtiesRepository')
+    private specialtiesRepository: ISpecialtiesRepository,
 
-    @inject('ProfessionalTypesRepository')
-    private professionalTypesRepository: IProfessionalTypesRepository,
+    @inject('PlanSpecialtyDiscountsRepository')
+    private planSpecialtyDiscountsRepository: IPlanSpecialtyDiscountsRepository,
 
-    @inject('PlanProfessionalTypeDiscountsRepository')
-    private planProfessionalTypeDiscountsRepository: IPlanProfessionalTypeDiscountsRepository,
-
-    @inject('PlanProfessionalSpecialtyDiscountsRepository')
-    private planProfessionalSpecialtyDiscountsRepository: IPlanProfessionalSpecialtyDiscountsRepository,
-
-    @inject('ProgramProfessionalTypeDiscountsRepository')
-    private programProfessionalTypeDiscountsRepository: IProgramProfessionalTypeDiscountsRepository,
-
-    @inject('ProgramProfessionalSpecialtyDiscountsRepository')
-    private programProfessionalSpecialtyDiscountsRepository: IProgramProfessionalSpecialtyDiscountsRepository,
+    @inject('ProgramSpecialtyDiscountsRepository')
+    private programSpecialtyDiscountsRepository: IProgramSpecialtyDiscountsRepository,
   ) {}
 
   public async execute(
     patientId: string,
-    professionalTypeId: string,
-    professionalSpecialtyId: string,
+    specialtyId: string,
   ): Promise<IPrices> {
     const patient = await this.patientsRepository.findById(patientId);
 
@@ -58,36 +45,13 @@ export class CheckAppointmentPrice {
       );
     }
 
-    let price: number;
-
-    // checa se tem specialtyId e se tiver pega o price
-
-    if (professionalSpecialtyId) {
-      const professionalSpecialty =
-        await this.professionalSpecialtiesRepository.findById(
-          professionalSpecialtyId,
-        );
-      if (!professionalSpecialty) {
-        throw new AppError(
-          'Especialidade não encontrada, verifique e tente novamente!',
-        );
-      }
-      price = professionalSpecialty.price;
-    }
-
-    // checa se tem typeId e se ainda nao foi atribuido nada ao price
-
-    if (professionalTypeId && !Number.isInteger(price)) {
-      const professionalType = await this.professionalTypesRepository.findById(
-        professionalTypeId,
+    const specialty = await this.specialtiesRepository.findById(specialtyId);
+    if (!specialty) {
+      throw new AppError(
+        'Especialidade não encontrada, verifique e tente novamente!',
       );
-      if (!professionalType) {
-        throw new AppError(
-          'Tipo de profissional não encontrado, verifique e tente novamente!',
-        );
-      }
-      price = professionalType.price;
     }
+    const { price } = specialty;
 
     if (!Number.isInteger(price)) {
       throw new AppError(
@@ -100,28 +64,14 @@ export class CheckAppointmentPrice {
     let discount = 0;
 
     if (planId) {
-      // checa o plano para a specialty
-
       const planSpecialtyDiscount =
-        await this.planProfessionalSpecialtyDiscountsRepository.findByPlanIdAndProfessionalSpecialtyId(
+        await this.planSpecialtyDiscountsRepository.findByPlanIdAndSpecialtyId(
           planId,
-          professionalSpecialtyId,
+          specialtyId,
         );
 
       if (planSpecialtyDiscount) {
         discount += planSpecialtyDiscount.discount;
-      }
-
-      // checa o plano para o type
-
-      const planTypeDiscount =
-        await this.planProfessionalTypeDiscountsRepository.findByPlanIdAndProfessionalTypeId(
-          planId,
-          professionalTypeId,
-        );
-
-      if (planTypeDiscount) {
-        discount += planTypeDiscount.discount;
       }
     }
 
@@ -135,25 +85,13 @@ export class CheckAppointmentPrice {
         // checa programas para a specialty
 
         const programSpecialtyDiscount =
-          await this.programProfessionalSpecialtyDiscountsRepository.findByProgramIdAndProfessionalSpecialtyId(
+          await this.programSpecialtyDiscountsRepository.findByProgramIdAndSpecialtyId(
             patientProgram.programId,
-            professionalSpecialtyId,
+            specialtyId,
           );
 
         if (programSpecialtyDiscount) {
           discount += programSpecialtyDiscount.discount;
-        }
-
-        // checa programa para o type
-
-        const programTypeDiscount =
-          await this.programProfessionalTypeDiscountsRepository.findByProgramIdAndProfessionalTypeId(
-            patientProgram.programId,
-            professionalTypeId,
-          );
-
-        if (programTypeDiscount) {
-          discount += programTypeDiscount.discount;
         }
       }),
     );
