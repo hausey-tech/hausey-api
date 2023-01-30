@@ -1,6 +1,7 @@
 import { injectable, inject } from 'tsyringe';
 
-import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
+import { IProfessionalSpecialtiesRepository } from '../../professionals/contracts/repositories/professional-specialties';
+import { ISpecialtiesRepository } from '../../professionals/contracts/repositories/specialties';
 import {
   groupSpecialtiesByGroup,
   FormattedSpecialty,
@@ -9,19 +10,25 @@ import {
 @injectable()
 export class FindAvailableSpecialtiesService {
   constructor(
-    @inject('ProfessionalsRepository')
-    private professionalsRepository: IProfessionalsRepository,
+    @inject('ProfessionalSpecialtiesRepository')
+    private professionalSpecialtiessRepository: IProfessionalSpecialtiesRepository,
+
+    @inject('SpecialtiesRepository')
+    private specialtiessRepository: ISpecialtiesRepository,
   ) {}
 
   public async execute(): Promise<FormattedSpecialty[]> {
-    const professionals = await this.professionalsRepository.find();
+    const professionalSpecialties =
+      await this.professionalSpecialtiessRepository.findAll();
 
-    const specialties = professionals.map(p => p.professionalSpecialty);
+    const specialtiesIds = [
+      ...new Set(professionalSpecialties.map(p => p.specialtyId)),
+    ];
 
-    const uniqueSpecialties = specialties.filter((s, i) => {
-      return !i || s.id !== specialties[i - 1].id;
-    });
+    const specialties = await this.specialtiessRepository.findByIds(
+      specialtiesIds,
+    );
 
-    return groupSpecialtiesByGroup(uniqueSpecialties);
+    return groupSpecialtiesByGroup(specialties);
   }
 }

@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 
 import { PostgresDataSource } from '../../../shared/typeorm';
 import { ICreateSpecialtyDTO } from '../contracts/dtos/create-specialty';
@@ -18,6 +18,10 @@ export class SpecialtiesRepository implements ISpecialtiesRepository {
 
   public async findById(id: string): Promise<Specialty> {
     return this.ormRepository.findOne({ where: { id } });
+  }
+
+  public async findByIds(ids: string[]): Promise<Specialty[]> {
+    return this.ormRepository.find({ where: { id: In(ids) } });
   }
 
   public async create(specialty: ICreateSpecialtyDTO): Promise<Specialty> {
