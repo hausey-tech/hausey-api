@@ -1,7 +1,7 @@
 import { Repository, In } from 'typeorm';
 
 import { ISlotsRepository } from '../contracts/repositories/slots';
-import { ICreateSlotDTO } from '../contracts/dtos/create-slot';
+import { ICreateDBSlotDTO } from '../contracts/dtos/create-db-slot';
 import { PostgresDataSource } from '../../../shared/typeorm';
 import { Slot } from '../entities/slot';
 
@@ -16,7 +16,7 @@ export class SlotsRepository implements ISlotsRepository {
     return this.ormRepository.find({ where: { professionalId: In(ids) } });
   }
 
-  public async create(payload: ICreateSlotDTO): Promise<Slot> {
+  public async create(payload: ICreateDBSlotDTO): Promise<Slot> {
     return this.ormRepository.create(payload);
   }
 

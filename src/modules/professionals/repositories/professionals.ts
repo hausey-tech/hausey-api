@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 
 import { IProfessionalsRepository } from '../contracts/repositories/professionals';
 import { ICreateProfessionalDTO } from '../contracts/dtos/create-professional';
@@ -14,6 +14,10 @@ export class ProfessionalsRepository implements IProfessionalsRepository {
 
   public async findById(id: string): Promise<Professional | null> {
     return this.ormRepository.findOne({ where: { id } });
+  }
+
+  public async findByIds(ids: string[]): Promise<Professional[]> {
+    return this.ormRepository.find({ where: { id: In(ids) } });
   }
 
   public async findByEmail(email: string): Promise<Professional | null> {
