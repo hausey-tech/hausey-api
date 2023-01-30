@@ -28,18 +28,6 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     return this.ormRepository.save(appointment);
   }
 
-  public async findByTypeBetweenDates(
-    typeId: string,
-    dates: Date[],
-  ): Promise<Appointment[]> {
-    const initial = dates[0];
-    const final = dates[dates.length - 1];
-
-    return this.ormRepository.find({
-      where: { date: Between(initial, final), professionalTypeId: typeId },
-    });
-  }
-
   public async findBySpecialtyBetweenDates(
     specialtyId: string,
     dates: Date[],
@@ -49,8 +37,8 @@ export class AppointmentsRepository implements IAppointmentsRepository {
 
     return this.ormRepository.find({
       where: {
+        specialtyId,
         date: Between(initial, final),
-        professionalSpecialtyId: specialtyId,
       },
     });
   }
@@ -69,11 +57,8 @@ export class AppointmentsRepository implements IAppointmentsRepository {
       order: { date: 'asc' },
       relations: [
         'patient',
-        'patient.user',
-        'professionalType',
-        'professionalSpecialty',
         'professional',
-        'professional.user',
+        'specialty',
         'anamnesis',
         'primaryDiagnosis',
       ],
@@ -88,11 +73,8 @@ export class AppointmentsRepository implements IAppointmentsRepository {
       order: { date: 'asc' },
       relations: [
         'patient',
-        'patient.user',
-        'professionalType',
-        'professionalSpecialty',
         'professional',
-        'professional.user',
+        'specialty',
         'anamnesis',
         'primaryDiagnosis',
       ],
@@ -105,11 +87,8 @@ export class AppointmentsRepository implements IAppointmentsRepository {
       order: { date: 'asc' },
       relations: [
         'patient',
-        'patient.user',
-        'professionalType',
-        'professionalSpecialty',
         'professional',
-        'professional.user',
+        'specialty',
         'anamnesis',
         'primaryDiagnosis',
       ],

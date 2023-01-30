@@ -12,16 +12,11 @@ export class FindProfessionalsService {
 
   public async execute(payload: {
     specialtyId?: string;
-    typeId?: string;
   }): Promise<Professional[]> {
-    const { specialtyId, typeId } = payload;
+    const { specialtyId } = payload;
 
     if (specialtyId) {
       return this.professionalsRepository.findBySpecialtyId(specialtyId);
-    }
-
-    if (typeId) {
-      return this.professionalsRepository.findByTypeId(typeId);
     }
 
     return this.professionalsRepository.find();

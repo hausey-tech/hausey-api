@@ -45,17 +45,7 @@ export class SetAppointmentProfessionalService {
       );
     }
 
-    if (
-      appointment.professionalTypeId &&
-      appointment.professionalTypeId !== professional.professionalTypeId
-    ) {
-      throw new AppError('O tipo do profissional é diferente do agendamento!');
-    }
-
-    if (
-      appointment.professionalSpecialtyId !==
-      professional.professionalSpecialtyId
-    ) {
+    if (appointment.specialtyId !== professional.specialtyId) {
       throw new AppError(
         'O profissional é de uma especialidade diferente do agendamento!',
       );

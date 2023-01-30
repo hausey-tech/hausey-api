@@ -19,7 +19,7 @@ appointmentsRouter.post(
 );
 
 appointmentsRouter.get(
-  '/prices/:professionalTypeId/:professionalSpecialtyId',
+  '/prices/:specialtyId',
   ensureAuthentication,
   appointmentsController.checkPrice,
 );

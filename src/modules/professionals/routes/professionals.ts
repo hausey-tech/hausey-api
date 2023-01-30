@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { celebrate } from 'celebrate';
 
 import {
-  CreateUserAndProfessionalSchema,
+  CreateProfessionalSchema,
   FindProfessionalsSchema,
 } from '../celebrate-schemas/professional';
 import { ProfessionalsController } from '../controllers/professionals';
@@ -21,6 +21,6 @@ professionalsRouter.get(
 professionalsRouter.post(
   '/',
   ensureAuthentication,
-  celebrate(CreateUserAndProfessionalSchema),
+  celebrate(CreateProfessionalSchema),
   professionalsController.create,
 );

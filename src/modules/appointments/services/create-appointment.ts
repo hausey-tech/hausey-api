@@ -17,8 +17,7 @@ export class CreateAppointmentService {
   ) {}
 
   public async execute(payload: ICreateAppointmentDTO): Promise<Appointment> {
-    const { patientId, professionalTypeId, professionalSpecialtyId, date } =
-      payload;
+    const { patientId, specialtyId, date } = payload;
 
     const patient = await this.patientsRepository.findById(patientId);
 
@@ -30,8 +29,7 @@ export class CreateAppointmentService {
 
     const appointment = await this.appointmentsRepository.create({
       patientId: patient.id,
-      professionalTypeId,
-      professionalSpecialtyId,
+      specialtyId,
       date,
     });
 

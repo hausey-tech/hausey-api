@@ -1,12 +1,11 @@
 import { Joi, Segments } from 'celebrate';
 
-export const CreateUserAndProfessionalSchema = {
+export const CreateProfessionalSchema = {
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string().required(),
     email: Joi.string().email().required(),
     cpf: Joi.string().required(),
-    professionalTypeId: Joi.string().uuid().required(),
-    professionalSpecialtyId: Joi.string().uuid(),
+    specialtyId: Joi.string().uuid().required(),
     registrationUf: Joi.string().length(2).required(),
     registration: Joi.string().required(),
     phoneNumber: Joi.string().required(),

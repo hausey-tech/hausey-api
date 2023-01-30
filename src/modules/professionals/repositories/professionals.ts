@@ -34,7 +34,7 @@ export class ProfessionalsRepository implements IProfessionalsRepository {
 
   public async find(): Promise<Professional[]> {
     const professionals = this.ormRepository.find({
-      relations: ['user', 'professionalSpecialty', 'professionalType'],
+      relations: ['specialty'],
     });
 
     return professionals;
