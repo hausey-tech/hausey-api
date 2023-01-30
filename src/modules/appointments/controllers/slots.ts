@@ -23,17 +23,15 @@ export class SlotsController {
 
   public async create(request: Request, response: Response): Promise<Response> {
     const roleId = request.user?.roleId;
-    const { professionalId, weekDay, startTime, endTime } = request.body;
+    const { professionalId, days } = request.body;
 
     const createSlotService = container.resolve(CreateSlotService);
 
-    const slot = await createSlotService.execute({
+    await createSlotService.execute({
       professionalId: professionalId || roleId,
-      weekDay,
-      startTime,
-      endTime,
+      days,
     });
 
-    return response.json(slot);
+    return response.json({ message: 'Escala cadastrada com sucesso!' });
   }
 }

@@ -1,10 +1,9 @@
 import { injectable, inject } from 'tsyringe';
 
+import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 import { ISlotsRepository } from '../contracts/repositories/slots';
 import { ICreateSlotDTO } from '../contracts/dtos/create-slot';
-import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 import { AppError } from '../../../shared/errors/app-error';
-import { Slot } from '../entities/slot';
 
 @injectable()
 export class CreateSlotService {
@@ -16,8 +15,8 @@ export class CreateSlotService {
     private slotsRepository: ISlotsRepository,
   ) {}
 
-  public async execute(payload: ICreateSlotDTO): Promise<Slot> {
-    const { professionalId, weekDay, startTime, endTime } = payload;
+  public async execute(payload: ICreateSlotDTO): Promise<void> {
+    const { professionalId, days } = payload;
 
     const professional = await this.professionalsRepository.findById(
       professionalId,
@@ -29,15 +28,20 @@ export class CreateSlotService {
       );
     }
 
-    const slot = await this.slotsRepository.create({
-      professionalId,
-      weekDay,
-      startTime,
-      endTime,
-    });
-
-    await this.slotsRepository.save(slot);
-
-    return slot;
+    await Promise.all(
+      days.map(async day => {
+        const { weekDay } = day;
+        day.times.map(async time => {
+          const { startTime, endTime } = time;
+          const slot = await this.slotsRepository.create({
+            professionalId,
+            weekDay,
+            startTime,
+            endTime,
+          });
+          await this.slotsRepository.save(slot);
+        });
+      }),
+    );
   }
 }

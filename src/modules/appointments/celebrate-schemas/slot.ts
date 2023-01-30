@@ -2,19 +2,34 @@ import { Joi, Segments } from 'celebrate';
 
 export const FindSlotsSchema = {
   [Segments.PARAMS]: Joi.object().keys({
-    uuid: Joi.string().uuid(),
+    specialtyId: Joi.string().uuid().required(),
   }),
   [Segments.QUERY]: Joi.object().keys({
-    filterBy: Joi.string().equal('type', 'specialty'),
     days: Joi.number().min(1).max(30),
   }),
 };
 
 export const CreateSlotSchema = {
   [Segments.BODY]: Joi.object().keys({
-    professionalId: Joi.string().uuid(),
-    weekDay: Joi.number().required().equal(1, 2, 3, 4, 5, 6, 7),
-    startTime: Joi.string().required(),
-    endTime: Joi.string().required(),
+    professionalId: Joi.string().uuid().required(),
+    days: Joi.array()
+      .items(
+        Joi.object()
+          .keys({
+            weekDay: Joi.number().equal(1, 2, 3, 4, 5, 6, 7).required(),
+            times: Joi.array()
+              .items(
+                Joi.object()
+                  .keys({
+                    startTime: Joi.string().required(),
+                    endTime: Joi.string().required(),
+                  })
+                  .required(),
+              )
+              .required(),
+          })
+          .required(),
+      )
+      .required(),
   }),
 };

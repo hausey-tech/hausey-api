@@ -12,7 +12,7 @@ import {
   isBefore,
 } from 'date-fns';
 
-import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
+import { IProfessionalSpecialtiesRepository } from '../../professionals/contracts/repositories/professional-specialties';
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
 import { ISlotsRepository } from '../contracts/repositories/slots';
 import { groupArrayByKey } from '../../../shared/utils/group-array-by-key';
@@ -47,29 +47,31 @@ export class FindAvailableSlotsService {
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,
 
-    @inject('ProfessionalsRepository')
-    private professionalsRepository: IProfessionalsRepository,
-
     @inject('SlotsRepository')
     private slotsRepository: ISlotsRepository,
+
+    @inject('ProfessionalSpecialtiesRepository')
+    private professionalSpecialtiesRepository: IProfessionalSpecialtiesRepository,
   ) {}
 
   public async execute({
     specialtyId,
     days,
   }: IFindAvailableSlotsDTO): Promise<IAvailableSlots[]> {
-    const professionals = [];
-    // const professionals = await this.professionalsRepository.findBySpecialtyId(
-    //   specialtyId,
-    // );
+    const professionalsSpecialty =
+      await this.professionalSpecialtiesRepository.findBySpecialtyId(
+        specialtyId,
+      );
 
-    if (professionals.length === 0) {
+    if (professionalsSpecialty.length === 0) {
       throw new AppError(
         'Não há nenhum profissional dessa especialidade cadastrado!',
       );
     }
 
-    const professionalsIds = professionals.map(p => p.id);
+    const professionalsIds = [
+      ...new Set(professionalsSpecialty.map(p => p.professionalId)),
+    ];
 
     const slots = await this.slotsRepository.findByProfessionalId(
       professionalsIds,
