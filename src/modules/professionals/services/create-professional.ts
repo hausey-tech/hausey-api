@@ -1,9 +1,10 @@
 import { injectable, inject, container } from 'tsyringe';
 
+import { IProfessionalsRepository } from '../contracts/repositories/professionals';
 import { ISpecialtiesRepository } from '../contracts/repositories/specialties';
 import { ICreateProfessionalDTO } from '../contracts/dtos/create-professional';
-import { IProfessionalsRepository } from '../contracts/repositories/professionals';
 import { CreateMemedUser } from '../../integrations/services/create-memed-user';
+import { IHashProvider } from '../../../shared/providers/HashProvider/entities/hash-provider';
 import { Professional } from '../entities/professional';
 import { formatDate } from '../../../shared/utils/format-date';
 import { AppError } from '../../../shared/errors/app-error';
@@ -16,6 +17,9 @@ export class CreateUserAndProfessionalService {
 
     @inject('SpecialtiesRepository')
     private specialtiesRepository: ISpecialtiesRepository,
+
+    @inject('HashProvider')
+    private hashProvider: IHashProvider,
   ) {}
 
   public async execute(payload: ICreateProfessionalDTO): Promise<Professional> {
@@ -41,9 +45,15 @@ export class CreateUserAndProfessionalService {
       );
     }
 
+    let hashedPassword: string;
+
+    if (password) {
+      hashedPassword = await this.hashProvider.generateHash(password);
+    }
+
     const professional = await this.professionalsRepository.create({
       email,
-      password,
+      password: hashedPassword,
       name,
       document,
       birthdate,

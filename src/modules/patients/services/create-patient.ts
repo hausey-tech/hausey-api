@@ -43,9 +43,11 @@ export class CreatePatientService {
       }
     }
 
-    const hashedPassword = password
-      ? await this.hashProvider.generateHash(password)
-      : undefined;
+    let hashedPassword: string;
+
+    if (password) {
+      hashedPassword = await this.hashProvider.generateHash(password);
+    }
 
     const patientDeleted = await this.patientsRepository.findByEmailWithDeleted(
       email,
