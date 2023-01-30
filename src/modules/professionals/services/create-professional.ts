@@ -1,5 +1,6 @@
 import { injectable, inject, container } from 'tsyringe';
 
+import { IProfessionalSpecialtiesRepository } from '../contracts/repositories/professional-specialties';
 import { IProfessionalsRepository } from '../contracts/repositories/professionals';
 import { ISpecialtiesRepository } from '../contracts/repositories/specialties';
 import { ICreateProfessionalDTO } from '../contracts/dtos/create-professional';
@@ -20,6 +21,9 @@ export class CreateUserAndProfessionalService {
 
     @inject('HashProvider')
     private hashProvider: IHashProvider,
+
+    @inject('ProfessionalSpecialtiesRepository')
+    private professionalSpecialtiesRepository: IProfessionalSpecialtiesRepository,
   ) {}
 
   public async execute(payload: ICreateProfessionalDTO): Promise<Professional> {
@@ -31,19 +35,28 @@ export class CreateUserAndProfessionalService {
       birthdate,
       phoneNumber,
       sex,
-      specialtyId,
-      specialtyRegistration,
+      specialties,
       registration,
       registrationUf,
     } = payload;
 
-    const specialty = await this.specialtiesRepository.findById(specialtyId);
+    let specialtyMemedId: number;
 
-    if (!specialty) {
-      throw new AppError(
-        'A especialidade informada não existe, verifique e tente novamente!',
-      );
-    }
+    await Promise.all(
+      specialties.map(async specialtyId => {
+        const specialty = await this.specialtiesRepository.findById(
+          specialtyId,
+        );
+
+        if (!specialty) {
+          throw new AppError(
+            `A especialidade informada não existe, verifique e tente novamente! (id: ${specialtyId})`,
+          );
+        }
+
+        specialtyMemedId = specialty.memedId;
+      }),
+    );
 
     let hashedPassword: string;
 
@@ -59,14 +72,23 @@ export class CreateUserAndProfessionalService {
       birthdate,
       phoneNumber,
       sex,
-      specialtyId,
-      specialtyRegistration,
       registrationUf,
       registration,
     });
 
     const savedProfessional = await this.professionalsRepository.save(
       professional,
+    );
+
+    await Promise.all(
+      specialties.map(async specialtyId => {
+        await this.professionalSpecialtiesRepository.save(
+          await this.professionalSpecialtiesRepository.create({
+            professionalId: savedProfessional.id,
+            specialtyId,
+          }),
+        );
+      }),
     );
 
     try {
@@ -92,7 +114,7 @@ export class CreateUserAndProfessionalService {
         relationships: {
           especialidade: {
             data: {
-              id: specialty.memedId,
+              id: specialtyMemedId,
             },
           },
         },

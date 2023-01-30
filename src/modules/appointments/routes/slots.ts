@@ -9,7 +9,7 @@ export const slotsRouter = Router();
 const slotsController = new SlotsController();
 
 slotsRouter.get(
-  '/slots/:uuid',
+  '/slots/:specialtyId',
   ensureAuthentication,
   celebrate(FindSlotsSchema),
   slotsController.index,

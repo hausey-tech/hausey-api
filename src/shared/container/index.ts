@@ -8,6 +8,9 @@ import { ProfessionalsRepository } from '../../modules/professionals/repositorie
 import { ISpecialtiesRepository } from '../../modules/professionals/contracts/repositories/specialties';
 import { SpecialtiesRepository } from '../../modules/professionals/repositories/specialties';
 
+import { IProfessionalSpecialtiesRepository } from '../../modules/professionals/contracts/repositories/professional-specialties';
+import { ProfessionalSpecialtiesRepository } from '../../modules/professionals/repositories/professional-specialties';
+
 import { IPatientsRepository } from '../../modules/patients/contracts/repositories/patients';
 import { PatientsRepository } from '../../modules/patients/repositories/patients';
 
@@ -41,6 +44,11 @@ import { PlanSpecialtyDiscountsRepository } from '../../modules/plans/repositori
 container.registerSingleton<IProfessionalsRepository>(
   'ProfessionalsRepository',
   ProfessionalsRepository,
+);
+
+container.registerSingleton<IProfessionalSpecialtiesRepository>(
+  'ProfessionalSpecialtiesRepository',
+  ProfessionalSpecialtiesRepository,
 );
 
 container.registerSingleton<IPatientsRepository>(

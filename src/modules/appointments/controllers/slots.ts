@@ -6,18 +6,17 @@ import { CreateSlotService } from '../services/create-slot';
 
 export class SlotsController {
   public async index(request: Request, response: Response): Promise<Response> {
-    const { uuid } = request.params;
-    const { filterBy = 'specialty', days = 3 } = request.query;
+    const { specialtyId } = request.params;
+    const { days = 3 } = request.query;
 
     const findAvailableSlotsService = container.resolve(
       FindAvailableSlotsService,
     );
 
-    const availableSlots = await findAvailableSlotsService.execute(
-      uuid,
-      filterBy as string,
-      days as number,
-    );
+    const availableSlots = await findAvailableSlotsService.execute({
+      specialtyId,
+      days: days as number,
+    });
 
     return response.json(availableSlots);
   }

@@ -16,10 +16,14 @@ import { IProfessionalsRepository } from '../../professionals/contracts/reposito
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
 import { ISlotsRepository } from '../contracts/repositories/slots';
 import { groupArrayByKey } from '../../../shared/utils/group-array-by-key';
-import { Professional } from '../../professionals/entities/professional';
 import { Appointment } from '../entities/appointment';
 import { AppError } from '../../../shared/errors/app-error';
 import { Slot } from '../entities/slot';
+
+interface IFindAvailableSlotsDTO {
+  specialtyId: string;
+  days: number;
+}
 
 interface IBusyDateSlots {
   date: string;
@@ -50,24 +54,18 @@ export class FindAvailableSlotsService {
     private slotsRepository: ISlotsRepository,
   ) {}
 
-  public async execute(
-    uuid: string,
-    filterBy: string,
-    days: number,
-  ): Promise<IAvailableSlots[]> {
-    let professionals: Professional[];
-
-    if (filterBy === 'type') {
-      professionals = await this.professionalsRepository.findByTypeId(uuid);
-    } else if (filterBy === 'specialty') {
-      professionals = await this.professionalsRepository.findBySpecialtyId(
-        uuid,
-      );
-    }
+  public async execute({
+    specialtyId,
+    days,
+  }: IFindAvailableSlotsDTO): Promise<IAvailableSlots[]> {
+    const professionals = [];
+    // const professionals = await this.professionalsRepository.findBySpecialtyId(
+    //   specialtyId,
+    // );
 
     if (professionals.length === 0) {
       throw new AppError(
-        'UUID incorreto ou não há nenhum profissional cadastrado nesse tipo ou especialidade!',
+        'Não há nenhum profissional dessa especialidade cadastrado!',
       );
     }
 
@@ -114,22 +112,13 @@ export class FindAvailableSlotsService {
     );
 
     const appointmentsInRequiredDates: Appointment[] = [];
-    let appointments: Appointment[];
     await Promise.all(
       requiredDates.map(async t => {
-        if (filterBy === 'type') {
-          appointments =
-            await this.appointmentsRepository.findByTypeBetweenDates(uuid, [
-              setHours(parseISO(t.date), 0),
-              setHours(parseISO(t.date), 20),
-            ]);
-        } else if (filterBy === 'specialty') {
-          appointments =
-            await this.appointmentsRepository.findBySpecialtyBetweenDates(
-              uuid,
-              [setHours(parseISO(t.date), 0), setHours(parseISO(t.date), 20)],
-            );
-        }
+        const appointments =
+          await this.appointmentsRepository.findBySpecialtyBetweenDates(
+            specialtyId,
+            [setHours(parseISO(t.date), 0), setHours(parseISO(t.date), 20)],
+          );
         if (appointments.length > 0) {
           appointmentsInRequiredDates.push(...appointments);
         }

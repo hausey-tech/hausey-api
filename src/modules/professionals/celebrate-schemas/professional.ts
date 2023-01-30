@@ -5,7 +5,7 @@ export const CreateProfessionalSchema = {
     name: Joi.string().required(),
     email: Joi.string().email().required(),
     cpf: Joi.string().required(),
-    specialtyId: Joi.string().uuid().required(),
+    specialties: Joi.array().items(Joi.string().uuid().required()).required(),
     registrationUf: Joi.string().length(2).required(),
     registration: Joi.string().required(),
     phoneNumber: Joi.string().required(),
@@ -15,7 +15,6 @@ export const CreateProfessionalSchema = {
       .regex(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, {
         name: 'YYYY-MM-DD',
       }),
-    specialtyRegistration: Joi.string(),
     password: Joi.string(),
   }),
 };

@@ -6,8 +6,7 @@ export interface ICreateProfessionalDTO {
   birthdate: string;
   phoneNumber: string;
   sex: 'M' | 'F';
-  specialtyId: string;
-  specialtyRegistration: string;
+  specialties: string[];
   registration: string;
   registrationUf: string;
 }

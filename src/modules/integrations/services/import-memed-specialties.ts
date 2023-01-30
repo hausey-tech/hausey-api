@@ -2,7 +2,7 @@ import { injectable, inject } from 'tsyringe';
 
 import { memedInstance } from '../utils/memed-instance';
 import { ISpecialtiesRepository } from '../../professionals/contracts/repositories/specialties';
-import { CreateSpecialtyDTO } from '../../professionals/contracts/dtos/create-specialty';
+import { ICreateSpecialtyDTO } from '../../professionals/contracts/dtos/create-specialty';
 
 @injectable()
 export class ImportMemedSpecialties {
@@ -16,7 +16,7 @@ export class ImportMemedSpecialties {
 
     const specialties = data.data;
 
-    const formattedSpecialties: CreateSpecialtyDTO[] = specialties.map(
+    const formattedSpecialties: ICreateSpecialtyDTO[] = specialties.map(
       (specialty: any) => ({
         memedId: specialty.id,
         group: specialty.attributes.grupo,
