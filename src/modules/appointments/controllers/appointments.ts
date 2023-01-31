@@ -5,7 +5,7 @@ import { FindAllAppointmentsService } from '../services/find-all-appointments';
 import { CheckAppointmentPrice } from '../services/check-appointment-price';
 import { CreateAppointmentService } from '../services/create-appointment';
 import { UploadFileToS3 } from '../../integrations/services/upload-file-to-s3';
-import { ListFilesFromS3 } from '../../integrations/services/list-files-from-s3';
+import { ListAppointmentFilesService } from '../services/list-appointment-files';
 import { ToggleAppointmentPaidService } from '../services/toggle-appointment-paid';
 
 export class AppointmentsController {
@@ -80,12 +80,14 @@ export class AppointmentsController {
   ): Promise<Response> {
     const { appointmentId } = request.params;
 
-    const listFilesService = container.resolve(ListFilesFromS3);
-
-    const files = await listFilesService.execute(
-      request,
-      `appointments/${appointmentId}`,
+    const listAppointmentFilesService = container.resolve(
+      ListAppointmentFilesService,
     );
+
+    const files = await listAppointmentFilesService.execute({
+      appointmentId,
+      request,
+    });
 
     return response.json(files);
   }

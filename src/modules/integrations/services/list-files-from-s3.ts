@@ -19,12 +19,13 @@ export class ListFilesFromS3 {
 
     try {
       const response = await s3Instance.send(command);
-      const files = response?.Contents.map(item => {
+      if (!response.Contents) return [];
+      const files = response.Contents.map(item => {
         const splittedKey = item.Key.split('/');
         const name = splittedKey[splittedKey.length - 1].slice(37);
         return {
           name,
-          url: `${baseUrl}/integrations/s3/files/${item.Key}`,
+          url: `${baseUrl}/v1/integrations/s3/files/${item.Key}`,
         };
       });
       return files;
