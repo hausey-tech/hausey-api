@@ -36,14 +36,17 @@ export class Appointment extends BaseEntity {
   @Column('varchar', { name: 'anamnesis_id', nullable: true })
   anamnesisId: string;
 
-  @OneToOne(() => Anamnesis)
+  @OneToOne(() => Anamnesis, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
   @JoinColumn({ name: 'anamnesis_id' })
   anamnesis: Anamnesis;
 
   @Column('varchar', { name: 'primary_diagnosis_id', nullable: true })
   primaryDiagnosisId: string;
 
-  @OneToOne(() => PrimaryDiagnosis)
+  @OneToOne(() => PrimaryDiagnosis, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
   @JoinColumn({ name: 'primary_diagnosis_id' })
   primaryDiagnosis: PrimaryDiagnosis;
 
