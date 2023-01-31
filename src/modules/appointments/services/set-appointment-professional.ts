@@ -1,10 +1,11 @@
 import { injectable, inject } from 'tsyringe';
 
+import { IProfessionalSpecialtiesRepository } from '../../professionals/contracts/repositories/professional-specialties';
 import { ISetAppointmentProfessionalDTO } from '../contracts/dtos/set-appointment-professional';
-import { AppError } from '../../../shared/errors/app-error';
-import { Appointment } from '../entities/appointment';
 import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
+import { Appointment } from '../entities/appointment';
+import { AppError } from '../../../shared/errors/app-error';
 
 @injectable()
 export class SetAppointmentProfessionalService {
@@ -14,6 +15,9 @@ export class SetAppointmentProfessionalService {
 
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,
+
+    @inject('ProfessionalSpecialtiesRepository')
+    private professionalSpecialtiesRepository: IProfessionalSpecialtiesRepository,
   ) {}
 
   public async execute(
@@ -45,9 +49,22 @@ export class SetAppointmentProfessionalService {
       );
     }
 
-    if (appointment.specialtyId !== professional.specialtyId) {
+    const professionalSpecialties =
+      await this.professionalSpecialtiesRepository.findByProfessionalId(
+        professionalId,
+      );
+
+    let hasRequiredSpecialty: boolean;
+
+    professionalSpecialties.forEach(professionalSpecialty => {
+      if (appointment.specialtyId === professionalSpecialty.specialtyId) {
+        hasRequiredSpecialty = true;
+      }
+    });
+
+    if (!hasRequiredSpecialty) {
       throw new AppError(
-        'O profissional é de uma especialidade diferente do agendamento!',
+        'O profissional não possui a especialidade diferente do agendamento!',
       );
     }
 
