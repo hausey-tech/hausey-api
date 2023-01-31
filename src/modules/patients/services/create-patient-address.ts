@@ -6,10 +6,6 @@ import { ICreateAddressDTO } from '../../addresses/contracts/dtos/create-address
 import { AppError } from '../../../shared/errors/app-error';
 import { Address } from '../../addresses/entities/address';
 
-interface IPayload extends ICreateAddressDTO {
-  patientId: string;
-}
-
 @injectable()
 export class CreatePatientAddressService {
   constructor(
@@ -17,8 +13,8 @@ export class CreatePatientAddressService {
     private patientsRepository: IPatientsRepository,
   ) {}
 
-  public async execute(payload: IPayload): Promise<Address> {
-    const { patientId, ...data } = payload;
+  public async execute(payload: ICreateAddressDTO): Promise<Address> {
+    const { patientId } = payload;
 
     const patient = await this.patientsRepository.findById(patientId);
 
@@ -36,7 +32,7 @@ export class CreatePatientAddressService {
 
     const createAddressService = container.resolve(CreateAddressService);
 
-    const address = await createAddressService.execute(data);
+    const address = await createAddressService.execute(payload);
 
     patient.addressId = address.id;
 

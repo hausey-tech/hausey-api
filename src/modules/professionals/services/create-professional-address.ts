@@ -6,10 +6,6 @@ import { ICreateAddressDTO } from '../../addresses/contracts/dtos/create-address
 import { AppError } from '../../../shared/errors/app-error';
 import { Address } from '../../addresses/entities/address';
 
-interface IPayload extends ICreateAddressDTO {
-  professionalId: string;
-}
-
 @injectable()
 export class CreateProfessionalAddressService {
   constructor(
@@ -17,8 +13,8 @@ export class CreateProfessionalAddressService {
     private professionalsRepository: IProfessionalsRepository,
   ) {}
 
-  public async execute(payload: IPayload): Promise<Address> {
-    const { professionalId, ...data } = payload;
+  public async execute(payload: ICreateAddressDTO): Promise<Address> {
+    const { professionalId } = payload;
 
     const profissional = await this.professionalsRepository.findById(
       professionalId,
@@ -38,7 +34,7 @@ export class CreateProfessionalAddressService {
 
     const createAddressService = container.resolve(CreateAddressService);
 
-    const address = await createAddressService.execute(data);
+    const address = await createAddressService.execute(payload);
 
     profissional.addressId = address.id;
 

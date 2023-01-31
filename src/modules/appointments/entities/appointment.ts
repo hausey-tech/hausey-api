@@ -22,14 +22,14 @@ export class Appointment extends BaseEntity {
   @Column('varchar', { name: 'professional_id', nullable: true })
   professionalId: string;
 
-  @ManyToOne(() => Professional)
+  @ManyToOne(() => Professional, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
   @JoinColumn({ name: 'professional_id' })
   professional: Professional;
 
   @Column('varchar', { name: 'patient_id' })
   patientId: string;
 
-  @ManyToOne(() => Patient)
+  @ManyToOne(() => Patient, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
   @JoinColumn({ name: 'patient_id' })
   patient: Patient;
 

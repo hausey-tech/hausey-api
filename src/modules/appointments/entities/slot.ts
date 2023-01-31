@@ -8,7 +8,7 @@ export class Slot extends BaseEntity {
   @Column('varchar', { name: 'professional_id' })
   professionalId: string;
 
-  @ManyToOne(() => Professional)
+  @ManyToOne(() => Professional, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   @JoinColumn({ name: 'professional_id' })
   professional: Professional;
 

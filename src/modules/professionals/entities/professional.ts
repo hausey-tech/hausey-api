@@ -17,7 +17,7 @@ export class Professional extends UserEntity {
   @Column('varchar', { name: 'address_id', nullable: true })
   addressId: string;
 
-  @OneToOne(() => Address)
+  @OneToOne(() => Address, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
   @JoinColumn({ name: 'address_id' })
   address: Address;
 }
