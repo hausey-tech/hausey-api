@@ -12,12 +12,14 @@ import { specialtiesRouter as appointmentsSpecialtiesRouter } from '../../module
 
 import { specialtiesRouter } from '../../modules/professionals/routes/specialties';
 import { professionalsRouter } from '../../modules/professionals/routes/professionals';
+import { professionalAddressesRouter } from '../../modules/professionals/routes/professional-addresses';
 
 import { programsRouter } from '../../modules/programs/routes/programs';
 
 import { plansRouter } from '../../modules/plans/routes/plans';
 
 import { patientsRouter } from '../../modules/patients/routes/patients';
+import { patientAddressesRouter } from '../../modules/patients/routes/patient-addresses';
 
 import { twilioRouter } from '../../modules/integrations/routes/twilio';
 import { memedRouter } from '../../modules/integrations/routes/memed';
@@ -36,8 +38,13 @@ routes.use(
   primaryDiagnosesRouter,
   appointmentsSpecialtiesRouter,
 );
-routes.use('/professionals', professionalsRouter, specialtiesRouter);
-routes.use('/patients', patientsRouter);
+routes.use(
+  '/professionals',
+  professionalsRouter,
+  specialtiesRouter,
+  professionalAddressesRouter,
+);
+routes.use('/patients', patientsRouter, patientAddressesRouter);
 routes.use('/programs', programsRouter);
 routes.use('/plans', plansRouter);
 routes.use('/integrations', twilioRouter, memedRouter, s3Router);

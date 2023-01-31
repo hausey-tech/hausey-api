@@ -2,6 +2,9 @@ import { container } from 'tsyringe';
 
 import '../providers';
 
+import { IAddressesRepository } from '../../modules/addresses/contracts/repositories/addresses';
+import { AddressesRepository } from '../../modules/addresses/repositories/addresses';
+
 import { IProfessionalsRepository } from '../../modules/professionals/contracts/repositories/professionals';
 import { ProfessionalsRepository } from '../../modules/professionals/repositories/professionals';
 
@@ -40,6 +43,11 @@ import { PlansRepository } from '../../modules/plans/repositories/plans';
 
 import { IPlanSpecialtyDiscountsRepository } from '../../modules/plans/contracts/repositories/plan-specialty-discounts';
 import { PlanSpecialtyDiscountsRepository } from '../../modules/plans/repositories/plan-specialty-discounts';
+
+container.registerSingleton<IAddressesRepository>(
+  'AddressesRepository',
+  AddressesRepository,
+);
 
 container.registerSingleton<IProfessionalsRepository>(
   'ProfessionalsRepository',
