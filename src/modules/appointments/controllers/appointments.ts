@@ -4,7 +4,7 @@ import { container } from 'tsyringe';
 import { FindAllAppointmentsService } from '../services/find-all-appointments';
 import { CheckAppointmentPrice } from '../services/check-appointment-price';
 import { CreateAppointmentService } from '../services/create-appointment';
-import { UploadFileToS3 } from '../../integrations/services/upload-file-to-s3';
+import { UploadAppointmentFilesService } from '../services/upload-appointment-files';
 import { ListAppointmentFilesService } from '../services/list-appointment-files';
 import { ToggleAppointmentPaidService } from '../services/toggle-appointment-paid';
 
@@ -64,12 +64,14 @@ export class AppointmentsController {
 
     const { appointmentId } = request.params;
 
-    const uploadFileService = container.resolve(UploadFileToS3);
-
-    await uploadFileService.execute(
-      files as Express.Multer.File[],
-      `appointments/${appointmentId}`,
+    const uploadAppointmentFilesService = container.resolve(
+      UploadAppointmentFilesService,
     );
+
+    await uploadAppointmentFilesService.execute({
+      appointmentId,
+      files: files as Express.Multer.File[],
+    });
 
     return response.json({ message: 'Arquivo(s) enviado(s) com sucesso!' });
   }

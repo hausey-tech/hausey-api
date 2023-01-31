@@ -6,7 +6,7 @@ import { AppError } from '../../../shared/errors/app-error';
 import { s3Instance } from '../utils/s3-instance';
 
 @injectable()
-export class UploadFileToS3 {
+export class UploadFilesToS3 {
   public async execute(
     files: Express.Multer.File[],
     prefix?: string,
