@@ -22,13 +22,12 @@ export class SlotsController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const roleId = request.user?.roleId;
     const { professionalId, days } = request.body;
 
     const createSlotService = container.resolve(CreateSlotService);
 
     await createSlotService.execute({
-      professionalId: professionalId || roleId,
+      professionalId,
       days,
     });
 
