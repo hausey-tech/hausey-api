@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 import { BaseEntity } from '../../../shared/typeorm/entities/base';
-import { Specialty } from '../../professionals/entities/specialty';
+import { Specialty } from '../../specialties/entities/specialty';
 import { Program } from './program';
 
 @Entity('program_specialty_discounts')

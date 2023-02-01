@@ -4,7 +4,7 @@ import { AppError } from '../../../shared/errors/app-error';
 import { formatMoney } from '../../../shared/utils/format-money';
 import { IPatientsRepository } from '../../patients/contracts/repositories/patients';
 import { IPatientProgramsRepository } from '../../patients/contracts/repositories/patient-programs';
-import { ISpecialtiesRepository } from '../../professionals/contracts/repositories/specialties';
+import { ISpecialtiesRepository } from '../../specialties/contracts/repositories/specialties';
 import { IPlanSpecialtyDiscountsRepository } from '../../plans/contracts/repositories/plan-specialty-discounts';
 import { IProgramSpecialtyDiscountsRepository } from '../../programs/contracts/repositories/program-specialty-discounts';
 

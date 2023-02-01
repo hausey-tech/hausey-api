@@ -2,7 +2,7 @@ import { injectable, inject, container } from 'tsyringe';
 
 import { IProfessionalSpecialtiesRepository } from '../contracts/repositories/professional-specialties';
 import { IProfessionalsRepository } from '../contracts/repositories/professionals';
-import { ISpecialtiesRepository } from '../contracts/repositories/specialties';
+import { ISpecialtiesRepository } from '../../specialties/contracts/repositories/specialties';
 import { ICreateProfessionalDTO } from '../contracts/dtos/create-professional';
 import { CreateMemedUser } from '../../integrations/services/create-memed-user';
 import { IHashProvider } from '../../../shared/providers/HashProvider/entities/hash-provider';

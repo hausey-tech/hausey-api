@@ -1,7 +1,7 @@
 import { Entity, Column, ManyToOne, JoinColumn, OneToOne } from 'typeorm';
 
 import { Patient } from '../../patients/entities/patient';
-import { Specialty } from '../../professionals/entities/specialty';
+import { Specialty } from '../../specialties/entities/specialty';
 import { Professional } from '../../professionals/entities/professional';
 import { BaseEntity } from '../../../shared/typeorm/entities/base';
 import { Anamnesis } from './anamnesis';

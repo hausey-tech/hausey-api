@@ -1,8 +1,8 @@
 import { injectable, inject } from 'tsyringe';
 
 import { memedInstance } from '../utils/memed-instance';
-import { ISpecialtiesRepository } from '../../professionals/contracts/repositories/specialties';
-import { ICreateSpecialtyDTO } from '../../professionals/contracts/dtos/create-specialty';
+import { ISpecialtiesRepository } from '../../specialties/contracts/repositories/specialties';
+import { ICreateSpecialtyDTO } from '../../specialties/contracts/dtos/create-specialty';
 
 @injectable()
 export class ImportMemedSpecialties {

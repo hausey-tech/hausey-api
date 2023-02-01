@@ -2,7 +2,7 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 import { BaseEntity } from '../../../shared/typeorm/entities/base';
 import { Professional } from './professional';
-import { Specialty } from './specialty';
+import { Specialty } from '../../specialties/entities/specialty';
 
 @Entity('professional_specialties')
 export class ProfessionalSpecialty extends BaseEntity {

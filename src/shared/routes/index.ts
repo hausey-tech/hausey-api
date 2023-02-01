@@ -6,9 +6,9 @@ import { appointmentsRouter } from '../../modules/appointments/routes/appointmen
 import { slotsRouter } from '../../modules/appointments/routes/slots';
 import { anamnesesRouter } from '../../modules/appointments/routes/anamneses';
 import { primaryDiagnosesRouter } from '../../modules/appointments/routes/primary-diagnoses';
-import { specialtiesRouter as appointmentsSpecialtiesRouter } from '../../modules/appointments/routes/specialties';
 
-import { specialtiesRouter } from '../../modules/professionals/routes/specialties';
+import { specialtiesRouter } from '../../modules/specialties/routes/specialties';
+
 import { professionalsRouter } from '../../modules/professionals/routes/professionals';
 import { professionalAddressesRouter } from '../../modules/professionals/routes/professional-addresses';
 
@@ -32,14 +32,9 @@ routes.use(
   slotsRouter,
   anamnesesRouter,
   primaryDiagnosesRouter,
-  appointmentsSpecialtiesRouter,
 );
-routes.use(
-  '/professionals',
-  professionalsRouter,
-  specialtiesRouter,
-  professionalAddressesRouter,
-);
+routes.use('/specialties', specialtiesRouter);
+routes.use('/professionals', professionalsRouter, professionalAddressesRouter);
 routes.use('/patients', patientsRouter, patientAddressesRouter);
 routes.use('/programs', programsRouter);
 routes.use('/plans', plansRouter);

@@ -8,8 +8,8 @@ import { AddressesRepository } from '../../modules/addresses/repositories/addres
 import { IProfessionalsRepository } from '../../modules/professionals/contracts/repositories/professionals';
 import { ProfessionalsRepository } from '../../modules/professionals/repositories/professionals';
 
-import { ISpecialtiesRepository } from '../../modules/professionals/contracts/repositories/specialties';
-import { SpecialtiesRepository } from '../../modules/professionals/repositories/specialties';
+import { ISpecialtiesRepository } from '../../modules/specialties/contracts/repositories/specialties';
+import { SpecialtiesRepository } from '../../modules/specialties/repositories/specialties';
 
 import { IProfessionalSpecialtiesRepository } from '../../modules/professionals/contracts/repositories/professional-specialties';
 import { ProfessionalSpecialtiesRepository } from '../../modules/professionals/repositories/professional-specialties';

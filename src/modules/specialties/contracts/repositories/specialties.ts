@@ -2,7 +2,7 @@ import { Specialty } from '../../entities/specialty';
 import { ICreateSpecialtyDTO } from '../dtos/create-specialty';
 
 export interface ISpecialtiesRepository {
-  findAll(): Promise<Specialty[]>;
+  find(): Promise<Specialty[]>;
   findById(id: string): Promise<Specialty>;
   findByIds(ids: string[]): Promise<Specialty[]>;
   create(specialty: ICreateSpecialtyDTO): Promise<Specialty>;

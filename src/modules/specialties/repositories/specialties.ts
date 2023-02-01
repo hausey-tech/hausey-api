@@ -12,7 +12,7 @@ export class SpecialtiesRepository implements ISpecialtiesRepository {
     this.ormRepository = PostgresDataSource.getRepository(Specialty);
   }
 
-  public async findAll(): Promise<Specialty[]> {
+  public async find(): Promise<Specialty[]> {
     return this.ormRepository.find({ order: { group: 'ASC' } });
   }
 

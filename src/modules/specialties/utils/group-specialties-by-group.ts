@@ -1,18 +1,16 @@
 import { groupArrayByKey } from '../../../shared/utils/group-array-by-key';
-import { ProfessionalSpecialty } from '../entities/specialty';
+import { Specialty } from '../entities/specialty';
 
 interface GroupedSpecialty {
-  [group: string]: ProfessionalSpecialty[];
+  [group: string]: Specialty[];
 }
 
 export interface FormattedSpecialty {
   group: string;
-  specialties: ProfessionalSpecialty[];
+  specialties: Specialty[];
 }
 
-export const groupSpecialtiesByGroup = (
-  specialties: ProfessionalSpecialty[],
-) => {
+export const groupSpecialtiesByGroup = (specialties: Specialty[]) => {
   const groupedSpecialties: GroupedSpecialty = groupArrayByKey(
     specialties,
     'group',
