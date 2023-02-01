@@ -15,4 +15,5 @@ export interface IAppointmentsRepository {
   find(where: FindOptionsWhere<Appointment>): Promise<Appointment[]>;
   findByProfessional(professionalId: string): Promise<Appointment[]>;
   findByPatient(patientId: string): Promise<Appointment[]>;
+  update(id: string, payload: Appointment): Promise<Appointment>;
 }

@@ -88,4 +88,9 @@ export class AppointmentsRepository implements IAppointmentsRepository {
       ],
     });
   }
+
+  public async update(id: string, payload: Appointment): Promise<Appointment> {
+    await this.ormRepository.update(id, payload);
+    return this.findById(id);
+  }
 }

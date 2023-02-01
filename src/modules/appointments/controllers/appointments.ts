@@ -4,6 +4,7 @@ import { container } from 'tsyringe';
 import { UploadAppointmentFilesService } from '../services/upload-appointment-files';
 import { ToggleAppointmentPaidService } from '../services/toggle-appointment-paid';
 import { ListAppointmentFilesService } from '../services/list-appointment-files';
+import { UpdateAppointmentService } from '../services/update-appointment';
 import { CreateAppointmentService } from '../services/create-appointment';
 import { FindAppointmentsService } from '../services/find-appointments';
 import { SetProfessionalService } from '../services/set-professional';
@@ -32,6 +33,22 @@ export class AppointmentsController {
       patientId: id,
       specialtyId,
       date,
+    });
+
+    return response.json(appointment);
+  }
+
+  public async update(request: Request, response: Response): Promise<Response> {
+    const { appointmentId } = request.params;
+    const payload = request.body;
+
+    const updateAppointmentService = container.resolve(
+      UpdateAppointmentService,
+    );
+
+    const appointment = await updateAppointmentService.execute({
+      appointmentId,
+      payload,
     });
 
     return response.json(appointment);

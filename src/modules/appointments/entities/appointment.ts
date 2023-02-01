@@ -1,11 +1,9 @@
-import { Entity, Column, ManyToOne, JoinColumn, OneToOne } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 
 import { Patient } from '../../patients/entities/patient';
 import { Specialty } from '../../specialties/entities/specialty';
 import { Professional } from '../../professionals/entities/professional';
 import { BaseEntity } from '../../../shared/typeorm/entities/base';
-import { Anamnesis } from './anamnesis';
-import { PrimaryDiagnosis } from './primary-diagnosis';
 
 @Entity('appointments')
 export class Appointment extends BaseEntity {
@@ -33,22 +31,11 @@ export class Appointment extends BaseEntity {
   @JoinColumn({ name: 'patient_id' })
   patient: Patient;
 
-  @Column('varchar', { name: 'anamnesis_id', nullable: true })
-  anamnesisId: string;
+  @Column('varchar', { nullable: true })
+  anamnesis: string;
 
-  @OneToOne(() => Anamnesis, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
-  @JoinColumn({ name: 'anamnesis_id' })
-  anamnesis: Anamnesis;
-
-  @Column('varchar', { name: 'primary_diagnosis_id', nullable: true })
-  primaryDiagnosisId: string;
-
-  @OneToOne(() => PrimaryDiagnosis, {
-    onDelete: 'SET NULL',
-    onUpdate: 'CASCADE',
-  })
-  @JoinColumn({ name: 'primary_diagnosis_id' })
-  primaryDiagnosis: PrimaryDiagnosis;
+  @Column('varchar', { name: 'primary_diagnosis', nullable: true })
+  primaryDiagnosis: string;
 
   @Column('boolean', { nullable: true })
   paid: boolean;

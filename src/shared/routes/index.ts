@@ -3,8 +3,6 @@ import { Router } from 'express';
 import { sessionsRouter } from '../../modules/sessions/routes/sessions';
 
 import { appointmentsRouter } from '../../modules/appointments/routes/appointments';
-import { anamnesesRouter } from '../../modules/appointments/routes/anamneses';
-import { primaryDiagnosesRouter } from '../../modules/appointments/routes/primary-diagnoses';
 
 import { slotsRouter } from '../../modules/slots/routes/slots';
 
@@ -27,12 +25,7 @@ import { s3Router } from '../../modules/integrations/routes/s3';
 export const routes = Router();
 
 routes.use('/sessions', sessionsRouter);
-routes.use(
-  '/appointments',
-  appointmentsRouter,
-  anamnesesRouter,
-  primaryDiagnosesRouter,
-);
+routes.use('/appointments', appointmentsRouter);
 routes.use('/slots', slotsRouter);
 routes.use('/specialties', specialtiesRouter);
 routes.use('/professionals', professionalsRouter, professionalAddressesRouter);

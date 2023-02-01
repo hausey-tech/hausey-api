@@ -5,6 +5,7 @@ import {
   FindAppointmentsSchema,
   CreateAppointmentSchema,
   SetProfessionalSchema,
+  UpdateAppointmentSchema,
 } from '../celebrate-schemas/appointment';
 import { AppointmentsController } from '../controllers/appointments';
 import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
@@ -25,6 +26,13 @@ appointmentsRouter.post(
   ensureAuthentication,
   celebrate(CreateAppointmentSchema),
   appointmentsController.create,
+);
+
+appointmentsRouter.patch(
+  '/:appointmentId',
+  ensureAuthentication,
+  celebrate(UpdateAppointmentSchema),
+  appointmentsController.update,
 );
 
 appointmentsRouter.get(

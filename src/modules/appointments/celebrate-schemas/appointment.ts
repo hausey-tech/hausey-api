@@ -23,3 +23,13 @@ export const SetProfessionalSchema = {
     professionalId: Joi.string().uuid().required(),
   }),
 };
+
+export const UpdateAppointmentSchema = {
+  [Segments.PARAMS]: Joi.object().keys({
+    appointmentId: Joi.string().uuid().required(),
+  }),
+  [Segments.BODY]: Joi.object().keys({
+    anamnesis: Joi.string(),
+    primaryDiagnosis: Joi.string(),
+  }),
+};
