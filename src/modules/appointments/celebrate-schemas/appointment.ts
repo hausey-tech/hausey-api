@@ -1,5 +1,15 @@
 import { Joi, Segments } from 'celebrate';
 
+export const FindAppointmentsSchema = {
+  [Segments.QUERY]: Joi.object().keys({
+    patientId: Joi.string().uuid(),
+    professionalId: Joi.alternatives().try(
+      Joi.string().uuid(),
+      Joi.string().valid('null', '!null'),
+    ),
+  }),
+};
+
 export const CreateAppointmentSchema = {
   [Segments.BODY]: Joi.object().keys({
     specialtyId: Joi.string().uuid().required(),

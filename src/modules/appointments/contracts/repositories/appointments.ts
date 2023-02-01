@@ -1,3 +1,5 @@
+import { FindOptionsWhere } from 'typeorm';
+
 import { Appointment } from '../../entities/appointment';
 import { ICreateAppointmentDTO } from '../dtos/create-appointment';
 
@@ -10,7 +12,7 @@ export interface IAppointmentsRepository {
     specialtyId: string,
     dates: Date[],
   ): Promise<Appointment[]>;
-  findAll(withoutProfessional: string): Promise<Appointment[]>;
+  find(where: FindOptionsWhere<Appointment>): Promise<Appointment[]>;
   findByProfessional(professionalId: string): Promise<Appointment[]>;
   findByPatient(patientId: string): Promise<Appointment[]>;
 }

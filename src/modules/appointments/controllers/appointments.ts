@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import { FindAllAppointmentsService } from '../services/find-all-appointments';
+import { FindAppointmentsService } from '../services/find-appointments';
 import { CheckAppointmentPrice } from '../services/check-appointment-price';
 import { CreateAppointmentService } from '../services/create-appointment';
 import { UploadAppointmentFilesService } from '../services/upload-appointment-files';
@@ -10,15 +10,11 @@ import { ToggleAppointmentPaidService } from '../services/toggle-appointment-pai
 
 export class AppointmentsController {
   public async index(request: Request, response: Response): Promise<Response> {
-    const { withoutProfessional } = request.query;
+    const { query } = request;
 
-    const findAllAppointmentsService = container.resolve(
-      FindAllAppointmentsService,
-    );
+    const findAppointmentsService = container.resolve(FindAppointmentsService);
 
-    const appointments = await findAllAppointmentsService.execute(
-      withoutProfessional?.toString(),
-    );
+    const appointments = await findAppointmentsService.execute(query);
 
     return response.json(appointments);
   }
