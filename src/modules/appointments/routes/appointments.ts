@@ -6,6 +6,7 @@ import {
   CreateAppointmentSchema,
   SetProfessionalSchema,
   UpdateAppointmentSchema,
+  CheckPriceSchema,
 } from '../celebrate-schemas/appointment';
 import { AppointmentsController } from '../controllers/appointments';
 import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
@@ -36,8 +37,9 @@ appointmentsRouter.patch(
 );
 
 appointmentsRouter.get(
-  '/prices/:specialtyId',
+  '/check-price',
   ensureAuthentication,
+  celebrate(CheckPriceSchema),
   appointmentsController.checkPrice,
 );
 

@@ -33,3 +33,9 @@ export const UpdateAppointmentSchema = {
     primaryDiagnosis: Joi.string(),
   }),
 };
+
+export const CheckPriceSchema = {
+  [Segments.QUERY]: Joi.object().keys({
+    specialtyId: Joi.string().uuid().required(),
+  }),
+};

@@ -59,13 +59,16 @@ export class AppointmentsController {
     response: Response,
   ): Promise<Response> {
     const { id } = request.user;
-    const { specialtyId } = request.params;
+    const { specialtyId } = request.query;
 
     const checkAppointmentPriceService = container.resolve(
       CheckAppointmentPrice,
     );
 
-    const prices = await checkAppointmentPriceService.execute(id, specialtyId);
+    const prices = await checkAppointmentPriceService.execute(
+      id,
+      specialtyId as string,
+    );
 
     return response.json(prices);
   }
