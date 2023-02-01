@@ -1,6 +1,6 @@
 export interface ICreateSlotDTO {
   professionalId: string;
-  days: {
+  slots: {
     weekDay: number;
     times: {
       startTime: string;

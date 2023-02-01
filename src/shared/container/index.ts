@@ -29,8 +29,8 @@ import { PrimaryDiagnosesRepository } from '../../modules/appointments/repositor
 import { IAppointmentsRepository } from '../../modules/appointments/contracts/repositories/appointments';
 import { AppointmentsRepository } from '../../modules/appointments/repositories/appointments';
 
-import { ISlotsRepository } from '../../modules/appointments/contracts/repositories/slots';
-import { SlotsRepository } from '../../modules/appointments/repositories/slots';
+import { ISlotsRepository } from '../../modules/slots/contracts/repositories/slots';
+import { SlotsRepository } from '../../modules/slots/repositories/slots';
 
 import { IProgramsRepository } from '../../modules/programs/contracts/repositories/programs';
 import { ProgramsRepository } from '../../modules/programs/repositories/programs';

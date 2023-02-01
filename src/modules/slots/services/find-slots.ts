@@ -13,10 +13,10 @@ import {
 } from 'date-fns';
 
 import { IProfessionalSpecialtiesRepository } from '../../professionals/contracts/repositories/professional-specialties';
-import { IAppointmentsRepository } from '../contracts/repositories/appointments';
+import { IAppointmentsRepository } from '../../appointments/contracts/repositories/appointments';
 import { ISlotsRepository } from '../contracts/repositories/slots';
 import { groupArrayByKey } from '../../../shared/utils/group-array-by-key';
-import { Appointment } from '../entities/appointment';
+import { Appointment } from '../../appointments/entities/appointment';
 import { AppError } from '../../../shared/errors/app-error';
 import { Slot } from '../entities/slot';
 
@@ -42,7 +42,7 @@ interface IAvailableSlots {
 }
 
 @injectable()
-export class FindAvailableSlotsService {
+export class FindSlotsService {
   constructor(
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,
@@ -73,7 +73,7 @@ export class FindAvailableSlotsService {
       ...new Set(professionalsSpecialty.map(p => p.professionalId)),
     ];
 
-    const slots = await this.slotsRepository.findByProfessionalId(
+    const slots = await this.slotsRepository.findByProfessionalIds(
       professionalsIds,
     );
 

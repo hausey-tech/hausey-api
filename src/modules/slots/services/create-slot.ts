@@ -16,7 +16,7 @@ export class CreateSlotService {
   ) {}
 
   public async execute(payload: ICreateSlotDTO): Promise<void> {
-    const { professionalId, days } = payload;
+    const { professionalId, slots } = payload;
 
     const professional = await this.professionalsRepository.findById(
       professionalId,
@@ -29,17 +29,18 @@ export class CreateSlotService {
     }
 
     await Promise.all(
-      days.map(async day => {
-        const { weekDay } = day;
-        day.times.map(async time => {
+      slots.map(async slot => {
+        const { weekDay } = slot;
+        slot.times.map(async time => {
           const { startTime, endTime } = time;
-          const slot = await this.slotsRepository.create({
-            professionalId,
-            weekDay,
-            startTime,
-            endTime,
-          });
-          await this.slotsRepository.save(slot);
+          await this.slotsRepository.save(
+            await this.slotsRepository.create({
+              professionalId,
+              weekDay,
+              startTime,
+              endTime,
+            }),
+          );
         });
       }),
     );

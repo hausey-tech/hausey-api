@@ -12,7 +12,7 @@ export class SlotsRepository implements ISlotsRepository {
     this.ormRepository = PostgresDataSource.getRepository(Slot);
   }
 
-  public async findByProfessionalId(ids: string[]): Promise<Slot[]> {
+  public async findByProfessionalIds(ids: string[]): Promise<Slot[]> {
     return this.ormRepository.find({ where: { professionalId: In(ids) } });
   }
 

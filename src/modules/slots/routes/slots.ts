@@ -9,14 +9,14 @@ export const slotsRouter = Router();
 const slotsController = new SlotsController();
 
 slotsRouter.get(
-  '/slots/:specialtyId',
+  '/',
   ensureAuthentication,
   celebrate(FindSlotsSchema),
   slotsController.index,
 );
 
 slotsRouter.post(
-  '/slots',
+  '/',
   ensureAuthentication,
   celebrate(CreateSlotSchema),
   slotsController.create,

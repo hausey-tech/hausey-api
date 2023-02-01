@@ -3,9 +3,10 @@ import { Router } from 'express';
 import { sessionsRouter } from '../../modules/sessions/routes/sessions';
 
 import { appointmentsRouter } from '../../modules/appointments/routes/appointments';
-import { slotsRouter } from '../../modules/appointments/routes/slots';
 import { anamnesesRouter } from '../../modules/appointments/routes/anamneses';
 import { primaryDiagnosesRouter } from '../../modules/appointments/routes/primary-diagnoses';
+
+import { slotsRouter } from '../../modules/slots/routes/slots';
 
 import { specialtiesRouter } from '../../modules/specialties/routes/specialties';
 
@@ -29,10 +30,10 @@ routes.use('/sessions', sessionsRouter);
 routes.use(
   '/appointments',
   appointmentsRouter,
-  slotsRouter,
   anamnesesRouter,
   primaryDiagnosesRouter,
 );
+routes.use('/slots', slotsRouter);
 routes.use('/specialties', specialtiesRouter);
 routes.use('/professionals', professionalsRouter, professionalAddressesRouter);
 routes.use('/patients', patientsRouter, patientAddressesRouter);
