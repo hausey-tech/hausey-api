@@ -47,7 +47,7 @@ appointmentsRouter.get(
 );
 
 appointmentsRouter.get(
-  '/:appointmentId/payments/toggle-paid',
+  '/:appointmentId/toggle-paid',
   ensureAuthentication,
   appointmentsController.togglePaid,
 );
