@@ -1,4 +1,4 @@
-export interface ISetAppointmentProfessionalDTO {
+export interface ISetProfessionalDTO {
   appointmentId: string;
   professionalId: string;
 }

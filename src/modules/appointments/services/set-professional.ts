@@ -1,14 +1,14 @@
 import { injectable, inject } from 'tsyringe';
 
 import { IProfessionalSpecialtiesRepository } from '../../professionals/contracts/repositories/professional-specialties';
-import { ISetAppointmentProfessionalDTO } from '../contracts/dtos/set-appointment-professional';
 import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
+import { ISetProfessionalDTO } from '../contracts/dtos/set-professional';
 import { Appointment } from '../entities/appointment';
 import { AppError } from '../../../shared/errors/app-error';
 
 @injectable()
-export class SetAppointmentProfessionalService {
+export class SetProfessionalService {
   constructor(
     @inject('ProfessionalsRepository')
     private professionalsRepository: IProfessionalsRepository,
@@ -20,11 +20,10 @@ export class SetAppointmentProfessionalService {
     private professionalSpecialtiesRepository: IProfessionalSpecialtiesRepository,
   ) {}
 
-  public async execute(
-    payload: ISetAppointmentProfessionalDTO,
-  ): Promise<Appointment> {
-    const { appointmentId, professionalId } = payload;
-
+  public async execute({
+    appointmentId,
+    professionalId,
+  }: ISetProfessionalDTO): Promise<Appointment> {
     const appointment = await this.appointmentsRepository.findById(
       appointmentId,
     );

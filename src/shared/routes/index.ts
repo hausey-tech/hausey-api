@@ -4,8 +4,6 @@ import { sessionsRouter } from '../../modules/sessions/routes/sessions';
 
 import { appointmentsRouter } from '../../modules/appointments/routes/appointments';
 import { slotsRouter } from '../../modules/appointments/routes/slots';
-import { professionalsRouter as appointmentsProfessionalsRouter } from '../../modules/appointments/routes/professionals';
-import { patientsRouter as appointmentsPatientsRouter } from '../../modules/appointments/routes/patients';
 import { anamnesesRouter } from '../../modules/appointments/routes/anamneses';
 import { primaryDiagnosesRouter } from '../../modules/appointments/routes/primary-diagnoses';
 import { specialtiesRouter as appointmentsSpecialtiesRouter } from '../../modules/appointments/routes/specialties';
@@ -32,8 +30,6 @@ routes.use(
   '/appointments',
   appointmentsRouter,
   slotsRouter,
-  appointmentsProfessionalsRouter,
-  appointmentsPatientsRouter,
   anamnesesRouter,
   primaryDiagnosesRouter,
   appointmentsSpecialtiesRouter,

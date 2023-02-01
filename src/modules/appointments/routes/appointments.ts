@@ -4,6 +4,7 @@ import { celebrate } from 'celebrate';
 import {
   FindAppointmentsSchema,
   CreateAppointmentSchema,
+  SetProfessionalSchema,
 } from '../celebrate-schemas/appointment';
 import { AppointmentsController } from '../controllers/appointments';
 import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
@@ -49,4 +50,11 @@ appointmentsRouter.get(
   '/:appointmentId/payments/toggle-paid',
   ensureAuthentication,
   appointmentsController.togglePaid,
+);
+
+appointmentsRouter.get(
+  '/:appointmentId/set-professional/:professionalId',
+  ensureAuthentication,
+  celebrate(SetProfessionalSchema),
+  appointmentsController.setProfessional,
 );

@@ -16,3 +16,10 @@ export const CreateAppointmentSchema = {
     date: Joi.string().required(),
   }),
 };
+
+export const SetProfessionalSchema = {
+  [Segments.PARAMS]: Joi.object().keys({
+    appointmentId: Joi.string().uuid().required(),
+    professionalId: Joi.string().uuid().required(),
+  }),
+};

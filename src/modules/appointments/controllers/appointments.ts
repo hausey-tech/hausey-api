@@ -1,12 +1,13 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import { FindAppointmentsService } from '../services/find-appointments';
-import { CheckAppointmentPrice } from '../services/check-appointment-price';
-import { CreateAppointmentService } from '../services/create-appointment';
 import { UploadAppointmentFilesService } from '../services/upload-appointment-files';
-import { ListAppointmentFilesService } from '../services/list-appointment-files';
 import { ToggleAppointmentPaidService } from '../services/toggle-appointment-paid';
+import { ListAppointmentFilesService } from '../services/list-appointment-files';
+import { CreateAppointmentService } from '../services/create-appointment';
+import { FindAppointmentsService } from '../services/find-appointments';
+import { SetProfessionalService } from '../services/set-professional';
+import { CheckAppointmentPrice } from '../services/check-appointment-price';
 
 export class AppointmentsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -103,6 +104,22 @@ export class AppointmentsController {
     const appointment = await toggleAppointmentPaidService.execute(
       appointmentId,
     );
+
+    return response.json(appointment);
+  }
+
+  public async setProfessional(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { appointmentId, professionalId } = request.params;
+
+    const setProfessionalService = container.resolve(SetProfessionalService);
+
+    const appointment = await setProfessionalService.execute({
+      appointmentId,
+      professionalId,
+    });
 
     return response.json(appointment);
   }
