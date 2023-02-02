@@ -9,6 +9,8 @@ import { CreateAppointmentService } from '../services/create-appointment';
 import { FindAppointmentsService } from '../services/find-appointments';
 import { SetProfessionalService } from '../services/set-professional';
 import { CheckAppointmentPrice } from '../services/check-appointment-price';
+import { CreatePrescriptionService } from '../services/create-prescription';
+import { DeletePrescriptionService } from '../services/delete-prescription';
 
 export class AppointmentsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -139,6 +141,43 @@ export class AppointmentsController {
     const appointment = await setProfessionalService.execute({
       appointmentId,
       professionalId,
+    });
+
+    return response.json(appointment);
+  }
+
+  public async createPrescription(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { appointmentId } = request.params;
+    const { prescriptionId } = request.body;
+
+    const createPrescriptionService = container.resolve(
+      CreatePrescriptionService,
+    );
+
+    const appointment = await createPrescriptionService.execute({
+      appointmentId,
+      prescriptionId,
+    });
+
+    return response.json(appointment);
+  }
+
+  public async deletePrescription(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { appointmentId, prescriptionId } = request.params;
+
+    const deletePrescriptionService = container.resolve(
+      DeletePrescriptionService,
+    );
+
+    const appointment = await deletePrescriptionService.execute({
+      appointmentId,
+      prescriptionId,
     });
 
     return response.json(appointment);

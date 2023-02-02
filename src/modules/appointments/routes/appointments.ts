@@ -7,6 +7,8 @@ import {
   SetProfessionalSchema,
   UpdateAppointmentSchema,
   CheckPriceSchema,
+  DeletePrescriptionSchema,
+  CreatePrescriptionSchema,
 } from '../celebrate-schemas/appointment';
 import { AppointmentsController } from '../controllers/appointments';
 import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
@@ -67,4 +69,18 @@ appointmentsRouter.get(
   ensureAuthentication,
   celebrate(SetProfessionalSchema),
   appointmentsController.setProfessional,
+);
+
+appointmentsRouter.post(
+  '/:appointmentId/prescriptions',
+  ensureAuthentication,
+  celebrate(CreatePrescriptionSchema),
+  appointmentsController.createPrescription,
+);
+
+appointmentsRouter.delete(
+  '/:appointmentId/prescriptions/:prescriptionId',
+  ensureAuthentication,
+  celebrate(DeletePrescriptionSchema),
+  appointmentsController.deletePrescription,
 );

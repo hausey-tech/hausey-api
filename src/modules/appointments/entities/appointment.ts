@@ -39,4 +39,7 @@ export class Appointment extends BaseEntity {
 
   @Column('boolean', { nullable: true })
   paid: boolean;
+
+  @Column('varchar', { array: true, default: [] })
+  prescriptions: string[];
 }
