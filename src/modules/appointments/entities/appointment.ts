@@ -1,9 +1,10 @@
-import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 
 import { Patient } from '../../patients/entities/patient';
 import { Specialty } from '../../specialties/entities/specialty';
 import { Professional } from '../../professionals/entities/professional';
 import { BaseEntity } from '../../../shared/typeorm/entities/base';
+import { Prescription } from '../../prescriptions/entities/prescription';
 
 @Entity('appointments')
 export class Appointment extends BaseEntity {
@@ -40,6 +41,6 @@ export class Appointment extends BaseEntity {
   @Column('boolean', { nullable: true })
   paid: boolean;
 
-  @Column('varchar', { array: true, default: [] })
-  prescriptions: string[];
+  @OneToMany(() => Prescription, prescription => prescription.appointment)
+  prescriptions: Prescription[];
 }
