@@ -1,5 +1,5 @@
 export interface ICreatePrescriptionDTO {
   appointmentId: string;
-  externalId: string;
+  externalId: number;
   pdfUrl: string;
 }

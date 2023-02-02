@@ -22,7 +22,7 @@ export class CreatePrescriptionService {
     token,
   }: {
     appointmentId: string;
-    externalId: string;
+    externalId: number;
     token: string;
   }): Promise<Prescription> {
     const appointment = await this.appointmentsRepository.findById(

@@ -10,7 +10,7 @@ export class DeletePrescriptionService {
     private prescriptionsRepository: IPrescriptionsRepository,
   ) {}
 
-  public async execute(externalId: string): Promise<void> {
+  public async execute(externalId: number): Promise<void> {
     const prescription = await this.prescriptionsRepository.findByExternalId(
       externalId,
     );

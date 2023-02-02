@@ -12,7 +12,7 @@ export class PrescriptionsRepository implements IPrescriptionsRepository {
     this.ormRepository = PostgresDataSource.getRepository(Prescription);
   }
 
-  public async findByExternalId(externalId: string): Promise<Prescription> {
+  public async findByExternalId(externalId: number): Promise<Prescription> {
     return this.ormRepository.findOne({ where: { externalId } });
   }
 

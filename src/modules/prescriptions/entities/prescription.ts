@@ -12,8 +12,8 @@ export class Prescription extends BaseEntity {
   @JoinColumn({ name: 'appointment_id' })
   appointment: Appointment;
 
-  @Column('varchar', { name: 'external_id' })
-  externalId: string;
+  @Column('int', { name: 'external_id' })
+  externalId: number;
 
   @Column('varchar', { name: 'pdf_url' })
   pdfUrl: string;

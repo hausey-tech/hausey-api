@@ -9,7 +9,7 @@ export class GetMemedPrescriptionPdfUrl {
     externalId,
     token,
   }: {
-    externalId: string;
+    externalId: number;
     token: string;
   }): Promise<string> {
     const { data } = await memedInstance.get(
