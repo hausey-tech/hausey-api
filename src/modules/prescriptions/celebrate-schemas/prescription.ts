@@ -4,6 +4,7 @@ export const CreatePrescriptionSchema = {
   [Segments.BODY]: Joi.object().keys({
     appointmentId: Joi.string().uuid().required(),
     externalId: Joi.string().required(),
+    token: Joi.string().required(),
   }),
 };
 

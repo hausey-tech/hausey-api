@@ -1,5 +1,6 @@
-import { injectable, inject } from 'tsyringe';
+import { injectable, inject, container } from 'tsyringe';
 
+import { GetMemedPrescriptionPdfUrl } from '../../integrations/services/get-memed-prescription-pdf-url';
 import { IPrescriptionsRepository } from '../contracts/repositories/prescriptions';
 import { IAppointmentsRepository } from '../../appointments/contracts/repositories/appointments';
 import { Prescription } from '../entities/prescription';
@@ -18,9 +19,11 @@ export class CreatePrescriptionService {
   public async execute({
     appointmentId,
     externalId,
+    token,
   }: {
     appointmentId: string;
     externalId: string;
+    token: string;
   }): Promise<Prescription> {
     const appointment = await this.appointmentsRepository.findById(
       appointmentId,
@@ -39,12 +42,23 @@ export class CreatePrescriptionService {
       throw new AppError('Já existe uma prescrição com esse id externo!');
     }
 
-    // recupera link pdf
+    const getPrescriptionUrl = container.resolve(GetMemedPrescriptionPdfUrl);
+
+    let pdfUrl: string;
+
+    try {
+      pdfUrl = await getPrescriptionUrl.execute({ externalId, token });
+    } catch (err) {
+      const error = err?.response?.data;
+      const statusCode = err?.response?.status;
+
+      throw new AppError(error, statusCode);
+    }
 
     const prescription = await this.prescriptionsRepository.create({
       appointmentId,
       externalId,
-      pdfUrl: 'temp',
+      pdfUrl,
     });
 
     return this.prescriptionsRepository.save(prescription);

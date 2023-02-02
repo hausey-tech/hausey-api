@@ -5,7 +5,7 @@ import { DeletePrescriptionService } from '../services/delete-prescription';
 
 export class PrescriptionsController {
   public async create(request: Request, response: Response): Promise<Response> {
-    const { appointmentId, externalId } = request.body;
+    const { appointmentId, externalId, token } = request.body;
 
     const createPrescriptionService = container.resolve(
       CreatePrescriptionService,
@@ -14,6 +14,7 @@ export class PrescriptionsController {
     const appointment = await createPrescriptionService.execute({
       appointmentId,
       externalId,
+      token,
     });
 
     return response.json(appointment);
