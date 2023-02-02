@@ -27,7 +27,7 @@ export class PrescriptionsController {
       DeletePrescriptionService,
     );
 
-    await deletePrescriptionService.execute(externalId);
+    await deletePrescriptionService.execute(Number(externalId));
 
     return response.json({ message: 'Prescrição deletada com sucesso!' });
   }
