@@ -37,7 +37,7 @@ appointmentsRouter.patch(
 );
 
 appointmentsRouter.get(
-  '/check-price',
+  '/check-price/:specialtyId',
   ensureAuthentication,
   celebrate(CheckPriceSchema),
   appointmentsController.checkPrice,

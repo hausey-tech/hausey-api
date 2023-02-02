@@ -35,7 +35,7 @@ export const UpdateAppointmentSchema = {
 };
 
 export const CheckPriceSchema = {
-  [Segments.QUERY]: Joi.object().keys({
+  [Segments.PARAMS]: Joi.object().keys({
     specialtyId: Joi.string().uuid().required(),
   }),
 };

@@ -59,7 +59,7 @@ export class AppointmentsController {
     response: Response,
   ): Promise<Response> {
     const { id } = request.user;
-    const { specialtyId } = request.query;
+    const { specialtyId } = request.params;
 
     const checkAppointmentPriceService = container.resolve(
       CheckAppointmentPrice,
