@@ -4,7 +4,7 @@ export const CreateProfessionalSchema = {
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string().required(),
     email: Joi.string().email().required(),
-    cpf: Joi.string().required(),
+    document: Joi.string().required(),
     specialties: Joi.array().items(Joi.string().uuid().required()).required(),
     registrationUf: Joi.string().length(2).required(),
     registration: Joi.string().required(),
