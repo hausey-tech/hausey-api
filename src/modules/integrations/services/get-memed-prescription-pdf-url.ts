@@ -1,7 +1,7 @@
-import { AppError } from 'shared/errors/app-error';
 import { injectable } from 'tsyringe';
 
 import { memedInstance } from '../utils/memed-instance';
+import { AppError } from '../../../shared/errors/app-error';
 
 @injectable()
 export class GetMemedPrescriptionPdfUrl {
