@@ -49,7 +49,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     return this.ormRepository.find({
       where,
       order: { date: 'asc' },
-      relations: ['patient', 'professional', 'specialty'],
+      relations: ['patient', 'professional', 'specialty', 'prescriptions'],
     });
   }
 
@@ -59,7 +59,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     return this.ormRepository.find({
       where: { professionalId },
       order: { date: 'asc' },
-      relations: ['patient', 'professional', 'specialty'],
+      relations: ['patient', 'professional', 'specialty', 'prescriptions'],
     });
   }
 
@@ -67,7 +67,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     return this.ormRepository.find({
       where: { patientId },
       order: { date: 'asc' },
-      relations: ['patient', 'professional', 'specialty'],
+      relations: ['patient', 'professional', 'specialty', 'prescriptions'],
     });
   }
 

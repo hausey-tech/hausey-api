@@ -1,0 +1,30 @@
+import { Repository } from 'typeorm';
+
+import { IPrescriptionsRepository } from '../contracts/repositories/prescriptions';
+import { PostgresDataSource } from '../../../shared/typeorm';
+import { Prescription } from '../entities/prescription';
+import { ICreatePrescriptionDTO } from '../contracts/dtos/create-prescription';
+
+export class PrescriptionsRepository implements IPrescriptionsRepository {
+  private ormRepository: Repository<Prescription>;
+
+  constructor() {
+    this.ormRepository = PostgresDataSource.getRepository(Prescription);
+  }
+
+  public async findByExternalId(externalId: string): Promise<Prescription> {
+    return this.ormRepository.findOne({ where: { externalId } });
+  }
+
+  public async create(payload: ICreatePrescriptionDTO): Promise<Prescription> {
+    return this.ormRepository.create(payload);
+  }
+
+  public async save(prescription: Prescription): Promise<Prescription> {
+    return this.ormRepository.save(prescription);
+  }
+
+  public async delete(id: string): Promise<void> {
+    await this.ormRepository.delete(id);
+  }
+}

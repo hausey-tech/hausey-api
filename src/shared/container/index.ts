@@ -38,6 +38,9 @@ import { PlansRepository } from '../../modules/plans/repositories/plans';
 import { IPlanSpecialtyDiscountsRepository } from '../../modules/plans/contracts/repositories/plan-specialty-discounts';
 import { PlanSpecialtyDiscountsRepository } from '../../modules/plans/repositories/plan-specialty-discounts';
 
+import { IPrescriptionsRepository } from '../../modules/prescriptions/contracts/repositories/prescriptions';
+import { PrescriptionsRepository } from '../../modules/prescriptions/repositories/prescriptions';
+
 container.registerSingleton<IAddressesRepository>(
   'AddressesRepository',
   AddressesRepository,
@@ -96,4 +99,9 @@ container.registerSingleton<IPlansRepository>(
 container.registerSingleton<IPlanSpecialtyDiscountsRepository>(
   'PlanSpecialtyDiscountsRepository',
   PlanSpecialtyDiscountsRepository,
+);
+
+container.registerSingleton<IPrescriptionsRepository>(
+  'PrescriptionsRepository',
+  PrescriptionsRepository,
 );

@@ -4,6 +4,8 @@ import { sessionsRouter } from '../../modules/sessions/routes/sessions';
 
 import { appointmentsRouter } from '../../modules/appointments/routes/appointments';
 
+import { prescriptionsRouter } from '../../modules/prescriptions/routes/prescriptions';
+
 import { slotsRouter } from '../../modules/slots/routes/slots';
 
 import { specialtiesRouter } from '../../modules/specialties/routes/specialties';
@@ -26,6 +28,7 @@ export const routes = Router();
 
 routes.use('/sessions', sessionsRouter);
 routes.use('/appointments', appointmentsRouter);
+routes.use('/prescriptions', prescriptionsRouter);
 routes.use('/slots', slotsRouter);
 routes.use('/specialties', specialtiesRouter);
 routes.use('/professionals', professionalsRouter, professionalAddressesRouter);

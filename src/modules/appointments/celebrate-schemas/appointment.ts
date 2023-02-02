@@ -39,19 +39,3 @@ export const CheckPriceSchema = {
     specialtyId: Joi.string().uuid().required(),
   }),
 };
-
-export const CreatePrescriptionSchema = {
-  [Segments.PARAMS]: Joi.object().keys({
-    appointmentId: Joi.string().uuid().required(),
-  }),
-  [Segments.BODY]: Joi.object().keys({
-    prescriptionId: Joi.string().uuid().required(),
-  }),
-};
-
-export const DeletePrescriptionSchema = {
-  [Segments.PARAMS]: Joi.object().keys({
-    appointmentId: Joi.string().uuid().required(),
-    prescriptionId: Joi.string().uuid().required(),
-  }),
-};
