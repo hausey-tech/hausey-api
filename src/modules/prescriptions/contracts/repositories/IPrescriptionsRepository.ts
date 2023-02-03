@@ -1,4 +1,4 @@
-import { Prescription } from '../../entities/PrescriptionA';
+import { Prescription } from '../../entities/Prescription';
 import { ICreatePrescriptionDTO } from '../dtos/ICreatePrescriptionDTO';
 
 export interface IPrescriptionsRepository {

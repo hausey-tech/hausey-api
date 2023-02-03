@@ -3,7 +3,7 @@ import { injectable, inject, container } from 'tsyringe';
 import { GetMemedPrescriptionPdfUrl } from '../../integrations/services/get-memed-prescription-pdf-url';
 import { IPrescriptionsRepository } from '../contracts/repositories/IPrescriptionsRepository';
 import { IAppointmentsRepository } from '../../appointments/contracts/repositories/appointments';
-import { Prescription } from '../entities/PrescriptionA';
+import { Prescription } from '../entities/Prescription';
 import { AppError } from '../../../shared/errors/app-error';
 
 @injectable()

@@ -4,7 +4,7 @@ import { Patient } from '../../patients/entities/patient';
 import { Specialty } from '../../specialties/entities/specialty';
 import { Professional } from '../../professionals/entities/professional';
 import { BaseEntity } from '../../../shared/typeorm/entities/base';
-import { Prescription } from '../../prescriptions/entities/PrescriptionA';
+import { Prescription } from '../../prescriptions/entities/Prescription';
 
 @Entity('appointments')
 export class Appointment extends BaseEntity {

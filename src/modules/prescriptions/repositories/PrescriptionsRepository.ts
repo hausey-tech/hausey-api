@@ -2,7 +2,7 @@ import { Repository } from 'typeorm';
 
 import { IPrescriptionsRepository } from '../contracts/repositories/IPrescriptionsRepository';
 import { PostgresDataSource } from '../../../shared/typeorm';
-import { Prescription } from '../entities/PrescriptionA';
+import { Prescription } from '../entities/Prescription';
 import { ICreatePrescriptionDTO } from '../contracts/dtos/ICreatePrescriptionDTO';
 
 export class PrescriptionsRepository implements IPrescriptionsRepository {
