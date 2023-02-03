@@ -1,5 +1,5 @@
-import { Prescription } from '../../entities/prescription';
-import { ICreatePrescriptionDTO } from '../dtos/create-prescription';
+import { Prescription } from '../../entities/PrescriptionA';
+import { ICreatePrescriptionDTO } from '../dtos/ICreatePrescriptionDTO';
 
 export interface IPrescriptionsRepository {
   findByExternalId(externalId: number): Promise<Prescription>;

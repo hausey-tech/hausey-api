@@ -7,9 +7,3 @@ export const CreatePrescriptionSchema = {
     token: Joi.string().required(),
   }),
 };
-
-export const DeletePrescriptionSchema = {
-  [Segments.PARAMS]: Joi.object().keys({
-    externalId: Joi.number().required(),
-  }),
-};

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
-import { CreatePrescriptionService } from '../services/create-prescription';
-import { DeletePrescriptionService } from '../services/delete-prescription';
+import { CreatePrescriptionService } from '../services/CreatePrescriptionService';
+import { DeletePrescriptionService } from '../services/DeletePrescriptionService';
 
 export class PrescriptionsController {
   public async create(request: Request, response: Response): Promise<Response> {

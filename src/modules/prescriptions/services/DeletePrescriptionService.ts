@@ -1,6 +1,6 @@
 import { injectable, inject } from 'tsyringe';
 
-import { IPrescriptionsRepository } from '../contracts/repositories/prescriptions';
+import { IPrescriptionsRepository } from '../contracts/repositories/IPrescriptionsRepository';
 import { AppError } from '../../../shared/errors/app-error';
 
 @injectable()

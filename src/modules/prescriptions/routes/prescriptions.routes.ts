@@ -1,11 +1,9 @@
 import { Router } from 'express';
 import { celebrate } from 'celebrate';
 
-import {
-  CreatePrescriptionSchema,
-  DeletePrescriptionSchema,
-} from '../celebrate-schemas/prescription';
-import { PrescriptionsController } from '../controllers/prescriptions';
+import { CreatePrescriptionSchema } from '../contracts/schemas/CreatePrescriptionSchema';
+import { DeletePrescriptionSchema } from '../contracts/schemas/DeletePrescriptionSchema';
+import { PrescriptionsController } from '../controllers/PrescriptionsController';
 import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
 
 export const prescriptionsRouter = Router();

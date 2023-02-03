@@ -4,7 +4,7 @@ import { sessionsRouter } from '../../modules/sessions/routes/sessions';
 
 import { appointmentsRouter } from '../../modules/appointments/routes/appointments';
 
-import { prescriptionsRouter } from '../../modules/prescriptions/routes/prescriptions';
+import { prescriptionsRouter } from '../../modules/prescriptions/routes/prescriptions.routes';
 
 import { slotsRouter } from '../../modules/slots/routes/slots';
 
