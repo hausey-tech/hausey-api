@@ -27,11 +27,13 @@ export class CreateAddressService {
       );
     }
 
-    const patientAddress = await this.addressesRepository.findById(patient.id);
+    const patientAddress = await this.addressesRepository.findByPatientId(
+      patient.id,
+    );
 
     if (patientAddress) {
       throw new AppError(
-        'Esse paciente já possui endereço cadastrado, edite-o!',
+        'Esse paciente já possui um endereço cadastrado, edite-o!',
       );
     }
 
