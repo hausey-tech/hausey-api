@@ -8,9 +8,11 @@ import { ListPatientsService } from '../services/list-patients';
 
 export class PatientsController {
   public async index(request: Request, response: Response): Promise<Response> {
+    const { query } = request;
+
     const listPatientsService = container.resolve(ListPatientsService);
 
-    const patients = await listPatientsService.execute();
+    const patients = await listPatientsService.execute(query);
 
     return response.json(patients);
   }

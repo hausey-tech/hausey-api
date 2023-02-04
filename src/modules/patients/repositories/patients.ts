@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 
 import { PostgresDataSource } from '../../../shared/typeorm';
 import { ICreatePatientDTO } from '../contracts/dtos/create-patient';
@@ -23,6 +23,13 @@ export class PatientsRepository implements IPatientsRepository {
   public async findById(id: string): Promise<Patient | null> {
     return this.ormRepository.findOne({
       where: { id },
+      relations: this.relations,
+    });
+  }
+
+  public async findByIds(ids: string[]): Promise<Patient[]> {
+    return this.ormRepository.find({
+      where: { id: In(ids) },
       relations: this.relations,
     });
   }

@@ -2,6 +2,7 @@ import { celebrate } from 'celebrate';
 import { Router } from 'express';
 
 import {
+  ListPatientsSchema,
   CreatePatientSchema,
   UpdatePatientSchema,
 } from '../celebrate-schemas/patient';
@@ -11,7 +12,12 @@ import { PatientsController } from '../controllers/patients';
 export const patientsRouter = Router();
 const patientsController = new PatientsController();
 
-patientsRouter.get('/', ensureAuthentication, patientsController.index);
+patientsRouter.get(
+  '/',
+  ensureAuthentication,
+  celebrate(ListPatientsSchema),
+  patientsController.index,
+);
 
 patientsRouter.post(
   '/',

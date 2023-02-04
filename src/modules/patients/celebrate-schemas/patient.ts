@@ -1,5 +1,11 @@
 import { Joi, Segments } from 'celebrate';
 
+export const ListPatientsSchema = {
+  [Segments.QUERY]: Joi.object().keys({
+    professionalId: Joi.string().uuid(),
+  }),
+};
+
 export const CreatePatientSchema = {
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string().required(),
