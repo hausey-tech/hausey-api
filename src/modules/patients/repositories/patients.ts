@@ -9,29 +9,44 @@ import { Patient } from '../entities/patient';
 export class PatientsRepository implements IPatientsRepository {
   private ormRepository: Repository<Patient>;
 
+  private relations: string[];
+
   constructor() {
     this.ormRepository = PostgresDataSource.getRepository(Patient);
+    this.relations = ['plan', 'address'];
+  }
+
+  public async find(): Promise<Patient[]> {
+    return this.ormRepository.find({ relations: this.relations });
   }
 
   public async findById(id: string): Promise<Patient | null> {
     return this.ormRepository.findOne({
       where: { id },
+      relations: this.relations,
     });
   }
 
   public async findByEmail(email: string): Promise<Patient | null> {
     return this.ormRepository.findOne({
       where: { email },
-      relations: ['plan'],
+      relations: this.relations,
     });
   }
 
   public async findByEmailWithDeleted(email: string): Promise<Patient | null> {
-    return this.ormRepository.findOne({ where: { email }, withDeleted: true });
+    return this.ormRepository.findOne({
+      where: { email },
+      relations: this.relations,
+      withDeleted: true,
+    });
   }
 
   public async findByDocument(document: string): Promise<Patient | null> {
-    return this.ormRepository.findOne({ where: { document } });
+    return this.ormRepository.findOne({
+      where: { document },
+      relations: this.relations,
+    });
   }
 
   public async restore(

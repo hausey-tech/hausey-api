@@ -4,8 +4,17 @@ import { container } from 'tsyringe';
 import { CreatePatientService } from '../services/create-patient';
 import { UpdatePatientService } from '../services/update-patient';
 import { CreateSessionService } from '../../sessions/services/create-session';
+import { ListPatientsService } from '../services/list-patients';
 
 export class PatientsController {
+  public async index(request: Request, response: Response): Promise<Response> {
+    const listPatientsService = container.resolve(ListPatientsService);
+
+    const patients = await listPatientsService.execute();
+
+    return response.json(patients);
+  }
+
   public async create(request: Request, response: Response): Promise<Response> {
     const payload = request.body;
 
