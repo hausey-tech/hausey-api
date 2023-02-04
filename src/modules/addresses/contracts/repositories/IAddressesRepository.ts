@@ -1,4 +1,4 @@
-import { Address } from '../../entities/AddressTest';
+import { Address } from '../../entities/Address';
 import { ICreateAddressDTO } from '../dtos/ICreateAddressDTO';
 
 export interface IAddressesRepository {

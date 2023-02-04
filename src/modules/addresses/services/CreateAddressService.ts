@@ -4,7 +4,7 @@ import { IAddressesRepository } from '../contracts/repositories/IAddressesReposi
 import { IPatientsRepository } from '../../patients/contracts/repositories/patients';
 import { ICreateAddressDTO } from '../contracts/dtos/ICreateAddressDTO';
 import { AppError } from '../../../shared/errors/app-error';
-import { Address } from '../entities/AddressTest';
+import { Address } from '../entities/Address';
 
 @injectable()
 export class CreateAddressService {

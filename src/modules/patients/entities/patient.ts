@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 
 import { UserEntity } from '../../../shared/typeorm/entities';
-import { Address } from '../../addresses/entities/AddressTest';
+import { Address } from '../../addresses/entities/Address';
 import { Plan } from '../../plans/entities/plan';
 
 @Entity('patients')
