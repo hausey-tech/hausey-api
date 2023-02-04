@@ -8,31 +8,45 @@ import { Professional } from '../entities/professional';
 export class ProfessionalsRepository implements IProfessionalsRepository {
   private ormRepository: Repository<Professional>;
 
+  private relations: string[];
+
   constructor() {
     this.ormRepository = PostgresDataSource.getRepository(Professional);
+    this.relations = ['specialties.specialty'];
+  }
+
+  public async find(): Promise<Professional[]> {
+    const professionals = this.ormRepository.find({
+      relations: this.relations,
+    });
+
+    return professionals;
   }
 
   public async findById(id: string): Promise<Professional | null> {
-    return this.ormRepository.findOne({ where: { id } });
+    return this.ormRepository.findOne({
+      where: { id },
+      relations: this.relations,
+    });
   }
 
   public async findByIds(ids: string[]): Promise<Professional[]> {
-    return this.ormRepository.find({ where: { id: In(ids) } });
+    return this.ormRepository.find({
+      where: { id: In(ids) },
+      relations: this.relations,
+    });
   }
 
   public async findByEmail(email: string): Promise<Professional | null> {
     return this.ormRepository.findOne({
       where: { email },
+      relations: this.relations,
     });
   }
 
-  public async find(): Promise<Professional[]> {
-    const professionals = this.ormRepository.find();
-
-    return professionals;
-  }
-
-  public async create(payload: ICreateProfessionalDTO): Promise<Professional> {
+  public async create(
+    payload: Omit<ICreateProfessionalDTO, 'specialties'>,
+  ): Promise<Professional> {
     return this.ormRepository.create(payload);
   }
 

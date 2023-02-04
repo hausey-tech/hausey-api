@@ -1,5 +1,6 @@
-import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, OneToOne, JoinColumn, OneToMany } from 'typeorm';
 
+import { ProfessionalSpecialty } from './professional-specialty';
 import { UserEntity } from '../../../shared/typeorm/entities';
 import { Address } from '../../addresses/entities/address';
 
@@ -20,4 +21,10 @@ export class Professional extends UserEntity {
   @OneToOne(() => Address, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
   @JoinColumn({ name: 'address_id' })
   address: Address;
+
+  @OneToMany(
+    () => ProfessionalSpecialty,
+    professionalSpecialty => professionalSpecialty.professional,
+  )
+  specialties: ProfessionalSpecialty[];
 }
