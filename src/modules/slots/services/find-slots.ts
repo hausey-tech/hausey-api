@@ -77,6 +77,12 @@ export class FindSlotsService {
       professionalsIds,
     );
 
+    if (slots.length === 0) {
+      throw new AppError(
+        'Não há nenhuma data disponível para essa especialidade!',
+      );
+    }
+
     const slotsGroupedByWeekDay = groupArrayByKey(slots, 'weekDay');
 
     const availability: IAvailability[] = [];
@@ -183,6 +189,16 @@ export class FindSlotsService {
       availableSlots.push({ ...t, slots: [...new Set(slotsTest)].sort() });
     });
 
-    return availableSlots;
+    const filteredAvailableSlots = availableSlots.filter(
+      availableSlot => availableSlot.slots.length > 0,
+    );
+
+    if (filteredAvailableSlots.length === 0) {
+      throw new AppError(
+        'Não há nenhuma data disponível para essa especialidade!',
+      );
+    }
+
+    return filteredAvailableSlots;
   }
 }
