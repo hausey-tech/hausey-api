@@ -12,7 +12,6 @@ import { slotsRouter } from '../../modules/slots/routes/slots';
 import { specialtiesRouter } from '../../modules/specialties/routes/specialties';
 
 import { professionalsRouter } from '../../modules/professionals/routes/professionals';
-import { professionalAddressesRouter } from '../../modules/professionals/routes/professional-addresses';
 
 import { programsRouter } from '../../modules/programs/routes/programs';
 
@@ -32,7 +31,7 @@ routes.use('/appointments', appointmentsRouter);
 routes.use('/prescriptions', prescriptionsRouter);
 routes.use('/slots', slotsRouter);
 routes.use('/specialties', specialtiesRouter);
-routes.use('/professionals', professionalsRouter, professionalAddressesRouter);
+routes.use('/professionals', professionalsRouter);
 routes.use('/patients', patientsRouter, patientAddressesRouter);
 routes.use('/programs', programsRouter);
 routes.use('/plans', plansRouter);

@@ -1,18 +1,10 @@
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 
-import { Professional } from '../../professionals/entities/professional';
 import { BaseEntity } from '../../../shared/typeorm/entities/base';
 import { Patient } from '../../patients/entities/patient';
 
 @Entity('addresses')
 export class Address extends BaseEntity {
-  @Column('varchar', { name: 'professional_id', nullable: true })
-  professionalId: string;
-
-  @OneToOne(() => Professional, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-  @JoinColumn({ name: 'professional_id' })
-  professional: Professional;
-
   @Column('varchar', { name: 'patient_id', nullable: true })
   patientId: string;
 
