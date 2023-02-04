@@ -2,8 +2,8 @@ import { container } from 'tsyringe';
 
 import '../providers';
 
-import { IAddressesRepository } from '../../modules/addresses/contracts/repositories/addresses';
-import { AddressesRepository } from '../../modules/addresses/repositories/addresses';
+import { IAddressesRepository } from '../../modules/addresses/contracts/repositories/IAddressesRepository';
+import { AddressesRepository } from '../../modules/addresses/repositories/AddressesRepository';
 
 import { IProfessionalsRepository } from '../../modules/professionals/contracts/repositories/professionals';
 import { ProfessionalsRepository } from '../../modules/professionals/repositories/professionals';

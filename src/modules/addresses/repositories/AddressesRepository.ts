@@ -1,9 +1,9 @@
 import { Repository } from 'typeorm';
 
-import { IAddressesRepository } from '../contracts/repositories/addresses';
-import { ICreateAddressDTO } from '../contracts/dtos/create-address';
+import { IAddressesRepository } from '../contracts/repositories/IAddressesRepository';
+import { ICreateAddressDTO } from '../contracts/dtos/ICreateAddressDTO';
 import { PostgresDataSource } from '../../../shared/typeorm';
-import { Address } from '../entities/address';
+import { Address } from '../entities/AddressTest';
 
 export class AddressesRepository implements IAddressesRepository {
   private ormRepository: Repository<Address>;

@@ -1,5 +1,5 @@
-import { Address } from '../../entities/address';
-import { ICreateAddressDTO } from '../dtos/create-address';
+import { Address } from '../../entities/AddressTest';
+import { ICreateAddressDTO } from '../dtos/ICreateAddressDTO';
 
 export interface IAddressesRepository {
   create(address: ICreateAddressDTO): Promise<Address>;

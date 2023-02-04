@@ -1,10 +1,8 @@
 import { Joi, Segments } from 'celebrate';
 
-export const CreatePatientAddressSchema = {
-  [Segments.PARAMS]: Joi.object().keys({
-    patientId: Joi.string().uuid().required(),
-  }),
+export const CreateAddressSchema = {
   [Segments.BODY]: Joi.object().keys({
+    patientId: Joi.string().uuid().required(),
     addressLine1: Joi.string().max(50).required(),
     addressLine2: Joi.string().max(50),
     city: Joi.string().required(),
