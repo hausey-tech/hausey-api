@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 
 import { IProfessionalsRepository } from '../contracts/repositories/professionals';
 import { ICreateProfessionalDTO } from '../contracts/dtos/create-professional';
@@ -8,48 +8,45 @@ import { Professional } from '../entities/professional';
 export class ProfessionalsRepository implements IProfessionalsRepository {
   private ormRepository: Repository<Professional>;
 
+  private relations: string[];
+
   constructor() {
     this.ormRepository = PostgresDataSource.getRepository(Professional);
-  }
-
-  public async findById(id: string): Promise<Professional | null> {
-    return this.ormRepository.findOne({ where: { id } });
-  }
-
-  public async findByUserId(id: string): Promise<Professional | null> {
-    return this.ormRepository.findOne({
-      where: { userId: id },
-      relations: ['user', 'professionalSpecialty', 'professionalType'],
-    });
-  }
-
-  public async findBySpecialtyId(id: string): Promise<Professional[]> {
-    const professionals = this.ormRepository.find({
-      where: { professionalSpecialtyId: id },
-      relations: ['user', 'professionalSpecialty', 'professionalType'],
-    });
-
-    return professionals;
-  }
-
-  public async findByTypeId(id: string): Promise<Professional[]> {
-    const professionals = this.ormRepository.find({
-      where: { professionalTypeId: id },
-      relations: ['user', 'professionalSpecialty', 'professionalType'],
-    });
-
-    return professionals;
+    this.relations = ['specialties.specialty'];
   }
 
   public async find(): Promise<Professional[]> {
     const professionals = this.ormRepository.find({
-      relations: ['user', 'professionalSpecialty', 'professionalType'],
+      relations: this.relations,
     });
 
     return professionals;
   }
 
-  public async create(payload: ICreateProfessionalDTO): Promise<Professional> {
+  public async findById(id: string): Promise<Professional | null> {
+    return this.ormRepository.findOne({
+      where: { id },
+      relations: this.relations,
+    });
+  }
+
+  public async findByIds(ids: string[]): Promise<Professional[]> {
+    return this.ormRepository.find({
+      where: { id: In(ids) },
+      relations: this.relations,
+    });
+  }
+
+  public async findByEmail(email: string): Promise<Professional | null> {
+    return this.ormRepository.findOne({
+      where: { email },
+      relations: this.relations,
+    });
+  }
+
+  public async create(
+    payload: Omit<ICreateProfessionalDTO, 'specialties'>,
+  ): Promise<Professional> {
     return this.ormRepository.create(payload);
   }
 

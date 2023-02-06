@@ -1,10 +1,7 @@
 export const createAppointmentSchema = {
   type: 'object',
   properties: {
-    professionalSpecialtyId: {
-      type: 'string',
-    },
-    professionalTypeId: {
+    specialtyId: {
       type: 'string',
     },
     date: {

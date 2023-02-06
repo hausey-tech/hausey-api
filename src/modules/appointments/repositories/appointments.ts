@@ -1,4 +1,4 @@
-import { Between, Repository, FindOptionsWhere, IsNull, Not } from 'typeorm';
+import { Between, Repository, FindOptionsWhere } from 'typeorm';
 
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
 import { PostgresDataSource } from '../../../shared/typeorm';
@@ -28,18 +28,6 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     return this.ormRepository.save(appointment);
   }
 
-  public async findByTypeBetweenDates(
-    typeId: string,
-    dates: Date[],
-  ): Promise<Appointment[]> {
-    const initial = dates[0];
-    const final = dates[dates.length - 1];
-
-    return this.ormRepository.find({
-      where: { date: Between(initial, final), professionalTypeId: typeId },
-    });
-  }
-
   public async findBySpecialtyBetweenDates(
     specialtyId: string,
     dates: Date[],
@@ -49,34 +37,19 @@ export class AppointmentsRepository implements IAppointmentsRepository {
 
     return this.ormRepository.find({
       where: {
+        specialtyId,
         date: Between(initial, final),
-        professionalSpecialtyId: specialtyId,
       },
     });
   }
 
-  public async findAll(withoutProfessional: string): Promise<Appointment[]> {
-    const where: FindOptionsWhere<Appointment> = {};
-
-    if (withoutProfessional === 'true') {
-      where.professionalId = IsNull();
-    } else if (withoutProfessional === 'false') {
-      where.professionalId = Not(IsNull());
-    }
-
+  public async find(
+    where: FindOptionsWhere<Appointment>,
+  ): Promise<Appointment[]> {
     return this.ormRepository.find({
       where,
       order: { date: 'asc' },
-      relations: [
-        'patient',
-        'patient.user',
-        'professionalType',
-        'professionalSpecialty',
-        'professional',
-        'professional.user',
-        'anamnesis',
-        'primaryDiagnosis',
-      ],
+      relations: ['patient', 'professional', 'specialty', 'prescriptions'],
     });
   }
 
@@ -86,16 +59,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     return this.ormRepository.find({
       where: { professionalId },
       order: { date: 'asc' },
-      relations: [
-        'patient',
-        'patient.user',
-        'professionalType',
-        'professionalSpecialty',
-        'professional',
-        'professional.user',
-        'anamnesis',
-        'primaryDiagnosis',
-      ],
+      relations: ['patient', 'professional', 'specialty', 'prescriptions'],
     });
   }
 
@@ -103,16 +67,12 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     return this.ormRepository.find({
       where: { patientId },
       order: { date: 'asc' },
-      relations: [
-        'patient',
-        'patient.user',
-        'professionalType',
-        'professionalSpecialty',
-        'professional',
-        'professional.user',
-        'anamnesis',
-        'primaryDiagnosis',
-      ],
+      relations: ['patient', 'professional', 'specialty', 'prescriptions'],
     });
+  }
+
+  public async update(id: string, payload: Appointment): Promise<Appointment> {
+    await this.ormRepository.update(id, payload);
+    return this.findById(id);
   }
 }

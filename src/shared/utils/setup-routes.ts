@@ -3,5 +3,5 @@ import { Express } from 'express';
 import { routes } from '../routes';
 
 export const setupRoutes = (app: Express): void => {
-  app.use('/', routes);
+  app.use('/v1', routes);
 };

@@ -1,6 +1,5 @@
 import {
   sessionsPath,
-  usersPath,
   appointmentsPath,
   professionalsPath,
   programsPath,
@@ -13,7 +12,6 @@ import {
   createSessionSchema,
   sessionSchema,
   updateUserSchema,
-  createUserSchema,
   userSchema,
   slotSchema,
   appointmentSchema,
@@ -22,8 +20,7 @@ import {
   baseSchema,
   createAppointmentSchema,
   priceSchema,
-  professionalTypeSchema,
-  createUserAndProfessionalSchema,
+  createProfessionalSchema,
   professionalSchema,
   patientSchema,
   createAnamnesisAndPrimaryDiagnosisSchema,
@@ -56,9 +53,6 @@ export default {
       name: 'Sessions',
     },
     {
-      name: 'Users',
-    },
-    {
       name: 'Patients',
     },
     {
@@ -76,15 +70,9 @@ export default {
   ],
   paths: {
     '/sessions': sessionsPath,
-    '/users': { ...usersPath, delete: undefined },
-    '/users/{id}': { delete: usersPath.delete },
     '/patients': patientsPath,
     '/professionals': professionalsPath,
-    '/professionals/types': professionalsPath.types,
     '/professionals/specialties': professionalsPath.specialties,
-    '/professionals/specialties/{typeId}': {
-      get: professionalsPath.specialties.byTypeId,
-    },
     '/appointments': appointmentsPath,
     '/appointments/patients': appointmentsPath.patients,
     '/appointments/professionals/{professionalId}': {
@@ -119,7 +107,6 @@ export default {
     error: errorSchema,
     createSession: createSessionSchema,
     session: sessionSchema,
-    createUser: createUserSchema,
     updateUser: updateUserSchema,
     user: userSchema,
     slot: slotSchema,
@@ -128,8 +115,7 @@ export default {
     specialty: specialtySchema,
     program: programSchema,
     price: priceSchema,
-    professionalType: professionalTypeSchema,
-    createUserAndProfessional: createUserAndProfessionalSchema,
+    createProfessional: createProfessionalSchema,
     professional: professionalSchema,
     patient: patientSchema,
     createAnamnesisAndPrimaryDiagnosis:

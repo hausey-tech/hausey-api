@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import { CreateUserAndProfessionalService } from '../services/create-user-and-professional';
+import { CreateUserAndProfessionalService } from '../services/create-professional';
 import { FindProfessionalsService } from '../services/find-professionals';
 
 export class ProfessionalsController {

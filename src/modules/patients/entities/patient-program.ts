@@ -9,7 +9,7 @@ export class PatientProgram extends BaseEntity {
   @Column('varchar', { name: 'patient_id' })
   patientId: string;
 
-  @ManyToOne(() => Patient)
+  @ManyToOne(() => Patient, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
   @JoinColumn({ name: 'patient_id' })
   patient: Patient;
 

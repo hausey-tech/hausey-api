@@ -1,5 +1,6 @@
 import { injectable, inject } from 'tsyringe';
 
+import { IProfessionalSpecialtiesRepository } from '../contracts/repositories/professional-specialties';
 import { IProfessionalsRepository } from '../contracts/repositories/professionals';
 import { Professional } from '../entities/professional';
 
@@ -8,20 +9,27 @@ export class FindProfessionalsService {
   constructor(
     @inject('ProfessionalsRepository')
     private professionalsRepository: IProfessionalsRepository,
+
+    @inject('ProfessionalSpecialtiesRepository')
+    private professionalSpecialtiesRepository: IProfessionalSpecialtiesRepository,
   ) {}
 
   public async execute(payload: {
     specialtyId?: string;
-    typeId?: string;
   }): Promise<Professional[]> {
-    const { specialtyId, typeId } = payload;
+    const { specialtyId } = payload;
 
     if (specialtyId) {
-      return this.professionalsRepository.findBySpecialtyId(specialtyId);
-    }
+      const professionalsSpecialty =
+        await this.professionalSpecialtiesRepository.findBySpecialtyId(
+          specialtyId,
+        );
 
-    if (typeId) {
-      return this.professionalsRepository.findByTypeId(typeId);
+      const professionalsIds = [
+        ...new Set(professionalsSpecialty.map(p => p.professionalId)),
+      ];
+
+      return this.professionalsRepository.findByIds(professionalsIds);
     }
 
     return this.professionalsRepository.find();

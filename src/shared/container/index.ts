@@ -2,17 +2,17 @@ import { container } from 'tsyringe';
 
 import '../providers';
 
-import { IUsersRepository } from '../../modules/users/contracts/repositories/users';
-import { UsersRepository } from '../../modules/users/repositories/users';
+import { IAddressesRepository } from '../../modules/addresses/contracts/repositories/IAddressesRepository';
+import { AddressesRepository } from '../../modules/addresses/repositories/AddressesRepository';
 
 import { IProfessionalsRepository } from '../../modules/professionals/contracts/repositories/professionals';
 import { ProfessionalsRepository } from '../../modules/professionals/repositories/professionals';
 
+import { ISpecialtiesRepository } from '../../modules/specialties/contracts/repositories/specialties';
+import { SpecialtiesRepository } from '../../modules/specialties/repositories/specialties';
+
 import { IProfessionalSpecialtiesRepository } from '../../modules/professionals/contracts/repositories/professional-specialties';
 import { ProfessionalSpecialtiesRepository } from '../../modules/professionals/repositories/professional-specialties';
-
-import { IProfessionalTypesRepository } from '../../modules/professionals/contracts/repositories/professional-types';
-import { ProfessionalTypesRepository } from '../../modules/professionals/repositories/professional-types';
 
 import { IPatientsRepository } from '../../modules/patients/contracts/repositories/patients';
 import { PatientsRepository } from '../../modules/patients/repositories/patients';
@@ -20,44 +20,40 @@ import { PatientsRepository } from '../../modules/patients/repositories/patients
 import { IPatientProgramsRepository } from '../../modules/patients/contracts/repositories/patient-programs';
 import { PatientProgramsRepository } from '../../modules/patients/repositories/patient-programs';
 
-import { IAnamnesesRepository } from '../../modules/appointments/contracts/repositories/anamneses';
-import { AnamnesesRepository } from '../../modules/appointments/repositories/anamneses';
-
-import { IPrimaryDiagnosesRepository } from '../../modules/appointments/contracts/repositories/primary-diagnoses';
-import { PrimaryDiagnosesRepository } from '../../modules/appointments/repositories/primary-diagnoses';
-
 import { IAppointmentsRepository } from '../../modules/appointments/contracts/repositories/appointments';
 import { AppointmentsRepository } from '../../modules/appointments/repositories/appointments';
 
-import { ISlotsRepository } from '../../modules/appointments/contracts/repositories/slots';
-import { SlotsRepository } from '../../modules/appointments/repositories/slots';
+import { ISlotsRepository } from '../../modules/slots/contracts/repositories/slots';
+import { SlotsRepository } from '../../modules/slots/repositories/slots';
 
 import { IProgramsRepository } from '../../modules/programs/contracts/repositories/programs';
 import { ProgramsRepository } from '../../modules/programs/repositories/programs';
 
-import { IProgramProfessionalTypeDiscountsRepository } from '../../modules/programs/contracts/repositories/program-professional-type-discounts';
-import { ProgramProfessionalTypeDiscountsRepository } from '../../modules/programs/repositories/program-professional-type-discounts';
-
-import { IProgramProfessionalSpecialtyDiscountsRepository } from '../../modules/programs/contracts/repositories/program-professional-specialty-discounts';
-import { ProgramProfessionalSpecialtyDiscountsRepository } from '../../modules/programs/repositories/program-professional-specialty-discounts';
+import { IProgramSpecialtyDiscountsRepository } from '../../modules/programs/contracts/repositories/program-specialty-discounts';
+import { ProgramSpecialtyDiscountsRepository } from '../../modules/programs/repositories/program-specialty-discounts';
 
 import { IPlansRepository } from '../../modules/plans/contracts/repositories/plans';
 import { PlansRepository } from '../../modules/plans/repositories/plans';
 
-import { IPlanProfessionalTypeDiscountsRepository } from '../../modules/plans/contracts/repositories/plan-professional-type-discounts';
-import { PlanProfessionalTypeDiscountsRepository } from '../../modules/plans/repositories/plan-professional-type-discounts';
+import { IPlanSpecialtyDiscountsRepository } from '../../modules/plans/contracts/repositories/plan-specialty-discounts';
+import { PlanSpecialtyDiscountsRepository } from '../../modules/plans/repositories/plan-specialty-discounts';
 
-import { IPlanProfessionalSpecialtyDiscountsRepository } from '../../modules/plans/contracts/repositories/plan-professional-specialty-discounts';
-import { PlanProfessionalSpecialtyDiscountsRepository } from '../../modules/plans/repositories/plan-professional-specialty-discounts';
+import { IPrescriptionsRepository } from '../../modules/prescriptions/contracts/repositories/IPrescriptionsRepository';
+import { PrescriptionsRepository } from '../../modules/prescriptions/repositories/PrescriptionsRepository';
 
-container.registerSingleton<IUsersRepository>(
-  'UsersRepository',
-  UsersRepository,
+container.registerSingleton<IAddressesRepository>(
+  'AddressesRepository',
+  AddressesRepository,
 );
 
 container.registerSingleton<IProfessionalsRepository>(
   'ProfessionalsRepository',
   ProfessionalsRepository,
+);
+
+container.registerSingleton<IProfessionalSpecialtiesRepository>(
+  'ProfessionalSpecialtiesRepository',
+  ProfessionalSpecialtiesRepository,
 );
 
 container.registerSingleton<IPatientsRepository>(
@@ -70,16 +66,6 @@ container.registerSingleton<IPatientProgramsRepository>(
   PatientProgramsRepository,
 );
 
-container.registerSingleton<IAnamnesesRepository>(
-  'AnamnesesRepository',
-  AnamnesesRepository,
-);
-
-container.registerSingleton<IPrimaryDiagnosesRepository>(
-  'PrimaryDiagnosesRepository',
-  PrimaryDiagnosesRepository,
-);
-
 container.registerSingleton<IAppointmentsRepository>(
   'AppointmentsRepository',
   AppointmentsRepository,
@@ -90,14 +76,9 @@ container.registerSingleton<ISlotsRepository>(
   SlotsRepository,
 );
 
-container.registerSingleton<IProfessionalSpecialtiesRepository>(
-  'ProfessionalSpecialtiesRepository',
-  ProfessionalSpecialtiesRepository,
-);
-
-container.registerSingleton<IProfessionalTypesRepository>(
-  'ProfessionalTypesRepository',
-  ProfessionalTypesRepository,
+container.registerSingleton<ISpecialtiesRepository>(
+  'SpecialtiesRepository',
+  SpecialtiesRepository,
 );
 
 container.registerSingleton<IProgramsRepository>(
@@ -105,14 +86,9 @@ container.registerSingleton<IProgramsRepository>(
   ProgramsRepository,
 );
 
-container.registerSingleton<IProgramProfessionalTypeDiscountsRepository>(
-  'ProgramProfessionalTypeDiscountsRepository',
-  ProgramProfessionalTypeDiscountsRepository,
-);
-
-container.registerSingleton<IProgramProfessionalSpecialtyDiscountsRepository>(
-  'ProgramProfessionalSpecialtyDiscountsRepository',
-  ProgramProfessionalSpecialtyDiscountsRepository,
+container.registerSingleton<IProgramSpecialtyDiscountsRepository>(
+  'ProgramSpecialtyDiscountsRepository',
+  ProgramSpecialtyDiscountsRepository,
 );
 
 container.registerSingleton<IPlansRepository>(
@@ -120,12 +96,12 @@ container.registerSingleton<IPlansRepository>(
   PlansRepository,
 );
 
-container.registerSingleton<IPlanProfessionalTypeDiscountsRepository>(
-  'PlanProfessionalTypeDiscountsRepository',
-  PlanProfessionalTypeDiscountsRepository,
+container.registerSingleton<IPlanSpecialtyDiscountsRepository>(
+  'PlanSpecialtyDiscountsRepository',
+  PlanSpecialtyDiscountsRepository,
 );
 
-container.registerSingleton<IPlanProfessionalSpecialtyDiscountsRepository>(
-  'PlanProfessionalSpecialtyDiscountsRepository',
-  PlanProfessionalSpecialtyDiscountsRepository,
+container.registerSingleton<IPrescriptionsRepository>(
+  'PrescriptionsRepository',
+  PrescriptionsRepository,
 );

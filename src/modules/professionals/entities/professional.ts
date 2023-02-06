@@ -1,39 +1,22 @@
-import { Entity, Column, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 
-import { BaseEntity } from '../../../shared/typeorm/entities/base';
-import { User } from '../../users/entities/user';
 import { ProfessionalSpecialty } from './professional-specialty';
-import { ProfessionalType } from './professional-type';
+import { UserEntity } from '../../../shared/typeorm/entities';
 
 @Entity('professionals')
-export class Professional extends BaseEntity {
-  @Column('varchar', { name: 'user_id' })
-  userId: string;
-
-  @OneToOne(() => User)
-  @JoinColumn({ name: 'user_id' })
-  user: User;
-
-  @Column('varchar', { name: 'professional_specialty_id', nullable: true })
-  professionalSpecialtyId: string;
-
-  @ManyToOne(() => ProfessionalSpecialty)
-  @JoinColumn({ name: 'professional_specialty_id' })
-  professionalSpecialty: ProfessionalSpecialty;
-
-  @Column('varchar')
+export class Professional extends UserEntity {
+  @Column('varchar', { nullable: true })
   registration: string;
 
-  @Column('varchar', { name: 'registration_uf' })
+  @Column('varchar', { name: 'registration_uf', nullable: true })
   registrationUf: string;
-
-  @Column('varchar', { name: 'professional_type_id' })
-  professionalTypeId: string;
-
-  @ManyToOne(() => ProfessionalType)
-  @JoinColumn({ name: 'professional_type_id' })
-  professionalType: ProfessionalType;
 
   @Column('varchar', { name: 'memed_status', nullable: true })
   memedStatus: string;
+
+  @OneToMany(
+    () => ProfessionalSpecialty,
+    professionalSpecialty => professionalSpecialty.professional,
+  )
+  specialties: ProfessionalSpecialty[];
 }

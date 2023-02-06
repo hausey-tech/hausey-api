@@ -1,22 +1,18 @@
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 
-import { BaseEntity } from '../../../shared/typeorm/entities/base';
-import { User } from '../../users/entities/user';
+import { UserEntity } from '../../../shared/typeorm/entities';
+import { Address } from '../../addresses/entities/Address';
 import { Plan } from '../../plans/entities/plan';
 
 @Entity('patients')
-export class Patient extends BaseEntity {
-  @Column('varchar', { name: 'user_id' })
-  userId: string;
-
-  @OneToOne(() => User)
-  @JoinColumn({ name: 'user_id' })
-  user: User;
-
+export class Patient extends UserEntity {
   @Column('varchar', { name: 'plan_id', nullable: true })
   planId: string;
 
   @ManyToOne(() => Plan)
   @JoinColumn({ name: 'plan_id' })
   plan: Plan;
+
+  @OneToOne(() => Address, address => address.patient)
+  address: Address;
 }

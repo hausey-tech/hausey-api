@@ -1,9 +1,9 @@
 import { Repository } from 'typeorm';
 
-import { PostgresDataSource } from '../../../shared/typeorm';
-import { CreateSpecialtyDTO } from '../contracts/dtos/create-specialty';
 import { IProfessionalSpecialtiesRepository } from '../contracts/repositories/professional-specialties';
+import { ICreateProfessionalSpecialtyDTO } from '../contracts/dtos/create-professional-specialty';
 import { ProfessionalSpecialty } from '../entities/professional-specialty';
+import { PostgresDataSource } from '../../../shared/typeorm';
 
 export class ProfessionalSpecialtiesRepository
   implements IProfessionalSpecialtiesRepository
@@ -17,35 +17,32 @@ export class ProfessionalSpecialtiesRepository
   }
 
   public async findAll(): Promise<ProfessionalSpecialty[]> {
-    return this.ormRepository.find({ order: { group: 'ASC' } });
+    return this.ormRepository.find();
   }
 
-  public async findById(id: string): Promise<ProfessionalSpecialty> {
-    return this.ormRepository.findOne({ where: { id } });
+  public async findBySpecialtyId(
+    specialtyId: string,
+  ): Promise<ProfessionalSpecialty[]> {
+    return this.ormRepository.find({ where: { specialtyId } });
   }
 
-  public async findByProfessionalTypeId(
-    professionalTypeid: string,
+  public async findByProfessionalId(
+    professionalId: string,
   ): Promise<ProfessionalSpecialty[]> {
     return this.ormRepository.find({
-      where: { professionalTypeId: professionalTypeid },
-      order: { group: 'ASC' },
+      where: { professionalId },
     });
   }
 
   public async create(
-    specialty: CreateSpecialtyDTO,
+    professionalSpecialty: ICreateProfessionalSpecialtyDTO,
   ): Promise<ProfessionalSpecialty> {
-    return this.ormRepository.create(specialty);
+    return this.ormRepository.create(professionalSpecialty);
   }
 
   public async save(
-    specialty: ProfessionalSpecialty,
+    professionalSpecialty: ProfessionalSpecialty,
   ): Promise<ProfessionalSpecialty> {
-    return this.ormRepository.save(specialty);
-  }
-
-  public async findByMemedId(memedId: number): Promise<ProfessionalSpecialty> {
-    return this.ormRepository.findOne({ where: { memedId } });
+    return this.ormRepository.save(professionalSpecialty);
   }
 }

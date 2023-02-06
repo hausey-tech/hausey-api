@@ -12,17 +12,20 @@ export const userSchema = {
         email: {
           type: 'string',
         },
-        cpf: {
+        password: {
+          type: 'string',
+        },
+        document: {
           type: 'string',
         },
         birthdate: {
           type: 'string',
         },
-        sex: {
-          type: 'integer',
-        },
         phoneNumber: {
           type: 'string',
+        },
+        sex: {
+          type: 'integer',
         },
       },
     },

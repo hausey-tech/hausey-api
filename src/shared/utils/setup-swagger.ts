@@ -5,5 +5,5 @@ import { noCache } from '../middlewares/no-cache';
 import swaggerConfig from '../docs';
 
 export const setupSwagger = (app: Express): void => {
-  app.use('/docs', noCache, serve, setup(swaggerConfig));
+  app.use('/v1/docs', noCache, serve, setup(swaggerConfig));
 };

@@ -1,41 +1,55 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import { FindAllAppointmentsService } from '../services/find-all-appointments';
-import { CheckAppointmentPrice } from '../services/check-appointment-price';
-import { CreateAppointmentService } from '../services/create-appointment';
-import { UploadFileToS3 } from '../../integrations/services/upload-file-to-s3';
-import { ListFilesFromS3 } from '../../integrations/services/list-files-from-s3';
+import { UploadAppointmentFilesService } from '../services/upload-appointment-files';
 import { ToggleAppointmentPaidService } from '../services/toggle-appointment-paid';
+import { ListAppointmentFilesService } from '../services/list-appointment-files';
+import { UpdateAppointmentService } from '../services/update-appointment';
+import { CreateAppointmentService } from '../services/create-appointment';
+import { FindAppointmentsService } from '../services/find-appointments';
+import { SetProfessionalService } from '../services/set-professional';
+import { CheckAppointmentPrice } from '../services/check-appointment-price';
+import { ToggleFinishedService } from '../services/toggle-finished';
 
 export class AppointmentsController {
   public async index(request: Request, response: Response): Promise<Response> {
-    const { withoutProfessional } = request.query;
+    const { query } = request;
 
-    const findAllAppointmentsService = container.resolve(
-      FindAllAppointmentsService,
-    );
+    const findAppointmentsService = container.resolve(FindAppointmentsService);
 
-    const appointments = await findAllAppointmentsService.execute(
-      withoutProfessional?.toString(),
-    );
+    const appointments = await findAppointmentsService.execute(query);
 
     return response.json(appointments);
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const { roleId } = request.user;
-    const { professionalTypeId, professionalSpecialtyId, date } = request.body;
+    const { id } = request.user;
+    const { specialtyId, date } = request.body;
 
     const createAppointmentService = container.resolve(
       CreateAppointmentService,
     );
 
     const appointment = await createAppointmentService.execute({
-      patientId: roleId,
-      professionalTypeId,
-      professionalSpecialtyId,
+      patientId: id,
+      specialtyId,
       date,
+    });
+
+    return response.json(appointment);
+  }
+
+  public async update(request: Request, response: Response): Promise<Response> {
+    const { appointmentId } = request.params;
+    const payload = request.body;
+
+    const updateAppointmentService = container.resolve(
+      UpdateAppointmentService,
+    );
+
+    const appointment = await updateAppointmentService.execute({
+      appointmentId,
+      payload,
     });
 
     return response.json(appointment);
@@ -45,17 +59,16 @@ export class AppointmentsController {
     request: Request,
     response: Response,
   ): Promise<Response> {
-    const { roleId } = request.user;
-    const { professionalTypeId, professionalSpecialtyId } = request.params;
+    const { id } = request.user;
+    const { specialtyId } = request.params;
 
     const checkAppointmentPriceService = container.resolve(
       CheckAppointmentPrice,
     );
 
     const prices = await checkAppointmentPriceService.execute(
-      roleId,
-      professionalTypeId,
-      professionalSpecialtyId,
+      id,
+      specialtyId as string,
     );
 
     return response.json(prices);
@@ -69,12 +82,14 @@ export class AppointmentsController {
 
     const { appointmentId } = request.params;
 
-    const uploadFileService = container.resolve(UploadFileToS3);
-
-    await uploadFileService.execute(
-      files as Express.Multer.File[],
-      `appointments/${appointmentId}`,
+    const uploadAppointmentFilesService = container.resolve(
+      UploadAppointmentFilesService,
     );
+
+    await uploadAppointmentFilesService.execute({
+      appointmentId,
+      files: files as Express.Multer.File[],
+    });
 
     return response.json({ message: 'Arquivo(s) enviado(s) com sucesso!' });
   }
@@ -85,12 +100,14 @@ export class AppointmentsController {
   ): Promise<Response> {
     const { appointmentId } = request.params;
 
-    const listFilesService = container.resolve(ListFilesFromS3);
-
-    const files = await listFilesService.execute(
-      request,
-      `appointments/${appointmentId}`,
+    const listAppointmentFilesService = container.resolve(
+      ListAppointmentFilesService,
     );
+
+    const files = await listAppointmentFilesService.execute({
+      appointmentId,
+      request,
+    });
 
     return response.json(files);
   }
@@ -108,6 +125,37 @@ export class AppointmentsController {
     const appointment = await toggleAppointmentPaidService.execute(
       appointmentId,
     );
+
+    return response.json(appointment);
+  }
+
+  public async setProfessional(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { appointmentId, professionalId } = request.params;
+
+    const setProfessionalService = container.resolve(SetProfessionalService);
+
+    const appointment = await setProfessionalService.execute({
+      appointmentId,
+      professionalId,
+    });
+
+    return response.json(appointment);
+  }
+
+  public async toggleFinished(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { appointmentId } = request.params;
+
+    const toggleFinishedService = container.resolve(ToggleFinishedService);
+
+    const appointment = await toggleFinishedService.execute({
+      appointmentId,
+    });
 
     return response.json(appointment);
   }

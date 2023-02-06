@@ -1,12 +1,11 @@
 import { Joi, Segments } from 'celebrate';
 
-export const CreateUserAndProfessionalSchema = {
+export const CreateProfessionalSchema = {
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string().required(),
     email: Joi.string().email().required(),
-    cpf: Joi.string().required(),
-    professionalTypeId: Joi.string().uuid().required(),
-    professionalSpecialtyId: Joi.string().uuid(),
+    document: Joi.string().required(),
+    specialties: Joi.array().items(Joi.string().uuid().required()).required(),
     registrationUf: Joi.string().length(2).required(),
     registration: Joi.string().required(),
     phoneNumber: Joi.string().required(),
@@ -16,7 +15,6 @@ export const CreateUserAndProfessionalSchema = {
       .regex(/^\d{4}\-(0[1-9]|1[012])\-(0[1-9]|[12][0-9]|3[01])$/, {
         name: 'YYYY-MM-DD',
       }),
-    specialtyRegistration: Joi.string(),
     password: Joi.string(),
   }),
 };

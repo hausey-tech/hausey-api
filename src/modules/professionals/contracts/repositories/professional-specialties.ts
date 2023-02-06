@@ -1,13 +1,16 @@
 import { ProfessionalSpecialty } from '../../entities/professional-specialty';
-import { CreateSpecialtyDTO } from '../dtos/create-specialty';
+import { ICreateProfessionalSpecialtyDTO } from '../dtos/create-professional-specialty';
 
 export interface IProfessionalSpecialtiesRepository {
   findAll(): Promise<ProfessionalSpecialty[]>;
-  findById(id: string): Promise<ProfessionalSpecialty>;
-  findByProfessionalTypeId(
-    professionalTypeid: string,
+  findBySpecialtyId(specialtyId: string): Promise<ProfessionalSpecialty[]>;
+  findByProfessionalId(
+    professionalId: string,
   ): Promise<ProfessionalSpecialty[]>;
-  create(specialty: CreateSpecialtyDTO): Promise<ProfessionalSpecialty>;
-  save(specialty: ProfessionalSpecialty): Promise<ProfessionalSpecialty>;
-  findByMemedId(memedId: number): Promise<ProfessionalSpecialty>;
+  create(
+    professionalSpecialty: ICreateProfessionalSpecialtyDTO,
+  ): Promise<ProfessionalSpecialty>;
+  save(
+    professionalSpecialty: ProfessionalSpecialty,
+  ): Promise<ProfessionalSpecialty>;
 }

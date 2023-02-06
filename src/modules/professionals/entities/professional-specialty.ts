@@ -1,29 +1,22 @@
-import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 import { BaseEntity } from '../../../shared/typeorm/entities/base';
-import { ProfessionalType } from './professional-type';
+import { Professional } from './professional';
+import { Specialty } from '../../specialties/entities/specialty';
 
 @Entity('professional_specialties')
 export class ProfessionalSpecialty extends BaseEntity {
-  @Column('varchar', { name: 'professional_type_id' })
-  professionalTypeId: string;
+  @Column('varchar', { name: 'professional_id' })
+  professionalId: string;
 
-  @ManyToOne(() => ProfessionalType)
-  @JoinColumn({ name: 'professional_type_id' })
-  professionalType: ProfessionalType;
+  @ManyToOne(() => Professional, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  @JoinColumn({ name: 'professional_id' })
+  professional: Professional;
 
-  @Column('varchar')
-  name: string;
+  @Column('varchar', { name: 'specialty_id' })
+  specialtyId: string;
 
-  @Column('varchar', { nullable: true })
-  description: string;
-
-  @Column('int', { nullable: true })
-  price: number;
-
-  @Column('varchar', { nullable: true })
-  group: string;
-
-  @Column('int', { name: 'memed_id', nullable: true })
-  memedId: number;
+  @ManyToOne(() => Specialty, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+  @JoinColumn({ name: 'specialty_id' })
+  specialty: Specialty;
 }

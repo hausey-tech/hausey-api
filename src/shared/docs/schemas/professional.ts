@@ -1,34 +1,27 @@
-import { professionalTypeSchema } from './professional-type';
 import { specialtySchema } from './specialty';
-import { userSchema } from './user';
 
 export const professionalSchema = {
   allOf: [
     {
-      $ref: '#/schemas/base',
+      $ref: '#/schemas/user',
     },
     {
       type: 'object',
       properties: {
-        userId: {
+        specialtyId: {
           type: 'string',
         },
-        user: userSchema,
-        professionalSpecialtyId: {
+        specialty: specialtySchema,
+        specialtyRegistration: {
           type: 'string',
         },
-        professionalSpecialty: specialtySchema,
         registration: {
           type: 'string',
         },
         registrationUf: {
           type: 'string',
         },
-        professionalTypeId: {
-          type: 'string',
-        },
-        professionalType: professionalTypeSchema,
-        specialtyRegistration: {
+        memedStatus: {
           type: 'string',
         },
       },
