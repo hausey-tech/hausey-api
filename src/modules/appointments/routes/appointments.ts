@@ -7,6 +7,7 @@ import {
   SetProfessionalSchema,
   UpdateAppointmentSchema,
   CheckPriceSchema,
+  ToggleFinishedSchema,
 } from '../celebrate-schemas/appointment';
 import { AppointmentsController } from '../controllers/appointments';
 import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
@@ -67,4 +68,11 @@ appointmentsRouter.get(
   ensureAuthentication,
   celebrate(SetProfessionalSchema),
   appointmentsController.setProfessional,
+);
+
+appointmentsRouter.get(
+  '/:appointmentId/toggle-finished',
+  ensureAuthentication,
+  celebrate(ToggleFinishedSchema),
+  appointmentsController.toggleFinished,
 );

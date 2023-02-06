@@ -38,9 +38,12 @@ export class Appointment extends BaseEntity {
   @Column('varchar', { name: 'primary_diagnosis', nullable: true })
   primaryDiagnosis: string;
 
-  @Column('boolean', { nullable: true })
+  @Column('boolean', { default: false })
   paid: boolean;
 
   @OneToMany(() => Prescription, prescription => prescription.appointment)
   prescriptions: Prescription[];
+
+  @Column('boolean', { default: false })
+  finished: boolean;
 }

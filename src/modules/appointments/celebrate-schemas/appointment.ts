@@ -39,3 +39,9 @@ export const CheckPriceSchema = {
     specialtyId: Joi.string().uuid().required(),
   }),
 };
+
+export const ToggleFinishedSchema = {
+  [Segments.PARAMS]: Joi.object().keys({
+    appointmentId: Joi.string().uuid().required(),
+  }),
+};
