@@ -12,7 +12,7 @@ export class FindAppointmentsService {
   ) {}
 
   public async execute(query: any): Promise<Appointment[]> {
-    const { patientId, professionalId } = query;
+    const { patientId, professionalId, finished } = query;
 
     const where: FindOptionsWhere<Appointment> = {};
 
@@ -28,6 +28,10 @@ export class FindAppointmentsService {
       } else {
         where.professionalId = professionalId;
       }
+    }
+
+    if (typeof finished === 'boolean') {
+      where.finished = finished;
     }
 
     const appointments = await this.appointmentsRepository.find(where);

@@ -7,6 +7,7 @@ export const FindAppointmentsSchema = {
       Joi.string().uuid(),
       Joi.string().valid('null', '!null'),
     ),
+    finished: Joi.boolean(),
   }),
 };
 
