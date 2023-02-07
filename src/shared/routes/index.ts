@@ -41,7 +41,7 @@ routes.use('/addresses', addressesRouter);
 routes.use('/integrations', twilioRouter, memedRouter, s3Router);
 routes.get('/health-check', (req, res) => {
   fs.readFile(
-    pathJS.join(__dirname, '../../../buildTime.txt'),
+    pathJS.join(__dirname, '../../../buildtime.txt'),
     'utf8',
     (err, data) => {
       res.send({
