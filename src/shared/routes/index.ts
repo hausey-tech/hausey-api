@@ -1,3 +1,5 @@
+import fs from 'fs';
+import pathJS from 'path';
 import { Router } from 'express';
 
 import { sessionsRouter } from '../../modules/sessions/routes/sessions';
@@ -38,5 +40,14 @@ routes.use('/plans', plansRouter);
 routes.use('/addresses', addressesRouter);
 routes.use('/integrations', twilioRouter, memedRouter, s3Router);
 routes.get('/health-check', (req, res) => {
-  res.send({ status: 'ok' });
+  fs.readFile(
+    pathJS.join(__dirname, '../../../buildTime.txt'),
+    'utf8',
+    (err, data) => {
+      res.send({
+        status: 'ok',
+        lastUpdate: new Date(Number(data.split(/\r?\n/)[0]) * 1000),
+      });
+    },
+  );
 });
