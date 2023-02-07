@@ -4,7 +4,7 @@
   "description": "Hausey API REST",
   "main": "index.js",
   "scripts": {
-    "build": "date +%s > buildtime.txt && tsc",
+    "build": "tsc",
     "start": "node dist/shared/server.js",
     "dev:server": "ts-node-dev -r tsconfig-paths/register --inspect --transpile-only --ignore node_modules src/shared/server.ts",
     "dev:docker": "docker-compose up -d",
