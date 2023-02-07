@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { AppError } from '../errors/app-error';
 
 import { sessionsRouter } from '../../modules/sessions/routes/sessions';
 
@@ -40,7 +39,4 @@ routes.use('/addresses', addressesRouter);
 routes.use('/integrations', twilioRouter, memedRouter, s3Router);
 routes.get('/health-check', (req, res) => {
   res.send({ status: 'ok' });
-});
-routes.use('/', () => {
-  throw new AppError('Rota não encontrada, verifique e tente novamente!', 404);
 });
