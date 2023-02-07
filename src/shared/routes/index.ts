@@ -39,7 +39,7 @@ routes.use('/plans', plansRouter);
 routes.use('/addresses', addressesRouter);
 routes.use('/integrations', twilioRouter, memedRouter, s3Router);
 routes.get('/health-check', (req, res) => {
-  res.send({ status: 'ok, codepipeline' });
+  res.send({ status: 'ok' });
 });
 routes.use('/', () => {
   throw new AppError('Rota não encontrada, verifique e tente novamente!', 404);
