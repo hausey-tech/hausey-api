@@ -19,6 +19,10 @@ export class PlansRepository implements IPlansRepository {
     return this.ormRepository.findOne({ where: { name } });
   }
 
+  public async findyByPriceId(priceId: string): Promise<Plan | null> {
+    return this.ormRepository.findOne({ where: { stripePriceId: priceId } });
+  }
+
   public async create(plan: ICreatePlanDTO): Promise<Plan> {
     return this.ormRepository.create(plan);
   }

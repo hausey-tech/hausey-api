@@ -1,6 +1,7 @@
 import Stripe from 'stripe';
 import { container, inject, injectable } from 'tsyringe';
 import { AppError } from '../../../../shared/errors/app-error';
+import { IPlansRepository } from '../../../plans/contracts/repositories/plans';
 import { IPatientsRepository } from '../../../patients/contracts/repositories/patients';
 import { stripeInstance } from '../../utils/stripe-instance';
 import { CreateCustomer } from './create-customer';
@@ -24,6 +25,9 @@ export class CreateSubscription {
   constructor(
     @inject('PatientsRepository')
     private patientsRepository: IPatientsRepository,
+
+    @inject('PlansRepository')
+    private plansRepository: IPlansRepository,
   ) {}
 
   public async execute({
@@ -37,6 +41,12 @@ export class CreateSubscription {
       throw new AppError(
         'Paciente não encontrado, verifique e tente novamente!',
       );
+    }
+
+    const plan = await this.plansRepository.findyByPriceId(priceId);
+
+    if (!plan) {
+      throw new AppError('Plano não encontrado, verifique e tente novamente!');
     }
 
     let customerId = patient.stripeCustomerId;
@@ -71,6 +81,11 @@ export class CreateSubscription {
       payment_behavior: 'error_if_incomplete',
       default_payment_method: cardId,
     });
+
+    patient.planId = plan.id;
+    patient.planExpiresAt = new Date(subscription.current_period_end * 1000);
+
+    await this.patientsRepository.save(patient);
 
     return subscription;
   }

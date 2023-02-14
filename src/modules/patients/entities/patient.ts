@@ -18,4 +18,7 @@ export class Patient extends UserEntity {
 
   @Column('varchar', { name: 'stripe_customer_id', nullable: true })
   stripeCustomerId: string;
+
+  @Column('timestamp', { name: 'plan_expires_at', nullable: true })
+  planExpiresAt: Date;
 }
