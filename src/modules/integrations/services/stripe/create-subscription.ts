@@ -83,6 +83,7 @@ export class CreateSubscription {
     });
 
     patient.planId = plan.id;
+    patient.stripeCustomerId = customerId;
     patient.planExpiresAt = new Date(subscription.current_period_end * 1000);
 
     await this.patientsRepository.save(patient);
