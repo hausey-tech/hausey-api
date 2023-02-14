@@ -2,6 +2,8 @@ import fs from 'fs';
 import pathJS from 'path';
 import { Router } from 'express';
 
+import { stripeRoutes } from 'modules/integrations/routes/stripe.routes';
+
 import { sessionsRouter } from '../../modules/sessions/routes/sessions';
 
 import { appointmentsRouter } from '../../modules/appointments/routes/appointments';
@@ -38,7 +40,7 @@ routes.use('/patients', patientsRouter);
 routes.use('/programs', programsRouter);
 routes.use('/plans', plansRouter);
 routes.use('/addresses', addressesRouter);
-routes.use('/integrations', twilioRouter, memedRouter, s3Router);
+routes.use('/integrations', twilioRouter, memedRouter, s3Router, stripeRoutes);
 routes.get('/health-check', (req, res) => {
   fs.readFile(
     pathJS.join(__dirname, '../../../buildtime.txt'),

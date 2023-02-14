@@ -1,0 +1,77 @@
+import Stripe from 'stripe';
+import { container, inject, injectable } from 'tsyringe';
+import { AppError } from '../../../../shared/errors/app-error';
+import { IPatientsRepository } from '../../../patients/contracts/repositories/patients';
+import { stripeInstance } from '../../utils/stripe-instance';
+import { CreateCustomer } from './create-customer';
+import { CreatePaymentMethod } from './create-payment-method';
+
+interface Card {
+  number: string;
+  expMonth: number;
+  expYear: number;
+  cvc: string;
+}
+
+interface Props {
+  patientId: string;
+  priceId: string;
+  card: Card | string;
+}
+
+@injectable()
+export class CreateSubscription {
+  constructor(
+    @inject('PatientsRepository')
+    private patientsRepository: IPatientsRepository,
+  ) {}
+
+  public async execute({
+    patientId,
+    priceId,
+    card,
+  }: Props): Promise<Stripe.Response<Stripe.Subscription>> {
+    const patient = await this.patientsRepository.findById(patientId);
+
+    if (!patient) {
+      throw new AppError(
+        'Paciente não encontrado, verifique e tente novamente!',
+      );
+    }
+
+    let customerId = patient.stripeCustomerId;
+
+    if (!customerId) {
+      const createCustomer = container.resolve(CreateCustomer);
+      const customer = await createCustomer.execute({
+        email: patient.email,
+        name: patient.name,
+      });
+      customerId = customer.id;
+    }
+
+    let cardId: string;
+
+    if (typeof card !== 'string') {
+      const createPaymentMethod = container.resolve(CreatePaymentMethod);
+      const paymentMethod = await createPaymentMethod.execute({
+        customerId,
+        card,
+      });
+
+      cardId = paymentMethod.id;
+    } else {
+      cardId = card;
+    }
+
+    const subscription = await stripeInstance.subscriptions.create({
+      customer: customerId,
+      items: [{ price: priceId }],
+      collection_method: 'charge_automatically',
+      payment_behavior: 'error_if_incomplete',
+      default_payment_method: cardId,
+    });
+
+    return subscription;
+  }
+}

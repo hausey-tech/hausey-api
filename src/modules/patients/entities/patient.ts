@@ -15,4 +15,7 @@ export class Patient extends UserEntity {
 
   @OneToOne(() => Address, address => address.patient)
   address: Address;
+
+  @Column('varchar', { name: 'stripe_customer_id', nullable: true })
+  stripeCustomerId: string;
 }
