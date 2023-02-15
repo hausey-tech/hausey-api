@@ -50,37 +50,42 @@ export class CreateSubscription {
     }
 
     let customerId = patient.stripeCustomerId;
+    let subscription: Stripe.Response<Stripe.Subscription>;
 
-    if (!customerId) {
-      const createCustomer = container.resolve(CreateCustomer);
-      const customer = await createCustomer.execute({
-        email: patient.email,
-        name: patient.name,
+    try {
+      if (!customerId) {
+        const createCustomer = container.resolve(CreateCustomer);
+        const customer = await createCustomer.execute({
+          email: patient.email,
+          name: patient.name,
+        });
+        customerId = customer.id;
+      }
+
+      let cardId: string;
+
+      if (typeof card !== 'string') {
+        const createPaymentMethod = container.resolve(CreatePaymentMethod);
+        const paymentMethod = await createPaymentMethod.execute({
+          customerId,
+          card,
+        });
+
+        cardId = paymentMethod.id;
+      } else {
+        cardId = card;
+      }
+
+      subscription = await stripeInstance.subscriptions.create({
+        customer: customerId,
+        items: [{ price: priceId }],
+        collection_method: 'charge_automatically',
+        payment_behavior: 'error_if_incomplete',
+        default_payment_method: cardId,
       });
-      customerId = customer.id;
+    } catch (err) {
+      throw new AppError(err.raw.message, err.statusCode);
     }
-
-    let cardId: string;
-
-    if (typeof card !== 'string') {
-      const createPaymentMethod = container.resolve(CreatePaymentMethod);
-      const paymentMethod = await createPaymentMethod.execute({
-        customerId,
-        card,
-      });
-
-      cardId = paymentMethod.id;
-    } else {
-      cardId = card;
-    }
-
-    const subscription = await stripeInstance.subscriptions.create({
-      customer: customerId,
-      items: [{ price: priceId }],
-      collection_method: 'charge_automatically',
-      payment_behavior: 'error_if_incomplete',
-      default_payment_method: cardId,
-    });
 
     patient.planId = plan.id;
     patient.stripeCustomerId = customerId;
