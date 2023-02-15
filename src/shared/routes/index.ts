@@ -2,8 +2,8 @@ import fs from 'fs';
 import pathJS from 'path';
 import { json, Router } from 'express';
 
-import { stripeRoutes } from 'modules/integrations/routes/stripe.routes';
-import { stripeWebhookRoutes } from 'modules/integrations/routes/stripe-webhook.routes';
+import { stripeRoutes } from '../../modules/integrations/routes/stripe.routes';
+import { stripeWebhookRoutes } from '../../modules/integrations/routes/stripe-webhook.routes';
 
 import { sessionsRouter } from '../../modules/sessions/routes/sessions';
 

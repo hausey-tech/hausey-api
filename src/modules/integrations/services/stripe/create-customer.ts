@@ -1,6 +1,6 @@
 import Stripe from 'stripe';
 import { injectable } from 'tsyringe';
-import { stripeInstance } from 'modules/integrations/utils/stripe-instance';
+import { stripeInstance } from '../../utils/stripe-instance';
 
 interface Customer {
   email: string;
