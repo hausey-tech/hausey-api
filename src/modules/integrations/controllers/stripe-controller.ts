@@ -32,16 +32,12 @@ export class StripeController {
 
     const createSubscription = container.resolve(CreateSubscription);
 
-    try {
-      const subscription = await createSubscription.execute({
-        patientId,
-        priceId,
-        card,
-      });
-      return response.json(subscription);
-    } catch (err) {
-      throw new AppError(err.raw.message, err.statusCode);
-    }
+    const subscription = await createSubscription.execute({
+      patientId,
+      priceId,
+      card,
+    });
+    return response.json(subscription);
   }
 
   public async webhook(
