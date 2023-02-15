@@ -12,4 +12,7 @@ export class Plan extends BaseEntity {
 
   @Column('int')
   price: number;
+
+  @Column('varchar', { name: 'stripe_price_id', nullable: true })
+  stripePriceId: string;
 }
