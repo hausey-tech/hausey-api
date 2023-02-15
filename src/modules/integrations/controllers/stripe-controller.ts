@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import { AppError } from '../../../shared/errors/app-error';
 import { CreateSubscription } from '../services/stripe/create-subscription';
+import { HandleWebhook } from '../services/stripe/handle-webhook';
 import { ListCards } from '../services/stripe/list-cards';
 
 export class StripeController {
@@ -39,8 +40,25 @@ export class StripeController {
       });
       return response.json(subscription);
     } catch (err) {
-      console.log('err: ', err);
       throw new AppError(err.raw.message, err.statusCode);
     }
+  }
+
+  public async webhook(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const sig = request.headers['stripe-signature'];
+    const { body } = request;
+
+    const handleWebhook = container.resolve(HandleWebhook);
+
+    try {
+      await handleWebhook.execute({ sig, body });
+    } catch (err) {
+      throw new AppError(`Webhook Error: ${err.message}`);
+    }
+
+    return response.json();
   }
 }

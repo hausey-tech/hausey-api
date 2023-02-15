@@ -17,6 +17,7 @@ declare namespace NodeJS {
     MEMED_SECRET_KEY: string;
 
     STRIPE_SECRET_KEY: string;
+    STRIPE_ENDPOINT_SECRET: string;
 
     AWS_BUCKET_NAME: string;
     AWS_BUCKET_REGION: string;
