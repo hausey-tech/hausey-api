@@ -5,6 +5,7 @@ import {
   ListPatientsSchema,
   CreatePatientSchema,
   UpdatePatientSchema,
+  GetPatientInfosSchema,
 } from '../celebrate-schemas/patient';
 import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
 import { PatientsController } from '../controllers/patients';
@@ -30,4 +31,11 @@ patientsRouter.patch(
   ensureAuthentication,
   celebrate(UpdatePatientSchema),
   patientsController.update,
+);
+
+patientsRouter.get(
+  '/:patientId',
+  ensureAuthentication,
+  celebrate(GetPatientInfosSchema),
+  patientsController.getInfos,
 );
