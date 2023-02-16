@@ -40,7 +40,9 @@ export class CreateUserAndProfessionalService {
     registration,
     registrationUf,
   }: ICreateProfessionalDTO): Promise<Professional> {
-    const professionalExists = this.professionalsRepository.findByEmail(email);
+    const professionalExists = await this.professionalsRepository.findByEmail(
+      email,
+    );
 
     if (professionalExists) {
       throw new AppError(
@@ -49,7 +51,7 @@ export class CreateUserAndProfessionalService {
     }
 
     const professionalWithDocumentExists =
-      this.professionalsRepository.findByEmail(email);
+      await this.professionalsRepository.findByEmail(email);
 
     if (professionalWithDocumentExists) {
       throw new AppError(
