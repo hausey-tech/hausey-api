@@ -21,7 +21,7 @@ export class HandleWebhook {
       const invoice = event.data.object as Stripe.Invoice;
 
       if (invoice.paid) {
-        const periodEnd = invoice.period_end;
+        const periodEnd = invoice.lines.data[0].period.end;
         const priceId = invoice.lines.data[0].price.id;
         const customerId = invoice.customer;
 
@@ -32,6 +32,12 @@ export class HandleWebhook {
           priceId,
           customerId: customerId as string,
         });
+        console.log(
+          'Entrou no webhook e atualizou os dados: ',
+          periodEnd,
+          priceId,
+          customerId,
+        );
       } else {
         // envia email avisando paciente que pagamento foi negado
       }
