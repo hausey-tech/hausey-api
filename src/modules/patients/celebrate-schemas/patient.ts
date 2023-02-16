@@ -26,3 +26,9 @@ export const UpdatePatientSchema = {
     phoneNumber: Joi.string(),
   }),
 };
+
+export const GetPatientInfosSchema = {
+  [Segments.PARAMS]: Joi.object().keys({
+    patientId: Joi.string().uuid().required(),
+  }),
+};
