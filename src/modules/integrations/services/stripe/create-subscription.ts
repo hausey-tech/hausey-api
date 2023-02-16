@@ -6,6 +6,7 @@ import { IPatientsRepository } from '../../../patients/contracts/repositories/pa
 import { stripeInstance } from '../../utils/stripe-instance';
 import { CreateCustomer } from './create-customer';
 import { CreatePaymentMethod } from './create-payment-method';
+import { Patient } from '../../../patients/entities/patient';
 
 interface Card {
   number: string;
@@ -30,11 +31,7 @@ export class CreateSubscription {
     private plansRepository: IPlansRepository,
   ) {}
 
-  public async execute({
-    patientId,
-    priceId,
-    card,
-  }: Props): Promise<Stripe.Response<Stripe.Subscription>> {
+  public async execute({ patientId, priceId, card }: Props): Promise<Patient> {
     const patient = await this.patientsRepository.findById(patientId);
 
     if (!patient) {
@@ -91,8 +88,6 @@ export class CreateSubscription {
     patient.stripeCustomerId = customerId;
     patient.planExpiresAt = new Date(subscription.current_period_end * 1000);
 
-    await this.patientsRepository.save(patient);
-
-    return subscription;
+    return this.patientsRepository.save(patient);
   }
 }
