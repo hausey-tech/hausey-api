@@ -14,18 +14,8 @@ export class MemedController {
 
     const createMemedUserService = container.resolve(CreateMemedUser);
 
-    try {
-      const user = await createMemedUserService.execute(payload);
-      return response.json(user);
-    } catch (err) {
-      const error =
-        err?.response?.data?.errors.length > 0
-          ? err?.response?.data?.errors[0]?.detail
-          : err.message;
-      const statusCode = err?.response?.status;
-
-      throw new AppError(error, statusCode);
-    }
+    const user = await createMemedUserService.execute(payload);
+    return response.json(user);
   }
 
   public async search(request: Request, response: Response): Promise<Response> {

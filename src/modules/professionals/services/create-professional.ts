@@ -1,9 +1,11 @@
 import { injectable, inject, container } from 'tsyringe';
 
 import { IProfessionalSpecialtiesRepository } from '../contracts/repositories/professional-specialties';
+import { CheckIfMemedUserAlreadyExists } from '../../integrations/services/check-if-memed-user-already-exists';
 import { IProfessionalsRepository } from '../contracts/repositories/professionals';
 import { ISpecialtiesRepository } from '../../specialties/contracts/repositories/specialties';
 import { ICreateProfessionalDTO } from '../contracts/dtos/create-professional';
+import { UpdateMemedUser } from '../../integrations/services/update-memed-user';
 import { CreateMemedUser } from '../../integrations/services/create-memed-user';
 import { IHashProvider } from '../../../shared/providers/HashProvider/entities/hash-provider';
 import { Professional } from '../entities/professional';
@@ -91,41 +93,69 @@ export class CreateUserAndProfessionalService {
       }),
     );
 
-    try {
-      const createMemedUserService = container.resolve(CreateMemedUser);
-      const splittedName = savedProfessional.name.split(' ');
-      const memedUser = await createMemedUserService.execute({
-        data: {
-          type: 'usuarios',
-          attributes: {
-            external_id: savedProfessional.id,
-            nome: splittedName[0],
-            sobrenome: splittedName[splittedName.length - 1],
-            data_nascimento: formatDate({
-              date: savedProfessional.birthdate.toString(),
-              format: 'yyyy-MM-dd to dd/MM/yyyy',
-            }),
-            cpf: savedProfessional.document,
-            uf: savedProfessional.registrationUf,
-            crm: savedProfessional.registration,
-            email,
-          },
-        },
-        relationships: {
-          especialidade: {
-            data: {
-              id: specialtyMemedId,
+    const checkIfMemedUserAlreadyExists = container.resolve(
+      CheckIfMemedUserAlreadyExists,
+    );
+
+    const existingMemedUser = await checkIfMemedUserAlreadyExists.execute({
+      cpf: savedProfessional.document,
+      crm: `${savedProfessional.registration}${savedProfessional.registrationUf}`,
+    });
+
+    if (!existingMemedUser) {
+      /*
+        Apesar de ja ter um try/catch dentro do CreateMemedUser, boto aqui tbm pra ele
+        não lançar o erro e finalizar a criação do profissional mesmo que isso ocorra!
+      */
+      try {
+        const createMemedUserService = container.resolve(CreateMemedUser);
+        const splittedName = savedProfessional.name.split(' ');
+        const memedUser = await createMemedUserService.execute({
+          data: {
+            type: 'usuarios',
+            attributes: {
+              external_id: savedProfessional.id,
+              nome: splittedName[0],
+              sobrenome: splittedName[splittedName.length - 1],
+              data_nascimento: formatDate({
+                date: savedProfessional.birthdate.toString(),
+                format: 'yyyy-MM-dd to dd/MM/yyyy',
+              }),
+              cpf: savedProfessional.document,
+              uf: savedProfessional.registrationUf,
+              crm: savedProfessional.registration,
+              email,
             },
           },
-        },
-      });
-      savedProfessional.memedStatus = memedUser?.user?.status;
-    } catch (err) {
-      savedProfessional.memedStatus = 'Erro ao criar usuário';
-      console.error(
-        'Erro ao criar usuário na Memed',
-        err?.response?.data?.errors[0].detail,
-      );
+          relationships: {
+            especialidade: {
+              data: {
+                id: specialtyMemedId,
+              },
+            },
+          },
+        });
+        savedProfessional.memedStatus = memedUser?.user?.status;
+      } catch (err) {
+        savedProfessional.memedStatus = 'Erro ao criar usuário';
+        console.error('Erro ao criar usuário na Memed', err.message);
+      }
+    } else {
+      savedProfessional.memedStatus = existingMemedUser?.user?.status;
+      try {
+        const updateMemedUserService = container.resolve(UpdateMemedUser);
+        await updateMemedUserService.execute({
+          id: existingMemedUser.user.cpf,
+          payload: {
+            external_id: savedProfessional.id,
+          },
+        });
+      } catch (err) {
+        console.error(
+          'Erro ao atualizar external_id do usuário na Memed',
+          err.message,
+        );
+      }
     }
 
     return this.professionalsRepository.save(savedProfessional);
