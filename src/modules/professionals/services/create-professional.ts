@@ -28,19 +28,34 @@ export class CreateUserAndProfessionalService {
     private professionalSpecialtiesRepository: IProfessionalSpecialtiesRepository,
   ) {}
 
-  public async execute(payload: ICreateProfessionalDTO): Promise<Professional> {
-    const {
-      email,
-      password,
-      name,
-      document,
-      birthdate,
-      phoneNumber,
-      sex,
-      specialties,
-      registration,
-      registrationUf,
-    } = payload;
+  public async execute({
+    email,
+    password,
+    name,
+    document,
+    birthdate,
+    phoneNumber,
+    sex,
+    specialties,
+    registration,
+    registrationUf,
+  }: ICreateProfessionalDTO): Promise<Professional> {
+    const professionalExists = this.professionalsRepository.findByEmail(email);
+
+    if (professionalExists) {
+      throw new AppError(
+        'Já existe um professional cadastrado com esse email!',
+      );
+    }
+
+    const professionalWithDocumentExists =
+      this.professionalsRepository.findByEmail(email);
+
+    if (professionalWithDocumentExists) {
+      throw new AppError(
+        'Já existe um professional cadastrado com esse documento!',
+      );
+    }
 
     let specialtyMemedId: number;
 

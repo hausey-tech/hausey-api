@@ -44,6 +44,13 @@ export class ProfessionalsRepository implements IProfessionalsRepository {
     });
   }
 
+  public async findByDocument(document: string): Promise<Professional | null> {
+    return this.ormRepository.findOne({
+      where: { document },
+      relations: this.relations,
+    });
+  }
+
   public async create(
     payload: Omit<ICreateProfessionalDTO, 'specialties'>,
   ): Promise<Professional> {
