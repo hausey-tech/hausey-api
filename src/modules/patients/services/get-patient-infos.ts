@@ -1,5 +1,5 @@
-import { AppError } from 'shared/errors/app-error';
 import { injectable, inject } from 'tsyringe';
+import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { Patient } from '../entities/patient';
 
