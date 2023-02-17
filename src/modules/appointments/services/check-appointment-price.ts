@@ -12,6 +12,7 @@ interface IPrices {
   price: string;
   discount: string;
   total: string;
+  totalInCents: number;
 }
 
 @injectable()
@@ -102,6 +103,7 @@ export class CheckAppointmentPrice {
       price: formatMoney(price),
       discount: formatMoney(discount),
       total: formatMoney(price - discount),
+      totalInCents: price - discount,
     };
   }
 }
