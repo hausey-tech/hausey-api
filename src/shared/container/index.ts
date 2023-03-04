@@ -41,6 +41,9 @@ import { PlanSpecialtyDiscountsRepository } from '../../modules/plans/repositori
 import { IPrescriptionsRepository } from '../../modules/prescriptions/contracts/repositories/IPrescriptionsRepository';
 import { PrescriptionsRepository } from '../../modules/prescriptions/repositories/PrescriptionsRepository';
 
+import { ISecretariesRepository } from '../../modules/secretaries/contracts/repositories/i-secretaries-repository';
+import { SecretariesRepository } from '../../modules/secretaries/repositories/secretaries-repository';
+
 container.registerSingleton<IAddressesRepository>(
   'AddressesRepository',
   AddressesRepository,
@@ -104,4 +107,9 @@ container.registerSingleton<IPlanSpecialtyDiscountsRepository>(
 container.registerSingleton<IPrescriptionsRepository>(
   'PrescriptionsRepository',
   PrescriptionsRepository,
+);
+
+container.registerSingleton<ISecretariesRepository>(
+  'SecretariesRepository',
+  SecretariesRepository,
 );
