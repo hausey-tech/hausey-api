@@ -13,6 +13,8 @@ yarn
 ## Usage
 Caso esteja usando o arquivo .env de desenvolvimento, é necessário rodar um banco Postgres localmente, preferencialmente no Docker. Verificar os dados de acesso ao banco e, se necessário, alterar no .env.
 
+* Para facilitar, os arquivos .env foram upados na aba "Downloads" neste repositório.
+
 Para rodar as migrations no banco local:
 ```bash
 yarn migration:run
