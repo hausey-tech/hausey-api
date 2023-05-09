@@ -5,11 +5,10 @@ export const rootPath = `${__dirname}/../../`;
 
 export const PostgresDataSource = new DataSource({
   type: 'postgres',
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
-  username: process.env.DB_USERNAME,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
+  url: process.env.DATABASE_URL,
   entities: [`${rootPath}/modules/**/entities/*.{ts,js}`],
   migrations: [`${rootPath}/shared/typeorm/migrations/*.{ts,js}`],
+  ssl: {
+    rejectUnauthorized: false,
+  },
 });
