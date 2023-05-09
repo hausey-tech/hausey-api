@@ -3,6 +3,5 @@ coverage
 .env
 .env.*
 dist
-.vscode/*
-!.vscode/launch.json
+.vscode
 tmp
