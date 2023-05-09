@@ -1,0 +1,149 @@
+import { sign } from 'jsonwebtoken';
+import { injectable, inject } from 'tsyringe';
+
+import { IHashProvider } from '../../../shared/providers/HashProvider/entities/hash-provider';
+import { AppError } from '../../../shared/errors/app-error';
+import { authConfig } from '../../../config/auth';
+
+import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
+import { Professional } from '../../professionals/entities/professional';
+
+import { IPatientsRepository } from '../../patients/contracts/repositories/patients';
+import { Patient } from '../../patients/entities/patient';
+
+import { ISecretariesRepository } from '../../secretaries/contracts/repositories/i-secretaries-repository';
+import { Secretary } from '../../secretaries/entities/secretary';
+
+import { ICreateSessionDTO } from '../contracts/dtos/create-session';
+
+interface IRoles {
+  professional?: Professional;
+  patient?: Patient;
+  secretary?: Secretary;
+}
+interface IResponse extends IRoles {
+  accessToken: string;
+  refreshToken: string;
+}
+
+@injectable()
+export class CreateSessionService {
+  constructor(
+    @inject('ProfessionalsRepository')
+    private professionalsRepository: IProfessionalsRepository,
+
+    @inject('PatientsRepository')
+    private patientsRepository: IPatientsRepository,
+
+    @inject('SecretariesRepository')
+    private secretariesRepository: ISecretariesRepository,
+
+    @inject('HashProvider')
+    private hashProvider: IHashProvider,
+  ) {}
+
+  public async execute(payload: ICreateSessionDTO): Promise<IResponse> {
+    const { email, password, role } = payload;
+
+    let data: IRoles;
+    let id: string;
+    let passwordMatched: boolean;
+
+    switch (role) {
+      case 'professional':
+        data = {
+          professional: await this.professionalsRepository.findByEmail(email),
+        };
+
+        if (!data.professional) {
+          throw new AppError('E-mail ou senha inválido(s)!', 401);
+        }
+
+        if (!data.professional.password) {
+          throw new AppError('Este usuário não possui senha cadastrada!');
+        }
+
+        passwordMatched = await this.hashProvider.compareHash(
+          password,
+          data.professional.password,
+        );
+
+        if (!passwordMatched) {
+          throw new AppError('E-mail ou senha inválido(s)!', 401);
+        }
+
+        id = data.professional.id;
+
+        break;
+
+      case 'patient':
+        data = { patient: await this.patientsRepository.findByEmail(email) };
+
+        if (!data.patient) {
+          throw new AppError('E-mail ou senha inválido(s)!', 401);
+        }
+
+        if (!data.patient.password) {
+          throw new AppError('Este usuário não possui senha cadastrada!');
+        }
+
+        passwordMatched = await this.hashProvider.compareHash(
+          password,
+          data.patient.password,
+        );
+
+        if (!passwordMatched) {
+          throw new AppError('E-mail ou senha inválido(s)!', 401);
+        }
+
+        id = data.patient.id;
+
+        break;
+
+      case 'manager':
+        data = {
+          secretary: await this.secretariesRepository.findByEmail(email),
+        };
+
+        if (!data.secretary) {
+          throw new AppError('E-mail ou senha inválido(s)!', 401);
+        }
+
+        if (!data.secretary.password) {
+          throw new AppError('Este usuário não possui senha cadastrada!');
+        }
+
+        passwordMatched = await this.hashProvider.compareHash(
+          password,
+          data.secretary.password,
+        );
+
+        if (!passwordMatched) {
+          throw new AppError('E-mail ou senha inválido(s)!', 401);
+        }
+
+        id = data.secretary.id;
+
+        break;
+
+      default:
+        throw new AppError('Informe a função do usuário para efetuar o login!');
+    }
+
+    const { secret, expiresIn, refreshExpiresIn } = authConfig.jwt;
+
+    const accessToken = sign({ id, role }, secret, {
+      expiresIn,
+    });
+
+    const refreshToken = sign({ id, role }, secret, {
+      expiresIn: refreshExpiresIn,
+    });
+
+    return {
+      accessToken,
+      refreshToken,
+      ...data,
+    };
+  }
+}

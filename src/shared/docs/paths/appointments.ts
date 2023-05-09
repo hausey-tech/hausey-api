@@ -1,0 +1,673 @@
+export const appointmentsPath = {
+  post: {
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
+    tags: ['Appointments'],
+    summary: 'Create a new appointment',
+    requestBody: {
+      content: {
+        'application/json': {
+          schema: {
+            $ref: '#/schemas/createAppointment',
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: 'Success',
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/schemas/appointment',
+            },
+          },
+        },
+      },
+      400: {
+        $ref: '#/components/badRequest',
+      },
+      401: {
+        $ref: '#/components/unauthorized',
+      },
+      404: {
+        $ref: '#/components/notFound',
+      },
+      500: {
+        $ref: '#/components/serverError',
+      },
+    },
+  },
+  get: {
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
+    tags: ['Appointments'],
+    summary: 'Show all appointments',
+    parameters: [
+      {
+        in: 'query',
+        name: 'withoutProfessional',
+        schema: {
+          type: 'boolean',
+        },
+        required: false,
+        description:
+          'Defines filter of appointments without professional (default: false)',
+      },
+    ],
+    responses: {
+      200: {
+        description: 'Success',
+        content: {
+          'application/json': {
+            schema: {
+              type: 'array',
+              items: {
+                $ref: '#/schemas/appointment',
+              },
+            },
+          },
+        },
+      },
+      400: {
+        $ref: '#/components/badRequest',
+      },
+      401: {
+        $ref: '#/components/unauthorized',
+      },
+      404: {
+        $ref: '#/components/notFound',
+      },
+      500: {
+        $ref: '#/components/serverError',
+      },
+    },
+  },
+  patients: {
+    get: {
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      tags: ['Appointments'],
+      summary: 'Shows appointments by patient',
+      parameters: [
+        {
+          in: 'query',
+          name: 'patientId',
+          schema: {
+            type: 'string',
+          },
+          required: false,
+          description:
+            'The patient id must be sent if the access token is from a non-patient user',
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Success',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: {
+                  $ref: '#/schemas/appointment',
+                },
+              },
+            },
+          },
+        },
+        400: {
+          $ref: '#/components/badRequest',
+        },
+        401: {
+          $ref: '#/components/unauthorized',
+        },
+        404: {
+          $ref: '#/components/notFound',
+        },
+        500: {
+          $ref: '#/components/serverError',
+        },
+      },
+    },
+  },
+  slots: {
+    get: {
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      tags: ['Appointments'],
+      summary: 'Show slots by type or specialty id',
+      parameters: [
+        {
+          in: 'path',
+          name: 'uuid',
+          schema: {
+            type: 'string',
+          },
+          required: true,
+          description: 'Professional type or specialty UUID',
+        },
+        {
+          in: 'query',
+          name: 'filterBy',
+          schema: {
+            type: 'string',
+            enum: ['type', 'specialty'],
+          },
+          required: false,
+          description:
+            'Defines if slots will be filtered by type or specialty (default: specialty)',
+        },
+        {
+          in: 'query',
+          name: 'days',
+          schema: {
+            type: 'integer',
+          },
+          required: false,
+          description: 'Defines number of returned days (default: 3)',
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Success',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: {
+                  $ref: '#/schemas/slot',
+                },
+              },
+            },
+          },
+        },
+        400: {
+          $ref: '#/components/badRequest',
+        },
+        401: {
+          $ref: '#/components/unauthorized',
+        },
+        404: {
+          $ref: '#/components/notFound',
+        },
+        500: {
+          $ref: '#/components/serverError',
+        },
+      },
+    },
+  },
+  prices: {
+    get: {
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      tags: ['Appointments'],
+      summary: 'Shows appointment price based on type and specialty',
+      parameters: [
+        {
+          in: 'path',
+          name: 'typeId',
+          schema: {
+            type: 'string',
+          },
+          required: true,
+          description: 'Professional type UUID',
+        },
+        {
+          in: 'path',
+          name: 'specialtyId',
+          schema: {
+            type: 'string',
+          },
+          required: true,
+          description: 'Professional specialty UUID',
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Success',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: {
+                  $ref: '#/schemas/price',
+                },
+              },
+            },
+          },
+        },
+        400: {
+          $ref: '#/components/badRequest',
+        },
+        401: {
+          $ref: '#/components/unauthorized',
+        },
+        404: {
+          $ref: '#/components/notFound',
+        },
+        500: {
+          $ref: '#/components/serverError',
+        },
+      },
+    },
+  },
+  professionals: {
+    get: {
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      tags: ['Appointments'],
+      summary: 'Shows appointments by professional id',
+      parameters: [
+        {
+          in: 'path',
+          name: 'professionalId',
+          schema: {
+            type: 'string',
+          },
+          required: true,
+          description: 'Professional UUID',
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Success',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: {
+                  $ref: '#/schemas/appointment',
+                },
+              },
+            },
+          },
+        },
+        400: {
+          $ref: '#/components/badRequest',
+        },
+        401: {
+          $ref: '#/components/unauthorized',
+        },
+        404: {
+          $ref: '#/components/notFound',
+        },
+        500: {
+          $ref: '#/components/serverError',
+        },
+      },
+    },
+    post: {
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      tags: ['Appointments'],
+      summary: 'Sets a professional to appointment',
+      requestBody: {
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                appointmentId: {
+                  type: 'string',
+                },
+                professionalId: {
+                  type: 'string',
+                },
+              },
+              required: ['appointmentId', 'professionalId'],
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: 'Success',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: {
+                  $ref: '#/schemas/appointment',
+                },
+              },
+            },
+          },
+        },
+        400: {
+          $ref: '#/components/badRequest',
+        },
+        401: {
+          $ref: '#/components/unauthorized',
+        },
+        404: {
+          $ref: '#/components/notFound',
+        },
+        500: {
+          $ref: '#/components/serverError',
+        },
+      },
+    },
+  },
+  files: {
+    get: {
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      tags: ['Appointments'],
+      summary: 'Shows appointments files',
+      parameters: [
+        {
+          in: 'path',
+          name: 'appointmentId',
+          schema: {
+            type: 'string',
+          },
+          required: true,
+          description: 'Appointment id',
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Success',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    name: {
+                      type: 'string',
+                    },
+                    url: {
+                      type: 'string',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        400: {
+          $ref: '#/components/badRequest',
+        },
+        401: {
+          $ref: '#/components/unauthorized',
+        },
+        404: {
+          $ref: '#/components/notFound',
+        },
+        500: {
+          $ref: '#/components/serverError',
+        },
+      },
+    },
+    post: {
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      tags: ['Appointments'],
+      summary: 'Uploads files to S3',
+      parameters: [
+        {
+          in: 'path',
+          name: 'appointmentId',
+          schema: {
+            type: 'string',
+          },
+          required: true,
+          description: 'Appointment id',
+        },
+      ],
+      requestBody: {
+        content: {
+          'multipart/form-data': {
+            schema: {
+              type: 'object',
+              properties: {
+                file: {
+                  type: 'string',
+                  format: 'binary',
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: 'Success',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  message: {
+                    type: 'string',
+                  },
+                },
+              },
+            },
+          },
+        },
+        400: {
+          $ref: '#/components/badRequest',
+        },
+        401: {
+          $ref: '#/components/unauthorized',
+        },
+        404: {
+          $ref: '#/components/notFound',
+        },
+        500: {
+          $ref: '#/components/serverError',
+        },
+      },
+    },
+  },
+  anamneses: {
+    post: {
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      tags: ['Appointments'],
+      summary: 'Creates or updates a patient anamnesis',
+      requestBody: {
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/schemas/createAnamnesisAndPrimaryDiagnosis',
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: 'Success',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/schemas/anamnesisAndPrimaryDiagnosis',
+              },
+            },
+          },
+        },
+        400: {
+          $ref: '#/components/badRequest',
+        },
+        401: {
+          $ref: '#/components/unauthorized',
+        },
+        404: {
+          $ref: '#/components/notFound',
+        },
+        500: {
+          $ref: '#/components/serverError',
+        },
+      },
+    },
+  },
+  primaryDiagnoses: {
+    post: {
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      tags: ['Appointments'],
+      summary: 'Creates or updates a primary diagnosis',
+      requestBody: {
+        content: {
+          'application/json': {
+            schema: {
+              $ref: '#/schemas/createAnamnesisAndPrimaryDiagnosis',
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: 'Success',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/schemas/anamnesisAndPrimaryDiagnosis',
+              },
+            },
+          },
+        },
+        400: {
+          $ref: '#/components/badRequest',
+        },
+        401: {
+          $ref: '#/components/unauthorized',
+        },
+        404: {
+          $ref: '#/components/notFound',
+        },
+        500: {
+          $ref: '#/components/serverError',
+        },
+      },
+    },
+  },
+  payments: {
+    get: {
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      tags: ['Appointments'],
+      summary: 'Toggle appointment paid',
+      parameters: [
+        {
+          in: 'path',
+          name: 'appointmentId',
+          schema: {
+            type: 'string',
+          },
+          required: true,
+          description: 'Appointment id',
+        },
+      ],
+      responses: {
+        200: {
+          description: 'Success',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/schemas/appointment',
+              },
+            },
+          },
+        },
+        400: {
+          $ref: '#/components/badRequest',
+        },
+        401: {
+          $ref: '#/components/unauthorized',
+        },
+        404: {
+          $ref: '#/components/notFound',
+        },
+        500: {
+          $ref: '#/components/serverError',
+        },
+      },
+    },
+  },
+  specialties: {
+    get: {
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
+      tags: ['Appointments'],
+      summary: 'Shows available specialties',
+      responses: {
+        200: {
+          description: 'Success',
+          content: {
+            'application/json': {
+              schema: {
+                type: 'object',
+                properties: {
+                  group: {
+                    type: 'string',
+                  },
+                  specialties: {
+                    type: 'array',
+                    items: {
+                      $ref: '#/schemas/specialty',
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        400: {
+          $ref: '#/components/badRequest',
+        },
+        401: {
+          $ref: '#/components/unauthorized',
+        },
+        404: {
+          $ref: '#/components/notFound',
+        },
+        500: {
+          $ref: '#/components/serverError',
+        },
+      },
+    },
+  },
+};
