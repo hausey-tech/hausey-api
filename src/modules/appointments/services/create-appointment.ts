@@ -45,43 +45,43 @@ export class CreateAppointmentService {
       );
     }
 
-    let customerId: string;
+    // let customerId: string;
 
-    if (!patient.stripeCustomerId) {
-      const createCustomerService = container.resolve(CreateCustomer);
-      const customer = await createCustomerService.execute({
-        email: patient.email,
-        name: patient.name,
-      });
-      customerId = customer.id;
-      patient.stripeCustomerId = customer.id;
-      await this.patientsRepository.save(patient);
-    } else {
-      customerId = patient.stripeCustomerId;
-    }
+    // if (!patient.stripeCustomerId) {
+    //   const createCustomerService = container.resolve(CreateCustomer);
+    //   const customer = await createCustomerService.execute({
+    //     email: patient.email,
+    //     name: patient.name,
+    //   });
+    //   customerId = customer.id;
+    //   patient.stripeCustomerId = customer.id;
+    //   await this.patientsRepository.save(patient);
+    // } else {
+    //   customerId = patient.stripeCustomerId;
+    // }
 
-    const checkPrice = container.resolve(CheckAppointmentPrice);
-    const { totalInCents } = await checkPrice.execute(patientId, specialtyId);
+    // const checkPrice = container.resolve(CheckAppointmentPrice);
+    // const { totalInCents } = await checkPrice.execute(patientId, specialtyId);
 
-    let paymentMethodId: string;
+    // let paymentMethodId: string;
 
-    if (typeof card !== 'string') {
-      const createPaymentMethodService = container.resolve(CreatePaymentMethod);
-      const paymentMethod = await createPaymentMethodService.execute({
-        customerId,
-        card,
-      });
-      paymentMethodId = paymentMethod.id;
-    } else {
-      paymentMethodId = card;
-    }
+    // if (typeof card !== 'string') {
+    //   const createPaymentMethodService = container.resolve(CreatePaymentMethod);
+    //   const paymentMethod = await createPaymentMethodService.execute({
+    //     customerId,
+    //     card,
+    //   });
+    //   paymentMethodId = paymentMethod.id;
+    // } else {
+    //   paymentMethodId = card;
+    // }
 
-    const createPaymentIntentService = container.resolve(CreatePaymentIntent);
-    await createPaymentIntentService.execute({
-      card: paymentMethodId,
-      price: totalInCents,
-      customerId,
-    });
+    // const createPaymentIntentService = container.resolve(CreatePaymentIntent);
+    // await createPaymentIntentService.execute({
+    //   card: paymentMethodId,
+    //   price: totalInCents,
+    //   customerId,
+    // });
 
     const appointment = await this.appointmentsRepository.create({
       patientId,
