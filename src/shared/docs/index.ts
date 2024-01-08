@@ -45,7 +45,7 @@ export default {
   },
   servers: [
     {
-      url: '/',
+      url: '/v1',
     },
   ],
   tags: [
