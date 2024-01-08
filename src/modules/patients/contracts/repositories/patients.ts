@@ -9,6 +9,7 @@ export interface IPatientsRepository {
   findByEmail(email: string): Promise<Patient | null>;
   findByEmailWithDeleted(email: string): Promise<Patient | null>;
   findByDocument(document: string): Promise<Patient | null>;
+  findByPhoneNumber(phoneNumber: string): Promise<Patient | null>;
   findByCustomerId(customerId: string): Promise<Patient | null>;
   restore(id: string, payload: ICreatePatientDTO): Promise<Patient>;
   create(payload: ICreatePatientDTO): Promise<Patient>;

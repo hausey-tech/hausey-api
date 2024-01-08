@@ -1,5 +1,13 @@
-import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 
+import { MedicalRecord } from 'modules/medical-records/entities/medical-record';
 import { Patient } from '../../patients/entities/patient';
 import { Specialty } from '../../specialties/entities/specialty';
 import { Professional } from '../../professionals/entities/professional';
@@ -34,6 +42,12 @@ export class Appointment extends BaseEntity {
 
   @Column('varchar', { nullable: true })
   anamnesis: string;
+
+  @OneToOne(() => MedicalRecord, medicalRecord => medicalRecord.appointment, {
+    cascade: true,
+  })
+  @JoinColumn()
+  medicalRecord: MedicalRecord;
 
   @Column('varchar', { name: 'primary_diagnosis', nullable: true })
   primaryDiagnosis: string;

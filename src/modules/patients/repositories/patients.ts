@@ -56,6 +56,13 @@ export class PatientsRepository implements IPatientsRepository {
     });
   }
 
+  public async findByPhoneNumber(phoneNumber: string): Promise<Patient | null> {
+    return this.ormRepository.findOne({
+      where: { phoneNumber },
+      relations: this.relations,
+    });
+  }
+
   public async findByCustomerId(customerId: string): Promise<Patient | null> {
     return this.ormRepository.findOne({
       where: { stripeCustomerId: customerId },

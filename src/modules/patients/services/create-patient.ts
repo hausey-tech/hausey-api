@@ -18,12 +18,21 @@ export class CreatePatientService {
   ) {}
 
   public async execute(payload: ICreatePatientDTO): Promise<Patient> {
-    const { email, document, password } = payload;
+    const { email, document, password, phoneNumber } = payload;
 
     const patientExists = await this.patientsRepository.findByEmail(email);
 
     if (patientExists) {
       throw new AppError('Já existe um usuário com este email, faça o login!');
+    }
+
+    const hasUserWithPhoneNumber =
+      await this.patientsRepository.findByPhoneNumber(phoneNumber);
+
+    if (hasUserWithPhoneNumber?.deletedAt === null) {
+      throw new AppError(
+        'Já existe um usuário cadastrado com esse celular, faça o login!',
+      );
     }
 
     if (document) {

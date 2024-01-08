@@ -1,14 +1,10 @@
-import { injectable, inject, container } from 'tsyringe';
+import { injectable, inject } from 'tsyringe';
 
 import { ICreateAppointmentDTO } from '../contracts/dtos/create-appointment';
 import { AppError } from '../../../shared/errors/app-error';
 import { Appointment } from '../entities/appointment';
 import { IPatientsRepository } from '../../patients/contracts/repositories/patients';
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
-import { CheckAppointmentPrice } from './check-appointment-price';
-import { CreatePaymentMethod } from '../../integrations/services/stripe/create-payment-method';
-import { CreatePaymentIntent } from '../../integrations/services/stripe/create-payment-intent';
-import { CreateCustomer } from '../../integrations/services/stripe/create-customer';
 
 interface Card {
   number: string;
@@ -35,7 +31,6 @@ export class CreateAppointmentService {
     patientId,
     specialtyId,
     date,
-    card,
   }: Props): Promise<Appointment> {
     const patient = await this.patientsRepository.findById(patientId);
 
