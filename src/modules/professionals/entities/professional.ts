@@ -1,5 +1,6 @@
-import { Entity, Column, OneToMany } from 'typeorm';
+import { Entity, Column, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 
+import { Role } from 'modules/roles/entities/role';
 import { ProfessionalSpecialty } from './professional-specialty';
 import { UserEntity } from '../../../shared/typeorm/entities';
 
@@ -19,4 +20,14 @@ export class Professional extends UserEntity {
     professionalSpecialty => professionalSpecialty.professional,
   )
   specialties: ProfessionalSpecialty[];
+
+  @Column('varchar', { name: 'role_id' })
+  roleId: string;
+
+  @ManyToOne(() => Role, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn({ name: 'role_id' })
+  role: Role;
 }
