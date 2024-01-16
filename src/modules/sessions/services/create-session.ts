@@ -11,15 +11,14 @@ import { Professional } from '../../professionals/entities/professional';
 import { IPatientsRepository } from '../../patients/contracts/repositories/patients';
 import { Patient } from '../../patients/entities/patient';
 
-import { ISecretariesRepository } from '../../secretaries/contracts/repositories/i-secretaries-repository';
-import { Secretary } from '../../secretaries/entities/secretary';
-
 import { ICreateSessionDTO } from '../contracts/dtos/create-session';
+import { IUsersRepository } from '../../users/contracts/repositories/users';
+import { User } from '../../users/entities/user';
 
 interface IRoles {
   professional?: Professional;
   patient?: Patient;
-  secretary?: Secretary;
+  user?: User;
 }
 interface IResponse extends IRoles {
   accessToken: string;
@@ -35,8 +34,8 @@ export class CreateSessionService {
     @inject('PatientsRepository')
     private patientsRepository: IPatientsRepository,
 
-    @inject('SecretariesRepository')
-    private secretariesRepository: ISecretariesRepository,
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
 
     @inject('HashProvider')
     private hashProvider: IHashProvider,
@@ -102,27 +101,27 @@ export class CreateSessionService {
 
       case 'manager':
         data = {
-          secretary: await this.secretariesRepository.findByEmail(email),
+          user: await this.usersRepository.findByEmail(email),
         };
 
-        if (!data.secretary) {
+        if (!data.user) {
           throw new AppError('E-mail ou senha inválido(s)!', 401);
         }
 
-        if (!data.secretary.password) {
+        if (!data.user.password) {
           throw new AppError('Este usuário não possui senha cadastrada!');
         }
 
         passwordMatched = await this.hashProvider.compareHash(
           password,
-          data.secretary.password,
+          data.user.password,
         );
 
         if (!passwordMatched) {
           throw new AppError('E-mail ou senha inválido(s)!', 401);
         }
 
-        id = data.secretary.id;
+        id = data.user.id;
 
         break;
 

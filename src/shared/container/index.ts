@@ -8,6 +8,12 @@ import { AddressesRepository } from '../../modules/addresses/repositories/Addres
 import { IProfessionalsRepository } from '../../modules/professionals/contracts/repositories/professionals';
 import { ProfessionalsRepository } from '../../modules/professionals/repositories/professionals';
 
+import { IUsersRepository } from '../../modules/users/contracts/repositories/users';
+import { UsersRepository } from '../../modules/users/repositories/users';
+
+import { IRolesRepository } from '../../modules/roles/contracts/repositories/roles';
+import { RolesRepository } from '../../modules/roles/repositories/roles';
+
 import { ISpecialtiesRepository } from '../../modules/specialties/contracts/repositories/specialties';
 import { SpecialtiesRepository } from '../../modules/specialties/repositories/specialties';
 
@@ -52,6 +58,15 @@ container.registerSingleton<IAddressesRepository>(
 container.registerSingleton<IProfessionalsRepository>(
   'ProfessionalsRepository',
   ProfessionalsRepository,
+);
+container.registerSingleton<IUsersRepository>(
+  'UsersRepository',
+  UsersRepository,
+);
+
+container.registerSingleton<IRolesRepository>(
+  'RolesRepository',
+  RolesRepository,
 );
 
 container.registerSingleton<IProfessionalSpecialtiesRepository>(
