@@ -1,8 +1,16 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  OneToMany,
+} from 'typeorm';
 
 import { UserEntity } from '../../../shared/typeorm/entities';
 import { Address } from '../../addresses/entities/Address';
 import { Plan } from '../../plans/entities/plan';
+import { ClinicalResume } from '../../clinical-resumes/entities/clinical-resume';
 
 @Entity('patients')
 export class Patient extends UserEntity {
@@ -12,6 +20,13 @@ export class Patient extends UserEntity {
   @ManyToOne(() => Plan)
   @JoinColumn({ name: 'plan_id' })
   plan: Plan;
+
+  @Column('varchar', { name: 'clinical_resume_id', nullable: true })
+  clinicalResumeId: string;
+
+  @OneToMany(() => ClinicalResume, clinicalResume => clinicalResume.patient)
+  @JoinColumn({ name: 'clinical_resume_id' })
+  clinicalResume: ClinicalResume;
 
   @OneToOne(() => Address, address => address.patient)
   address: Address;
