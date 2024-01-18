@@ -7,6 +7,8 @@ import { Appointment } from '../entities/appointment';
 import { IPatientsRepository } from '../../patients/contracts/repositories/patients';
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
 
+import { createVideoRoomCode } from '../utils/create-video-room-code';
+
 @injectable()
 export class CreateAppointmentService {
   constructor(
@@ -24,7 +26,7 @@ export class CreateAppointmentService {
     patientId,
     professionalId,
     date,
-  }: ICreateAppointmentDTO): Promise<Appointment> {
+  }: Omit<ICreateAppointmentDTO, 'roomId'>): Promise<Appointment> {
     const patient = await this.patientsRepository.findById(patientId);
 
     if (!patient) {
@@ -40,6 +42,13 @@ export class CreateAppointmentService {
       throw new AppError(
         'Profissional não encontrado, verifique e tente novamente!',
       );
+    }
+    let roomId = '';
+
+    const room = await createVideoRoomCode();
+
+    if (room) {
+      roomId = room.roomId;
     }
 
     // let customerId: string;
@@ -83,6 +92,7 @@ export class CreateAppointmentService {
     const appointment = await this.appointmentsRepository.create({
       patientId,
       professionalId,
+      roomId,
       date,
     });
 

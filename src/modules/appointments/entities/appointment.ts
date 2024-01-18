@@ -43,6 +43,9 @@ export class Appointment extends BaseEntity {
   @Column('varchar', { nullable: true })
   anamnesis: string;
 
+  @Column('varchar', { nullable: true })
+  roomId: string;
+
   @OneToOne(() => MedicalRecord, medicalRecord => medicalRecord.appointment, {
     cascade: true,
   })
