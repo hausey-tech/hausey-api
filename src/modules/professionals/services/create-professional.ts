@@ -1,5 +1,6 @@
 import { injectable, inject, container } from 'tsyringe';
 
+import { IRolesRepository } from 'modules/roles/contracts/repositories/roles';
 import { IProfessionalSpecialtiesRepository } from '../contracts/repositories/professional-specialties';
 import { CheckIfMemedUserAlreadyExists } from '../../integrations/services/check-if-memed-user-already-exists';
 import { IProfessionalsRepository } from '../contracts/repositories/professionals';
@@ -24,6 +25,9 @@ export class CreateUserAndProfessionalService {
     @inject('HashProvider')
     private hashProvider: IHashProvider,
 
+    @inject('RolesRepository')
+    private rolesRepository: IRolesRepository,
+
     @inject('ProfessionalSpecialtiesRepository')
     private professionalSpecialtiesRepository: IProfessionalSpecialtiesRepository,
   ) {}
@@ -38,6 +42,7 @@ export class CreateUserAndProfessionalService {
     sex,
     specialties,
     registration,
+    roleId,
     registrationUf,
   }: ICreateProfessionalDTO): Promise<Professional> {
     const professionalExists = await this.professionalsRepository.findByEmail(
@@ -57,6 +62,12 @@ export class CreateUserAndProfessionalService {
       throw new AppError(
         'Já existe um professional cadastrado com esse documento!',
       );
+    }
+
+    const role = await this.rolesRepository.findById(roleId);
+
+    if (!role) {
+      throw new AppError('RoleId Inválido, verifique e tente novamente!');
     }
 
     let specialtyMemedId: number;
@@ -91,6 +102,7 @@ export class CreateUserAndProfessionalService {
       birthdate,
       phoneNumber,
       sex,
+      roleId,
       registrationUf,
       registration,
     });
