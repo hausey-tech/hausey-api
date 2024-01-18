@@ -19,7 +19,7 @@ export class Appointment extends BaseEntity {
   @Column('timestamp')
   date: Date;
 
-  @Column('varchar', { name: 'specialty_id' })
+  @Column('varchar', { name: 'specialty_id', nullable: true })
   specialtyId: string;
 
   @ManyToOne(() => Specialty)

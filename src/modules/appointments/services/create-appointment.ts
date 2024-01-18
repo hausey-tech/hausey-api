@@ -1,21 +1,11 @@
 import { injectable, inject } from 'tsyringe';
 
+import { IProfessionalsRepository } from 'modules/professionals/contracts/repositories/professionals';
 import { ICreateAppointmentDTO } from '../contracts/dtos/create-appointment';
 import { AppError } from '../../../shared/errors/app-error';
 import { Appointment } from '../entities/appointment';
 import { IPatientsRepository } from '../../patients/contracts/repositories/patients';
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
-
-interface Card {
-  number: string;
-  expMonth: number;
-  expYear: number;
-  cvc: string;
-}
-
-interface Props extends ICreateAppointmentDTO {
-  card: Card | string;
-}
 
 @injectable()
 export class CreateAppointmentService {
@@ -25,18 +15,30 @@ export class CreateAppointmentService {
 
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,
+
+    @inject('ProfessionalsRepository')
+    private professionalsRepository: IProfessionalsRepository,
   ) {}
 
   public async execute({
     patientId,
-    specialtyId,
+    professionalId,
     date,
-  }: Props): Promise<Appointment> {
+  }: ICreateAppointmentDTO): Promise<Appointment> {
     const patient = await this.patientsRepository.findById(patientId);
 
     if (!patient) {
       throw new AppError(
         'Paciente não encontrado, verifique e tente novamente!',
+      );
+    }
+    const professional = await this.professionalsRepository.findById(
+      professionalId,
+    );
+
+    if (!professional) {
+      throw new AppError(
+        'Profissional não encontrado, verifique e tente novamente!',
       );
     }
 
@@ -80,7 +82,7 @@ export class CreateAppointmentService {
 
     const appointment = await this.appointmentsRepository.create({
       patientId,
-      specialtyId,
+      professionalId,
       date,
     });
 

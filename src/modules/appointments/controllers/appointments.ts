@@ -23,18 +23,16 @@ export class AppointmentsController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const { id } = request.user;
-    const { specialtyId, date, card } = request.body;
+    const { professionalId, date, patientId } = request.body;
 
     const createAppointmentService = container.resolve(
       CreateAppointmentService,
     );
 
     const appointment = await createAppointmentService.execute({
-      patientId: id,
-      specialtyId,
+      patientId,
+      professionalId,
       date,
-      card,
     });
 
     return response.json(appointment);
