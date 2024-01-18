@@ -9,6 +9,7 @@ export const CreateProfessionalSchema = {
     registrationUf: Joi.string().length(2).required(),
     registration: Joi.string().required(),
     phoneNumber: Joi.string().required(),
+    roleId: Joi.string().required(),
     birthdate: Joi.string()
       .required()
       // eslint-disable-next-line no-useless-escape

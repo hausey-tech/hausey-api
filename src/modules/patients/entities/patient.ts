@@ -11,6 +11,7 @@ import { UserEntity } from '../../../shared/typeorm/entities';
 import { Address } from '../../addresses/entities/Address';
 import { Plan } from '../../plans/entities/plan';
 import { ClinicalResume } from '../../clinical-resumes/entities/clinical-resume';
+import { User } from '../../users/entities/user';
 
 @Entity('patients')
 export class Patient extends UserEntity {
@@ -36,4 +37,11 @@ export class Patient extends UserEntity {
 
   @Column('timestamp', { name: 'plan_expires_at', nullable: true })
   planExpiresAt: Date;
+
+  @Column('varchar', { name: 'seller_id', nullable: true })
+  sellerId: string;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'seller_id' })
+  seller: User;
 }
