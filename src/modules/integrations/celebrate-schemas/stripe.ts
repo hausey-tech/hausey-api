@@ -21,3 +21,9 @@ export const CreateSubscriptionSchema = {
     ).required(),
   }),
 };
+export const CreateCheckoutSessionSchema = {
+  [Segments.BODY]: Joi.object().keys({
+    patientId: Joi.string().uuid().required(),
+    priceId: Joi.string().required(),
+  }),
+};
