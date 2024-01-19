@@ -1,6 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
-import { Role } from 'modules/roles/entities/role';
+import { Role } from '../../roles/entities/role';
 import { UserEntity } from '../../../shared/typeorm/entities';
 
 @Entity('users')

@@ -1,6 +1,6 @@
 import { Entity, Column, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 
-import { Role } from 'modules/roles/entities/role';
+import { Role } from '../../roles/entities/role';
 import { ProfessionalSpecialty } from './professional-specialty';
 import { UserEntity } from '../../../shared/typeorm/entities';
 

@@ -1,7 +1,7 @@
 import { injectable, inject } from 'tsyringe';
 import { cpf } from 'cpf-cnpj-validator';
 
-import { IUsersRepository } from 'modules/users/contracts/repositories/users';
+import { IUsersRepository } from '../../users/contracts/repositories/users';
 import { AppError } from '../../../shared/errors/app-error';
 import { ICreatePatientDTO } from '../contracts/dtos/create-patient';
 import { IPatientsRepository } from '../contracts/repositories/patients';

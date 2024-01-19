@@ -7,7 +7,7 @@ import {
   OneToOne,
 } from 'typeorm';
 
-import { MedicalRecord } from 'modules/medical-records/entities/medical-record';
+import { MedicalRecord } from '../../medical-records/entities/medical-record';
 import { Patient } from '../../patients/entities/patient';
 import { Specialty } from '../../specialties/entities/specialty';
 import { Professional } from '../../professionals/entities/professional';

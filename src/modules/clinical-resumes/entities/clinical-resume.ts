@@ -1,8 +1,8 @@
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 
-import { Patient } from 'modules/patients/entities/patient';
-import { ClinicalCategory } from 'modules/clinical-categories/entities/clinical-category';
-import { Professional } from 'modules/professionals/entities/professional';
+import { Patient } from '../../patients/entities/patient';
+import { ClinicalCategory } from '../../clinical-categories/entities/clinical-category';
+import { Professional } from '../../professionals/entities/professional';
 import { BaseEntity } from '../../../shared/typeorm/entities/base';
 
 @Entity('clinical_resumes')

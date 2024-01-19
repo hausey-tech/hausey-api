@@ -1,6 +1,6 @@
 import { Entity, Column, JoinColumn, OneToOne } from 'typeorm';
 
-import { Appointment } from 'modules/appointments/entities/appointment';
+import { Appointment } from '../../appointments/entities/appointment';
 
 import { BaseEntity } from '../../../shared/typeorm/entities/base';
 

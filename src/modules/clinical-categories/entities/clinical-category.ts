@@ -1,6 +1,6 @@
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 
-import { Role } from 'modules/roles/entities/role';
+import { Role } from '../../roles/entities/role';
 import { BaseEntity } from '../../../shared/typeorm/entities/base';
 
 @Entity('clinical_categories')

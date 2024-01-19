@@ -1,6 +1,6 @@
 import { injectable, inject } from 'tsyringe';
 
-import { IProfessionalsRepository } from 'modules/professionals/contracts/repositories/professionals';
+import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 import { ICreateAppointmentDTO } from '../contracts/dtos/create-appointment';
 import { AppError } from '../../../shared/errors/app-error';
 import { Appointment } from '../entities/appointment';

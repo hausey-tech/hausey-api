@@ -1,6 +1,6 @@
 import { injectable, inject, container } from 'tsyringe';
 
-import { IRolesRepository } from 'modules/roles/contracts/repositories/roles';
+import { IRolesRepository } from '../../roles/contracts/repositories/roles';
 import { IProfessionalSpecialtiesRepository } from '../contracts/repositories/professional-specialties';
 import { CheckIfMemedUserAlreadyExists } from '../../integrations/services/check-if-memed-user-already-exists';
 import { IProfessionalsRepository } from '../contracts/repositories/professionals';
