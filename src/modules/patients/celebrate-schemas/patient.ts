@@ -22,6 +22,7 @@ export const UpdatePatientSchema = {
   }),
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string(),
+    sellerId: Joi.string().uuid(),
     document: Joi.string(),
     birthdate: Joi.string(),
     sex: Joi.string().equal('M', 'F'),

@@ -5,19 +5,23 @@ import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { IUpdatePatientDTO } from '../contracts/dtos/update-patient';
 import { Patient } from '../entities/patient';
+import { IUsersRepository } from '../../users/contracts/repositories/users';
 
 @injectable()
 export class UpdatePatientService {
   constructor(
     @inject('PatientsRepository')
     private patientsRepository: IPatientsRepository,
+
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
   ) {}
 
   public async execute(
     id: string,
     payload: IUpdatePatientDTO,
   ): Promise<Patient> {
-    const { document } = payload;
+    const { document, sellerId } = payload;
 
     const patientExists = await this.patientsRepository.findById(id);
 
@@ -25,6 +29,17 @@ export class UpdatePatientService {
       throw new AppError(
         'Paciente não encontrado, verifique o id e tente novamente!',
       );
+    }
+    if (sellerId) {
+      const userSellerWithIdExists = await this.usersRepository.findById(
+        sellerId,
+      );
+
+      if (!userSellerWithIdExists) {
+        throw new AppError(
+          'Representante inválido, verifique e tente novamente!',
+        );
+      }
     }
 
     if (document) {
