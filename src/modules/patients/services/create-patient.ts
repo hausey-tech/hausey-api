@@ -1,6 +1,7 @@
 import { injectable, inject } from 'tsyringe';
 import { cpf } from 'cpf-cnpj-validator';
 
+import { IUsersRepository } from 'modules/users/contracts/repositories/users';
 import { AppError } from '../../../shared/errors/app-error';
 import { ICreatePatientDTO } from '../contracts/dtos/create-patient';
 import { IPatientsRepository } from '../contracts/repositories/patients';
@@ -13,12 +14,15 @@ export class CreatePatientService {
     @inject('PatientsRepository')
     private patientsRepository: IPatientsRepository,
 
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+
     @inject('HashProvider')
     private hashProvider: IHashProvider,
   ) {}
 
   public async execute(payload: ICreatePatientDTO): Promise<Patient> {
-    const { email, document, password, phoneNumber } = payload;
+    const { email, document, password, phoneNumber, sellerId } = payload;
 
     const patientExists = await this.patientsRepository.findByEmail(email);
 
@@ -33,6 +37,17 @@ export class CreatePatientService {
       throw new AppError(
         'Já existe um usuário cadastrado com esse celular, faça o login!',
       );
+    }
+    if (sellerId) {
+      const userSellerWithIdExists = await this.usersRepository.findById(
+        sellerId,
+      );
+
+      if (!userSellerWithIdExists) {
+        throw new AppError(
+          'Representante inválido, verifique e tente novamente!',
+        );
+      }
     }
 
     if (document) {

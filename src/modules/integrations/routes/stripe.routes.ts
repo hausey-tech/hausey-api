@@ -4,6 +4,7 @@ import { ensureAuthentication } from '../../../shared/middlewares/ensure-authent
 import {
   CreateSubscriptionSchema,
   ListCardsSchema,
+  CreateCheckoutSessionSchema,
 } from '../celebrate-schemas/stripe';
 import { StripeController } from '../controllers/stripe-controller';
 
@@ -15,6 +16,13 @@ stripeRoutes.get(
   ensureAuthentication,
   celebrate(ListCardsSchema),
   stripeController.listCards,
+);
+
+stripeRoutes.post(
+  '/stripe/checkout-session',
+  ensureAuthentication,
+  celebrate(CreateCheckoutSessionSchema),
+  stripeController.createCheckoutSession,
 );
 
 stripeRoutes.post(
