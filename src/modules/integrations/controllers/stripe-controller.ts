@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import { AppError } from '../../../shared/errors/app-error';
 import { CreateSubscription } from '../services/stripe/create-subscription';
+import { CreateCheckoutSession } from '../services/stripe/create-checkout-session';
 import { HandleWebhook } from '../services/stripe/handle-webhook';
 import { ListCards } from '../services/stripe/list-cards';
 
@@ -38,6 +39,21 @@ export class StripeController {
       card,
     });
     return response.json(subscription);
+  }
+
+  public async createCheckoutSession(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { patientId, priceId } = request.body;
+
+    const createSession = container.resolve(CreateCheckoutSession);
+
+    const session = await createSession.execute({
+      patientId,
+      priceId,
+    });
+    return response.json(session);
   }
 
   public async webhook(

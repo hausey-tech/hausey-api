@@ -1,5 +1,6 @@
 export interface ICreateAppointmentDTO {
   patientId: string;
-  specialtyId: string;
+  professionalId: string;
   date: string;
+  roomId: string;
 }

@@ -9,4 +9,5 @@ export interface ICreateProfessionalDTO {
   specialties: string[];
   registration: string;
   registrationUf: string;
+  roleId: string;
 }

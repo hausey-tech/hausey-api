@@ -5,4 +5,5 @@ export interface IUpdatePatientDTO {
   phoneNumber?: string;
   sex?: 'M' | 'F';
   planId?: string;
+  sellerId?: string;
 }

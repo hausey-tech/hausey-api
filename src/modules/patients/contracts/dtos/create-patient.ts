@@ -7,4 +7,5 @@ export interface ICreatePatientDTO {
   phoneNumber: string;
   sex: 'M' | 'F';
   planId: string;
+  sellerId: string;
 }
