@@ -54,10 +54,10 @@ export class CreateCheckoutSession {
 
       session = await stripeInstance.checkout.sessions.create({
         customer: customerId,
-        success_url: 'https://frete.meuceasa.com.br',
+        success_url: 'hauseyapp://hauseyapp/',
         line_items: [{ price: priceId, quantity: 1 }],
         mode: 'subscription',
-        cancel_url: 'https://frete.meuceasa.com.br',
+        cancel_url: 'hauseyapp://hauseyapp/',
       });
     } catch (err) {
       throw new AppError(err.raw.message, err.statusCode);
