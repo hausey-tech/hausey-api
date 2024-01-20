@@ -7,6 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 
+import { Professional } from 'modules/professionals/entities/professional';
 import { UserEntity } from '../../../shared/typeorm/entities';
 import { Address } from '../../addresses/entities/Address';
 import { Plan } from '../../plans/entities/plan';
@@ -44,4 +45,14 @@ export class Patient extends UserEntity {
   @ManyToOne(() => User)
   @JoinColumn({ name: 'seller_id' })
   seller: User;
+
+  @Column('varchar', { name: 'responsible_doctor_id', nullable: true })
+  responsibleDoctorId: string;
+
+  @ManyToOne(() => Professional)
+  @JoinColumn({ name: 'responsible_doctor_id' })
+  responsibleDoctor: Professional;
+
+  @Column('boolean', { default: false })
+  questionnaireAnswered: boolean;
 }
