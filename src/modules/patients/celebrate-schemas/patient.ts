@@ -25,6 +25,7 @@ export const UpdatePatientSchema = {
     sellerId: Joi.string().uuid(),
     document: Joi.string(),
     birthdate: Joi.string(),
+    fcmToken: Joi.string(),
     sex: Joi.string().equal('M', 'F'),
   }),
 };

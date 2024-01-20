@@ -55,4 +55,7 @@ export class Patient extends UserEntity {
 
   @Column('boolean', { default: false })
   questionnaireAnswered: boolean;
+
+  @Column('varchar', { nullable: true })
+  fcmToken: string | null;
 }

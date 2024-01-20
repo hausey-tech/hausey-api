@@ -6,4 +6,5 @@ export interface IUpdatePatientDTO {
   sex?: 'M' | 'F';
   planId?: string;
   sellerId?: string;
+  fcmToken?: string;
 }
