@@ -6,6 +6,8 @@ import { IUsersRepository } from '../contracts/repositories/users';
 import { IHashProvider } from '../../../shared/providers/HashProvider/entities/hash-provider';
 import { User } from '../entities/user';
 import { IRolesRepository } from '../../roles/contracts/repositories/roles';
+import { ISellerCodesRepository } from '../../seller-codes/contracts/repositories/seller-codes';
+import { generateRandomCode } from '../utils/create-random-code';
 
 interface CreateUser {
   email: string;
@@ -28,6 +30,9 @@ export class CreateUserService {
 
     @inject('RolesRepository')
     private rolesRepository: IRolesRepository,
+
+    @inject('SellerCodesRepository')
+    private sellerCodesRepository: ISellerCodesRepository,
   ) {}
 
   public async execute(payload: CreateUser): Promise<User> {
@@ -96,6 +101,28 @@ export class CreateUserService {
       password: hashedPassword,
     });
 
-    return this.usersRepository.save(user);
+    const savedUser = await this.usersRepository.save(user);
+
+    if (roleType === 'comercial') {
+      let isUnique = false;
+      let code;
+      /* eslint-disable no-await-in-loop */
+      while (!isUnique) {
+        code = generateRandomCode(savedUser.name);
+        const codeExists = await this.sellerCodesRepository.findByCode(code);
+
+        if (!codeExists) {
+          isUnique = true;
+          const sellerCode = await this.sellerCodesRepository.create({
+            code,
+            sellerId: savedUser.id,
+          });
+          await this.sellerCodesRepository.save(sellerCode);
+        }
+      }
+      /* eslint-enable no-await-in-loop */
+    }
+
+    return savedUser;
   }
 }

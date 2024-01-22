@@ -7,7 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 
-import { Professional } from 'modules/professionals/entities/professional';
+import { Professional } from '../../professionals/entities/professional';
 import { UserEntity } from '../../../shared/typeorm/entities';
 import { Address } from '../../addresses/entities/Address';
 import { Plan } from '../../plans/entities/plan';

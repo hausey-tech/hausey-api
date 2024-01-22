@@ -12,7 +12,7 @@ export const CreatePatientSchema = {
     email: Joi.string().required(),
     password: Joi.string().required(),
     phoneNumber: Joi.string().required(),
-    sellerId: Joi.string(),
+    sellerCode: Joi.string(),
   }),
 };
 
@@ -22,7 +22,7 @@ export const UpdatePatientSchema = {
   }),
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string(),
-    sellerId: Joi.string().uuid(),
+    sellerCode: Joi.string().max(6),
     document: Joi.string(),
     birthdate: Joi.string(),
     fcmToken: Joi.string(),

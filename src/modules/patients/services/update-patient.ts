@@ -1,27 +1,30 @@
-import { injectable, inject } from 'tsyringe';
+import { injectable, inject, container } from 'tsyringe';
 import { cpf } from 'cpf-cnpj-validator';
 
 import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
-import { IUpdatePatientDTO } from '../contracts/dtos/update-patient';
 import { Patient } from '../entities/patient';
-import { IUsersRepository } from '../../users/contracts/repositories/users';
+import { UpdateSellerCodeService } from '../../seller-codes/services/update-seller-code';
 
+interface Props {
+  name?: string;
+  document?: string;
+  birthdate?: string;
+  phoneNumber?: string;
+  sex?: 'M' | 'F';
+  planId?: string;
+  sellerCode?: string;
+  fcmToken?: string;
+}
 @injectable()
 export class UpdatePatientService {
   constructor(
     @inject('PatientsRepository')
     private patientsRepository: IPatientsRepository,
-
-    @inject('UsersRepository')
-    private usersRepository: IUsersRepository,
   ) {}
 
-  public async execute(
-    id: string,
-    payload: IUpdatePatientDTO,
-  ): Promise<Patient> {
-    const { document, sellerId } = payload;
+  public async execute(id: string, payload: Props): Promise<Patient> {
+    const { document, sellerCode, ...restOfPayload } = payload;
 
     const patientExists = await this.patientsRepository.findById(id);
 
@@ -30,16 +33,15 @@ export class UpdatePatientService {
         'Paciente não encontrado, verifique o id e tente novamente!',
       );
     }
-    if (sellerId) {
-      const userSellerWithIdExists = await this.usersRepository.findById(
-        sellerId,
+    let sellerId: string;
+    if (sellerCode) {
+      const updateSellerCodeService = container.resolve(
+        UpdateSellerCodeService,
       );
-
-      if (!userSellerWithIdExists) {
-        throw new AppError(
-          'Representante inválido, verifique e tente novamente!',
-        );
-      }
+      const updatedSellerCode = await updateSellerCodeService.execute({
+        code: sellerCode,
+      });
+      sellerId = updatedSellerCode.sellerId;
     }
 
     if (document) {
@@ -58,7 +60,10 @@ export class UpdatePatientService {
         );
       }
     }
-
-    return this.patientsRepository.update(id, payload);
+    return this.patientsRepository.update(id, {
+      ...restOfPayload,
+      document,
+      sellerId,
+    });
   }
 }

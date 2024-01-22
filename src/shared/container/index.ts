@@ -14,6 +14,9 @@ import { UsersRepository } from '../../modules/users/repositories/users';
 import { IRolesRepository } from '../../modules/roles/contracts/repositories/roles';
 import { RolesRepository } from '../../modules/roles/repositories/roles';
 
+import { ISellerCodesRepository } from '../../modules/seller-codes/contracts/repositories/seller-codes';
+import { SellerCodesRepository } from '../../modules/seller-codes/repositories/seller-codes';
+
 import { ISpecialtiesRepository } from '../../modules/specialties/contracts/repositories/specialties';
 import { SpecialtiesRepository } from '../../modules/specialties/repositories/specialties';
 
@@ -67,6 +70,10 @@ container.registerSingleton<IUsersRepository>(
 container.registerSingleton<IRolesRepository>(
   'RolesRepository',
   RolesRepository,
+);
+container.registerSingleton<ISellerCodesRepository>(
+  'SellerCodesRepository',
+  SellerCodesRepository,
 );
 
 container.registerSingleton<IProfessionalSpecialtiesRepository>(

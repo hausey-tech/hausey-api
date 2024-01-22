@@ -1,0 +1,60 @@
+import { FindOptionsWhere, Repository } from 'typeorm';
+import { PostgresDataSource } from '../../../shared/typeorm';
+import { ICreateSellerCodeDTO } from '../contracts/dtos/create-seller-code-dto';
+import { SellerCode } from '../entities/seller-code';
+import { ISellerCodesRepository } from '../contracts/repositories/seller-codes';
+import { IUpdateSellerCodeDto } from '../contracts/dtos/update-seller-code-dto';
+
+export class SellerCodesRepository implements ISellerCodesRepository {
+  private ormRepository: Repository<SellerCode>;
+
+  constructor() {
+    this.ormRepository = PostgresDataSource.getRepository(SellerCode);
+  }
+
+  public async find(
+    where: FindOptionsWhere<SellerCode>,
+  ): Promise<SellerCode[]> {
+    return this.ormRepository.find({
+      where,
+    });
+  }
+
+  public async findAll(): Promise<SellerCode[]> {
+    return this.ormRepository.find();
+  }
+
+  public async findByCode(code: string): Promise<SellerCode | null> {
+    return this.ormRepository.findOne({
+      where: { code },
+    });
+  }
+
+  public async findById(id: string): Promise<SellerCode | null> {
+    return this.ormRepository.findOne({
+      where: { id },
+    });
+  }
+
+  public async findBySellerId(sellerId: string): Promise<SellerCode | null> {
+    return this.ormRepository.findOne({
+      where: { sellerId },
+    });
+  }
+
+  public async create(sellerCode: ICreateSellerCodeDTO): Promise<SellerCode> {
+    return this.ormRepository.create(sellerCode);
+  }
+
+  public async save(sellerCode: SellerCode): Promise<SellerCode> {
+    return this.ormRepository.save(sellerCode);
+  }
+
+  public async update(
+    id: string,
+    payload: IUpdateSellerCodeDto,
+  ): Promise<SellerCode> {
+    await this.ormRepository.update(id, payload);
+    return this.findById(id);
+  }
+}
