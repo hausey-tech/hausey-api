@@ -21,6 +21,8 @@ import { programsRouter } from '../../modules/programs/routes/programs';
 
 import { plansRouter } from '../../modules/plans/routes/plans';
 
+import { groupTypesRouter } from '../../modules/group-type/routes/group-types';
+
 import { patientsRouter } from '../../modules/patients/routes/patients';
 
 import { addressesRouter } from '../../modules/addresses/routes/addresses.routes';
@@ -43,6 +45,7 @@ routes.use(json());
 
 routes.use('/integrations', twilioRouter, memedRouter, s3Router, stripeRoutes);
 routes.use('/sessions', sessionsRouter);
+routes.use('/group-types', groupTypesRouter);
 routes.use('/users', usersRouter);
 routes.use('/roles', rolesRouter);
 routes.use('/seller-codes', sellerCodesRouter);

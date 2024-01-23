@@ -13,6 +13,8 @@ import { Address } from '../../addresses/entities/Address';
 import { Plan } from '../../plans/entities/plan';
 import { ClinicalResume } from '../../clinical-resumes/entities/clinical-resume';
 import { User } from '../../users/entities/user';
+import { PatientGroup } from './patient-group';
+import { PatientProfessionalAssistance } from './patient-professional-assistance';
 
 @Entity('patients')
 export class Patient extends UserEntity {
@@ -23,12 +25,17 @@ export class Patient extends UserEntity {
   @JoinColumn({ name: 'plan_id' })
   plan: Plan;
 
-  @Column('varchar', { name: 'clinical_resume_id', nullable: true })
-  clinicalResumeId: string;
-
   @OneToMany(() => ClinicalResume, clinicalResume => clinicalResume.patient)
-  @JoinColumn({ name: 'clinical_resume_id' })
-  clinicalResume: ClinicalResume;
+  clinicalResume: ClinicalResume[];
+
+  @OneToMany(() => PatientGroup, patientGroup => patientGroup.patient)
+  patientGroups: PatientGroup[];
+
+  @OneToMany(
+    () => PatientProfessionalAssistance,
+    patientProfessionalAssistance => patientProfessionalAssistance.patient,
+  )
+  patientProfessionalAssistances: PatientProfessionalAssistance[];
 
   @OneToOne(() => Address, address => address.patient)
   address: Address;

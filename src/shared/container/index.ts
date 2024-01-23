@@ -26,6 +26,18 @@ import { ProfessionalSpecialtiesRepository } from '../../modules/professionals/r
 import { IPatientsRepository } from '../../modules/patients/contracts/repositories/patients';
 import { PatientsRepository } from '../../modules/patients/repositories/patients';
 
+import { IGroupTypesRepository } from '../../modules/group-type/contracts/repositories/group-types';
+import { GroupTypesRepository } from '../../modules/group-type/repositories/group-types';
+
+import { IPatientGroupTypesRepository } from '../../modules/patients/contracts/repositories/patient-group-types';
+import { PatientGroupTypesRepository } from '../../modules/patients/repositories/patient-group-types';
+
+import { IPatientGroupsRepository } from '../../modules/patients/contracts/repositories/patient-groups';
+import { PatientGroupsRepository } from '../../modules/patients/repositories/patient-groups';
+
+import { IPatientProfessionalAssistancesRepository } from '../../modules/patients/contracts/repositories/patient-professional-assistances';
+import { PatientProfessionalAssistancesRepository } from '../../modules/patients/repositories/patient-professional-assistances';
+
 import { IPatientProgramsRepository } from '../../modules/patients/contracts/repositories/patient-programs';
 import { PatientProgramsRepository } from '../../modules/patients/repositories/patient-programs';
 
@@ -84,6 +96,26 @@ container.registerSingleton<IProfessionalSpecialtiesRepository>(
 container.registerSingleton<IPatientsRepository>(
   'PatientsRepository',
   PatientsRepository,
+);
+
+container.registerSingleton<IPatientGroupTypesRepository>(
+  'PatientsGroupTypesRepository',
+  PatientGroupTypesRepository,
+);
+
+container.registerSingleton<IPatientGroupsRepository>(
+  'PatientGroupsRepository',
+  PatientGroupsRepository,
+);
+
+container.registerSingleton<IPatientProfessionalAssistancesRepository>(
+  'PatientProfessionalAssistancesRepository',
+  PatientProfessionalAssistancesRepository,
+);
+
+container.registerSingleton<IGroupTypesRepository>(
+  'GroupTypesRepository',
+  GroupTypesRepository,
 );
 
 container.registerSingleton<IPatientProgramsRepository>(

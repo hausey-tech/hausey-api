@@ -13,7 +13,13 @@ export class PatientsRepository implements IPatientsRepository {
 
   constructor() {
     this.ormRepository = PostgresDataSource.getRepository(Patient);
-    this.relations = ['plan', 'address'];
+    this.relations = [
+      'plan',
+      'address',
+      'patientProfessionalAssistances',
+      'clinicalResume',
+      'patientGroups',
+    ];
   }
 
   public async find(): Promise<Patient[]> {
