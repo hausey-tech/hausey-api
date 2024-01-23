@@ -10,7 +10,7 @@ export class PatientGroupType extends BaseEntity {
   patientGroupId: string;
 
   @ManyToOne(() => PatientGroup, { onDelete: 'CASCADE', onUpdate: 'CASCADE' })
-  @JoinColumn({ name: 'patient_id' })
+  @JoinColumn({ name: 'patient_group_id' })
   patientGroup: PatientGroup;
 
   @Column('varchar', { name: 'group_type_id' })

@@ -6,6 +6,7 @@ import {
   CreatePatientSchema,
   UpdatePatientSchema,
   GetPatientInfosSchema,
+  CreatePatientGroupSchema,
 } from '../celebrate-schemas/patient';
 import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
 import { PatientsController } from '../controllers/patients';
@@ -24,6 +25,12 @@ patientsRouter.post(
   '/',
   celebrate(CreatePatientSchema),
   patientsController.create,
+);
+
+patientsRouter.post(
+  '/patient-group',
+  celebrate(CreatePatientGroupSchema),
+  patientsController.createPatientGroup,
 );
 
 patientsRouter.patch(

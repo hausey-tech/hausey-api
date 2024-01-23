@@ -21,7 +21,7 @@ export class CreatePatientGroupService {
     @inject('PatientGroupsRepository')
     private patientGroupsRepository: IPatientGroupsRepository,
 
-    @inject('PatientGroupTypesRepository')
+    @inject('PatientsGroupTypesRepository')
     private patientGroupTypesRepository: IPatientGroupTypesRepository,
   ) {}
 
@@ -40,9 +40,13 @@ export class CreatePatientGroupService {
       roleId,
     });
 
+    const patientGroupSave = await this.patientGroupsRepository.save(
+      patientGroup,
+    );
+
     groupTypes.map(async groupTypeId => {
       const patientGroupTypes = await this.patientGroupTypesRepository.create({
-        patientGroupId: patientGroup.id,
+        patientGroupId: patientGroupSave.id,
         groupTypeId,
       });
       this.patientGroupTypesRepository.save(patientGroupTypes);

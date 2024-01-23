@@ -15,6 +15,14 @@ export const CreatePatientSchema = {
     sellerCode: Joi.string(),
   }),
 };
+export const CreatePatientGroupSchema = {
+  [Segments.BODY]: Joi.object().keys({
+    observations: Joi.string().required(),
+    roleId: Joi.string().uuid().required(),
+    patientId: Joi.string().uuid().required(),
+    groupTypes: Joi.array().items(Joi.string().required()).required(),
+  }),
+};
 
 export const UpdatePatientSchema = {
   [Segments.PARAMS]: Joi.object().keys({

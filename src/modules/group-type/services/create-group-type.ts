@@ -6,7 +6,7 @@ import { ICreateGroupTypeDto } from '../contracts/dtos/create-group-type';
 @injectable()
 export class CreateGroupType {
   constructor(
-    @inject('GroupTypes')
+    @inject('GroupTypesRepository')
     private groupTypesRepository: IGroupTypesRepository,
   ) {}
 

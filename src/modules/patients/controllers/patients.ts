@@ -6,6 +6,7 @@ import { UpdatePatientService } from '../services/update-patient';
 import { CreateSessionService } from '../../sessions/services/create-session';
 import { ListPatientsService } from '../services/list-patients';
 import { GetPatientInfos } from '../services/get-patient-infos';
+import { CreatePatientGroupService } from '../services/create-patient-group';
 
 export class PatientsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -36,6 +37,21 @@ export class PatientsController {
     });
 
     return response.json(session);
+  }
+
+  public async createPatientGroup(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const payload = request.body;
+
+    const createPatientGroupService = container.resolve(
+      CreatePatientGroupService,
+    );
+
+    const patientGroup = await createPatientGroupService.execute(payload);
+
+    return response.json(patientGroup);
   }
 
   public async update(request: Request, response: Response): Promise<Response> {
