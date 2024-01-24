@@ -6,7 +6,7 @@ import { GroupType } from '../entities/group-type';
 @injectable()
 export class FindGroupTypes {
   constructor(
-    @inject('GroupTypes')
+    @inject('GroupTypesRepository')
     private groupTypesRepository: IGroupTypesRepository,
   ) {}
 

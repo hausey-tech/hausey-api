@@ -13,11 +13,10 @@ export class PatientGroupsRepository implements IPatientGroupsRepository {
   constructor() {
     this.ormRepository = PostgresDataSource.getRepository(PatientGroup);
     this.relations = [
-      'plan',
-      'address',
-      'patientProfessionalAssistances',
-      'clinicalResume',
-      'patientGroups',
+      'patient',
+      'role',
+      'patientGroupTypes',
+      'patientGroupTypes.grouptype',
     ];
   }
 

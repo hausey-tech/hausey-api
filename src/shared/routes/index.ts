@@ -33,6 +33,10 @@ import { rolesRouter } from '../../modules/roles/routes/roles';
 
 import { sellerCodesRouter } from '../../modules/seller-codes/routes/seller-codes';
 
+import { clinicalCategoryRouter } from '../../modules/clinical-categories/routes/clinical-category';
+
+import { clinicalResumeRouter } from '../../modules/clinical-resumes/routes/clinical-resumes';
+
 import { twilioRouter } from '../../modules/integrations/routes/twilio';
 import { memedRouter } from '../../modules/integrations/routes/memed';
 import { s3Router } from '../../modules/integrations/routes/s3';
@@ -52,6 +56,8 @@ routes.use('/seller-codes', sellerCodesRouter);
 routes.use('/appointments', appointmentsRouter);
 routes.use('/prescriptions', prescriptionsRouter);
 routes.use('/slots', slotsRouter);
+routes.use('/clinical-category', clinicalCategoryRouter);
+routes.use('/clinical-resume', clinicalResumeRouter);
 routes.use('/specialties', specialtiesRouter);
 routes.use('/professionals', professionalsRouter);
 routes.use('/patients', patientsRouter);

@@ -23,6 +23,13 @@ export const CreatePatientGroupSchema = {
     groupTypes: Joi.array().items(Joi.string().required()).required(),
   }),
 };
+export const CreatePatientProfessionalAssistanceSchema = {
+  [Segments.BODY]: Joi.object().keys({
+    roleId: Joi.string().uuid().required(),
+    patientId: Joi.string().uuid().required(),
+    assistanceType: Joi.string().equal('Grupo', 'Individual').required(),
+  }),
+};
 
 export const UpdatePatientSchema = {
   [Segments.PARAMS]: Joi.object().keys({

@@ -14,13 +14,7 @@ export class PatientGroupTypesRepository
 
   constructor() {
     this.ormRepository = PostgresDataSource.getRepository(PatientGroupType);
-    this.relations = [
-      'plan',
-      'address',
-      'patientProfessionalAssistances',
-      'clinicalResume',
-      'patientGroups',
-    ];
+    this.relations = ['patientGroup', 'grouptype'];
   }
 
   public async find(): Promise<PatientGroupType[]> {

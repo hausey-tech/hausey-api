@@ -16,13 +16,7 @@ export class PatientProfessionalAssistancesRepository
     this.ormRepository = PostgresDataSource.getRepository(
       PatientProfessionalAssistance,
     );
-    this.relations = [
-      'plan',
-      'address',
-      'patientProfessionalAssistances',
-      'clinicalResume',
-      'patientGroups',
-    ];
+    this.relations = ['patient', 'role'];
   }
 
   public async find(): Promise<PatientProfessionalAssistance[]> {

@@ -26,6 +26,9 @@ import { ProfessionalSpecialtiesRepository } from '../../modules/professionals/r
 import { IPatientsRepository } from '../../modules/patients/contracts/repositories/patients';
 import { PatientsRepository } from '../../modules/patients/repositories/patients';
 
+import { IClinicalCategorysRepository } from '../../modules/clinical-categories/contracts/repositories/clinical-categories';
+import { ClinicalCategorysRepository } from '../../modules/clinical-categories/repositories/clinical-categories';
+
 import { IGroupTypesRepository } from '../../modules/group-type/contracts/repositories/group-types';
 import { GroupTypesRepository } from '../../modules/group-type/repositories/group-types';
 
@@ -65,6 +68,9 @@ import { PrescriptionsRepository } from '../../modules/prescriptions/repositorie
 import { ISecretariesRepository } from '../../modules/secretaries/contracts/repositories/i-secretaries-repository';
 import { SecretariesRepository } from '../../modules/secretaries/repositories/secretaries-repository';
 
+import { IClinicalResumesRepository } from '../../modules/clinical-resumes/contracts/repositories/clinical-resumes';
+import { ClinicalResumesRepository } from '../../modules/clinical-resumes/repositories/clinical-resumes';
+
 container.registerSingleton<IAddressesRepository>(
   'AddressesRepository',
   AddressesRepository,
@@ -74,6 +80,16 @@ container.registerSingleton<IProfessionalsRepository>(
   'ProfessionalsRepository',
   ProfessionalsRepository,
 );
+
+container.registerSingleton<IClinicalCategorysRepository>(
+  'ClinicalCategoryRepository',
+  ClinicalCategorysRepository,
+);
+container.registerSingleton<IClinicalResumesRepository>(
+  'ClinicalResumeRepository',
+  ClinicalResumesRepository,
+);
+
 container.registerSingleton<IUsersRepository>(
   'UsersRepository',
   UsersRepository,
