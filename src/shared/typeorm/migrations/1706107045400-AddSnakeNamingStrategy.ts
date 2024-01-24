@@ -12,9 +12,6 @@ export class AddSnakeNamingStrategy1706107045400 implements MigrationInterface {
     );
     await queryRunner.query(`ALTER TABLE "patients" DROP COLUMN "fcmToken"`);
     await queryRunner.query(
-      `ALTER TABLE "patients" DROP COLUMN "clinical_resume_id"`,
-    );
-    await queryRunner.query(
       `ALTER TABLE "appointments" DROP CONSTRAINT "UQ_2c2cd311e559d1a9e425de7b597"`,
     );
     await queryRunner.query(
@@ -64,9 +61,6 @@ export class AddSnakeNamingStrategy1706107045400 implements MigrationInterface {
     );
     await queryRunner.query(
       `ALTER TABLE "appointments" ADD CONSTRAINT "UQ_2c2cd311e559d1a9e425de7b597" UNIQUE ("medicalRecordId")`,
-    );
-    await queryRunner.query(
-      `ALTER TABLE "patients" ADD "clinical_resume_id" character varying`,
     );
     await queryRunner.query(
       `ALTER TABLE "patients" ADD "fcmToken" character varying`,
