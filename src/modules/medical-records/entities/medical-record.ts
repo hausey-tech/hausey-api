@@ -1,18 +1,13 @@
-import { Entity, Column, JoinColumn, OneToOne } from 'typeorm';
-
-import { Appointment } from '../../appointments/entities/appointment';
+import { Entity, Column, OneToMany } from 'typeorm';
 
 import { BaseEntity } from '../../../shared/typeorm/entities/base';
+import { MedicalRecordCid } from './medical-record-cid';
 
 @Entity('medical_records')
 export class MedicalRecord extends BaseEntity {
   @Column('varchar')
-  cid: string;
-
-  @Column('varchar')
   description: string;
 
-  @OneToOne(() => Appointment, appointment => appointment.medicalRecord)
-  @JoinColumn()
-  appointment: Appointment;
+  @OneToMany(() => MedicalRecordCid, medRecCid => medRecCid.medicalRecord)
+  cids: MedicalRecordCid[];
 }

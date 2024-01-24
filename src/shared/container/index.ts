@@ -71,6 +71,12 @@ import { SecretariesRepository } from '../../modules/secretaries/repositories/se
 import { IClinicalResumesRepository } from '../../modules/clinical-resumes/contracts/repositories/clinical-resumes';
 import { ClinicalResumesRepository } from '../../modules/clinical-resumes/repositories/clinical-resumes';
 
+import { IMedicalRecordsRepository } from '../../modules/medical-records/contracts/repositories/medical-records-repository';
+import { MedicalRecordsRepository } from '../../modules/medical-records/repositories/medical-records-repository';
+
+import { IMedicalRecordCidsRepository } from '../../modules/medical-records/contracts/repositories/medical-record-cids-repository';
+import { MedicalRecordCidsRepository } from '../../modules/medical-records/repositories/medical-record-cids-repository';
+
 container.registerSingleton<IAddressesRepository>(
   'AddressesRepository',
   AddressesRepository,
@@ -85,6 +91,7 @@ container.registerSingleton<IClinicalCategorysRepository>(
   'ClinicalCategoryRepository',
   ClinicalCategorysRepository,
 );
+
 container.registerSingleton<IClinicalResumesRepository>(
   'ClinicalResumeRepository',
   ClinicalResumesRepository,
@@ -182,4 +189,14 @@ container.registerSingleton<IPrescriptionsRepository>(
 container.registerSingleton<ISecretariesRepository>(
   'SecretariesRepository',
   SecretariesRepository,
+);
+
+container.registerSingleton<IMedicalRecordsRepository>(
+  'MedicalRecordsRepository',
+  MedicalRecordsRepository,
+);
+
+container.registerSingleton<IMedicalRecordCidsRepository>(
+  'MedicalRecordCidsRepository',
+  MedicalRecordCidsRepository,
 );

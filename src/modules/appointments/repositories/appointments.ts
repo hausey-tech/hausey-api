@@ -8,8 +8,18 @@ import { ICreateAppointmentDTO } from '../contracts/dtos/create-appointment';
 export class AppointmentsRepository implements IAppointmentsRepository {
   private ormRepository: Repository<Appointment>;
 
+  private relations: string[];
+
   constructor() {
     this.ormRepository = PostgresDataSource.getRepository(Appointment);
+    this.relations = [
+      'patient',
+      'professional',
+      'specialty',
+      'prescriptions',
+      'medicalRecord',
+      'medicalRecord.cids',
+    ];
   }
 
   public async findById(id: string): Promise<Appointment | null> {
@@ -49,7 +59,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     return this.ormRepository.find({
       where,
       order: { date: 'asc' },
-      relations: ['patient', 'professional', 'specialty', 'prescriptions'],
+      relations: this.relations,
     });
   }
 
@@ -59,7 +69,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     return this.ormRepository.find({
       where: { professionalId },
       order: { date: 'asc' },
-      relations: ['patient', 'professional', 'specialty', 'prescriptions'],
+      relations: this.relations,
     });
   }
 
@@ -67,7 +77,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     return this.ormRepository.find({
       where: { patientId },
       order: { date: 'asc' },
-      relations: ['patient', 'professional', 'specialty', 'prescriptions'],
+      relations: this.relations,
     });
   }
 

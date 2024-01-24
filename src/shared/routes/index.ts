@@ -36,6 +36,7 @@ import { sellerCodesRouter } from '../../modules/seller-codes/routes/seller-code
 import { clinicalCategoryRouter } from '../../modules/clinical-categories/routes/clinical-category';
 
 import { clinicalResumeRouter } from '../../modules/clinical-resumes/routes/clinical-resumes';
+import { medicalRecordsRouter } from '../../modules/medical-records/routes/medical-records.routes';
 
 import { twilioRouter } from '../../modules/integrations/routes/twilio';
 import { memedRouter } from '../../modules/integrations/routes/memed';
@@ -64,6 +65,7 @@ routes.use('/patients', patientsRouter);
 routes.use('/programs', programsRouter);
 routes.use('/plans', plansRouter);
 routes.use('/addresses', addressesRouter);
+routes.use('/medical-records', medicalRecordsRouter);
 routes.get('/health-check', (req, res) => {
   fs.readFile(
     pathJS.join(__dirname, '../../../buildtime.txt'),

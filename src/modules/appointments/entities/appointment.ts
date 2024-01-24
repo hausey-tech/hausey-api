@@ -46,12 +46,6 @@ export class Appointment extends BaseEntity {
   @Column('varchar', { nullable: true })
   roomId: string;
 
-  @OneToOne(() => MedicalRecord, medicalRecord => medicalRecord.appointment, {
-    cascade: true,
-  })
-  @JoinColumn()
-  medicalRecord: MedicalRecord;
-
   @Column('varchar', { name: 'primary_diagnosis', nullable: true })
   primaryDiagnosis: string;
 
@@ -63,4 +57,8 @@ export class Appointment extends BaseEntity {
 
   @Column('boolean', { default: false })
   finished: boolean;
+
+  @OneToOne(() => MedicalRecord)
+  @JoinColumn()
+  medicalRecord: MedicalRecord | null;
 }
