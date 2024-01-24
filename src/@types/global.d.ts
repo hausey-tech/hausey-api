@@ -22,5 +22,8 @@ declare namespace NodeJS {
     AWS_ACCESS_KEY_ID: string;
     AWS_SECRET_ACCESS_KEY: string;
     AWS_MAX_FILE_SIZE: number;
+
+    VIDEO_SDK_API_KEY: string;
+    VIDEO_SDK_SECRET_KEY: string;
   }
 }
