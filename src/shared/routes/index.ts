@@ -39,6 +39,7 @@ import { clinicalResumeRouter } from '../../modules/clinical-resumes/routes/clin
 import { medicalRecordsRouter } from '../../modules/medical-records/routes/medical-records.routes';
 
 import { twilioRouter } from '../../modules/integrations/routes/twilio';
+import { videoSdkRouter } from '../../modules/integrations/routes/video-sdk';
 import { memedRouter } from '../../modules/integrations/routes/memed';
 import { s3Router } from '../../modules/integrations/routes/s3';
 
@@ -48,7 +49,14 @@ routes.use('/integrations/stripe/webhook', stripeWebhookRoutes);
 
 routes.use(json());
 
-routes.use('/integrations', twilioRouter, memedRouter, s3Router, stripeRoutes);
+routes.use(
+  '/integrations',
+  twilioRouter,
+  memedRouter,
+  s3Router,
+  stripeRoutes,
+  videoSdkRouter,
+);
 routes.use('/sessions', sessionsRouter);
 routes.use('/group-types', groupTypesRouter);
 routes.use('/users', usersRouter);
