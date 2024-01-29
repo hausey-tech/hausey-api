@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { PostgresDataSource } from '../../../shared/typeorm';
 import { ICreateClinicalResumeDto } from '../contracts/dtos/create-clinical-resume';
 import { IClinicalResumesRepository } from '../contracts/repositories/clinical-resumes';
@@ -7,12 +7,21 @@ import { ClinicalResume } from '../entities/clinical-resume';
 export class ClinicalResumesRepository implements IClinicalResumesRepository {
   private ormRepository: Repository<ClinicalResume>;
 
+  private relations: string[];
+
   constructor() {
     this.ormRepository = PostgresDataSource.getRepository(ClinicalResume);
+    this.relations = ['professional', 'category'];
   }
 
-  public async findAll(): Promise<ClinicalResume[]> {
-    return this.ormRepository.find();
+  public async find(
+    where: FindOptionsWhere<ClinicalResume>,
+  ): Promise<ClinicalResume[]> {
+    return this.ormRepository.find({
+      where,
+      order: { createdAt: 'asc' },
+      relations: this.relations,
+    });
   }
 
   public async findByPatientId(

@@ -5,11 +5,12 @@ import { CreateClinicalResume } from '../services/create-clinical-resume';
 
 export class ClinicalResumeController {
   public async index(request: Request, response: Response): Promise<Response> {
+    const { query } = request;
     const findAllCategoriesService = container.resolve(FindClinicalResumes);
 
-    const plans = await findAllCategoriesService.execute();
+    const clinicalResumes = await findAllCategoriesService.execute(query);
 
-    return response.json(plans);
+    return response.json(clinicalResumes);
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
