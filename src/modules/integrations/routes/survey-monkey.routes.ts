@@ -11,11 +11,8 @@ surveyMonkeyRouter.use(
   }),
 );
 
-surveyMonkeyRouter.get('/survey-monkey/webhook', (req, res) => {
+surveyMonkeyRouter.get('/', (req, res) => {
   res.send();
 });
 
-surveyMonkeyRouter.post(
-  '/survey-monkey/webhook',
-  surveyMonkeyController.webhook,
-);
+surveyMonkeyRouter.post('/', surveyMonkeyController.webhook);
