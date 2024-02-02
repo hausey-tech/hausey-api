@@ -7,11 +7,10 @@ export class SurveyMonkeyController {
     request: Request,
     response: Response,
   ): Promise<Response> {
-    const { body } = request;
     const handleSurveyMonkeyWebhookService = container.resolve(
       HandleSurveyMonkeyWebhookService,
     );
-    await handleSurveyMonkeyWebhookService.execute({ body });
+    await handleSurveyMonkeyWebhookService.execute({ body: request });
     return response.json({ message: 'Webhook recebido com sucesso!' });
   }
 }
