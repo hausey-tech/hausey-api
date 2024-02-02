@@ -1,6 +1,6 @@
 import { injectable, inject } from 'tsyringe';
-import { IPatientsRepository } from 'modules/patients/contracts/repositories/patients';
-import { IAppointmentsRepository } from 'modules/appointments/contracts/repositories/appointments';
+import { IPatientsRepository } from '../../patients/contracts/repositories/patients';
+import { IAppointmentsRepository } from '../../appointments/contracts/repositories/appointments';
 import { AppError } from '../../../shared/errors/app-error';
 import { MedicalRecord } from '../entities/medical-record';
 import { IListMedicalRecordsDTO } from '../contracts/dtos/list-medical-records-dto';

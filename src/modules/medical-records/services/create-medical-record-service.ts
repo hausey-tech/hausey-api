@@ -1,5 +1,5 @@
 import { injectable, inject } from 'tsyringe';
-import { IAppointmentsRepository } from 'modules/appointments/contracts/repositories/appointments';
+import { IAppointmentsRepository } from '../../appointments/contracts/repositories/appointments';
 import { AppError } from '../../../shared/errors/app-error';
 import { MedicalRecord } from '../entities/medical-record';
 import { ICreateMedicalRecordDTO } from '../contracts/dtos/create-medical-record-dto';
