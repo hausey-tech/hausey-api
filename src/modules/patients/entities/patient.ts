@@ -60,8 +60,8 @@ export class Patient extends UserEntity {
   @JoinColumn({ name: 'responsible_doctor_id' })
   responsibleDoctor: Professional;
 
-  @Column('boolean', { default: false })
-  questionnaireAnswered: boolean;
+  @Column('varchar', { nullable: true })
+  questionnaireUrl: string | null;
 
   @Column('varchar', { nullable: true })
   fcmToken: string | null;

@@ -11,7 +11,7 @@ export class SurveyMonkeyController {
     const handleSurveyMonkeyWebhookService = container.resolve(
       HandleSurveyMonkeyWebhookService,
     );
-    await handleSurveyMonkeyWebhookService.execute({ body });
-    return response.json({ message: 'Webhook recebido com sucesso!' });
+    await handleSurveyMonkeyWebhookService.execute(body);
+    return response.json({ message: 'Paciente atualizado com sucesso!' });
   }
 }
