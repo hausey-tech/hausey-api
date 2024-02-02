@@ -1,14 +1,15 @@
-import express, { Router } from 'express';
+import { Router } from 'express';
+import bodyParser from 'body-parser';
 import { SurveyMonkeyController } from '../controllers/survey-monkey-controller';
 
 export const surveyMonkeyRouter = Router();
 const surveyMonkeyController = new SurveyMonkeyController();
 
-// surveyMonkeyRouter.use(
-//   bodyParser.json({
-//     type: 'application/vnd.surveymonkey.response.v1+json',
-//   }),
-// );
+surveyMonkeyRouter.use(
+  bodyParser.json({
+    type: 'application/vnd.surveymonkey.response.v1+json',
+  }),
+);
 
 surveyMonkeyRouter.get('/survey-monkey/webhook', (req, res) => {
   res.send();
@@ -16,6 +17,5 @@ surveyMonkeyRouter.get('/survey-monkey/webhook', (req, res) => {
 
 surveyMonkeyRouter.post(
   '/survey-monkey/webhook',
-  express.raw({ type: 'application/vnd.surveymonkey.response.v1+json' }),
   surveyMonkeyController.webhook,
 );
