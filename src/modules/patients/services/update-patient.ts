@@ -5,6 +5,7 @@ import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { Patient } from '../entities/patient';
 import { UpdateSellerCodeService } from '../../seller-codes/services/update-seller-code';
+import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 
 interface Props {
   name?: string;
@@ -15,18 +16,33 @@ interface Props {
   planId?: string;
   sellerCode?: string;
   fcmToken?: string;
+  responsibleDoctorId?: string;
 }
 @injectable()
 export class UpdatePatientService {
   constructor(
     @inject('PatientsRepository')
     private patientsRepository: IPatientsRepository,
+
+    @inject('ProfessionalsRepository')
+    private professionalsRepository: IProfessionalsRepository,
   ) {}
 
   public async execute(id: string, payload: Props): Promise<Patient> {
-    const { document, sellerCode, ...restOfPayload } = payload;
+    const { document, sellerCode, responsibleDoctorId, ...restOfPayload } =
+      payload;
 
     const patientExists = await this.patientsRepository.findById(id);
+
+    const doctorExists = await this.professionalsRepository.findById(
+      responsibleDoctorId,
+    );
+
+    if (!doctorExists) {
+      throw new AppError(
+        'Profissional não encontrado, verifique o id e tente novamente!',
+      );
+    }
 
     if (!patientExists) {
       throw new AppError(
@@ -62,6 +78,7 @@ export class UpdatePatientService {
     }
     return this.patientsRepository.update(id, {
       ...restOfPayload,
+      responsibleDoctorId,
       document,
       sellerId,
     });

@@ -7,4 +7,5 @@ export interface IUpdatePatientDTO {
   planId?: string;
   sellerId?: string;
   fcmToken?: string;
+  responsibleDoctorId?: string;
 }

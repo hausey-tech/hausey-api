@@ -19,6 +19,7 @@ export class PatientsRepository implements IPatientsRepository {
       'patientProfessionalAssistances',
       'clinicalResume',
       'patientGroups',
+      'responsibleDoctor',
       'patientGroups.patientGroupTypes',
       'patientGroups.patientGroupTypes.grouptype',
     ];
