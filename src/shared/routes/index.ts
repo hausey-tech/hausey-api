@@ -47,7 +47,6 @@ import { surveyMonkeyRouter } from '../../modules/integrations/routes/survey-mon
 export const routes = Router();
 
 routes.use('/integrations/stripe/webhook', stripeWebhookRoutes);
-routes.use('/integrations/survey-monkey/webhook', surveyMonkeyRouter);
 
 routes.use(json());
 
@@ -58,6 +57,7 @@ routes.use(
   s3Router,
   stripeRoutes,
   videoSdkRouter,
+  surveyMonkeyRouter,
 );
 routes.use('/sessions', sessionsRouter);
 routes.use('/group-types', groupTypesRouter);
