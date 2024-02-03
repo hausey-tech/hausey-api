@@ -25,5 +25,8 @@ declare namespace NodeJS {
 
     VIDEO_SDK_API_KEY: string;
     VIDEO_SDK_SECRET_KEY: string;
+
+    SURVEY_MONKEY_URL: string;
+    SURVEY_MONKEY_KEY: string;
   }
 }

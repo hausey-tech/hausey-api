@@ -44,6 +44,7 @@ import { twilioRouter } from '../../modules/integrations/routes/twilio';
 import { videoSdkRouter } from '../../modules/integrations/routes/video-sdk';
 import { memedRouter } from '../../modules/integrations/routes/memed';
 import { s3Router } from '../../modules/integrations/routes/s3';
+import { surveyMonkeyRouter } from '../../modules/integrations/routes/survey-monkey.routes';
 
 export const routes = Router();
 
@@ -58,6 +59,7 @@ routes.use(
   s3Router,
   stripeRoutes,
   videoSdkRouter,
+  surveyMonkeyRouter,
 );
 routes.use('/sessions', sessionsRouter);
 routes.use('/messaging', messagingRoutes);
