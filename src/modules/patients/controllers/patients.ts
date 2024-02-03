@@ -8,6 +8,7 @@ import { ListPatientsService } from '../services/list-patients';
 import { GetPatientInfos } from '../services/get-patient-infos';
 import { CreatePatientGroupService } from '../services/create-patient-group';
 import { CreatePatientProfessionalAssistanceService } from '../services/create-patient-professional-assistance';
+import { GetPatientsByGroupService } from '../services/get-patients-by-group';
 
 export class PatientsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -38,6 +39,21 @@ export class PatientsController {
     });
 
     return response.json(session);
+  }
+
+  public async getPatientsByGroup(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const payload = request.body;
+
+    const getPatientByGroupService = container.resolve(
+      GetPatientsByGroupService,
+    );
+
+    const patients = await getPatientByGroupService.execute(payload);
+
+    return response.json(patients);
   }
 
   public async createPatientGroup(

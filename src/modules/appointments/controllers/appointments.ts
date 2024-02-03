@@ -10,6 +10,7 @@ import { FindAppointmentsService } from '../services/find-appointments';
 import { SetProfessionalService } from '../services/set-professional';
 import { CheckAppointmentPrice } from '../services/check-appointment-price';
 import { ToggleFinishedService } from '../services/toggle-finished';
+import { Appointment } from '../entities/appointment';
 
 export class AppointmentsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -23,17 +24,29 @@ export class AppointmentsController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const { professionalId, date, patientId } = request.body;
+    const { professionalId, date, patientId, emergency } = request.body;
 
     const createAppointmentService = container.resolve(
       CreateAppointmentService,
     );
+    let appointment: Appointment;
+    if (professionalId) {
+      const appointmentProfessional = await createAppointmentService.execute({
+        patientId,
+        professionalId,
+        date,
+      });
+      appointment = appointmentProfessional;
+    }
 
-    const appointment = await createAppointmentService.execute({
-      patientId,
-      professionalId,
-      date,
-    });
+    if (emergency) {
+      const appointmentEmergency = await createAppointmentService.execute({
+        patientId,
+        emergency,
+        date,
+      });
+      appointment = appointmentEmergency;
+    }
 
     return response.json(appointment);
   }

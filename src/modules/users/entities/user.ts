@@ -14,4 +14,7 @@ export class User extends UserEntity {
   })
   @JoinColumn({ name: 'role_id' })
   role: Role;
+
+  @Column('varchar', { nullable: true })
+  fcmToken: string | null;
 }

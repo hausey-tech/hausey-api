@@ -35,6 +35,13 @@ export class PatientGroupTypesRepository
     });
   }
 
+  public async findByGroupTypeIds(ids: string[]): Promise<PatientGroupType[]> {
+    return this.ormRepository.find({
+      where: { groupTypeId: In(ids) },
+      relations: this.relations,
+    });
+  }
+
   public async create(
     payload: ICreatePatientGroupTypeDto,
   ): Promise<PatientGroupType> {

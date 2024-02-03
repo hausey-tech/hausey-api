@@ -76,6 +76,8 @@ import { MedicalRecordsRepository } from '../../modules/medical-records/reposito
 
 import { IMedicalRecordCidsRepository } from '../../modules/medical-records/contracts/repositories/medical-record-cids-repository';
 import { MedicalRecordCidsRepository } from '../../modules/medical-records/repositories/medical-record-cids-repository';
+import { IMessagesRepository } from '../../modules/messages/contracts/repositories/messages-repository';
+import { MessagesRepository } from '../../modules/messages/repositories/messages-repository';
 
 container.registerSingleton<IAddressesRepository>(
   'AddressesRepository',
@@ -129,6 +131,10 @@ container.registerSingleton<IPatientGroupTypesRepository>(
 container.registerSingleton<IPatientGroupsRepository>(
   'PatientGroupsRepository',
   PatientGroupsRepository,
+);
+container.registerSingleton<IMessagesRepository>(
+  'MessagesRepository',
+  MessagesRepository,
 );
 
 container.registerSingleton<IPatientProfessionalAssistancesRepository>(

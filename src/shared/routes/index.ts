@@ -30,13 +30,15 @@ import { addressesRouter } from '../../modules/addresses/routes/addresses.routes
 import { usersRouter } from '../../modules/users/routes/users';
 
 import { rolesRouter } from '../../modules/roles/routes/roles';
-
+import { messagingRoutes } from '../../modules/integrations/routes/messaging.routes';
 import { sellerCodesRouter } from '../../modules/seller-codes/routes/seller-codes';
 
 import { clinicalCategoryRouter } from '../../modules/clinical-categories/routes/clinical-category';
 
 import { clinicalResumeRouter } from '../../modules/clinical-resumes/routes/clinical-resumes';
 import { medicalRecordsRouter } from '../../modules/medical-records/routes/medical-records.routes';
+
+import { messagesRouter } from '../../modules/messages/routes/messages.routes';
 
 import { twilioRouter } from '../../modules/integrations/routes/twilio';
 import { videoSdkRouter } from '../../modules/integrations/routes/video-sdk';
@@ -58,6 +60,8 @@ routes.use(
   videoSdkRouter,
 );
 routes.use('/sessions', sessionsRouter);
+routes.use('/messaging', messagingRoutes);
+routes.use('/messages', messagesRouter);
 routes.use('/group-types', groupTypesRouter);
 routes.use('/users', usersRouter);
 routes.use('/roles', rolesRouter);

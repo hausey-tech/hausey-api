@@ -13,9 +13,10 @@ export const FindAppointmentsSchema = {
 
 export const CreateAppointmentSchema = {
   [Segments.BODY]: Joi.object().keys({
-    professionalId: Joi.string().uuid().required(),
+    professionalId: Joi.string().uuid(),
     patientId: Joi.string().uuid().required(),
     date: Joi.string().required(),
+    emergency: Joi.boolean(),
   }),
 };
 

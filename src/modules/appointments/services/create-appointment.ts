@@ -26,6 +26,7 @@ export class CreateAppointmentService {
     patientId,
     professionalId,
     date,
+    emergency,
   }: Omit<ICreateAppointmentDTO, 'roomId'>): Promise<Appointment> {
     const patient = await this.patientsRepository.findById(patientId);
 
@@ -34,14 +35,16 @@ export class CreateAppointmentService {
         'Paciente não encontrado, verifique e tente novamente!',
       );
     }
-    const professional = await this.professionalsRepository.findById(
-      professionalId,
-    );
-
-    if (!professional) {
-      throw new AppError(
-        'Profissional não encontrado, verifique e tente novamente!',
+    if (professionalId) {
+      const professional = await this.professionalsRepository.findById(
+        professionalId,
       );
+
+      if (!professional) {
+        throw new AppError(
+          'Profissional não encontrado, verifique e tente novamente!',
+        );
+      }
     }
     let roomId = '';
 
@@ -88,13 +91,25 @@ export class CreateAppointmentService {
     //   price: totalInCents,
     //   customerId,
     // });
-
-    const appointment = await this.appointmentsRepository.create({
-      patientId,
-      professionalId,
-      roomId,
-      date,
-    });
+    let appointment: Appointment;
+    if (professionalId) {
+      const appointmentProfessional = await this.appointmentsRepository.create({
+        patientId,
+        professionalId,
+        roomId,
+        date,
+      });
+      appointment = appointmentProfessional;
+    }
+    if (emergency) {
+      const appointmentEmergency = await this.appointmentsRepository.create({
+        patientId,
+        roomId,
+        emergency,
+        date,
+      });
+      appointment = appointmentEmergency;
+    }
 
     appointment.paid = true;
 

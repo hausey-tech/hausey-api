@@ -1,0 +1,25 @@
+import { injectable } from 'tsyringe';
+import { firebaseMessagingInstance } from '../utils/firebase-instance';
+
+interface IProps {
+  token: string;
+  notification: {
+    title: string;
+    body: string;
+  };
+}
+
+@injectable()
+export class SendFirebaseMessagingService {
+  public async execute({ token, notification }: IProps): Promise<void> {
+    try {
+      await firebaseMessagingInstance.send({ token, notification });
+    } catch (error) {
+      console.error({
+        message: 'Error on sending notification',
+        token,
+        error: error.errorInfo.code,
+      });
+    }
+  }
+}

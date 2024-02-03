@@ -52,6 +52,9 @@ export class Appointment extends BaseEntity {
   @Column('boolean', { default: false })
   paid: boolean;
 
+  @Column('boolean', { default: false })
+  emergency: boolean;
+
   @OneToMany(() => Prescription, prescription => prescription.appointment)
   prescriptions: Prescription[];
 
