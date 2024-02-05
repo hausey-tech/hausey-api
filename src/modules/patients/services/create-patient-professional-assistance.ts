@@ -27,15 +27,27 @@ export class CreatePatientProfessionalAssistanceService {
         'Paciente não encontrado, verifique o id e tente novamente!',
       );
     }
-    const patientProfesionalAssistance =
-      await this.patientProfessionalAssistanceRepository.create({
-        assistanceType,
+    const assistanceExists =
+      await this.patientProfessionalAssistanceRepository.findByPatientAndRole(
         patientId,
         roleId,
-      });
+      );
+    if (!assistanceExists) {
+      const patientProfesionalAssistance =
+        await this.patientProfessionalAssistanceRepository.create({
+          assistanceType,
+          patientId,
+          roleId,
+        });
 
-    return this.patientProfessionalAssistanceRepository.save(
-      patientProfesionalAssistance,
+      return this.patientProfessionalAssistanceRepository.save(
+        patientProfesionalAssistance,
+      );
+    }
+    assistanceExists.assistanceType = assistanceType;
+    return this.patientProfessionalAssistanceRepository.update(
+      assistanceExists.id,
+      assistanceExists,
     );
   }
 }

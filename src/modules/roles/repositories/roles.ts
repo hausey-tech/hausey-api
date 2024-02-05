@@ -23,8 +23,8 @@ export class RolesRepository implements IRolesRepository {
     return this.ormRepository.findOne({ where: { id } });
   }
 
-  public async findByType(type: string): Promise<Role | null> {
-    return this.ormRepository.findOne({ where: { type } });
+  public async findByType(type: string): Promise<Role[]> {
+    return this.ormRepository.find({ where: { type } });
   }
 
   public async create(role: ICreateRoleDTO): Promise<Role> {

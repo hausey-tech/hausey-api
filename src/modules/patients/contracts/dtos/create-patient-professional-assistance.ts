@@ -1,5 +1,5 @@
 export interface ICreatePatientProfessionalAssistanceDto {
   patientId: string;
   roleId: string;
-  assistanceType: 'Grupo' | 'Individual';
+  assistanceType: 'Grupo' | 'Individual' | 'Não Necessita';
 }

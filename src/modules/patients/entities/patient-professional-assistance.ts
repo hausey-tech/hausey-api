@@ -24,5 +24,5 @@ export class PatientProfessionalAssistance extends BaseEntity {
   role: Role;
 
   @Column('varchar', { name: 'assistance_type' })
-  assistanceType: 'Grupo' | 'Individual';
+  assistanceType: 'Grupo' | 'Individual' | 'Não Necessita';
 }

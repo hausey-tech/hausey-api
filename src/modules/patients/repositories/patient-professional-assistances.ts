@@ -41,6 +41,16 @@ export class PatientProfessionalAssistancesRepository
     });
   }
 
+  public async findByPatientAndRole(
+    patientId: string,
+    roleId: string,
+  ): Promise<PatientProfessionalAssistance> {
+    return this.ormRepository.findOne({
+      where: { patientId, roleId },
+      relations: this.relations,
+    });
+  }
+
   public async create(
     payload: ICreatePatientProfessionalAssistanceDto,
   ): Promise<PatientProfessionalAssistance> {
@@ -51,5 +61,13 @@ export class PatientProfessionalAssistancesRepository
     patient: PatientProfessionalAssistance,
   ): Promise<PatientProfessionalAssistance> {
     return this.ormRepository.save(patient);
+  }
+
+  public async update(
+    profAssistanceId: string,
+    payload: PatientProfessionalAssistance,
+  ): Promise<PatientProfessionalAssistance> {
+    await this.ormRepository.update(profAssistanceId, payload);
+    return this.findById(profAssistanceId);
   }
 }
