@@ -5,7 +5,7 @@ import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { Patient } from '../entities/patient';
 import { UpdateSellerCodeService } from '../../seller-codes/services/update-seller-code';
-import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
+import { ITeamsRepository } from '../../teams/contracts/repositories/teams-repository';
 
 interface Props {
   name?: string;
@@ -16,7 +16,7 @@ interface Props {
   planId?: string;
   sellerCode?: string;
   fcmToken?: string;
-  responsibleDoctorId?: string;
+  responsibleTeamId?: string;
 }
 @injectable()
 export class UpdatePatientService {
@@ -24,24 +24,20 @@ export class UpdatePatientService {
     @inject('PatientsRepository')
     private patientsRepository: IPatientsRepository,
 
-    @inject('ProfessionalsRepository')
-    private professionalsRepository: IProfessionalsRepository,
+    @inject('TeamsRepository')
+    private teamsRepository: ITeamsRepository,
   ) {}
 
   public async execute(id: string, payload: Props): Promise<Patient> {
-    const { document, sellerCode, responsibleDoctorId, ...restOfPayload } =
+    const { document, sellerCode, responsibleTeamId, ...restOfPayload } =
       payload;
 
     const patientExists = await this.patientsRepository.findById(id);
 
-    const doctorExists = await this.professionalsRepository.findById(
-      responsibleDoctorId,
-    );
+    const teamExists = await this.teamsRepository.findById(responsibleTeamId);
 
-    if (!doctorExists) {
-      throw new AppError(
-        'Profissional não encontrado, verifique o id e tente novamente!',
-      );
+    if (!teamExists) {
+      throw new AppError('Equipe não encontrada, verifique e tente novamente!');
     }
 
     if (!patientExists) {
@@ -78,7 +74,7 @@ export class UpdatePatientService {
     }
     return this.patientsRepository.update(id, {
       ...restOfPayload,
-      responsibleDoctorId,
+      responsibleTeamId,
       document,
       sellerId,
     });

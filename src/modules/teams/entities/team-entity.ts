@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../shared/typeorm/entities';
 import { TeamProfessional } from './team-professional-entity';
+import { Patient } from '../../patients/entities/patient';
 
 @Entity('teams')
 export class Team extends BaseEntity {
@@ -15,4 +16,7 @@ export class Team extends BaseEntity {
 
   @OneToMany(() => TeamProfessional, professional => professional.team)
   professionals: TeamProfessional[];
+
+  @OneToMany(() => Patient, patient => patient.responsibleTeam)
+  patients: Patient[];
 }

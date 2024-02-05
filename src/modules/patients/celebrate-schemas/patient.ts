@@ -47,7 +47,7 @@ export const UpdatePatientSchema = {
     birthdate: Joi.string(),
     fcmToken: Joi.string(),
     sex: Joi.string().equal('M', 'F'),
-    responsibleDoctorId: Joi.string().uuid(),
+    responsibleTeamId: Joi.string().uuid(),
   }),
 };
 

@@ -7,7 +7,6 @@ import {
   OneToMany,
 } from 'typeorm';
 
-import { Professional } from '../../professionals/entities/professional';
 import { UserEntity } from '../../../shared/typeorm/entities';
 import { Address } from '../../addresses/entities/Address';
 import { Plan } from '../../plans/entities/plan';
@@ -15,6 +14,7 @@ import { ClinicalResume } from '../../clinical-resumes/entities/clinical-resume'
 import { User } from '../../users/entities/user';
 import { PatientGroup } from './patient-group';
 import { PatientProfessionalAssistance } from './patient-professional-assistance';
+import { Team } from '../../teams/entities/team-entity';
 
 @Entity('patients')
 export class Patient extends UserEntity {
@@ -53,16 +53,16 @@ export class Patient extends UserEntity {
   @JoinColumn({ name: 'seller_id' })
   seller: User;
 
-  @Column('varchar', { name: 'responsible_doctor_id', nullable: true })
-  responsibleDoctorId: string;
-
-  @ManyToOne(() => Professional)
-  @JoinColumn({ name: 'responsible_doctor_id' })
-  responsibleDoctor: Professional;
-
   @Column('varchar', { nullable: true })
   questionnaireUrl: string | null;
 
   @Column('varchar', { nullable: true })
   fcmToken: string | null;
+
+  @Column('varchar', { nullable: true })
+  responsibleTeamId: string | null;
+
+  @ManyToOne(() => Team, { nullable: true })
+  @JoinColumn()
+  responsibleTeam: Team | null;
 }
