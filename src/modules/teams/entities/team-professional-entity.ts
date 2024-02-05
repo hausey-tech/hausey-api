@@ -5,8 +5,15 @@ import { Professional } from '../../professionals/entities/professional';
 
 @Entity('team_professionals')
 export class TeamProfessional extends BaseEntity {
-  @ManyToOne(() => Team, team => team.professionals)
+  @Column('varchar')
+  teamId: string;
+
+  @ManyToOne(() => Team)
+  @JoinColumn()
   team: Team;
+
+  @Column('varchar')
+  professionalId: string;
 
   @OneToOne(() => Professional)
   @JoinColumn()
