@@ -46,6 +46,8 @@ import { memedRouter } from '../../modules/integrations/routes/memed';
 import { s3Router } from '../../modules/integrations/routes/s3';
 import { surveyMonkeyRouter } from '../../modules/integrations/routes/survey-monkey.routes';
 
+import { teamsRouter } from '../../modules/teams/routes/teams.routes';
+
 export const routes = Router();
 
 routes.use('/integrations/stripe/webhook', stripeWebhookRoutes);
@@ -80,6 +82,7 @@ routes.use('/programs', programsRouter);
 routes.use('/plans', plansRouter);
 routes.use('/addresses', addressesRouter);
 routes.use('/medical-records', medicalRecordsRouter);
+routes.use('/teams', teamsRouter);
 routes.get('/health-check', (req, res) => {
   fs.readFile(
     pathJS.join(__dirname, '../../../buildtime.txt'),
