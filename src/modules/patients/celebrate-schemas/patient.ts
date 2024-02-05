@@ -32,7 +32,9 @@ export const CreatePatientProfessionalAssistanceSchema = {
   [Segments.BODY]: Joi.object().keys({
     roleId: Joi.string().uuid().required(),
     patientId: Joi.string().uuid().required(),
-    assistanceType: Joi.string().equal('Grupo', 'Individual').required(),
+    assistanceType: Joi.string()
+      .equal('Grupo', 'Individual', 'Não Necessita')
+      .required(),
   }),
 };
 

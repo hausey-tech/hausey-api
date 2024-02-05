@@ -9,4 +9,5 @@ export const rolesRouter = Router();
 const rolesController = new RolesController();
 
 rolesRouter.get('/', ensureAuthentication, rolesController.index);
+rolesRouter.get('/:roleType', ensureAuthentication, rolesController.findByType);
 rolesRouter.post('/', celebrate(CreateRoleSchema), rolesController.create);
