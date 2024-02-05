@@ -35,6 +35,12 @@ export class HandleSurveyMonkeyWebhookService {
       object_id: objectId,
     } = data;
 
+    /*
+      DESAFIOS:
+      - PADRONIZAR O INPUT DE DOCUMENTO, NÃO SEI SE TEM COMO NO SURVEY MONKEY
+      - DEIXAR SEMPRE ESSE INPUT NA MESMA POSIÇÃO
+    */
+
     if (eventType === 'response_completed') {
       const { data: response } = await surveyMonkeyInstance.get(
         `/surveys/${filterId}/responses/${objectId}/details`,
