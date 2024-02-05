@@ -90,14 +90,14 @@ export class CreateUserService {
     if (patientDeleted) {
       return this.usersRepository.restore(patientDeleted.id, {
         ...payload,
-        roleId: role.id,
+        roleId: role[0].id,
         password: hashedPassword,
       });
     }
 
     const user = await this.usersRepository.create({
       ...payload,
-      roleId: role.id,
+      roleId: role[0].id,
       password: hashedPassword,
     });
 
