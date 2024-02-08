@@ -43,23 +43,25 @@ export class CreateMessageService {
           groupTypes,
         });
       }
-      const usersWithFcm = users.filter(
-        user => typeof user.fcmToken === 'string',
-      );
-      try {
-        await Promise.all(
-          usersWithFcm.map(async user => {
-            const sendPushService = container.resolve(
-              SendFirebaseMessagingService,
-            );
-            await sendPushService.execute({
-              token: user.fcmToken as string,
-              notification: { title, body },
-            });
-          }),
+      if (users) {
+        const usersWithFcm = users?.filter(
+          user => typeof user.fcmToken === 'string',
         );
-      } catch {
-        console.log('Erro ao enviar FCM');
+        try {
+          await Promise.all(
+            usersWithFcm.map(async user => {
+              const sendPushService = container.resolve(
+                SendFirebaseMessagingService,
+              );
+              await sendPushService.execute({
+                token: user.fcmToken as string,
+                notification: { title, body },
+              });
+            }),
+          );
+        } catch {
+          console.log('Erro ao enviar FCM');
+        }
       }
       await this.messagesRepository.create({
         type,
