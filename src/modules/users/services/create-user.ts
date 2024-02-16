@@ -1,4 +1,4 @@
-import { injectable, inject } from 'tsyringe';
+import { injectable, inject, container } from 'tsyringe';
 import { cpf } from 'cpf-cnpj-validator';
 
 import { AppError } from '../../../shared/errors/app-error';
@@ -8,6 +8,9 @@ import { User } from '../entities/user';
 import { IRolesRepository } from '../../roles/contracts/repositories/roles';
 import { ISellerCodesRepository } from '../../seller-codes/contracts/repositories/seller-codes';
 import { generateRandomCode } from '../utils/create-random-code';
+import { CreateCoupon } from '../../integrations/services/stripe/create-coupon';
+import { mailer } from '../../../shared/utils/mailer';
+import { WelcomeRepresentantHtmlText } from '../../../shared/utils/html-texts';
 
 interface CreateUser {
   email: string;
@@ -118,7 +121,16 @@ export class CreateUserService {
             sellerId: savedUser.id,
           });
           await this.sellerCodesRepository.save(sellerCode);
+          const createCouponService = container.resolve(CreateCoupon);
+          await createCouponService.execute({
+            code,
+          });
         }
+        mailer({
+          to: savedUser.email,
+          subject: `💙Boas Vindas à Hausey!`,
+          body: WelcomeRepresentantHtmlText(savedUser.email, password),
+        });
       }
       /* eslint-enable no-await-in-loop */
     }

@@ -37,6 +37,13 @@ export class ProfessionalsRepository implements IProfessionalsRepository {
     });
   }
 
+  public async findByRoleId(roleId: string): Promise<Professional[]> {
+    return this.ormRepository.find({
+      where: { roleId },
+      relations: this.relations,
+    });
+  }
+
   public async findByEmail(email: string): Promise<Professional | null> {
     return this.ormRepository.findOne({
       where: { email },

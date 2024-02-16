@@ -9,6 +9,7 @@ import {
   CreatePatientGroupSchema,
   CreatePatientProfessionalAssistanceSchema,
   GetPatientsByGroupSchema,
+  CreateForwardRequestSchema,
 } from '../celebrate-schemas/patient';
 import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
 import { PatientsController } from '../controllers/patients';
@@ -39,6 +40,12 @@ patientsRouter.post(
   ensureAuthentication,
   celebrate(CreatePatientGroupSchema),
   patientsController.createPatientGroup,
+);
+patientsRouter.post(
+  '/forward-request',
+  ensureAuthentication,
+  celebrate(CreateForwardRequestSchema),
+  patientsController.createForwardRequest,
 );
 patientsRouter.post(
   '/patient-professional-assistance',

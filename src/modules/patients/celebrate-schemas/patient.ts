@@ -28,6 +28,14 @@ export const CreatePatientGroupSchema = {
     groupTypes: Joi.array().items(Joi.string().required()).required(),
   }),
 };
+export const CreateForwardRequestSchema = {
+  [Segments.BODY]: Joi.object().keys({
+    observation: Joi.string().required(),
+    professionalIdFrom: Joi.string().uuid().required(),
+    professionalIdTo: Joi.string().uuid().required(),
+    patientId: Joi.string().uuid().required(),
+  }),
+};
 export const CreatePatientProfessionalAssistanceSchema = {
   [Segments.BODY]: Joi.object().keys({
     roleId: Joi.string().uuid().required(),

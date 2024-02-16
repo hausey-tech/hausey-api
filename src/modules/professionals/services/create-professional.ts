@@ -12,6 +12,8 @@ import { IHashProvider } from '../../../shared/providers/HashProvider/entities/h
 import { Professional } from '../entities/professional';
 import { formatDate } from '../../../shared/utils/format-date';
 import { AppError } from '../../../shared/errors/app-error';
+import { mailer } from '../../../shared/utils/mailer';
+import { WelcomeProfessionalHtmlText } from '../../../shared/utils/html-texts';
 
 @injectable()
 export class CreateUserAndProfessionalService {
@@ -186,6 +188,11 @@ export class CreateUserAndProfessionalService {
         );
       }
     }
+    mailer({
+      to: savedProfessional.email,
+      subject: `💙Boas Vindas à Hausey!`,
+      body: WelcomeProfessionalHtmlText(savedProfessional.email, password),
+    });
 
     return this.professionalsRepository.save(savedProfessional);
   }

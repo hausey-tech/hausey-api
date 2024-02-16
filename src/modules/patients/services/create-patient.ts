@@ -7,6 +7,8 @@ import { ICreatePatientDTO } from '../contracts/dtos/create-patient';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { IHashProvider } from '../../../shared/providers/HashProvider/entities/hash-provider';
 import { Patient } from '../entities/patient';
+import { mailer } from '../../../shared/utils/mailer';
+import { WelcomePatientHtmlText } from '../../../shared/utils/html-texts';
 
 @injectable()
 export class CreatePatientService {
@@ -87,6 +89,22 @@ export class CreatePatientService {
     const patient = await this.patientsRepository.create({
       ...payload,
       password: hashedPassword,
+    });
+    mailer({
+      to: 'adm.hausey@gmail.com',
+      subject: `📢Novo paciente cadastrado!`,
+      body: `
+      <h2>Olá, um novo paciente se cadastrou no app!</h2>
+      <h4>Veja as informações:</h4>
+      <p>Nome: <b>${patient.name}</b></p>
+      <p>Email: <b>${patient.email}</b></p>
+      <p>Telefone: <b>${patient.phoneNumber}</b></p>
+    `,
+    });
+    mailer({
+      to: patient.email,
+      subject: `💙Boas Vindas à Hausey!`,
+      body: WelcomePatientHtmlText,
     });
 
     return this.patientsRepository.save(patient);

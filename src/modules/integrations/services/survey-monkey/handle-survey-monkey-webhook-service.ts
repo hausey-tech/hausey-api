@@ -2,6 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import { surveyMonkeyInstance } from '../../utils/survey-monkey-instance';
 import { IPatientsRepository } from '../../../patients/contracts/repositories/patients';
 import { AppError } from '../../../../shared/errors/app-error';
+import { mailer } from '../../../../shared/utils/mailer';
 
 interface IProps {
   name: string;
@@ -53,6 +54,25 @@ export class HandleSurveyMonkeyWebhookService {
       }
       const questionnaireUrl = response.edit_url;
       patient.questionnaireUrl = questionnaireUrl;
+
+      const patientStringfied = JSON.stringify(patient);
+
+      mailer({
+        to: 'adm.hausey@gmail.com',
+        subject: `📜Novo questionário respondido!`,
+        body: `
+        <h2>Olá, um novo paciente respondeu o questionário e já pode ser avaliado!</h2>
+        <h4>Veja as informações:</h4>
+        <p>Nome: <b>${patient.name}</b></p>
+        <p>Email: <b>${patient.email}</b></p>
+        <p>Telefone: <b>${patient.phoneNumber}</b></p>
+        <a href=${
+          patient.questionnaireUrl
+        } target="_blank">Url do Questionário: ${patient.questionnaireUrl}</a>
+        <p>Clique no link abaixo para acessar o paciente no portal:</p>
+      <a href=${`https://hausey.com.br/doctor/patientsDetails?patient=${patientStringfied}`} target="_blank">Ver paciente<a/>
+      `,
+      });
       await this.patientsRepository.save(patient);
     }
   }

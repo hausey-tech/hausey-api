@@ -9,6 +9,7 @@ import { GetPatientInfos } from '../services/get-patient-infos';
 import { CreatePatientGroupService } from '../services/create-patient-group';
 import { CreatePatientProfessionalAssistanceService } from '../services/create-patient-professional-assistance';
 import { GetPatientsByGroupService } from '../services/get-patients-by-group';
+import { CreateForwardRequest } from '../services/create-forward-request';
 
 export class PatientsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -109,5 +110,18 @@ export class PatientsController {
     const patient = await getPatientInfosService.execute({ patientId });
 
     return response.json(patient);
+  }
+
+  public async createForwardRequest(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const payload = request.body;
+
+    const createForwardRequestService = container.resolve(CreateForwardRequest);
+
+    const message = await createForwardRequestService.execute(payload);
+
+    return response.json(message);
   }
 }

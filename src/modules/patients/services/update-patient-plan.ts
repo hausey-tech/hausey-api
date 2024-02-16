@@ -1,6 +1,7 @@
 import { injectable, inject } from 'tsyringe';
 import { IPlansRepository } from '../../plans/contracts/repositories/plans';
 import { IPatientsRepository } from '../contracts/repositories/patients';
+import { mailer } from '../../../shared/utils/mailer';
 
 interface Props {
   periodEnd: number;
@@ -37,6 +38,21 @@ export class UpdatePatientPlanService {
 
     patient.planId = plan.id;
     patient.planExpiresAt = new Date(periodEnd * 1000);
+    mailer({
+      to: 'adm.hausey@gmail.com',
+      subject: `💵Nova Compra de Assinatura Efetuada!`,
+      body: `
+      <h2>Olá, um novo paciente se cadastrou no app!</h2>
+      <h4>Veja as informações:</h4>
+      <p>Nome: <b>${patient.name}</b></p>
+      <p>Telefone: <b>${patient.phoneNumber}</b></p>
+      <p>Email: <b>${patient.email}</b><p>
+      <hr/>
+      <p>Valor: <b>R$${plan.price / 100}</b></p>
+      <p>Expira em: <b>${patient.planExpiresAt}</b></p>
+      <p>Plano: <b>${plan.name}</b></p>
+    `,
+    });
 
     await this.patientsRepository.save(patient);
   }

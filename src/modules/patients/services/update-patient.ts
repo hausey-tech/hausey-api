@@ -6,6 +6,7 @@ import { IPatientsRepository } from '../contracts/repositories/patients';
 import { Patient } from '../entities/patient';
 import { UpdateSellerCodeService } from '../../seller-codes/services/update-seller-code';
 import { ITeamsRepository } from '../../teams/contracts/repositories/teams-repository';
+import { NotifySellerService } from '../../users/services/notify-seller';
 
 interface Props {
   name?: string;
@@ -72,11 +73,27 @@ export class UpdatePatientService {
         );
       }
     }
-    return this.patientsRepository.update(id, {
+    await this.patientsRepository.update(id, {
       ...restOfPayload,
       responsibleTeamId,
       document,
       sellerId,
     });
+
+    const updatedUser = await this.patientsRepository.findById(id);
+
+    if (updatedUser === null) {
+      throw new AppError('Usuário atualizado, faça o login novamente!');
+    }
+    if (sellerId) {
+      const notifySellerService = container.resolve(NotifySellerService);
+
+      await notifySellerService.execute({
+        userId: sellerId,
+        patient: updatedUser,
+      });
+    }
+
+    return updatedUser;
   }
 }
