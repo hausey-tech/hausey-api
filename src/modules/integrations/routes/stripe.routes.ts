@@ -31,3 +31,9 @@ stripeRoutes.post(
   celebrate(CreateSubscriptionSchema),
   stripeController.createSubscription,
 );
+
+stripeRoutes.get(
+  '/stripe/billing-portal-session',
+  ensureAuthentication,
+  stripeController.createBillingPortalSession,
+);

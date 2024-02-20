@@ -5,6 +5,7 @@ import { CreateSubscription } from '../services/stripe/create-subscription';
 import { CreateCheckoutSession } from '../services/stripe/create-checkout-session';
 import { HandleWebhook } from '../services/stripe/handle-webhook';
 import { ListCards } from '../services/stripe/list-cards';
+import { CreateBillingPortalSession } from '../services/stripe/create-billing-portal-session';
 
 export class StripeController {
   public async listCards(
@@ -73,5 +74,19 @@ export class StripeController {
     }
 
     return response.json();
+  }
+
+  public async createBillingPortalSession(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { id } = request.user;
+    const createBillingPortalSession = container.resolve(
+      CreateBillingPortalSession,
+    );
+    const session = await createBillingPortalSession.execute({
+      patientId: id,
+    });
+    return response.json(session);
   }
 }
