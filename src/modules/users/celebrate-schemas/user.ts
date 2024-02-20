@@ -11,6 +11,7 @@ export const CreateUserSchema = {
     name: Joi.string().required(),
     email: Joi.string().required(),
     password: Joi.string().required(),
+    document: Joi.string(),
     phoneNumber: Joi.string().required(),
     roleType: Joi.string().required(),
     sex: Joi.string().equal('M', 'F'),

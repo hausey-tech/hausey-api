@@ -55,7 +55,7 @@ export class CreateForwardRequest {
       to: professionalTo.email,
       subject: `📢Nova Solicitação de Encaminhamento de ${professionalFrom.name}`,
       body: `
-      <h2>Olá, ${professionalFrom.sex === 'M' ? 'a Dra.' : 'o Dr.'} ${
+      <h2>Olá, ${professionalFrom.sex === 'F' ? 'a Dra.' : 'o Dr.'} ${
         professionalFrom.name
       }</h2>
       <h4>sugeriu que você marque um atendimento com o paciente:</h4>
