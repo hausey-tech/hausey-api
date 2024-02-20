@@ -116,15 +116,16 @@ export class CreateUserService {
 
         if (!codeExists) {
           isUnique = true;
+          const createCouponService = container.resolve(CreateCoupon);
+          const promotionCode = await createCouponService.execute({
+            code,
+          });
           const sellerCode = await this.sellerCodesRepository.create({
             code,
             sellerId: savedUser.id,
+            promotionCodeId: promotionCode.id,
           });
           await this.sellerCodesRepository.save(sellerCode);
-          const createCouponService = container.resolve(CreateCoupon);
-          await createCouponService.execute({
-            code,
-          });
         }
         mailer({
           to: savedUser.email,

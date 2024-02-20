@@ -5,10 +5,12 @@ import { IPlansRepository } from '../../../plans/contracts/repositories/plans';
 import { IPatientsRepository } from '../../../patients/contracts/repositories/patients';
 import { stripeInstance } from '../../utils/stripe-instance';
 import { CreateCustomer } from './create-customer';
+import { ISellerCodesRepository } from '../../../seller-codes/contracts/repositories/seller-codes';
 
 interface Props {
   patientId: string;
   priceId: string;
+  coupon?: string;
 }
 
 @injectable()
@@ -19,11 +21,15 @@ export class CreateCheckoutSession {
 
     @inject('PlansRepository')
     private plansRepository: IPlansRepository,
+
+    @inject('SellerCodesRepository')
+    private sellerCodesRepository: ISellerCodesRepository,
   ) {}
 
   public async execute({
     patientId,
     priceId,
+    coupon,
   }: Props): Promise<Stripe.Response<Stripe.Checkout.Session>> {
     const patient = await this.patientsRepository.findById(patientId);
 
@@ -51,9 +57,26 @@ export class CreateCheckoutSession {
         });
         customerId = customer.id;
       }
-
+      if (coupon) {
+        const promoCodeId = await this.sellerCodesRepository.findByCode(coupon);
+        if (promoCodeId) {
+          session = await stripeInstance.checkout.sessions.create({
+            customer: customerId,
+            success_url: 'https://hausey.com.br/hauseyapp',
+            line_items: [{ price: priceId, quantity: 1 }],
+            mode: 'subscription',
+            discounts: [
+              {
+                promotion_code: promoCodeId.promotionCodeId,
+              },
+            ],
+            cancel_url: 'https://hausey.com.br/hauseyapp',
+          });
+        }
+      }
       session = await stripeInstance.checkout.sessions.create({
         customer: customerId,
+        allow_promotion_codes: true,
         success_url: 'https://hausey.com.br/hauseyapp',
         line_items: [{ price: priceId, quantity: 1 }],
         mode: 'subscription',

@@ -6,6 +6,7 @@ import { SellerCode } from '../entities/seller-code';
 interface Props {
   code: string;
   sellerId: string;
+  promotionCodeId: string;
 }
 
 @injectable()
@@ -15,7 +16,11 @@ export class CreateSellerCode {
     private sellerCodesRepository: ISellerCodesRepository,
   ) {}
 
-  public async execute({ code, sellerId }: Props): Promise<SellerCode> {
+  public async execute({
+    code,
+    sellerId,
+    promotionCodeId,
+  }: Props): Promise<SellerCode> {
     const codeExists = await this.sellerCodesRepository.findByCode(code);
 
     if (codeExists) {
@@ -25,6 +30,7 @@ export class CreateSellerCode {
     const sellerCode = await this.sellerCodesRepository.create({
       code,
       sellerId,
+      promotionCodeId,
     });
 
     return this.sellerCodesRepository.save(sellerCode);

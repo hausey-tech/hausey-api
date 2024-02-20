@@ -28,11 +28,15 @@ export class SellerCodesController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const { code, sellerId } = request.body;
+    const { code, sellerId, promotionCodeId } = request.body;
 
     const createPlanService = container.resolve(CreateSellerCode);
 
-    const plan = await createPlanService.execute({ code, sellerId });
+    const plan = await createPlanService.execute({
+      code,
+      sellerId,
+      promotionCodeId,
+    });
 
     return response.json(plan);
   }

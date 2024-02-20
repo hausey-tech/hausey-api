@@ -11,6 +11,9 @@ export class SellerCode extends BaseEntity {
   @Column('varchar', { name: 'seller_id', nullable: true })
   sellerId: string;
 
+  @Column('varchar', { name: 'promo_code_id', nullable: true })
+  promotionCodeId: string;
+
   @ManyToOne(() => User)
   @JoinColumn({ name: 'seller_id' })
   seller: User;

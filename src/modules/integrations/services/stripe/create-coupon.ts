@@ -11,16 +11,11 @@ interface Props {
 export class CreateCoupon {
   public async execute({
     code,
-  }: Props): Promise<Stripe.Response<Stripe.Coupon>> {
+  }: Props): Promise<Stripe.Response<Stripe.PromotionCode>> {
     try {
-      const coupon = await stripeInstance.coupons.create({
-        duration: 'forever',
-        name: code,
-        amount_off: 500,
-        currency: 'BRL',
-        applies_to: {
-          products: ['prod_POQjTVMZ5NerEv'],
-        },
+      const coupon = await stripeInstance.promotionCodes.create({
+        coupon: 'OcAHw1zM',
+        code,
       });
       return coupon;
     } catch (err) {
