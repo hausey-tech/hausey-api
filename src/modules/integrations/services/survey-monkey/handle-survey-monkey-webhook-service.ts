@@ -47,7 +47,10 @@ export class HandleSurveyMonkeyWebhookService {
         `/surveys/${filterId}/responses/${objectId}/details`,
       );
 
-      const document = response.pages[0].questions[2].answers[0].text;
+      const document = response.pages[0].questions[1].answers[0].text.replace(
+        /[^\d]/g,
+        '',
+      );
       const patient = await this.patientsRepository.findByDocument(document);
       if (!patient) {
         throw new AppError('Paciente não encontrado!');
