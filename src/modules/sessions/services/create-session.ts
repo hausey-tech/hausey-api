@@ -55,7 +55,7 @@ export class CreateSessionService {
         };
 
         if (!data.professional) {
-          throw new AppError('E-mail ou senha inválido(s)!', 401);
+          throw new AppError('E-mail ou senha inválido(s)!');
         }
 
         if (!data.professional.password) {
@@ -68,7 +68,7 @@ export class CreateSessionService {
         );
 
         if (!passwordMatched) {
-          throw new AppError('E-mail ou senha inválido(s)!', 401);
+          throw new AppError('E-mail ou senha inválido(s)!');
         }
 
         id = data.professional.id;
@@ -79,7 +79,7 @@ export class CreateSessionService {
         data = { patient: await this.patientsRepository.findByEmail(email) };
 
         if (!data.patient) {
-          throw new AppError('E-mail ou senha inválido(s)!', 401);
+          throw new AppError('E-mail ou senha inválido(s)!');
         }
 
         if (!data.patient.password) {
@@ -92,7 +92,7 @@ export class CreateSessionService {
         );
 
         if (!passwordMatched) {
-          throw new AppError('E-mail ou senha inválido(s)!', 401);
+          throw new AppError('E-mail ou senha inválido(s)!');
         }
 
         id = data.patient.id;
@@ -105,7 +105,7 @@ export class CreateSessionService {
         };
 
         if (!data.user) {
-          throw new AppError('E-mail ou senha inválido(s)!', 401);
+          throw new AppError('E-mail ou senha inválido(s)!');
         }
 
         if (!data.user.password) {
@@ -118,7 +118,7 @@ export class CreateSessionService {
         );
 
         if (!passwordMatched) {
-          throw new AppError('E-mail ou senha inválido(s)!', 401);
+          throw new AppError('E-mail ou senha inválido(s)!');
         }
 
         id = data.user.id;
