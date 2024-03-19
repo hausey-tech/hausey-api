@@ -14,7 +14,7 @@ export class CreateCoupon {
   }: Props): Promise<Stripe.Response<Stripe.PromotionCode>> {
     try {
       const coupon = await stripeInstance.promotionCodes.create({
-        coupon: 'OcAHw1zM',
+        coupon: 'moObBtOa',
         code,
       });
       return coupon;
