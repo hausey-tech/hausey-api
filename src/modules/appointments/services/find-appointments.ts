@@ -12,12 +12,15 @@ export class FindAppointmentsService {
   ) {}
 
   public async execute(query: any): Promise<Appointment[]> {
-    const { patientId, professionalId, finished } = query;
+    const { patientId, professionalId, finished, appointmentId } = query;
 
     const where: FindOptionsWhere<Appointment> = {};
 
     if (patientId) {
       where.patientId = patientId;
+    }
+    if (appointmentId) {
+      where.id = appointmentId;
     }
 
     if (professionalId) {
