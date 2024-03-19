@@ -29,7 +29,6 @@ export class CreateCheckoutSession {
   public async execute({
     patientId,
     priceId,
-    coupon,
   }: Props): Promise<Stripe.Response<Stripe.Checkout.Session>> {
     const patient = await this.patientsRepository.findById(patientId);
 
@@ -46,6 +45,7 @@ export class CreateCheckoutSession {
     }
 
     let customerId = patient.stripeCustomerId;
+    let sessionParams: Stripe.Checkout.SessionCreateParams;
     let session: Stripe.Response<Stripe.Checkout.Session>;
 
     try {
@@ -57,31 +57,26 @@ export class CreateCheckoutSession {
         });
         customerId = customer.id;
       }
-      if (coupon) {
-        const promoCodeId = await this.sellerCodesRepository.findByCode(coupon);
-        if (promoCodeId) {
-          session = await stripeInstance.checkout.sessions.create({
-            customer: customerId,
-            success_url: 'https://hausey.com.br/hauseyapp',
-            line_items: [{ price: priceId, quantity: 1 }],
-            mode: 'subscription',
-            discounts: [
-              {
-                promotion_code: promoCodeId.promotionCodeId,
-              },
-            ],
-            cancel_url: 'https://hausey.com.br/hauseyapp',
-          });
-        }
-      }
-      session = await stripeInstance.checkout.sessions.create({
+      sessionParams = {
         customer: customerId,
-        allow_promotion_codes: true,
         success_url: 'https://hausey.com.br/hauseyapp',
         line_items: [{ price: priceId, quantity: 1 }],
         mode: 'subscription',
         cancel_url: 'https://hausey.com.br/hauseyapp',
-      });
+      };
+      if (patient.sellerId) {
+        const sellerCode = await this.sellerCodesRepository.findBySellerId(
+          patient.sellerId,
+        );
+        if (sellerCode?.promotionCodeId) {
+          sessionParams.discounts = [
+            {
+              promotion_code: sellerCode?.promotionCodeId,
+            },
+          ];
+        }
+      }
+      session = await stripeInstance.checkout.sessions.create(sessionParams);
     } catch (err) {
       throw new AppError(err.raw.message, err.statusCode);
     }

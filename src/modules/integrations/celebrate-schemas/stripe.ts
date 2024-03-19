@@ -25,6 +25,5 @@ export const CreateCheckoutSessionSchema = {
   [Segments.BODY]: Joi.object().keys({
     patientId: Joi.string().uuid().required(),
     priceId: Joi.string().required(),
-    coupon: Joi.string(),
   }),
 };
