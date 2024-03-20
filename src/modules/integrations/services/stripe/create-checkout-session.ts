@@ -59,10 +59,10 @@ export class CreateCheckoutSession {
       }
       sessionParams = {
         customer: customerId,
-        success_url: 'https://app.hausey.com.br',
+        success_url: 'https://hausey.com.br/app',
         line_items: [{ price: priceId, quantity: 1 }],
         mode: 'subscription',
-        cancel_url: 'https://app.hausey.com.br',
+        cancel_url: 'https://hausey.com.br/app',
       };
       if (patient.sellerId) {
         const sellerCode = await this.sellerCodesRepository.findBySellerId(
