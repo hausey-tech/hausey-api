@@ -48,24 +48,24 @@ export class SetProfessionalService {
       );
     }
 
-    const professionalSpecialties =
-      await this.professionalSpecialtiesRepository.findByProfessionalId(
-        professionalId,
-      );
+    // const professionalSpecialties =
+    //   await this.professionalSpecialtiesRepository.findByProfessionalId(
+    //     professionalId,
+    //   );
 
-    let hasRequiredSpecialty: boolean;
+    // let hasRequiredSpecialty: boolean;
 
-    professionalSpecialties.forEach(professionalSpecialty => {
-      if (appointment.specialtyId === professionalSpecialty.specialtyId) {
-        hasRequiredSpecialty = true;
-      }
-    });
+    // professionalSpecialties.forEach(professionalSpecialty => {
+    //   if (appointment.specialtyId === professionalSpecialty.specialtyId) {
+    //     hasRequiredSpecialty = true;
+    //   }
+    // });
 
-    if (!hasRequiredSpecialty) {
-      throw new AppError(
-        'O profissional não possui a especialidade diferente do agendamento!',
-      );
-    }
+    // if (!hasRequiredSpecialty) {
+    //   throw new AppError(
+    //     'O profissional não possui a especialidade diferente do agendamento!',
+    //   );
+    // }
 
     appointment.professionalId = professionalId;
 
