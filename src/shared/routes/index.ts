@@ -47,6 +47,7 @@ import { s3Router } from '../../modules/integrations/routes/s3';
 import { surveyMonkeyRouter } from '../../modules/integrations/routes/survey-monkey.routes';
 
 import { teamsRouter } from '../../modules/teams/routes/teams.routes';
+import { teamResumeRouter } from '../../modules/team-resumes/routes/team-resumes';
 
 export const routes = Router();
 
@@ -75,6 +76,7 @@ routes.use('/prescriptions', prescriptionsRouter);
 routes.use('/slots', slotsRouter);
 routes.use('/clinical-category', clinicalCategoryRouter);
 routes.use('/clinical-resume', clinicalResumeRouter);
+routes.use('/team-resume', teamResumeRouter);
 routes.use('/specialties', specialtiesRouter);
 routes.use('/professionals', professionalsRouter);
 routes.use('/patients', patientsRouter);

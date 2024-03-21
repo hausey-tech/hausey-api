@@ -84,6 +84,8 @@ import { TeamsRepository } from '../../modules/teams/repositories/teams-reposito
 
 import { ITeamProfessionalsRepository } from '../../modules/teams/contracts/repositories/team-professionals-repository';
 import { TeamProfessionalsRepository } from '../../modules/teams/repositories/team-professionals-repository';
+import { ITeamResumesRepository } from '../../modules/team-resumes/contracts/repositories/team-resumes';
+import { TeamResumesRepository } from '../../modules/team-resumes/repositories/team-resumes';
 
 container.registerSingleton<IAddressesRepository>(
   'AddressesRepository',
@@ -103,6 +105,10 @@ container.registerSingleton<IClinicalCategorysRepository>(
 container.registerSingleton<IClinicalResumesRepository>(
   'ClinicalResumeRepository',
   ClinicalResumesRepository,
+);
+container.registerSingleton<ITeamResumesRepository>(
+  'TeamResumeRepository',
+  TeamResumesRepository,
 );
 
 container.registerSingleton<IUsersRepository>(
