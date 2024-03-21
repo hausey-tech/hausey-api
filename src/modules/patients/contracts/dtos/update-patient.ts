@@ -8,4 +8,7 @@ export interface IUpdatePatientDTO {
   sellerId?: string;
   fcmToken?: string;
   responsibleTeamId?: string;
+  password?: string;
+  resetPasswordToken?: string | null;
+  resetPasswordTokenExpiresIn?: Date | null;
 }

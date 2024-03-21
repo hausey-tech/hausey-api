@@ -10,6 +10,9 @@ import { CreatePatientGroupService } from '../services/create-patient-group';
 import { CreatePatientProfessionalAssistanceService } from '../services/create-patient-professional-assistance';
 import { GetPatientsByGroupService } from '../services/get-patients-by-group';
 import { CreateForwardRequest } from '../services/create-forward-request';
+import { ForgotPasswordService } from '../services/forgot-password-service';
+import { ResetPasswordService } from '../services/reset-password-service';
+import { VerifyTokenService } from '../services/verify-token-service';
 
 export class PatientsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -123,5 +126,48 @@ export class PatientsController {
     const message = await createForwardRequestService.execute(payload);
 
     return response.json(message);
+  }
+
+  public async forgotPassword(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { email } = request.body;
+    const forgotPasswordService = container.resolve(ForgotPasswordService);
+    await forgotPasswordService.execute({ email });
+    return response.json({
+      message: 'O token de verificação foi enviado ao seu email!',
+    });
+  }
+
+  public async verifyToken(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { email, token } = request.body;
+    const verifyTokenService = container.resolve(VerifyTokenService);
+    await verifyTokenService.execute({
+      email,
+      token,
+    });
+    return response.json({ message: 'Token válido!' });
+  }
+
+  public async resetPassword(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { email, token, password } = request.body;
+    const verifyTokenService = container.resolve(VerifyTokenService);
+    await verifyTokenService.execute({
+      email,
+      token,
+    });
+    const resetPasswordService = container.resolve(ResetPasswordService);
+    await resetPasswordService.execute({
+      email,
+      password,
+    });
+    return response.json({ message: 'Senha redefinida com sucesso!' });
   }
 }

@@ -66,3 +66,22 @@ export const GetPatientInfosSchema = {
     patientId: Joi.string().uuid().required(),
   }),
 };
+
+export const ForgotPasswordSchema = {
+  [Segments.BODY]: Joi.object().keys({
+    email: Joi.string().email().required(),
+  }),
+};
+export const VerifyTokenSchema = {
+  [Segments.BODY]: Joi.object().keys({
+    email: Joi.string().email().required(),
+    token: Joi.string().max(6).required(),
+  }),
+};
+export const ResetPasswordSchema = {
+  [Segments.BODY]: Joi.object().keys({
+    email: Joi.string().email().required(),
+    token: Joi.string().max(6).required(),
+    password: Joi.string().min(8).required(),
+  }),
+};

@@ -65,4 +65,10 @@ export class Patient extends UserEntity {
   @ManyToOne(() => Team, { nullable: true })
   @JoinColumn()
   responsibleTeam: Team | null;
+
+  @Column('varchar', { nullable: true })
+  resetPasswordToken: string | null;
+
+  @Column('timestamp', { nullable: true })
+  resetPasswordTokenExpiresIn: Date | null;
 }

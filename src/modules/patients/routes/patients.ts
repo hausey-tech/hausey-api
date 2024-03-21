@@ -10,6 +10,9 @@ import {
   CreatePatientProfessionalAssistanceSchema,
   GetPatientsByGroupSchema,
   CreateForwardRequestSchema,
+  ForgotPasswordSchema,
+  VerifyTokenSchema,
+  ResetPasswordSchema,
 } from '../celebrate-schemas/patient';
 import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
 import { PatientsController } from '../controllers/patients';
@@ -66,4 +69,20 @@ patientsRouter.get(
   ensureAuthentication,
   celebrate(GetPatientInfosSchema),
   patientsController.getInfos,
+);
+
+patientsRouter.post(
+  '/forgot-password',
+  celebrate(ForgotPasswordSchema),
+  patientsController.forgotPassword,
+);
+patientsRouter.post(
+  '/verify-token',
+  celebrate(VerifyTokenSchema),
+  patientsController.verifyToken,
+);
+patientsRouter.post(
+  '/reset-password',
+  celebrate(ResetPasswordSchema),
+  patientsController.resetPassword,
 );

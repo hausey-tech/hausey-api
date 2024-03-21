@@ -28,5 +28,10 @@ declare namespace NodeJS {
 
     SURVEY_MONKEY_URL: string;
     SURVEY_MONKEY_KEY: string;
+
+    EMAIL_HOST: string;
+    EMAIL_PASS: string;
+    EMAIL_PORT: string;
+    EMAIL_USER: string;
   }
 }
