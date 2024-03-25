@@ -22,7 +22,7 @@ export const GetPatientsByGroupSchema = {
 };
 export const CreatePatientGroupSchema = {
   [Segments.BODY]: Joi.object().keys({
-    observations: Joi.string().required(),
+    observations: Joi.string(),
     roleId: Joi.string().uuid().required(),
     patientId: Joi.string().uuid().required(),
     groupTypes: Joi.array().items(Joi.string().required()).required(),
