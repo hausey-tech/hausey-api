@@ -5,7 +5,7 @@ import { UploadFilesToFirebaseService } from '../../integrations/services/upload
 import { type ITeamResumesRepository } from '../contracts/repositories/team-resumes';
 
 interface IProps {
-  teamId: string;
+  teamResumeId: string;
   file: Express.Multer.File;
 }
 
@@ -16,8 +16,8 @@ export class UploadTeamResumeFileService {
     private readonly teamResumesRepository: ITeamResumesRepository,
   ) {}
 
-  public async execute({ teamId, file }: IProps): Promise<void> {
-    const teamResume = await this.teamResumesRepository.findById(teamId);
+  public async execute({ teamResumeId, file }: IProps): Promise<void> {
+    const teamResume = await this.teamResumesRepository.findById(teamResumeId);
 
     if (teamResume === null) {
       throw new AppError('Id não encontrado, verifique e tente novamente!');

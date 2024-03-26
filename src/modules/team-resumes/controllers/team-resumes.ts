@@ -34,12 +34,12 @@ export class TeamResumeController {
     response: Response,
   ): Promise<Response> {
     const { file } = request;
-    const { teamId } = request.params;
+    const { teamResumeId } = request.params;
 
     const uploadFileService = container.resolve(UploadTeamResumeFileService);
 
     await uploadFileService.execute({
-      teamId,
+      teamResumeId,
       file: file as Express.Multer.File,
     });
 
