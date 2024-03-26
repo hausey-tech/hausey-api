@@ -33,4 +33,10 @@ export class Professional extends UserEntity {
 
   @Column('varchar', { nullable: true })
   fcmToken: string | null;
+
+  @Column('varchar', { nullable: true })
+  resetPasswordToken: string | null;
+
+  @Column('timestamp', { nullable: true })
+  resetPasswordTokenExpiresIn: Date | null;
 }

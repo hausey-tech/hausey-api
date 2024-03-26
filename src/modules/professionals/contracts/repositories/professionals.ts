@@ -1,5 +1,6 @@
 import { Professional } from '../../entities/professional';
 import { ICreateProfessionalDTO } from '../dtos/create-professional';
+import { IUpdateProfessionalDTO } from '../dtos/update-professional';
 
 export interface IProfessionalsRepository {
   find(): Promise<Professional[]>;
@@ -12,4 +13,6 @@ export interface IProfessionalsRepository {
     payload: Omit<ICreateProfessionalDTO, 'specialties'>,
   ): Promise<Professional>;
   save(professional: Professional): Promise<Professional>;
+  update(id: string, payload: IUpdateProfessionalDTO): Promise<Professional>;
+  delete(id: string): Promise<Professional>;
 }

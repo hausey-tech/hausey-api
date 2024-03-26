@@ -4,6 +4,7 @@ import { IProfessionalsRepository } from '../contracts/repositories/professional
 import { ICreateProfessionalDTO } from '../contracts/dtos/create-professional';
 import { PostgresDataSource } from '../../../shared/typeorm';
 import { Professional } from '../entities/professional';
+import { IUpdateProfessionalDTO } from '../contracts/dtos/update-professional';
 
 export class ProfessionalsRepository implements IProfessionalsRepository {
   private ormRepository: Repository<Professional>;
@@ -66,5 +67,18 @@ export class ProfessionalsRepository implements IProfessionalsRepository {
 
   public async save(professional: Professional): Promise<Professional> {
     return this.ormRepository.save(professional);
+  }
+
+  public async update(
+    id: string,
+    payload: Omit<IUpdateProfessionalDTO, 'specialties'>,
+  ): Promise<Professional> {
+    await this.ormRepository.update(id, payload);
+    return this.findById(id);
+  }
+
+  public async delete(id: string): Promise<Professional> {
+    await this.ormRepository.softDelete(id);
+    return this.findById(id);
   }
 }
