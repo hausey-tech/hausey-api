@@ -63,6 +63,7 @@ export class CreateTeamResume {
       return this.teamResumesRepository.update(teamResumeExists.id, {
         observation,
         fileUrl,
+        professionalId,
       });
     }
 
