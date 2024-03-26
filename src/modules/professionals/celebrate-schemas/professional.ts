@@ -24,6 +24,7 @@ export const CreateProfessionalSchema = {
 export const FindProfessionalsSchema = {
   [Segments.QUERY]: Joi.object().keys({
     specialtyId: Joi.string(),
+    professionalId: Joi.string().uuid(),
     typeId: Joi.string(),
   }),
 };

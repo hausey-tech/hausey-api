@@ -1,5 +1,6 @@
 import { injectable, inject } from 'tsyringe';
 
+import { FindOptionsWhere } from 'typeorm';
 import { IProfessionalSpecialtiesRepository } from '../contracts/repositories/professional-specialties';
 import { IProfessionalsRepository } from '../contracts/repositories/professionals';
 import { Professional } from '../entities/professional';
@@ -16,9 +17,14 @@ export class FindProfessionalsService {
 
   public async execute(payload: {
     specialtyId?: string;
+    professionalId?: string;
   }): Promise<Professional[]> {
-    const { specialtyId } = payload;
+    const { specialtyId, professionalId } = payload;
 
+    const where: FindOptionsWhere<Professional> = {};
+    if (professionalId) {
+      where.id = professionalId;
+    }
     if (specialtyId) {
       const professionalsSpecialty =
         await this.professionalSpecialtiesRepository.findBySpecialtyId(
@@ -32,6 +38,6 @@ export class FindProfessionalsService {
       return this.professionalsRepository.findByIds(professionalsIds);
     }
 
-    return this.professionalsRepository.find();
+    return this.professionalsRepository.find(where);
   }
 }

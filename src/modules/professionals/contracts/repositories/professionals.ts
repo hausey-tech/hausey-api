@@ -1,9 +1,10 @@
+import { FindOptionsWhere } from 'typeorm';
 import { Professional } from '../../entities/professional';
 import { ICreateProfessionalDTO } from '../dtos/create-professional';
 import { IUpdateProfessionalDTO } from '../dtos/update-professional';
 
 export interface IProfessionalsRepository {
-  find(): Promise<Professional[]>;
+  find(where: FindOptionsWhere<Professional>): Promise<Professional[]>;
   findById(id: string): Promise<Professional | null>;
   findByIds(ids: string[]): Promise<Professional[]>;
   findByRoleId(roleId: string): Promise<Professional[]>;

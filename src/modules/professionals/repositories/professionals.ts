@@ -1,4 +1,4 @@
-import { Repository, In } from 'typeorm';
+import { Repository, In, FindOptionsWhere } from 'typeorm';
 
 import { IProfessionalsRepository } from '../contracts/repositories/professionals';
 import { ICreateProfessionalDTO } from '../contracts/dtos/create-professional';
@@ -16,8 +16,11 @@ export class ProfessionalsRepository implements IProfessionalsRepository {
     this.relations = ['specialties.specialty'];
   }
 
-  public async find(): Promise<Professional[]> {
+  public async find(
+    where: FindOptionsWhere<Professional>,
+  ): Promise<Professional[]> {
     const professionals = this.ormRepository.find({
+      where,
       relations: this.relations,
     });
 
