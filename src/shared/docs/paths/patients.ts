@@ -1,7 +1,7 @@
 export const patientsPath = {
   post: {
     tags: ['Patients'],
-    summary: 'Creates a user and patient',
+    summary: 'Creates a patient type of user',
     requestBody: {
       content: {
         'application/json': {

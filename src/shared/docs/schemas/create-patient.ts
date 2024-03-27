@@ -20,8 +20,11 @@ export const createUserAndPatientSchema = {
       type: 'string',
     },
     sex: {
+      type: 'M' || 'F',
+    },
+    sellerCode: {
       type: 'string',
     },
   },
-  required: ['email', 'password', 'name'],
+  required: ['email', 'password', 'name', 'phoneNumber'],
 };
