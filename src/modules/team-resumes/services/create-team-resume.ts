@@ -1,4 +1,4 @@
-import { injectable, inject } from 'tsyringe';
+import { injectable, inject, container } from 'tsyringe';
 import { ITeamResumesRepository } from '../contracts/repositories/team-resumes';
 import { TeamResume } from '../entities/team-resume';
 import { ICreateTeamResumeDto } from '../contracts/dtos/create-team-resume';
@@ -6,6 +6,7 @@ import { IPatientsRepository } from '../../patients/contracts/repositories/patie
 import { AppError } from '../../../shared/errors/app-error';
 import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 import { IRolesRepository } from '../../roles/contracts/repositories/roles';
+import { SendFirebaseMessagingService } from '../../integrations/services/send-firebase-messaging';
 
 @injectable()
 export class CreateTeamResume {
@@ -59,6 +60,20 @@ export class CreateTeamResume {
         patientId,
         roleId,
       );
+    const sendFirebasePushService = container.resolve(
+      SendFirebaseMessagingService,
+    );
+    try {
+      await sendFirebasePushService.execute({
+        token: patientExists.fcmToken as string,
+        notification: {
+          title: '💙Novo Plano de Cuidados no APP!',
+          body: `Você recebeu um novo plano de cuidados de ${roleExists.name}. Acesse o app para ver os detalhes!`,
+        },
+      });
+    } catch {
+      console.log('Erro ao enviar FCM');
+    }
     if (teamResumeExists) {
       return this.teamResumesRepository.update(teamResumeExists.id, {
         observation,
