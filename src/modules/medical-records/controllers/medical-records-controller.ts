@@ -16,7 +16,7 @@ export class MedicalRecordsController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const { appointmentId, description, cids } = request.body;
+    const { appointmentId, description, cids, restricted } = request.body;
     const createMedicalRecordService = container.resolve(
       CreateMedicalRecordService,
     );
@@ -24,6 +24,7 @@ export class MedicalRecordsController {
       appointmentId,
       description,
       cids,
+      restricted,
     });
     return response.json(medicalRecord);
   }

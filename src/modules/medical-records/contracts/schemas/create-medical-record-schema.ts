@@ -5,5 +5,6 @@ export const CreateMedicalRecordSchema = {
     appointmentId: Joi.string().uuid().required(),
     description: Joi.string().required(),
     cids: Joi.array().items(Joi.string()),
+    restricted: Joi.boolean(),
   }),
 };

@@ -10,4 +10,7 @@ export class MedicalRecord extends BaseEntity {
 
   @OneToMany(() => MedicalRecordCid, medRecCid => medRecCid.medicalRecord)
   cids: MedicalRecordCid[];
+
+  @Column('boolean', { default: false })
+  restricted: boolean;
 }

@@ -23,6 +23,7 @@ export class CreateMedicalRecordService {
     appointmentId,
     description,
     cids,
+    restricted,
   }: ICreateMedicalRecordDTO): Promise<MedicalRecord> {
     const appointment = await this.appointmentsRepository.findById(
       appointmentId,
@@ -46,6 +47,7 @@ export class CreateMedicalRecordService {
 
     const medicalRecord = await this.medicalRecordsRepository.create({
       description,
+      restricted,
     });
     medicalRecord.cids = medicalRecordCids;
     await this.medicalRecordsRepository.save(medicalRecord);

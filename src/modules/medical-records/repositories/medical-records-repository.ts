@@ -16,6 +16,7 @@ export class MedicalRecordsRepository implements IMedicalRecordsRepository {
 
   public async create(payload: {
     description: string;
+    restricted?: boolean;
   }): Promise<MedicalRecord> {
     const medicalRecord = this.ormRepository.create(payload);
     return this.ormRepository.save(medicalRecord);

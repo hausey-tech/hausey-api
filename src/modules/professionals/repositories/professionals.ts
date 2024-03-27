@@ -13,7 +13,7 @@ export class ProfessionalsRepository implements IProfessionalsRepository {
 
   constructor() {
     this.ormRepository = PostgresDataSource.getRepository(Professional);
-    this.relations = ['specialties.specialty'];
+    this.relations = ['specialties.specialty', 'role'];
   }
 
   public async find(
