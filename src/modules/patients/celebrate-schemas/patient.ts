@@ -12,6 +12,9 @@ export const CreatePatientSchema = {
     email: Joi.string().required(),
     password: Joi.string().required(),
     phoneNumber: Joi.string().required(),
+    document: Joi.string(),
+    sex: Joi.string().equal('M', 'F'),
+    birthdate: Joi.string(),
     sellerCode: Joi.string(),
   }),
 };

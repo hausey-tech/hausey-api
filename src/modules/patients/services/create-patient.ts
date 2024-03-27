@@ -1,7 +1,6 @@
-import { injectable, inject } from 'tsyringe';
+import { injectable, inject, container } from 'tsyringe';
 import { cpf } from 'cpf-cnpj-validator';
 
-import { IUsersRepository } from '../../users/contracts/repositories/users';
 import { AppError } from '../../../shared/errors/app-error';
 import { ICreatePatientDTO } from '../contracts/dtos/create-patient';
 import { IPatientsRepository } from '../contracts/repositories/patients';
@@ -9,22 +8,23 @@ import { IHashProvider } from '../../../shared/providers/HashProvider/entities/h
 import { Patient } from '../entities/patient';
 import { mailer } from '../../../shared/utils/mailer';
 import { WelcomePatientHtmlText } from '../../../shared/utils/html-texts';
+import { UpdateSellerCodeService } from '../../seller-codes/services/update-seller-code';
 
+interface Props extends Omit<ICreatePatientDTO, 'sellerId'> {
+  sellerCode?: string;
+}
 @injectable()
 export class CreatePatientService {
   constructor(
     @inject('PatientsRepository')
     private patientsRepository: IPatientsRepository,
 
-    @inject('UsersRepository')
-    private usersRepository: IUsersRepository,
-
     @inject('HashProvider')
     private hashProvider: IHashProvider,
   ) {}
 
-  public async execute(payload: ICreatePatientDTO): Promise<Patient> {
-    const { email, document, password, phoneNumber, sellerId } = payload;
+  public async execute(payload: Props): Promise<Patient> {
+    const { email, document, password, phoneNumber, sellerCode } = payload;
 
     const patientExists = await this.patientsRepository.findByEmail(email);
 
@@ -40,16 +40,15 @@ export class CreatePatientService {
         'Já existe um usuário cadastrado com esse celular, faça o login!',
       );
     }
-    if (sellerId) {
-      const userSellerWithIdExists = await this.usersRepository.findById(
-        sellerId,
+    let sellerId: string;
+    if (sellerCode) {
+      const updateSellerCodeService = container.resolve(
+        UpdateSellerCodeService,
       );
-
-      if (!userSellerWithIdExists) {
-        throw new AppError(
-          'Representante inválido, verifique e tente novamente!',
-        );
-      }
+      const updatedSellerCode = await updateSellerCodeService.execute({
+        code: sellerCode,
+      });
+      sellerId = updatedSellerCode.sellerId;
     }
 
     if (document) {
@@ -83,12 +82,14 @@ export class CreatePatientService {
       return this.patientsRepository.restore(patientDeleted.id, {
         ...payload,
         password: hashedPassword,
+        sellerId,
       });
     }
 
     const patient = await this.patientsRepository.create({
       ...payload,
       password: hashedPassword,
+      sellerId,
     });
     mailer({
       to: 'adm.hausey@gmail.com',
