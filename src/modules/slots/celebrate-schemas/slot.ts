@@ -2,7 +2,7 @@ import { Joi, Segments } from 'celebrate';
 
 export const FindSlotsSchema = {
   [Segments.QUERY]: Joi.object().keys({
-    specialtyId: Joi.string().uuid().required(),
+    professionalId: Joi.string().uuid().required(),
     days: Joi.number().min(1).max(30),
   }),
 };

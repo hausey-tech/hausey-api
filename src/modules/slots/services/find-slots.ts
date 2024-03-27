@@ -5,7 +5,6 @@ import {
   format,
   addDays,
   parseISO,
-  setHours,
   getHours,
   getMinutes,
   addMinutes,
@@ -21,7 +20,7 @@ import { AppError } from '../../../shared/errors/app-error';
 import { Slot } from '../entities/slot';
 
 interface IFindAvailableSlotsDTO {
-  specialtyId: string;
+  professionaId: string;
   days: number;
 }
 
@@ -55,12 +54,12 @@ export class FindSlotsService {
   ) {}
 
   public async execute({
-    specialtyId,
+    professionaId,
     days,
   }: IFindAvailableSlotsDTO): Promise<IAvailableSlots[]> {
     const professionalsSpecialty =
-      await this.professionalSpecialtiesRepository.findBySpecialtyId(
-        specialtyId,
+      await this.professionalSpecialtiesRepository.findByProfessionalId(
+        professionaId,
       );
 
     if (professionalsSpecialty.length === 0) {
@@ -120,18 +119,18 @@ export class FindSlotsService {
     );
 
     const appointmentsInRequiredDates: Appointment[] = [];
-    await Promise.all(
-      requiredDates.map(async t => {
-        const appointments =
-          await this.appointmentsRepository.findBySpecialtyBetweenDates(
-            specialtyId,
-            [setHours(parseISO(t.date), 0), setHours(parseISO(t.date), 20)],
-          );
-        if (appointments.length > 0) {
-          appointmentsInRequiredDates.push(...appointments);
-        }
-      }),
-    );
+    // await Promise.all(
+    //   requiredDates.map(async t => {
+    //     const appointments =
+    //       await this.appointmentsRepository.findBySpecialtyBetweenDates(
+    //         specialtyId,
+    //         [setHours(parseISO(t.date), 0), setHours(parseISO(t.date), 20)],
+    //       );
+    //     if (appointments.length > 0) {
+    //       appointmentsInRequiredDates.push(...appointments);
+    //     }
+    //   }),
+    // );
 
     const busyDates: IBusyDateSlots[] = [];
     appointmentsInRequiredDates.forEach(a => {
