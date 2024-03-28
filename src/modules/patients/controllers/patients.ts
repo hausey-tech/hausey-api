@@ -13,6 +13,7 @@ import { CreateForwardRequest } from '../services/create-forward-request';
 import { ForgotPasswordService } from '../services/forgot-password-service';
 import { ResetPasswordService } from '../services/reset-password-service';
 import { VerifyTokenService } from '../services/verify-token-service';
+import { GetGroupsByPatientService } from '../services/get-groups-by-patient';
 
 export class PatientsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -58,6 +59,23 @@ export class PatientsController {
     const patients = await getPatientByGroupService.execute(payload);
 
     return response.json(patients);
+  }
+
+  public async getGroupsByPatient(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { patientId } = request.query;
+
+    const getGroupByPatientService = container.resolve(
+      GetGroupsByPatientService,
+    );
+
+    const groups = await getGroupByPatientService.execute({
+      patientId: patientId as string,
+    });
+
+    return response.json(groups);
   }
 
   public async createPatientGroup(

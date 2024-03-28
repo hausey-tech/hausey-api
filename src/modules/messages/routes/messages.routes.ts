@@ -18,3 +18,9 @@ messagesRouter.post(
   celebrate(CreateMessageSchema),
   messagesController.create as RequestHandler,
 );
+messagesRouter.post(
+  '/user',
+  ensureAuthentication,
+  celebrate(CreateMessageSchema),
+  messagesController.createMessageToUser as RequestHandler,
+);

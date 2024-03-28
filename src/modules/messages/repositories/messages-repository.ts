@@ -1,4 +1,4 @@
-import { LessThan, MoreThan, type Repository } from 'typeorm';
+import { type Repository } from 'typeorm';
 import { PostgresDataSource } from '../../../shared/typeorm';
 import {
   type IMessagesRepository,
@@ -26,8 +26,6 @@ export class MessagesRepository implements IMessagesRepository {
       where: {
         type,
         to: destination,
-        startsAt: LessThan(new Date()),
-        expiresAt: MoreThan(new Date()),
       },
       order: {
         createdAt: 'ASC',

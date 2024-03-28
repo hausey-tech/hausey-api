@@ -1,8 +1,10 @@
 import { injectable, inject } from 'tsyringe';
+import { IPatientGroupsRepository } from 'modules/patients/contracts/repositories/patient-groups';
 import { type IMessagesRepository } from '../contracts/repositories/messages-repository';
 import { type IReadMessagesRepository } from '../contracts/repositories/read-messages-repository';
 import { type Message } from '../entities/message-entity';
 import { IPatientsRepository } from '../../patients/contracts/repositories/patients';
+import { AppError } from '../../../shared/errors/app-error';
 
 interface IProps {
   userId: string;
@@ -17,19 +19,61 @@ export class GetUserMessagesService {
     @inject('PatientsRepository')
     private readonly patientsRepository: IPatientsRepository,
 
+    @inject('PatientGroupsRepository')
+    private readonly patientGroupsRepository: IPatientGroupsRepository,
+
     @inject('ReadMessagesRepository')
     private readonly readMessagesRepository: IReadMessagesRepository,
   ) {}
 
-  public async execute({ userId }: IProps): Promise<Message | null> {
+  public async execute({ userId }: IProps): Promise<Message[] | null> {
     const user = await this.patientsRepository.findById(userId);
 
-    if (user === null) return null;
+    if (!user) {
+      throw new AppError(
+        'Paciente não encontrado, verifique e tente novamente!',
+      );
+    }
+    const messages: Message[] = [];
 
-    const messages = await this.messagesRepository.findByTypeAndDestination({
-      type: 'inApp',
-      destination: user.name,
-    });
+    const messagesToAll =
+      await this.messagesRepository.findByTypeAndDestination({
+        type: 'push',
+        destination: 'todos',
+      });
+    messages.push(...messagesToAll);
+
+    const messagesToUser =
+      await this.messagesRepository.findByTypeAndDestination({
+        type: 'push',
+        destination: userId,
+      });
+    messages.push(...messagesToUser);
+
+    const patientGroups = await this.patientGroupsRepository.findByPatientId(
+      userId,
+    );
+
+    const GroupNames = [];
+
+    if (patientGroups.length > 0) {
+      patientGroups.map(pgroup => {
+        return pgroup.patientGroupTypes.map(groupType => {
+          return GroupNames.push(groupType.grouptype.name);
+        });
+      });
+    }
+    if (GroupNames.length > 0) {
+      GroupNames.map(async nameGroup => {
+        const messagesByGroup =
+          await this.messagesRepository.findByTypeAndDestination({
+            type: 'push',
+            destination: nameGroup,
+          });
+        return messages.push(...messagesByGroup);
+      });
+    }
+
     const readMessages = await this.readMessagesRepository.findByUserId(userId);
 
     const unreadMessages = messages.filter(message => {
@@ -47,6 +91,6 @@ export class GetUserMessagesService {
       userId,
     });
 
-    return messageToSend;
+    return messages;
   }
 }

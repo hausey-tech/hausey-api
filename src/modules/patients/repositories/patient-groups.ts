@@ -31,6 +31,15 @@ export class PatientGroupsRepository implements IPatientGroupsRepository {
     });
   }
 
+  public async findByPatientId(
+    patientId: string,
+  ): Promise<PatientGroup[] | null> {
+    return this.ormRepository.find({
+      where: { patientId },
+      relations: this.relations,
+    });
+  }
+
   public async findByIds(ids: string[]): Promise<PatientGroup[]> {
     return this.ormRepository.find({
       where: { id: In(ids) },

@@ -13,6 +13,7 @@ import {
   ForgotPasswordSchema,
   VerifyTokenSchema,
   ResetPasswordSchema,
+  GetGroupByPatientSchema,
 } from '../celebrate-schemas/patient';
 import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
 import { PatientsController } from '../controllers/patients';
@@ -36,6 +37,11 @@ patientsRouter.post(
   '/get-patients-by-group',
   celebrate(GetPatientsByGroupSchema),
   patientsController.getPatientsByGroup,
+);
+patientsRouter.get(
+  '/get-group-by-patient',
+  celebrate(GetGroupByPatientSchema),
+  patientsController.getGroupsByPatient,
 );
 
 patientsRouter.post(

@@ -6,7 +6,7 @@ import { IPatientsRepository } from '../../patients/contracts/repositories/patie
 import { AppError } from '../../../shared/errors/app-error';
 import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 import { IRolesRepository } from '../../roles/contracts/repositories/roles';
-import { SendFirebaseMessagingService } from '../../integrations/services/send-firebase-messaging';
+import { CreateMessageToUserService } from '../../messages/services/create-message-to-user-service';
 
 @injectable()
 export class CreateTeamResume {
@@ -60,16 +60,15 @@ export class CreateTeamResume {
         patientId,
         roleId,
       );
-    const sendFirebasePushService = container.resolve(
-      SendFirebaseMessagingService,
+    const sendUserMessagePushService = container.resolve(
+      CreateMessageToUserService,
     );
     try {
-      await sendFirebasePushService.execute({
-        token: patientExists.fcmToken as string,
-        notification: {
-          title: '💙Novo Plano de Cuidados no APP!',
-          body: `Você recebeu um novo plano de cuidados de ${roleExists.name}. Acesse o app para ver os detalhes!`,
-        },
+      await sendUserMessagePushService.execute({
+        to: patientExists.id,
+        title: '💙Novo Plano de Cuidados no APP!',
+        body: `Você recebeu um novo plano de cuidados de ${roleExists.name}. Acesse o app para ver os detalhes!`,
+        type: 'push',
       });
     } catch {
       console.log('Erro ao enviar FCM');
