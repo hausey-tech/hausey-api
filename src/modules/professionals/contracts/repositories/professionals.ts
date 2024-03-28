@@ -8,6 +8,7 @@ export interface IProfessionalsRepository {
   findById(id: string): Promise<Professional | null>;
   findByIds(ids: string[]): Promise<Professional[]>;
   findByRoleId(roleId: string): Promise<Professional[]>;
+  findByRoleIds(roleIds: string[]): Promise<Professional[]>;
   findByEmail(email: string): Promise<Professional | null>;
   findByDocument(document: string): Promise<Professional | null>;
   create(

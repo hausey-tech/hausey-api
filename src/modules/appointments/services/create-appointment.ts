@@ -111,9 +111,10 @@ export class CreateAppointmentService {
       });
       appointment = appointmentEmergency;
       // find all the professionals of the type medical
-      const professionals = await this.professionalsRepository.findByRoleId(
+      const professionals = await this.professionalsRepository.findByRoleIds([
         'b3460425-43fd-45ea-aec1-339627ea9825',
-      );
+        '64db0cda-ee21-4a82-a765-b0500d0bbd52',
+      ]);
       if (professionals.length > 0) {
         professionals.map(professional =>
           mailer({
