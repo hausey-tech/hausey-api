@@ -27,6 +27,17 @@ export const UpdateUserSchema = {
     document: Joi.string(),
     birthdate: Joi.string(),
     sex: Joi.string().equal('M', 'F'),
+    bankAccount: Joi.object().keys({
+      holder_name: Joi.string().max(30).required(),
+      bank: Joi.string().max(3).required(),
+      branch_number: Joi.string().max(4).required(),
+      branch_check_digit: Joi.string().max(1),
+      account_number: Joi.string().max(13).required(),
+      account_check_digit: Joi.string().max(2).required(),
+      holder_type: Joi.string().valid('individual', 'company').required(),
+      holder_document: Joi.string().required(),
+      type: Joi.string().valid('checking', 'savings').required(),
+    }),
   }),
 };
 
