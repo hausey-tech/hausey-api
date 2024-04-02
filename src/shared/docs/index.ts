@@ -71,6 +71,8 @@ export default {
   paths: {
     '/sessions': sessionsPath,
     '/patients': patientsPath,
+    '/patients/{patientId}': patientsPath.patientId,
+    '/patients/{patientId}/plan': patientsPath.patientId.plan,
     '/professionals': professionalsPath,
     '/professionals/specialties': professionalsPath.specialties,
     '/appointments': appointmentsPath,
