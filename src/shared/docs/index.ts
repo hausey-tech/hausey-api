@@ -31,6 +31,7 @@ import {
   createMemedUserSchema,
 } from './schemas';
 import { badRequest, unauthorized, notFound, serverError } from './components';
+import { updatePatientPlanSchema } from './schemas/update-patient-plan';
 
 export default {
   openapi: '3.0.0',
@@ -124,6 +125,7 @@ export default {
       createAnamnesisAndPrimaryDiagnosisSchema,
     anamnesisAndPrimaryDiagnosis: anamnesisAndPrimaryDiagnosisSchema,
     createUserAndPatient: createUserAndPatientSchema,
+    updatePatientPlan: updatePatientPlanSchema,
     patientSession: patientSessionSchema,
     memedUser: memedUserSchema,
     createMemedUser: createMemedUserSchema,

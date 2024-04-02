@@ -45,7 +45,7 @@ export const patientsPath = {
             apiKey: [],
           },
         ],
-        tags: ['Update Patient Plan'],
+        tags: ['Patients'],
         summary: 'Updated patient plan status',
         parameters: [
           {
@@ -63,15 +63,7 @@ export const patientsPath = {
         content: {
           'application/json': {
             schema: {
-              type: 'object',
-              properties: {
-                priceId: {
-                  type: 'string',
-                },
-                periodEnd: {
-                  type: 'string',
-                },
-              },
+              $ref: '#/schemas/updatePatientPlan',
             },
           },
         },
