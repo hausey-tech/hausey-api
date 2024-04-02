@@ -2,16 +2,15 @@ import { injectable, inject } from 'tsyringe';
 import { IPlansRepository } from '../../plans/contracts/repositories/plans';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { mailer } from '../../../shared/utils/mailer';
-import { Patient } from '../entities/patient';
 
 interface Props {
   periodEnd: number;
   priceId: string;
-  customerId: string;
+  patientId: string;
 }
 
 @injectable()
-export class UpdatePatientPlanService {
+export class UpdatePatientPlanPartnerService {
   constructor(
     @inject('PatientsRepository')
     private patientsRepository: IPatientsRepository,
@@ -21,11 +20,11 @@ export class UpdatePatientPlanService {
   ) {}
 
   public async execute({
-    customerId,
+    patientId,
     priceId,
     periodEnd,
-  }: Props): Promise<Patient> {
-    const patient = await this.patientsRepository.findByCustomerId(customerId);
+  }: Props): Promise<void> {
+    const patient = await this.patientsRepository.findById(patientId);
 
     if (!patient) {
       console.error('Paciente não encontrado!');
@@ -38,10 +37,12 @@ export class UpdatePatientPlanService {
     }
 
     patient.planId = plan.id;
-    patient.planExpiresAt = new Date(periodEnd * 1000);
+    const dateExpiration = new Date(periodEnd);
+    dateExpiration.setHours(dateExpiration.getHours() + 3);
+    patient.planExpiresAt = dateExpiration;
     mailer({
       to: 'adm.hausey@gmail.com',
-      subject: `💵Nova Compra de Assinatura Efetuada!`,
+      subject: `💵Nova Assinatura Ativada por parceiro!`,
       body: `
       <h2>Olá, um novo paciente se cadastrou no app!</h2>
       <h4>Veja as informações:</h4>
@@ -55,7 +56,6 @@ export class UpdatePatientPlanService {
     `,
     });
 
-    const updatedPatient = await this.patientsRepository.save(patient);
-    return updatedPatient;
+    await this.patientsRepository.save(patient);
   }
 }

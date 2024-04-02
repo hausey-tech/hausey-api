@@ -14,6 +14,7 @@ import {
   VerifyTokenSchema,
   ResetPasswordSchema,
   GetGroupByPatientSchema,
+  UpdatePatientPlanSchema,
 } from '../celebrate-schemas/patient';
 import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
 import { PatientsController } from '../controllers/patients';
@@ -68,6 +69,12 @@ patientsRouter.patch(
   ensureAuthentication,
   celebrate(UpdatePatientSchema),
   patientsController.update,
+);
+patientsRouter.patch(
+  '/:patientId/plan',
+  ensureAuthentication,
+  celebrate(UpdatePatientPlanSchema),
+  patientsController.updatePlan,
 );
 
 patientsRouter.get(

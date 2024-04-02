@@ -36,4 +36,70 @@ export const patientsPath = {
       },
     },
   },
+  patientId: {
+    plan: {
+      patch: {
+        security: [
+          {
+            bearerAuth: [],
+            apiKey: [],
+          },
+        ],
+        tags: ['Update Patient Plan'],
+        summary: 'Updated patient plan status',
+        parameters: [
+          {
+            in: 'path',
+            name: 'patientId',
+            schema: {
+              type: 'string',
+            },
+            required: true,
+            description: 'Patient UUID',
+          },
+        ],
+      },
+      requestBody: {
+        content: {
+          'application/json': {
+            schema: {
+              type: 'object',
+              properties: {
+                priceId: {
+                  type: 'string',
+                },
+                periodEnd: {
+                  type: 'string',
+                },
+              },
+            },
+          },
+        },
+      },
+      responses: {
+        200: {
+          description: 'Success',
+          content: {
+            'application/json': {
+              schema: {
+                $ref: '#/schemas/patientSchema',
+              },
+            },
+          },
+        },
+        400: {
+          $ref: '#/components/badRequest',
+        },
+        401: {
+          $ref: '#/components/unauthorized',
+        },
+        404: {
+          $ref: '#/components/notFound',
+        },
+        500: {
+          $ref: '#/components/serverError',
+        },
+      },
+    },
+  },
 };

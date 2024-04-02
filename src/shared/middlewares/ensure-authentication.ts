@@ -17,24 +17,52 @@ export const ensureAuthentication = (
   next: NextFunction,
 ): Response | void => {
   const authHeader = request.headers.authorization;
+  const apiKey = request.headers['api-key'];
 
-  if (!authHeader) {
-    throw new AppError('Falha de autenticação, nenhum token fornecido', 401);
+  // if (!authHeader) {
+  //   throw new AppError('Falha de autenticação, nenhum token fornecido', 401);
+  // }
+  console.log(apiKey);
+  if (authHeader && apiKey) {
+    throw new AppError(
+      'Both JWT token and API key provided. Please use only one type of authentication.',
+      400,
+    );
   }
 
-  const [, token] = authHeader.split(' ');
+  if (authHeader) {
+    const [, token] = authHeader.split(' ');
 
-  const { secret } = authConfig.jwt;
+    const { secret } = authConfig.jwt;
 
-  try {
-    const decoded = verify(token, secret);
+    try {
+      const decoded = verify(token, secret);
 
-    const { id, role } = decoded as ITokenPayload;
+      const { id, role } = decoded as ITokenPayload;
 
-    request.user = { id, role };
+      request.user = { id, role };
+
+      return next();
+    } catch {
+      throw new AppError(
+        'Failed to authenticate token. Please login again.',
+        401,
+      );
+    }
+  }
+
+  if (apiKey) {
+    const { apiKey: expectedApiKey } = authConfig;
+
+    if (apiKey !== expectedApiKey) {
+      throw new AppError('Invalid API key.', 401);
+    }
+
+    // You may optionally set a user object in request for API key authentication
+    request.user = { id: null, role: 'manager' }; // Or any other value to represent an unauthenticated user
 
     return next();
-  } catch {
-    throw new AppError('Falha de autenticação, faça login novamente', 401);
   }
+
+  throw new AppError('Falha de autenticação, nenhum token fornecido', 401);
 };

@@ -68,6 +68,15 @@ export const UpdatePatientSchema = {
     responsibleTeamId: Joi.string().uuid(),
   }),
 };
+export const UpdatePatientPlanSchema = {
+  [Segments.PARAMS]: Joi.object().keys({
+    patientId: Joi.string().uuid().required(),
+  }),
+  [Segments.BODY]: Joi.object().keys({
+    priceId: Joi.string().required(),
+    periodEnd: Joi.string().required(),
+  }),
+};
 
 export const GetPatientInfosSchema = {
   [Segments.PARAMS]: Joi.object().keys({

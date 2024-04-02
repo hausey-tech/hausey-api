@@ -4,4 +4,5 @@ export const authConfig = {
     expiresIn: '14d',
     refreshExpiresIn: '5y',
   },
+  apiKey: 'CoSJJLFwA64fKPTC1H4Iwt9oisI0luVl',
 };

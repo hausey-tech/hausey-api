@@ -14,6 +14,7 @@ import { ForgotPasswordService } from '../services/forgot-password-service';
 import { ResetPasswordService } from '../services/reset-password-service';
 import { VerifyTokenService } from '../services/verify-token-service';
 import { GetGroupsByPatientService } from '../services/get-groups-by-patient';
+import { UpdatePatientPlanPartnerService } from '../services/update-patient-plan-integration';
 
 export class PatientsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -116,6 +117,26 @@ export class PatientsController {
     const updatePatientService = container.resolve(UpdatePatientService);
 
     const patient = await updatePatientService.execute(patientId, payload);
+
+    return response.json(patient);
+  }
+
+  public async updatePlan(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { patientId } = request.params;
+    const payload = request.body;
+
+    const updatePatientPlanPartnerService = container.resolve(
+      UpdatePatientPlanPartnerService,
+    );
+
+    const patient = await updatePatientPlanPartnerService.execute({
+      patientId,
+      priceId: payload.priceId,
+      periodEnd: payload.periodEnd,
+    });
 
     return response.json(patient);
   }

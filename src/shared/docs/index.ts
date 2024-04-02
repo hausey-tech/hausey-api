@@ -129,6 +129,12 @@ export default {
   components: {
     securitySchemes: {
       bearerAuth: bearerAuthSchema,
+      ApiKeyAuth: {
+        // Define security scheme for API key
+        type: 'apiKey',
+        in: 'header',
+        name: 'api-key',
+      },
     },
     badRequest,
     unauthorized,
