@@ -73,7 +73,7 @@ export const patientsPath = {
             content: {
               'application/json': {
                 schema: {
-                  $ref: '#/schemas/patientSchema',
+                  $ref: '#/schemas/patient',
                 },
               },
             },
