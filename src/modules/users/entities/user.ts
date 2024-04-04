@@ -17,4 +17,7 @@ export class User extends UserEntity {
 
   @Column('varchar', { nullable: true })
   fcmToken: string | null;
+
+  @Column('varchar', { nullable: true })
+  recipientId: string | null;
 }

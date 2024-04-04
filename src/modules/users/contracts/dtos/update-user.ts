@@ -4,4 +4,5 @@ export interface IUpdateUserDTO {
   birthdate?: string;
   phoneNumber?: string;
   sex?: 'M' | 'F';
+  recipientId?: string;
 }

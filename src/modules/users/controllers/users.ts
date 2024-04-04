@@ -6,6 +6,7 @@ import { UpdateUserService } from '../services/update-user';
 import { CreateSessionService } from '../../sessions/services/create-session';
 import { ListUsersService } from '../services/list-users';
 import { GetUserInfos } from '../services/get-user-infos';
+import { CreateBankAccountService } from '../services/create-bank-account-service';
 
 export class UsersController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -60,5 +61,18 @@ export class UsersController {
     const patient = await getPatientInfosService.execute({ userId });
 
     return response.json(patient);
+  }
+
+  public async createBankAccount(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { id } = request.user;
+    const bankAccount = request.body;
+    const createBankAccountService = container.resolve(
+      CreateBankAccountService,
+    );
+    await createBankAccountService.execute({ id, bankAccount });
+    return response.json({ message: 'Conta bancária vinculada com sucesso!' });
   }
 }
