@@ -1,6 +1,6 @@
 import { injectable, inject, container } from 'tsyringe';
 import { AppError } from '../../../shared/errors/app-error';
-import { CreateProduct } from '../../integrations/services/stripe/create-product';
+import { CreatePagarmePlanService } from '../../integrations/services/pagarme/create-pagarme-plan-service';
 import { IPlansRepository } from '../contracts/repositories/plans';
 import { Plan } from '../entities/plan';
 
@@ -11,7 +11,7 @@ interface Props {
 }
 
 @injectable()
-export class CreatePlan {
+export class CreatePlanService {
   constructor(
     @inject('PlansRepository')
     private plansRepository: IPlansRepository,
@@ -24,9 +24,11 @@ export class CreatePlan {
       throw new AppError('Já existe um plano com esse nome!');
     }
 
-    const createProductService = container.resolve(CreateProduct);
+    const createPagarmePlanService = container.resolve(
+      CreatePagarmePlanService,
+    );
 
-    const { default_price: defaultPrice } = await createProductService.execute({
+    const planId = await createPagarmePlanService.execute({
       name,
       description,
       price,
@@ -38,7 +40,7 @@ export class CreatePlan {
       price,
     });
 
-    plan.stripePriceId = defaultPrice.toString();
+    plan.stripePriceId = planId;
 
     return this.plansRepository.save(plan);
   }
