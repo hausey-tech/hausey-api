@@ -1,5 +1,5 @@
 import { injectable, inject, container } from 'tsyringe';
-import { CreatePagarmeRecipientService } from 'modules/integrations/services/pagarme/create-pagarme-recipient-service';
+import { CreatePagarmeRecipientService } from '../../integrations/services/pagarme/create-pagarme-recipient-service';
 import { AppError } from '../../../shared/errors/app-error';
 import { IUsersRepository } from '../contracts/repositories/users';
 import { ICreateBankAccount } from '../contracts/dtos/create-bank-account-dto';
