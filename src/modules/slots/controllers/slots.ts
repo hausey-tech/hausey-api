@@ -6,13 +6,12 @@ import { CreateSlotService } from '../services/create-slot';
 
 export class SlotsController {
   public async index(request: Request, response: Response): Promise<Response> {
-    const { professionaId, days = 3 } = request.query;
+    const { professionalId } = request.query;
 
     const findSlotsService = container.resolve(FindSlotsService);
 
     const slots = await findSlotsService.execute({
-      professionaId: professionaId as string,
-      days: days as number,
+      professionalId: professionalId as string,
     });
 
     return response.json(slots);
