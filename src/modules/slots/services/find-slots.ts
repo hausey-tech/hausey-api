@@ -1,42 +1,20 @@
 /* eslint-disable import/no-duplicates */
 import { injectable, inject } from 'tsyringe';
-import { ptBR } from 'date-fns/locale';
-import {
-  format,
-  addDays,
-  parseISO,
-  getHours,
-  getMinutes,
-  addMinutes,
-  isBefore,
-} from 'date-fns';
+import { format, addMinutes, isBefore } from 'date-fns';
 
-import { IProfessionalSpecialtiesRepository } from '../../professionals/contracts/repositories/professional-specialties';
 import { IAppointmentsRepository } from '../../appointments/contracts/repositories/appointments';
 import { ISlotsRepository } from '../contracts/repositories/slots';
 import { groupArrayByKey } from '../../../shared/utils/group-array-by-key';
-import { Appointment } from '../../appointments/entities/appointment';
 import { AppError } from '../../../shared/errors/app-error';
 import { Slot } from '../entities/slot';
+import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 
 interface IFindAvailableSlotsDTO {
-  professionaId: string;
-  days: number;
-}
-
-interface IBusyDateSlots {
-  date: string;
-  slots: string[];
+  professionalId: string;
 }
 
 interface IAvailability {
   weekDay: number;
-  slots: string[];
-}
-
-interface IAvailableSlots {
-  formattedDate: string;
-  date: string;
   slots: string[];
 }
 
@@ -49,31 +27,23 @@ export class FindSlotsService {
     @inject('SlotsRepository')
     private slotsRepository: ISlotsRepository,
 
-    @inject('ProfessionalSpecialtiesRepository')
-    private professionalSpecialtiesRepository: IProfessionalSpecialtiesRepository,
+    @inject('ProfessionalsRepository')
+    private professionalRepository: IProfessionalsRepository,
   ) {}
 
   public async execute({
-    professionaId,
-    days,
-  }: IFindAvailableSlotsDTO): Promise<IAvailableSlots[]> {
-    const professionalsSpecialty =
-      await this.professionalSpecialtiesRepository.findByProfessionalId(
-        professionaId,
-      );
+    professionalId,
+  }: IFindAvailableSlotsDTO): Promise<IAvailability[]> {
+    const professional = await this.professionalRepository.findById(
+      professionalId,
+    );
 
-    if (professionalsSpecialty.length === 0) {
-      throw new AppError(
-        'Não há nenhum profissional dessa especialidade cadastrado!',
-      );
+    if (!professional) {
+      throw new AppError('Profissional não encontrado');
     }
 
-    const professionalsIds = [
-      ...new Set(professionalsSpecialty.map(p => p.professionalId)),
-    ];
-
-    const slots = await this.slotsRepository.findByProfessionalIds(
-      professionalsIds,
+    const slots = await this.slotsRepository.findByProfessionalId(
+      professionalId,
     );
 
     if (slots.length === 0) {
@@ -108,17 +78,17 @@ export class FindSlotsService {
       });
     });
 
-    const requiredDates: Omit<IAvailableSlots, 'slots'>[] = [];
-    [...Array(days).keys()].forEach(d =>
-      requiredDates.push({
-        formattedDate: format(addDays(new Date(), d), "dd/MM',' EEEE", {
-          locale: ptBR,
-        }),
-        date: format(addDays(new Date(), d), 'yyyy-MM-dd'),
-      }),
-    );
+    // const requiredDates: Omit<IAvailableSlots, 'slots'>[] = [];
+    // [...Array(days).keys()].forEach(d =>
+    //   requiredDates.push({
+    //     formattedDate: format(addDays(new Date(), d), "dd/MM',' EEEE", {
+    //       locale: ptBR,
+    //     }),
+    //     date: format(addDays(new Date(), d), 'yyyy-MM-dd'),
+    //   }),
+    // );
 
-    const appointmentsInRequiredDates: Appointment[] = [];
+    // const appointmentsInRequiredDates: Appointment[] = [];
     // await Promise.all(
     //   requiredDates.map(async t => {
     //     const appointments =
@@ -132,72 +102,72 @@ export class FindSlotsService {
     //   }),
     // );
 
-    const busyDates: IBusyDateSlots[] = [];
-    appointmentsInRequiredDates.forEach(a => {
-      const date = format(a.date, 'yyyy-MM-dd');
-      const busySlots = [];
-      busySlots.push(
-        `${getHours(a.date) <= 9 ? `0${getHours(a.date)}` : getHours(a.date)}:${
-          getMinutes(a.date) <= 9
-            ? `0${getMinutes(a.date)}`
-            : getMinutes(a.date)
-        }`,
-      );
-      busyDates.push({ date, slots: busySlots });
-    });
+    // const busyDates: IBusyDateSlots[] = [];
+    // appointmentsInRequiredDates.forEach(a => {
+    //   const date = format(a.date, 'yyyy-MM-dd');
+    //   const busySlots = [];
+    //   busySlots.push(
+    //     `${getHours(a.date) <= 9 ? `0${getHours(a.date)}` : getHours(a.date)}:${
+    //       getMinutes(a.date) <= 9
+    //         ? `0${getMinutes(a.date)}`
+    //         : getMinutes(a.date)
+    //     }`,
+    //   );
+    //   busyDates.push({ date, slots: busySlots });
+    // });
 
-    const groupedBusyDates = groupArrayByKey(busyDates, 'date');
-    const formattedBusyDates: IBusyDateSlots[] = [];
-    Object.keys(groupedBusyDates).forEach(key => {
-      const tests = [];
+    // const groupedBusyDates = groupArrayByKey(busyDates, 'date');
+    // const formattedBusyDates: IBusyDateSlots[] = [];
+    // Object.keys(groupedBusyDates).forEach(key => {
+    //   const tests = [];
 
-      groupedBusyDates[key].forEach((g: any) => {
-        g.slots.forEach(gs => {
-          tests.push(gs);
-        });
-      });
+    //   groupedBusyDates[key].forEach((g: any) => {
+    //     g.slots.forEach(gs => {
+    //       tests.push(gs);
+    //     });
+    //   });
 
-      formattedBusyDates.push({
-        date: key,
-        slots: tests.sort(),
-      });
-    });
+    //   formattedBusyDates.push({
+    //     date: key,
+    //     slots: tests.sort(),
+    //   });
+    // });
 
-    const availableSlots: IAvailableSlots[] = [];
-    requiredDates.forEach(t => {
-      const slotsTest = [];
-      availability.forEach(av => {
-        if (Number(format(parseISO(t.date), 'i')) === av.weekDay) {
-          slotsTest.push(...av.slots);
-          formattedBusyDates.forEach(bd => {
-            if (t.date === bd.date) {
-              av.slots.forEach(avSlot => {
-                bd.slots.forEach((bdSlot, index) => {
-                  if (bdSlot === avSlot) {
-                    if (slotsTest.indexOf(bdSlot) !== -1) {
-                      bd.slots.splice(index, 1);
-                      slotsTest.splice(slotsTest.indexOf(bdSlot), 1);
-                    }
-                  }
-                });
-              });
-            }
-          });
-        }
-      });
-      availableSlots.push({ ...t, slots: [...new Set(slotsTest)].sort() });
-    });
+    // const availableSlots: IAvailableSlots[] = [];
+    // requiredDates.forEach(t => {
+    //   const slotsTest = [];
+    //   availability.forEach(av => {
+    //     if (Number(format(parseISO(t.date), 'i')) === av.weekDay) {
+    //       slotsTest.push(...av.slots);
+    //       formattedBusyDates.forEach(bd => {
+    //         if (t.date === bd.date) {
+    //           av.slots.forEach(avSlot => {
+    //             bd.slots.forEach((bdSlot, index) => {
+    //               if (bdSlot === avSlot) {
+    //                 if (slotsTest.indexOf(bdSlot) !== -1) {
+    //                   bd.slots.splice(index, 1);
+    //                   slotsTest.splice(slotsTest.indexOf(bdSlot), 1);
+    //                 }
+    //               }
+    //             });
+    //           });
+    //         }
+    //       });
+    //     }
+    //   });
+    //   availableSlots.push({ ...t, slots: [...new Set(slotsTest)].sort() });
+    // });
 
-    const filteredAvailableSlots = availableSlots.filter(
-      availableSlot => availableSlot.slots.length > 0,
-    );
+    // const filteredAvailableSlots = availableSlots.filter(
+    //   availableSlot => availableSlot.slots.length > 0,
+    // );
 
-    if (filteredAvailableSlots.length === 0) {
-      throw new AppError(
-        'Não há nenhuma data disponível para essa especialidade!',
-      );
-    }
+    // if (filteredAvailableSlots.length === 0) {
+    //   throw new AppError(
+    //     'Não há nenhuma data disponível para essa especialidade!',
+    //   );
+    // }
 
-    return filteredAvailableSlots;
+    return availability;
   }
 }

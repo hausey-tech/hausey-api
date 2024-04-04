@@ -1,5 +1,5 @@
 import { injectable, inject } from 'tsyringe';
-import { IPatientGroupsRepository } from 'modules/patients/contracts/repositories/patient-groups';
+import { IPatientGroupsRepository } from '../../patients/contracts/repositories/patient-groups';
 import { type IMessagesRepository } from '../contracts/repositories/messages-repository';
 import { type IReadMessagesRepository } from '../contracts/repositories/read-messages-repository';
 import { type Message } from '../entities/message-entity';

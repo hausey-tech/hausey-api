@@ -16,6 +16,10 @@ export class SlotsRepository implements ISlotsRepository {
     return this.ormRepository.find({ where: { professionalId: In(ids) } });
   }
 
+  public async findByProfessionalId(id: string): Promise<Slot[]> {
+    return this.ormRepository.find({ where: { professionalId: id } });
+  }
+
   public async create(payload: ICreateDBSlotDTO): Promise<Slot> {
     return this.ormRepository.create(payload);
   }
