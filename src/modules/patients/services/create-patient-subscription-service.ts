@@ -1,5 +1,6 @@
 import { injectable, inject, container } from 'tsyringe';
 import { CreatePagarmeSubscriptionService } from 'modules/integrations/services/pagarme/create-pagarme-subscription-service';
+import { ISellerCodesRepository } from 'modules/seller-codes/contracts/repositories/seller-codes';
 import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 
@@ -15,6 +16,9 @@ export class CreatePatientSubscriptionService {
   constructor(
     @inject('PatientsRepository')
     private patientsRepository: IPatientsRepository,
+
+    @inject('SellerCodesRepository')
+    private sellerCodesRepository: ISellerCodesRepository,
   ) {}
 
   public async execute({
@@ -34,6 +38,34 @@ export class CreatePatientSubscriptionService {
         'Paciente não possui conta de pagamento, entre em contato com o suporte!',
       );
     }
+    const split = [];
+    if (patient.sellerId) {
+      const sellerCode = await this.sellerCodesRepository.findBySellerId(
+        patient.sellerId,
+      );
+      if (sellerCode.discount) {
+        split.push({
+          amount: sellerCode.discount,
+          recipientId: patient.seller.recipientId,
+          type: 'porcentage',
+          options: {
+            chargeProcessingFee: false,
+            chargeRemainderFee: false,
+            liable: false,
+          },
+        });
+        split.push({
+          amount: 100 - sellerCode.discount,
+          recipientId: 'recipient_hausey',
+          type: 'porcentage',
+          options: {
+            chargeProcessingFee: true,
+            chargeRemainderFee: true,
+            liable: true,
+          },
+        });
+      }
+    }
     const createPagarmeSubscriptionService = container.resolve(
       CreatePagarmeSubscriptionService,
     );
@@ -41,6 +73,7 @@ export class CreatePatientSubscriptionService {
       planId,
       paymentMethod,
       cardToken,
+      split,
       customerId: patient.stripeCustomerId,
     });
     patient.planExpiresAt = new Date(expiresAt);

@@ -7,6 +7,16 @@ interface IProps {
   paymentMethod: number;
   customerId: string;
   cardToken: string;
+  split?: {
+    amount: number;
+    recipientId: string;
+    type: string;
+    options: {
+      chargeProcessingFee: boolean;
+      chargeRemainderFee: boolean;
+      liable: boolean;
+    };
+  }[];
   discounts?: {
     cycles: string;
     value: string;
@@ -82,7 +92,8 @@ export class CreatePagarmeSubscriptionService {
     paymentMethod,
     customerId,
     cardToken,
-    discounts = [],
+    split,
+    discounts,
   }: IProps): Promise<string> {
     try {
       const { data }: { data: IResponse } = await pagarmeInstance.post(
@@ -92,7 +103,23 @@ export class CreatePagarmeSubscriptionService {
           payment_method: paymentMethod,
           customer_id: customerId,
           card_token: cardToken,
-          discounts: discounts.map(discount => ({
+          split:
+            split?.length > 0
+              ? {
+                  enabled: true,
+                  rules: split.map(sp => ({
+                    amount: sp.amount,
+                    recipientId: sp.recipientId,
+                    type: sp.type,
+                    options: {
+                      chargeProcessingFee: sp.options.chargeProcessingFee,
+                      chargeRemainderFee: sp.options.chargeRemainderFee,
+                      liable: sp.options.liable,
+                    },
+                  })),
+                }
+              : undefined,
+          discounts: discounts?.map(discount => ({
             cycles: discount.cycles,
             value: discount.value,
             discount_type: discount.discountType,

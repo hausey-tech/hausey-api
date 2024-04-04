@@ -23,4 +23,7 @@ export class SellerCode extends BaseEntity {
 
   @Column('boolean', { default: true })
   active: boolean;
+
+  @Column('int', { nullable: true })
+  discount: number | null;
 }
