@@ -15,6 +15,7 @@ import {
   ResetPasswordSchema,
   GetGroupByPatientSchema,
   UpdatePatientPlanSchema,
+  CreateSubscriptionSchema,
 } from '../celebrate-schemas/patient';
 import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
 import { PatientsController } from '../controllers/patients';
@@ -98,4 +99,9 @@ patientsRouter.post(
   '/reset-password',
   celebrate(ResetPasswordSchema),
   patientsController.resetPassword,
+);
+patientsRouter.post(
+  '/subscriptions',
+  celebrate(CreateSubscriptionSchema),
+  patientsController.createSubscription,
 );

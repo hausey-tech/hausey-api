@@ -15,6 +15,7 @@ import { ResetPasswordService } from '../services/reset-password-service';
 import { VerifyTokenService } from '../services/verify-token-service';
 import { GetGroupsByPatientService } from '../services/get-groups-by-patient';
 import { UpdatePatientPlanPartnerService } from '../services/update-patient-plan-integration';
+import { CreatePatientSubscriptionService } from '../services/create-patient-subscription-service';
 
 export class PatientsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -208,5 +209,22 @@ export class PatientsController {
       password,
     });
     return response.json({ message: 'Senha redefinida com sucesso!' });
+  }
+
+  public async createSubscription(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { patientId, planId, paymentMethod, cardToken } = request.body;
+    const createPatientSubscriptionService = container.resolve(
+      CreatePatientSubscriptionService,
+    );
+    await createPatientSubscriptionService.execute({
+      patientId,
+      planId,
+      paymentMethod,
+      cardToken,
+    });
+    return response.json({ message: 'Assinatura efetuada com sucesso!' });
   }
 }

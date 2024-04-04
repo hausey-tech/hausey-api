@@ -102,3 +102,12 @@ export const ResetPasswordSchema = {
     password: Joi.string().min(8).required(),
   }),
 };
+
+export const CreateSubscriptionSchema = {
+  [Segments.BODY]: Joi.object().keys({
+    patientId: Joi.string().uuid().required(),
+    planId: Joi.string().required(),
+    paymentMethod: Joi.string().valid('credit_card', 'debit_card').required(),
+    cardToken: Joi.string().required(),
+  }),
+};
