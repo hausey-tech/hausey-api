@@ -10,6 +10,7 @@ import {
 import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
 import { cors } from '../../../shared/middlewares/cors';
 import { UsersController } from '../controllers/users';
+import { CreateBankAccountSchema } from '../contracts/schemas/create-bank-account-schema';
 
 export const usersRouter = Router();
 const usersController = new UsersController();
@@ -40,4 +41,11 @@ usersRouter.get(
   ensureAuthentication,
   celebrate(GetUserInfosSchema),
   usersController.getInfos,
+);
+
+usersRouter.post(
+  '/bank-account',
+  ensureAuthentication,
+  celebrate(CreateBankAccountSchema),
+  usersController.createBankAccount,
 );
