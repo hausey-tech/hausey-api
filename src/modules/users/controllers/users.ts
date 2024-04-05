@@ -67,8 +67,7 @@ export class UsersController {
     request: Request,
     response: Response,
   ): Promise<Response> {
-    const { id } = request.user;
-    const bankAccount = request.body;
+    const { id, bankAccount } = request.body;
     const createBankAccountService = container.resolve(
       CreateBankAccountService,
     );
