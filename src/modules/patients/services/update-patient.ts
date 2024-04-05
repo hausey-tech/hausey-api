@@ -79,12 +79,15 @@ export class UpdatePatientService {
           const createPagarmeCustomerService = container.resolve(
             CreatePagarmeCustomerService,
           );
-          await createPagarmeCustomerService.execute({
+          const customerId = await createPagarmeCustomerService.execute({
             id: patientExists.id,
             name: patientExists.name,
             email: patientExists.email,
             document,
             phoneNumber: patientExists.phoneNumber,
+          });
+          await this.patientsRepository.update(id, {
+            stripeCustomerId: customerId,
           });
         } catch (error) {
           console.error(
