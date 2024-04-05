@@ -130,21 +130,24 @@ export class CreatePagarmeSubscriptionService {
                   enabled: true,
                   rules: split.map(sp => ({
                     amount: sp.amount,
-                    recipientId: sp.recipientId,
+                    recipient_id: sp.recipientId,
                     type: sp.type,
                     options: {
-                      chargeProcessingFee: sp.options.chargeProcessingFee,
-                      chargeRemainderFee: sp.options.chargeRemainderFee,
+                      charge_processing_fee: sp.options.chargeProcessingFee,
+                      charge_remainder_fee: sp.options.chargeRemainderFee,
                       liable: sp.options.liable,
                     },
                   })),
                 }
               : undefined,
-          discounts: discounts?.map(discount => ({
-            cycles: discount.cycles,
-            value: discount.value,
-            discount_type: discount.discountType,
-          })),
+          discounts:
+            discounts?.length > 0
+              ? discounts?.map(discount => ({
+                  cycles: discount.cycles,
+                  value: discount.value,
+                  discount_type: discount.discountType,
+                }))
+              : undefined,
         },
       );
       return data.current_cycle.end_at;

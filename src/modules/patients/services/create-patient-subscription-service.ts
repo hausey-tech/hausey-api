@@ -3,6 +3,7 @@ import { CreatePagarmeSubscriptionService } from '../../integrations/services/pa
 import { ISellerCodesRepository } from '../../seller-codes/contracts/repositories/seller-codes';
 import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
+import { IPlansRepository } from '../../plans/contracts/repositories/plans';
 
 interface IProps {
   patientId: string;
@@ -29,6 +30,9 @@ export class CreatePatientSubscriptionService {
 
     @inject('SellerCodesRepository')
     private sellerCodesRepository: ISellerCodesRepository,
+
+    @inject('PlansRepository')
+    private plansRepository: IPlansRepository,
   ) {}
 
   public async execute({
@@ -49,6 +53,12 @@ export class CreatePatientSubscriptionService {
         'Paciente não possui conta de pagamento, entre em contato com o suporte!',
       );
     }
+    const plan = await this.plansRepository.findyByPriceId(planId);
+    if (!plan.stripePriceId) {
+      throw new AppError(
+        'Plano não encontrado, entre em contato com o suporte!',
+      );
+    }
     const split = [];
     const discounts = [];
     if (patient.sellerId) {
@@ -65,7 +75,7 @@ export class CreatePatientSubscriptionService {
         split.push({
           amount: sellerCode.fee,
           recipientId: patient.seller.recipientId,
-          type: 'porcentage',
+          type: 'percentage',
           options: {
             chargeProcessingFee: false,
             chargeRemainderFee: false,
@@ -75,7 +85,7 @@ export class CreatePatientSubscriptionService {
         split.push({
           amount: 100 - sellerCode.fee,
           recipientId: process.env.PAGARME_RECIPIENT_ID,
-          type: 'porcentage',
+          type: 'percentage',
           options: {
             chargeProcessingFee: true,
             chargeRemainderFee: true,
@@ -97,6 +107,7 @@ export class CreatePatientSubscriptionService {
       address,
     });
     patient.planExpiresAt = new Date(expiresAt);
+    patient.planId = plan.id;
     await this.patientsRepository.save(patient);
   }
 }
