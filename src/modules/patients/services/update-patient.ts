@@ -1,6 +1,7 @@
 import { injectable, inject, container } from 'tsyringe';
 import { cpf } from 'cpf-cnpj-validator';
 
+import { CreatePagarmeCustomerService } from '../../integrations/services/pagarme/create-pagarme-customer-service';
 import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { Patient } from '../entities/patient';
@@ -71,6 +72,26 @@ export class UpdatePatientService {
         throw new AppError(
           'Já existe um usuário com este CPF, verifique e tente novamente!',
         );
+      }
+
+      if (!patientExists.stripeCustomerId) {
+        try {
+          const createPagarmeCustomerService = container.resolve(
+            CreatePagarmeCustomerService,
+          );
+          await createPagarmeCustomerService.execute({
+            id: patientExists.id,
+            name: patientExists.name,
+            email: patientExists.email,
+            document,
+            phoneNumber: patientExists.phoneNumber,
+          });
+        } catch (error) {
+          console.error(
+            `ERROR ON CREATE CUSTOMER (${patientExists.id})`,
+            error,
+          );
+        }
       }
     }
     await this.patientsRepository.update(id, {

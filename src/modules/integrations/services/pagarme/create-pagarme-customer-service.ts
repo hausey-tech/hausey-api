@@ -6,6 +6,7 @@ interface IProps {
   id: string;
   email: string;
   name: string;
+  document: string;
   phoneNumber: string;
 }
 
@@ -15,6 +16,7 @@ export class CreatePagarmeCustomerService {
     id,
     email,
     name,
+    document,
     phoneNumber,
   }: IProps): Promise<string> {
     try {
@@ -22,6 +24,8 @@ export class CreatePagarmeCustomerService {
         code: id,
         email,
         name,
+        document,
+        type: 'individual',
         phones: {
           mobile_phone: {
             country_code: '55',
