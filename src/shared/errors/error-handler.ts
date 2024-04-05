@@ -12,6 +12,7 @@ export function errorHandler(
   _: NextFunction,
 ): Response {
   if (err instanceof AppError) {
+    console.error('AppError: ', err.message);
     return response.status(err.statusCode).json({
       status: 'error',
       message: err.message,
@@ -20,9 +21,10 @@ export function errorHandler(
 
   if (isCelebrateError(err)) {
     const error =
-      err.details.get('body') ||
-      err.details.get('params') ||
+      err.details.get('body') ??
+      err.details.get('params') ??
       err.details.get('query');
+    console.error('CelebrateError: ', error?.message);
     return response.status(400).json({
       status: 'error',
       message: error?.message,
@@ -30,6 +32,7 @@ export function errorHandler(
   }
 
   if (err instanceof multer.MulterError) {
+    console.error('MulterError: ', err.code);
     if (err.code === 'LIMIT_FILE_SIZE') {
       return response.status(400).json({
         status: 'error',
@@ -53,15 +56,15 @@ export function errorHandler(
   }
 
   if (err instanceof QueryFailedError) {
-    const error = err.driverError?.detail || err.message;
+    const error = err.driverError?.detail ?? err.message;
+    console.error('QueryError: ', error);
     return response.status(400).json({
       status: 'error',
       message: error,
     });
   }
 
-  console.error(err);
-
+  console.error('InternalError: ', err);
   return response.status(500).json({
     status: 'error',
     message: 'Erro interno ao servidor',
