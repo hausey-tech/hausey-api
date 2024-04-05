@@ -8,7 +8,7 @@ import { PlansController } from '../controllers/plans';
 export const plansRouter = Router();
 const plansController = new PlansController();
 
-plansRouter.get('/', ensureAuthentication, plansController.index);
+plansRouter.get('/', plansController.index);
 plansRouter.post(
   '/',
   ensureAuthentication,
