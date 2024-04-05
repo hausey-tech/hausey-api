@@ -7,6 +7,16 @@ interface IProps {
   paymentMethod: number;
   customerId: string;
   cardToken: string;
+  address: {
+    street: string;
+    number: string;
+    neighborhood: string;
+    complement?: string;
+    zipCode: string;
+    city: string;
+    state: string;
+    country: string;
+  };
   split?: {
     amount: number;
     recipientId: string;
@@ -92,6 +102,7 @@ export class CreatePagarmeSubscriptionService {
     paymentMethod,
     customerId,
     cardToken,
+    address,
     split,
     discounts,
   }: IProps): Promise<string> {
@@ -103,6 +114,16 @@ export class CreatePagarmeSubscriptionService {
           payment_method: paymentMethod,
           customer_id: customerId,
           card_token: cardToken,
+          card: {
+            billing_address: {
+              line_1: `${address.number}, ${address.street}, ${address.neighborhood}`,
+              line_2: address.complement,
+              zip_code: address.zipCode,
+              city: address.city,
+              state: address.state,
+              country: address.country,
+            },
+          },
           split:
             split?.length > 0
               ? {

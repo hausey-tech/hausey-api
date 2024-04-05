@@ -9,6 +9,16 @@ interface IProps {
   planId: string;
   paymentMethod: number;
   cardToken: string;
+  address: {
+    street: string;
+    number: string;
+    neighborhood: string;
+    complement?: string;
+    zipCode: string;
+    city: string;
+    state: string;
+    country: string;
+  };
 }
 
 @injectable()
@@ -26,6 +36,7 @@ export class CreatePatientSubscriptionService {
     planId,
     paymentMethod,
     cardToken,
+    address,
   }: IProps): Promise<void> {
     const patient = await this.patientsRepository.findById(patientId);
     if (!patient) {
@@ -80,9 +91,10 @@ export class CreatePatientSubscriptionService {
       planId,
       paymentMethod,
       cardToken,
-      split,
       customerId: patient.stripeCustomerId,
+      split,
       discounts,
+      address,
     });
     patient.planExpiresAt = new Date(expiresAt);
     await this.patientsRepository.save(patient);

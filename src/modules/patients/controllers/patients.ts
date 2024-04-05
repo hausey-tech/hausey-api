@@ -215,7 +215,8 @@ export class PatientsController {
     request: Request,
     response: Response,
   ): Promise<Response> {
-    const { patientId, planId, paymentMethod, cardToken } = request.body;
+    const { patientId, planId, paymentMethod, cardToken, address } =
+      request.body;
     const createPatientSubscriptionService = container.resolve(
       CreatePatientSubscriptionService,
     );
@@ -224,6 +225,7 @@ export class PatientsController {
       planId,
       paymentMethod,
       cardToken,
+      address,
     });
     return response.json({ message: 'Assinatura efetuada com sucesso!' });
   }
