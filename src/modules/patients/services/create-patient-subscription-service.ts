@@ -39,13 +39,20 @@ export class CreatePatientSubscriptionService {
       );
     }
     const split = [];
+    const discounts = [];
     if (patient.sellerId) {
       const sellerCode = await this.sellerCodesRepository.findBySellerId(
         patient.sellerId,
       );
       if (sellerCode.discount) {
+        discounts.push({
+          discountType: 'percentage',
+          value: sellerCode.discount,
+        });
+      }
+      if (sellerCode.fee && patient.seller.recipientId) {
         split.push({
-          amount: sellerCode.discount,
+          amount: sellerCode.fee,
           recipientId: patient.seller.recipientId,
           type: 'porcentage',
           options: {
@@ -55,8 +62,8 @@ export class CreatePatientSubscriptionService {
           },
         });
         split.push({
-          amount: 100 - sellerCode.discount,
-          recipientId: 'recipient_hausey',
+          amount: 100 - sellerCode.fee,
+          recipientId: process.env.PAGARME_RECIPIENT_ID,
           type: 'porcentage',
           options: {
             chargeProcessingFee: true,
@@ -75,6 +82,7 @@ export class CreatePatientSubscriptionService {
       cardToken,
       split,
       customerId: patient.stripeCustomerId,
+      discounts,
     });
     patient.planExpiresAt = new Date(expiresAt);
     await this.patientsRepository.save(patient);

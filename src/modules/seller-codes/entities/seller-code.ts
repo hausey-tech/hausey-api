@@ -26,4 +26,7 @@ export class SellerCode extends BaseEntity {
 
   @Column('int', { nullable: true })
   discount: number | null;
+
+  @Column('int', { nullable: true })
+  fee: number | null;
 }

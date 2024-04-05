@@ -10,6 +10,14 @@ declare namespace NodeJS {
     TWILIO_API_KEY: string;
     TWILIO_API_SECRET: string;
 
+    EMAIL_HOST: string;
+    EMAIL_PASS: string;
+    EMAIL_PORT: string;
+    EMAIL_USER: string;
+
+    VIDEO_SDK_API_KEY: string;
+    VIDEO_SDK_SECRET_KEY: string;
+
     MEMED_URL: string;
     MEMED_API_KEY: string;
     MEMED_SECRET_KEY: string;
@@ -23,15 +31,11 @@ declare namespace NodeJS {
     AWS_SECRET_ACCESS_KEY: string;
     AWS_MAX_FILE_SIZE: number;
 
-    VIDEO_SDK_API_KEY: string;
-    VIDEO_SDK_SECRET_KEY: string;
+    PAGARME_URL: string;
+    PAGARME_SECRET_KEY: string;
+    PAGARME_RECIPIENT_ID: string;
 
     SURVEY_MONKEY_URL: string;
     SURVEY_MONKEY_KEY: string;
-
-    EMAIL_HOST: string;
-    EMAIL_PASS: string;
-    EMAIL_PORT: string;
-    EMAIL_USER: string;
   }
 }
