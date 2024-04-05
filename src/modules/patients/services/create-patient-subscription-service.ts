@@ -1,6 +1,6 @@
 import { injectable, inject, container } from 'tsyringe';
-import { CreatePagarmeSubscriptionService } from 'modules/integrations/services/pagarme/create-pagarme-subscription-service';
-import { ISellerCodesRepository } from 'modules/seller-codes/contracts/repositories/seller-codes';
+import { CreatePagarmeSubscriptionService } from '../../integrations/services/pagarme/create-pagarme-subscription-service';
+import { ISellerCodesRepository } from '../../seller-codes/contracts/repositories/seller-codes';
 import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 
