@@ -45,6 +45,7 @@ import { videoSdkRouter } from '../../modules/integrations/routes/video-sdk';
 import { memedRouter } from '../../modules/integrations/routes/memed';
 import { s3Router } from '../../modules/integrations/routes/s3';
 import { surveyMonkeyRouter } from '../../modules/integrations/routes/survey-monkey.routes';
+import { pagarmeRouter } from '../../modules/integrations/routes/pagarme.routes';
 
 import { teamsRouter } from '../../modules/teams/routes/teams.routes';
 import { teamResumeRouter } from '../../modules/team-resumes/routes/team-resumes';
@@ -63,6 +64,7 @@ routes.use(
   stripeRoutes,
   videoSdkRouter,
   surveyMonkeyRouter,
+  pagarmeRouter,
 );
 routes.use('/sessions', sessionsRouter);
 routes.use('/messaging', messagingRoutes);
