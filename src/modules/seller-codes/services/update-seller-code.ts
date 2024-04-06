@@ -22,6 +22,14 @@ export class UpdateSellerCodeService {
         'Código não encontrado, verifique o id e tente novamente!',
       );
     }
+
+    if (
+      sellerCodeExists.maxUse &&
+      sellerCodeExists.maxUse <= sellerCodeExists.uses
+    ) {
+      throw new AppError('Código esgotado, verifique e tente novamente!');
+    }
+
     const uses = sellerCodeExists.uses + 1;
 
     return this.sellerCodesRepository.update(sellerCodeExists.id, { uses });
