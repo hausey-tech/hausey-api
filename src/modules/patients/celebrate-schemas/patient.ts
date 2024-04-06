@@ -107,17 +107,29 @@ export const CreateSubscriptionSchema = {
   [Segments.BODY]: Joi.object().keys({
     patientId: Joi.string().uuid().required(),
     planId: Joi.string().required(),
-    paymentMethod: Joi.string().valid('credit_card', 'debit_card').required(),
-    cardToken: Joi.string().required(),
-    address: Joi.object().keys({
-      street: Joi.string().required(),
-      number: Joi.string().required(),
-      neighborhood: Joi.string().required(),
-      complement: Joi.string().max(128).empty(''),
-      zipCode: Joi.string().max(16).required(),
-      city: Joi.string().max(64).required(),
-      state: Joi.string().length(2).required(),
-      country: Joi.string().length(2).required(),
+    paymentMethod: Joi.string()
+      .valid('credit_card', 'debit_card', 'pix')
+      .required(),
+    cardToken: Joi.when('paymentMethod', {
+      is: 'pix',
+      then: Joi.forbidden(),
+      otherwise: Joi.string().required(),
+    }),
+    address: Joi.when('paymentMethod', {
+      is: 'pix',
+      then: Joi.forbidden(),
+      otherwise: Joi.object()
+        .keys({
+          street: Joi.string().required(),
+          number: Joi.string().required(),
+          neighborhood: Joi.string().required(),
+          complement: Joi.string().max(128).empty(''),
+          zipCode: Joi.string().max(16).required(),
+          city: Joi.string().max(64).required(),
+          state: Joi.string().length(2).required(),
+          country: Joi.string().length(2).required(),
+        })
+        .required(),
     }),
   }),
 };

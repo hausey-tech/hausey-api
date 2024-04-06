@@ -15,7 +15,8 @@ import { ResetPasswordService } from '../services/reset-password-service';
 import { VerifyTokenService } from '../services/verify-token-service';
 import { GetGroupsByPatientService } from '../services/get-groups-by-patient';
 import { UpdatePatientPlanPartnerService } from '../services/update-patient-plan-integration';
-import { CreatePatientSubscriptionService } from '../services/create-patient-subscription-service';
+import { CreatePatientCardSubscriptionService } from '../services/create-patient-card-subscription-service';
+import { CreatePatientPixSubscriptionService } from '../services/create-patient-pix-subscription-service';
 
 export class PatientsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -217,10 +218,20 @@ export class PatientsController {
   ): Promise<Response> {
     const { patientId, planId, paymentMethod, cardToken, address } =
       request.body;
-    const createPatientSubscriptionService = container.resolve(
-      CreatePatientSubscriptionService,
+    if (paymentMethod === 'pix') {
+      const createPatientPixSubscriptionService = container.resolve(
+        CreatePatientPixSubscriptionService,
+      );
+      const pix = await createPatientPixSubscriptionService.execute({
+        patientId,
+        planId,
+      });
+      return response.json(pix);
+    }
+    const createPatientCardSubscriptionService = container.resolve(
+      CreatePatientCardSubscriptionService,
     );
-    await createPatientSubscriptionService.execute({
+    await createPatientCardSubscriptionService.execute({
       patientId,
       planId,
       paymentMethod,

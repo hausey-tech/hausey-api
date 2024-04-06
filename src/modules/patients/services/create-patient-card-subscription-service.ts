@@ -8,7 +8,7 @@ import { IPlansRepository } from '../../plans/contracts/repositories/plans';
 interface IProps {
   patientId: string;
   planId: string;
-  paymentMethod: number;
+  paymentMethod: string;
   cardToken: string;
   address: {
     street: string;
@@ -23,7 +23,7 @@ interface IProps {
 }
 
 @injectable()
-export class CreatePatientSubscriptionService {
+export class CreatePatientCardSubscriptionService {
   constructor(
     @inject('PatientsRepository')
     private patientsRepository: IPatientsRepository,

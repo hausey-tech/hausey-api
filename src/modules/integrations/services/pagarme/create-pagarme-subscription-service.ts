@@ -4,7 +4,7 @@ import { pagarmeInstance } from '../../utils/pagarme-instance';
 
 interface IProps {
   planId: string;
-  paymentMethod: number;
+  paymentMethod: string;
   customerId: string;
   cardToken: string;
   address: {
