@@ -106,8 +106,10 @@ export class CreatePatientCardSubscriptionService {
       discounts,
       address,
     });
-    patient.planExpiresAt = new Date(expiresAt);
-    patient.planId = plan.id;
-    await this.patientsRepository.save(patient);
+
+    await this.patientsRepository.update(patient.id, {
+      planId: plan.id,
+      planExpiresAt: expiresAt,
+    });
   }
 }
