@@ -1,6 +1,6 @@
 /* eslint-disable no-case-declarations */
 import { container, injectable } from 'tsyringe';
-import { UpdateSubscriptionByWebhookService } from 'modules/patients/services/update-subscription-by-webhook-service';
+import { UpdateSubscriptionByWebhookService } from '../../../patients/services/update-subscription-by-webhook-service';
 import { IPagarmeWebhookDTO } from '../../contracts/dtos/pagarme/pagarme-webhook-dto';
 
 @injectable()
