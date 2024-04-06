@@ -1,11 +1,11 @@
-import { injectable, inject } from 'tsyringe';
+import { injectable, inject, container } from 'tsyringe';
 
-import { IProfessionalSpecialtiesRepository } from '../../professionals/contracts/repositories/professional-specialties';
 import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
 import { ISetProfessionalDTO } from '../contracts/dtos/set-professional';
 import { Appointment } from '../entities/appointment';
 import { AppError } from '../../../shared/errors/app-error';
+import { CreateMessageToUserService } from '../../messages/services/create-message-to-user-service';
 
 @injectable()
 export class SetProfessionalService {
@@ -15,9 +15,6 @@ export class SetProfessionalService {
 
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,
-
-    @inject('ProfessionalSpecialtiesRepository')
-    private professionalSpecialtiesRepository: IProfessionalSpecialtiesRepository,
   ) {}
 
   public async execute({
@@ -46,6 +43,19 @@ export class SetProfessionalService {
       throw new AppError(
         'Profissional não encontrado, verifique e tente novamente!',
       );
+    }
+    const sendUserMessagePushService = container.resolve(
+      CreateMessageToUserService,
+    );
+    try {
+      await sendUserMessagePushService.execute({
+        to: appointment.patientId,
+        title: 'Um médico assumiu o seu plantão!',
+        body: `Você já pode entrar na sala e em poucos minutos iniciará o seu atendimento.`,
+        type: 'push',
+      });
+    } catch {
+      console.log('Erro ao enviar FCM');
     }
 
     // const professionalSpecialties =
