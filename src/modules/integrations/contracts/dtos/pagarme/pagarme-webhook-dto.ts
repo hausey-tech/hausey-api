@@ -22,6 +22,14 @@ export interface IPagarmeWebhookDTO {
     updated_at: string;
     closed_at: string;
     charges: IPagarmeChargeDTO[];
+    cycle: {
+      id: string;
+      start_at: string;
+      end_at: string;
+      billing_at: string;
+      status: string;
+      cycle: number;
+    };
     metadata: unknown;
   };
 }

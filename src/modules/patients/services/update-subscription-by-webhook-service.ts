@@ -23,8 +23,12 @@ export class UpdateSubscriptionByWebhookService {
           'Paciente não encontrado, verifique e tente novamente!',
         );
       }
-      patient.planExpiresAt = addMonths(new Date(charge.paid_at), 1);
-      patient.planId = data.items[0].code;
+      if (charge.payment_method === 'pix') {
+        patient.planExpiresAt = addMonths(new Date(charge.paid_at), 1);
+        patient.planId = data.items[0].code;
+      } else {
+        patient.planExpiresAt = new Date(data.cycle.end_at);
+      }
       await this.patientsRepository.save(patient);
     }
   }

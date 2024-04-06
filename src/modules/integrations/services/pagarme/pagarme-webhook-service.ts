@@ -7,11 +7,15 @@ import { IPagarmeWebhookDTO } from '../../contracts/dtos/pagarme/pagarme-webhook
 export class PagarmeWebhookService {
   public async execute(webhook: IPagarmeWebhookDTO): Promise<void> {
     const { type } = webhook;
+    const updateSubscriptionByWebhookService = container.resolve(
+      UpdateSubscriptionByWebhookService,
+    );
     switch (type) {
       case 'order.paid':
-        const updateSubscriptionByWebhookService = container.resolve(
-          UpdateSubscriptionByWebhookService,
-        );
+        await updateSubscriptionByWebhookService.execute(webhook);
+        break;
+
+      case 'invoice.paid':
         await updateSubscriptionByWebhookService.execute(webhook);
         break;
 
