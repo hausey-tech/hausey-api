@@ -12,7 +12,7 @@ export class UpdateSubscriptionByWebhookService {
   ) {}
 
   public async execute({ data }: IPagarmeWebhookDTO): Promise<void> {
-    const charge = data.charges[0] || data.charge;
+    const charge = data.charges ? data.charges[0] : data.charge;
     if (charge.status === 'paid') {
       const customerId = data.customer.id;
       const patient = await this.patientsRepository.findByCustomerId(
