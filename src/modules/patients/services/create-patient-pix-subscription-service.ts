@@ -52,7 +52,7 @@ export class CreatePatientPixSubscriptionService {
         patient.sellerId,
       );
       if (sellerCode.discount) {
-        price = plan.price - plan.price * (sellerCode.discount / 100);
+        price = plan.price - sellerCode.discount;
       }
       if (sellerCode.fee && patient.seller.recipientId) {
         split.push({

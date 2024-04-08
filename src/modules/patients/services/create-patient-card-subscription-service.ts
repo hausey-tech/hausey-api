@@ -67,7 +67,7 @@ export class CreatePatientCardSubscriptionService {
       );
       if (sellerCode.discount) {
         discounts.push({
-          discountType: 'percentage',
+          discountType: 'flat',
           value: sellerCode.discount,
         });
       }
