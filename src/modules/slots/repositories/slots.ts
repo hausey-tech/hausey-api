@@ -8,8 +8,15 @@ import { Slot } from '../entities/slot';
 export class SlotsRepository implements ISlotsRepository {
   private ormRepository: Repository<Slot>;
 
+  private relations: string[];
+
   constructor() {
     this.ormRepository = PostgresDataSource.getRepository(Slot);
+    this.relations = ['professional'];
+  }
+
+  public async find(): Promise<Slot[]> {
+    return this.ormRepository.find({ relations: this.relations });
   }
 
   public async findByProfessionalIds(ids: string[]): Promise<Slot[]> {

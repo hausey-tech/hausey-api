@@ -1,6 +1,6 @@
 export interface ICreateDBSlotDTO {
   professionalId: string;
-  weekDay: number;
+  date: string;
   startTime: string;
   endTime: string;
 }

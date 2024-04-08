@@ -22,7 +22,6 @@ export const ensureAuthentication = (
   // if (!authHeader) {
   //   throw new AppError('Falha de autenticação, nenhum token fornecido', 401);
   // }
-  console.log(apiKey);
   if (authHeader && apiKey) {
     throw new AppError(
       'Both JWT token and API key provided. Please use only one type of authentication.',

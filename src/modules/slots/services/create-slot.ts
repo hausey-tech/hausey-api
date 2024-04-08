@@ -30,13 +30,13 @@ export class CreateSlotService {
 
     await Promise.all(
       slots.map(async slot => {
-        const { weekDay } = slot;
+        const { date } = slot;
         slot.times.map(async time => {
           const { startTime, endTime } = time;
           await this.slotsRepository.save(
             await this.slotsRepository.create({
               professionalId,
-              weekDay,
+              date,
               startTime,
               endTime,
             }),

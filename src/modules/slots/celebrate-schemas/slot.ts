@@ -2,7 +2,7 @@ import { Joi, Segments } from 'celebrate';
 
 export const FindSlotsSchema = {
   [Segments.QUERY]: Joi.object().keys({
-    professionalId: Joi.string().uuid().required(),
+    professionalId: Joi.string().uuid(),
     days: Joi.number().min(1).max(30),
   }),
 };
@@ -14,7 +14,7 @@ export const CreateSlotSchema = {
       .items(
         Joi.object()
           .keys({
-            weekDay: Joi.number().equal(1, 2, 3, 4, 5, 6, 7).required(),
+            date: Joi.string().required(),
             times: Joi.array()
               .items(
                 Joi.object()
