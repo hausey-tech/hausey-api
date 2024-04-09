@@ -1,6 +1,7 @@
 import { injectable, inject, container } from 'tsyringe';
 import { cpf } from 'cpf-cnpj-validator';
 
+import { addYears } from 'date-fns';
 import { CreatePagarmeCustomerService } from '../../integrations/services/pagarme/create-pagarme-customer-service';
 import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
@@ -8,6 +9,7 @@ import { Patient } from '../entities/patient';
 import { UpdateSellerCodeService } from '../../seller-codes/services/update-seller-code';
 import { ITeamsRepository } from '../../teams/contracts/repositories/teams-repository';
 import { NotifySellerService } from '../../users/services/notify-seller';
+import { IPlansRepository } from '../../plans/contracts/repositories/plans';
 
 interface Props {
   name?: string;
@@ -28,6 +30,9 @@ export class UpdatePatientService {
 
     @inject('TeamsRepository')
     private teamsRepository: ITeamsRepository,
+
+    @inject('PlansRepository')
+    private plansRepository: IPlansRepository,
   ) {}
 
   public async execute(id: string, payload: Props): Promise<Patient> {
@@ -48,6 +53,8 @@ export class UpdatePatientService {
       );
     }
     let sellerId: string;
+    let planId: string;
+    let planExpiresAt: string;
     if (sellerCode) {
       const updateSellerCodeService = container.resolve(
         UpdateSellerCodeService,
@@ -56,6 +63,16 @@ export class UpdatePatientService {
         code: sellerCode,
       });
       sellerId = updatedSellerCode.sellerId;
+      if (updatedSellerCode.free) {
+        const isTest = process.env.PAGARME_SECRET_KEY.split('_')[1] === 'test';
+        const plan = await this.plansRepository.findByName(
+          isTest ? 'Cuidando de você Teste' : 'Cuidando de você',
+        );
+        if (plan) {
+          planId = plan.id;
+        }
+        planExpiresAt = addYears(new Date(), 2).toISOString();
+      }
     }
 
     if (document) {
@@ -102,6 +119,8 @@ export class UpdatePatientService {
       responsibleTeamId,
       document,
       sellerId,
+      planId,
+      planExpiresAt,
     });
 
     const updatedUser = await this.patientsRepository.findById(id);

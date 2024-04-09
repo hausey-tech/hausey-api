@@ -32,4 +32,7 @@ export class SellerCode extends BaseEntity {
 
   @Column('int', { nullable: true })
   maxUse: number | null;
+
+  @Column('boolean', { default: false })
+  free: boolean;
 }

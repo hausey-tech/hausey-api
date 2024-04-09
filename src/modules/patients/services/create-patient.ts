@@ -1,6 +1,7 @@
 import { injectable, inject, container } from 'tsyringe';
 import { cpf } from 'cpf-cnpj-validator';
 
+import { addYears } from 'date-fns';
 import { AppError } from '../../../shared/errors/app-error';
 import { ICreatePatientDTO } from '../contracts/dtos/create-patient';
 import { IPatientsRepository } from '../contracts/repositories/patients';
@@ -9,6 +10,7 @@ import { Patient } from '../entities/patient';
 import { mailer } from '../../../shared/utils/mailer';
 import { WelcomePatientHtmlText } from '../../../shared/utils/html-texts';
 import { UpdateSellerCodeService } from '../../seller-codes/services/update-seller-code';
+import { IPlansRepository } from '../../plans/contracts/repositories/plans';
 
 interface Props extends Omit<ICreatePatientDTO, 'sellerId'> {
   sellerCode?: string;
@@ -18,6 +20,9 @@ export class CreatePatientService {
   constructor(
     @inject('PatientsRepository')
     private patientsRepository: IPatientsRepository,
+
+    @inject('PlansRepository')
+    private plansRepository: IPlansRepository,
 
     @inject('HashProvider')
     private hashProvider: IHashProvider,
@@ -41,6 +46,8 @@ export class CreatePatientService {
       );
     }
     let sellerId: string;
+    let planId: string;
+    let planExpiresAt: Date;
     if (sellerCode) {
       const updateSellerCodeService = container.resolve(
         UpdateSellerCodeService,
@@ -49,6 +56,16 @@ export class CreatePatientService {
         code: sellerCode,
       });
       sellerId = updatedSellerCode.sellerId;
+      if (updatedSellerCode.free) {
+        const isTest = process.env.PAGARME_SECRET_KEY.split('_')[1] === 'test';
+        const plan = await this.plansRepository.findByName(
+          isTest ? 'Cuidando de você Teste' : 'Cuidando de você',
+        );
+        if (plan) {
+          planId = plan.id;
+        }
+        planExpiresAt = addYears(new Date(), 2);
+      }
     }
 
     if (document) {
@@ -83,6 +100,8 @@ export class CreatePatientService {
         ...payload,
         password: hashedPassword,
         sellerId,
+        planId,
+        planExpiresAt,
       });
     }
 
@@ -90,6 +109,8 @@ export class CreatePatientService {
       ...payload,
       password: hashedPassword,
       sellerId,
+      planId,
+      planExpiresAt,
     });
     mailer({
       to: 'adm.hausey@gmail.com',

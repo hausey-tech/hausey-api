@@ -8,4 +8,5 @@ export interface ICreatePatientDTO {
   sex?: 'M' | 'F';
   planId?: string;
   sellerId: string;
+  planExpiresAt?: Date;
 }
