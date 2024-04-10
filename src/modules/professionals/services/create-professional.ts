@@ -214,7 +214,7 @@ export class CreateUserAndProfessionalService {
     }
     mailer({
       to: savedProfessional.email,
-      subject: `💙Boas Vindas à Hausey!`,
+      subject: `💙Boas Vindas à Hausey, Profissional!`,
       body: WelcomeProfessionalHtmlText(savedProfessional.email, password),
     });
 
