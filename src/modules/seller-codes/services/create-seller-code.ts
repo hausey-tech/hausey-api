@@ -7,6 +7,10 @@ interface Props {
   code: string;
   sellerId: string;
   promotionCodeId: string;
+  discount: number;
+  fee: number;
+  maxUse?: number;
+  free?: boolean;
 }
 
 @injectable()
@@ -20,6 +24,10 @@ export class CreateSellerCode {
     code,
     sellerId,
     promotionCodeId,
+    discount,
+    fee,
+    maxUse,
+    free,
   }: Props): Promise<SellerCode> {
     const codeExists = await this.sellerCodesRepository.findByCode(code);
 
@@ -31,6 +39,10 @@ export class CreateSellerCode {
       code,
       sellerId,
       promotionCodeId,
+      discount,
+      fee,
+      maxUse,
+      free,
     });
 
     return this.sellerCodesRepository.save(sellerCode);

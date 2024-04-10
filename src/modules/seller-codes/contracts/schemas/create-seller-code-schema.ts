@@ -5,5 +5,9 @@ export const CreateSellerCodeSchema = {
     code: Joi.string().required(),
     sellerId: Joi.string().uuid().required(),
     promotionCodeId: Joi.string().required(),
+    discount: Joi.number().default(1500),
+    fee: Joi.number().default(20),
+    maxUse: Joi.number(),
+    free: Joi.boolean(),
   }),
 };
