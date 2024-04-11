@@ -15,4 +15,7 @@ export class Plan extends BaseEntity {
 
   @Column('varchar', { name: 'stripe_price_id', nullable: true })
   stripePriceId: string;
+
+  @Column('int', { nullable: true })
+  sellerPart: number | null;
 }

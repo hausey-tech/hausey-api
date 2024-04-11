@@ -48,17 +48,18 @@ export class CreatePatientPixSubscriptionService {
     let { price } = plan;
 
     if (patient.sellerId) {
+      const { sellerPart } = plan;
       const sellerCode = await this.sellerCodesRepository.findBySellerId(
         patient.sellerId,
       );
       if (sellerCode.discount) {
         price = plan.price - sellerCode.discount;
       }
-      if (sellerCode.fee && patient.seller.recipientId) {
+      if (sellerPart && patient.seller.recipientId) {
         split.push({
-          amount: sellerCode.fee,
+          amount: sellerPart,
           recipientId: patient.seller.recipientId,
-          type: 'percentage',
+          type: 'flat',
           options: {
             chargeProcessingFee: false,
             chargeRemainderFee: false,
@@ -66,9 +67,9 @@ export class CreatePatientPixSubscriptionService {
           },
         });
         split.push({
-          amount: 100 - sellerCode.fee,
+          amount: price - sellerPart,
           recipientId: process.env.PAGARME_RECIPIENT_ID,
-          type: 'percentage',
+          type: 'flat',
           options: {
             chargeProcessingFee: true,
             chargeRemainderFee: true,
