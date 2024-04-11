@@ -6,6 +6,7 @@ import { Professional } from '../entities/professional';
 import { AppError } from '../../../shared/errors/app-error';
 import { mailer } from '../../../shared/utils/mailer';
 import { IUpdatePassword } from '../contracts/dtos/update-password';
+import { sendgrid } from '../../../shared/utils/sendgrid';
 
 @injectable()
 export class UpdateProfessionalPasswordService {
@@ -51,6 +52,16 @@ export class UpdateProfessionalPasswordService {
     mailer({
       to: professionalUpdated.email,
       subject: `Sua senha foi redefinida`,
+      body: `
+        <h2>Olá, ${professionalUpdated.name}!</h2>
+        <p>A sua senha foi redefinida com sucesso.</p>
+        <p>Caso não tenha sido você, altere-a indo em "Esqueci minha senha" no app ou entre em contato com nosso suporte.</p>
+      `,
+    });
+    sendgrid({
+      to: professionalUpdated.email,
+      subject: `Sua senha foi redefinida`,
+      text: 'Lembrete de redefinição',
       body: `
         <h2>Olá, ${professionalUpdated.name}!</h2>
         <p>A sua senha foi redefinida com sucesso.</p>
