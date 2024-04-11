@@ -11,6 +11,7 @@ import {
 interface IProps {
   patientId: string;
   planId: string;
+  months: number;
 }
 
 @injectable()
@@ -26,7 +27,7 @@ export class CreatePatientPixSubscriptionService {
     private plansRepository: IPlansRepository,
   ) {}
 
-  public async execute({ patientId, planId }: IProps): Promise<IPix> {
+  public async execute({ patientId, planId, months }: IProps): Promise<IPix> {
     const patient = await this.patientsRepository.findById(patientId);
     if (!patient) {
       throw new AppError(
@@ -45,15 +46,15 @@ export class CreatePatientPixSubscriptionService {
       );
     }
     const split = [];
-    let { price } = plan;
+    let price = plan.price * months;
 
     if (patient.sellerId) {
-      const { sellerPart } = plan;
+      const sellerPart = (plan.sellerPart || 0) * months;
       const sellerCode = await this.sellerCodesRepository.findBySellerId(
         patient.sellerId,
       );
       if (sellerCode.discount) {
-        price = plan.price - sellerCode.discount;
+        price -= sellerCode.discount * months;
       }
       if (sellerPart && patient.seller.recipientId) {
         split.push({
@@ -86,6 +87,7 @@ export class CreatePatientPixSubscriptionService {
       customerId: patient.stripeCustomerId,
       plan,
       price,
+      months,
       split,
     });
 

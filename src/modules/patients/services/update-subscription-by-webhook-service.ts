@@ -24,9 +24,13 @@ export class UpdateSubscriptionByWebhookService {
         );
       }
       if (charge.payment_method === 'pix') {
+        const item = data.items[0];
         await this.patientsRepository.update(patient.id, {
-          planId: data.items[0].code,
-          planExpiresAt: addMonths(new Date(charge.paid_at), 1).toISOString(),
+          planId: item.code,
+          planExpiresAt: addMonths(
+            new Date(charge.paid_at),
+            item.quantity,
+          ).toISOString(),
         });
       } else {
         await this.patientsRepository.update(patient.id, {

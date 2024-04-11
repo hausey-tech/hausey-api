@@ -110,6 +110,11 @@ export const CreateSubscriptionSchema = {
     paymentMethod: Joi.string()
       .valid('credit_card', 'debit_card', 'pix')
       .required(),
+    months: Joi.when('paymentMethod', {
+      is: 'pix',
+      then: Joi.number().default(1),
+      otherwise: Joi.forbidden(),
+    }),
     cardToken: Joi.when('paymentMethod', {
       is: 'pix',
       then: Joi.forbidden(),

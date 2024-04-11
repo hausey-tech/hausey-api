@@ -14,6 +14,7 @@ export class CreatePagarmePixOrderService {
     customerId,
     plan,
     price,
+    months,
     split,
   }: ICreatePagarmePixOrderDTO): Promise<IPix> {
     try {
@@ -23,7 +24,7 @@ export class CreatePagarmePixOrderService {
           {
             amount: price,
             description: `Plano ${plan.id}`,
-            quantity: 1,
+            quantity: months,
             code: plan.id,
           },
         ],

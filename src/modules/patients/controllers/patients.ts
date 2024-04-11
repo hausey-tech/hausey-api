@@ -216,7 +216,7 @@ export class PatientsController {
     request: Request,
     response: Response,
   ): Promise<Response> {
-    const { patientId, planId, paymentMethod, cardToken, address } =
+    const { patientId, planId, paymentMethod, months, cardToken, address } =
       request.body;
     if (paymentMethod === 'pix') {
       const createPatientPixSubscriptionService = container.resolve(
@@ -225,6 +225,7 @@ export class PatientsController {
       const pix = await createPatientPixSubscriptionService.execute({
         patientId,
         planId,
+        months,
       });
       return response.json(pix);
     }
