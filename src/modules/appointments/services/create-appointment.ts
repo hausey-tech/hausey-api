@@ -8,7 +8,7 @@ import { IPatientsRepository } from '../../patients/contracts/repositories/patie
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
 
 import { createVideoRoomCode } from '../utils/create-video-room-code';
-import { mailer } from '../../../shared/utils/mailer';
+// import { mailer } from '../../../shared/utils/mailer';
 
 @injectable()
 export class CreateAppointmentService {
@@ -111,28 +111,28 @@ export class CreateAppointmentService {
       });
       appointment = appointmentEmergency;
       // find all the professionals of the type medical
-      const professionals = await this.professionalsRepository.findByRoleIds([
-        'b3460425-43fd-45ea-aec1-339627ea9825',
-        '64db0cda-ee21-4a82-a765-b0500d0bbd52',
-      ]);
-      if (professionals.length > 0) {
-        professionals.map(professional =>
-          mailer({
-            to: professional.email,
-            subject: `📢Nova Solicitação de Plantão!`,
-            body: `
-          <h2>Olá, um paciente solicitou um atendimento de plantão no app!</h2>
-          <h4>Veja as informações:</h4>
-          <p>Nome: <b>${patient.name}</b></p>
-          <p>Email: <b>${patient.email}</b></p>
-          <p>Telefone: <b>${patient.phoneNumber}</b></p>
-          <hr/>
-          <p>Clique no link abaixo para agendar no portal:</p>
-          <a href=${'https://hausey.com.br/doctor/dashboard'} target="_blank">Acessar atendimento<a/>
-        `,
-          }),
-        );
-      }
+      // const professionals = await this.professionalsRepository.findByRoleIds([
+      //   'b3460425-43fd-45ea-aec1-339627ea9825',
+      //   '64db0cda-ee21-4a82-a765-b0500d0bbd52',
+      // ]);
+      // if (professionals.length > 0) {
+      //   professionals.map(professional =>
+      //     mailer({
+      //       to: professional.email,
+      //       subject: `📢Nova Solicitação de Plantão!`,
+      //       body: `
+      //     <h2>Olá, um paciente solicitou um atendimento de plantão no app!</h2>
+      //     <h4>Veja as informações:</h4>
+      //     <p>Nome: <b>${patient.name}</b></p>
+      //     <p>Email: <b>${patient.email}</b></p>
+      //     <p>Telefone: <b>${patient.phoneNumber}</b></p>
+      //     <hr/>
+      //     <p>Clique no link abaixo para agendar no portal:</p>
+      //     <a href=${'https://hausey.com.br/doctor/dashboard'} target="_blank">Acessar atendimento<a/>
+      //   `,
+      //     }),
+      //   );
+      // }
     }
 
     appointment.paid = true;
