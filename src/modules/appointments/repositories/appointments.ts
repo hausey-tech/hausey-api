@@ -15,6 +15,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     this.relations = [
       'patient',
       'professional',
+      'professional.role',
       'specialty',
       'prescriptions',
       'medicalRecord',
