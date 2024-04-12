@@ -12,6 +12,7 @@ interface IFindAvailableSlotsDTO {
 }
 
 interface IAvailability {
+  id: string;
   professional: Professional;
   date: Date;
   slots: {
@@ -54,6 +55,7 @@ export class FindSlotsService {
 
       slots.forEach((slot: Slot) => {
         availability.push({
+          id: slot.id,
           date: slot.date,
           professional: slot.professional,
           slots: {
@@ -75,6 +77,7 @@ export class FindSlotsService {
 
     slots.forEach((slot: Slot) => {
       availability.push({
+        id: slot.id,
         date: slot.date,
         professional: slot.professional,
         slots: {
