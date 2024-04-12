@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 
 import { FindSlotsService } from '../services/find-slots';
 import { CreateSlotService } from '../services/create-slot';
+import { DeleteSlotService } from '../services/delete-slot';
 
 export class SlotsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -28,5 +29,17 @@ export class SlotsController {
     });
 
     return response.json({ message: 'Escala cadastrada com sucesso!' });
+  }
+
+  public async delete(request: Request, response: Response): Promise<Response> {
+    const { slotId } = request.params;
+
+    const deleteSlotService = container.resolve(DeleteSlotService);
+
+    const slot = await deleteSlotService.execute({
+      id: slotId,
+    });
+
+    return response.json(slot);
   }
 }

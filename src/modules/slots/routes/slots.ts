@@ -1,7 +1,11 @@
 import { celebrate } from 'celebrate';
 import { Router } from 'express';
 
-import { FindSlotsSchema, CreateSlotSchema } from '../celebrate-schemas/slot';
+import {
+  FindSlotsSchema,
+  CreateSlotSchema,
+  DeleteSlotSchema,
+} from '../celebrate-schemas/slot';
 import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
 import { SlotsController } from '../controllers/slots';
 
@@ -13,6 +17,12 @@ slotsRouter.get(
   ensureAuthentication,
   celebrate(FindSlotsSchema),
   slotsController.index,
+);
+slotsRouter.get(
+  '/:slotId/delete',
+  ensureAuthentication,
+  celebrate(DeleteSlotSchema),
+  slotsController.delete,
 );
 
 slotsRouter.post(

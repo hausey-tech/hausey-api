@@ -19,6 +19,10 @@ export class SlotsRepository implements ISlotsRepository {
     return this.ormRepository.find({ relations: this.relations });
   }
 
+  public async findById(id: string): Promise<Slot> {
+    return this.ormRepository.findOne({ where: { id } });
+  }
+
   public async findByProfessionalIds(ids: string[]): Promise<Slot[]> {
     return this.ormRepository.find({ where: { professionalId: In(ids) } });
   }
@@ -33,5 +37,10 @@ export class SlotsRepository implements ISlotsRepository {
 
   public async save(slot: Slot): Promise<Slot> {
     return this.ormRepository.save(slot);
+  }
+
+  public async delete(id: string): Promise<Slot> {
+    await this.ormRepository.softDelete(id);
+    return this.findById(id);
   }
 }

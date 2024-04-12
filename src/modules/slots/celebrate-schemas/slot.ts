@@ -6,6 +6,11 @@ export const FindSlotsSchema = {
     days: Joi.number().min(1).max(30),
   }),
 };
+export const DeleteSlotSchema = {
+  [Segments.QUERY]: Joi.object().keys({
+    slotId: Joi.string().uuid(),
+  }),
+};
 
 export const CreateSlotSchema = {
   [Segments.BODY]: Joi.object().keys({
