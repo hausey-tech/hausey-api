@@ -89,6 +89,9 @@ import { TeamResumesRepository } from '../../modules/team-resumes/repositories/t
 import { ReadMessagesRepository } from '../../modules/messages/repositories/read-messages-repository';
 import { IReadMessagesRepository } from '../../modules/messages/contracts/repositories/read-messages-repository';
 
+import { IErrorsRepository } from '../../modules/errors/contracts/repositories/errors-repository';
+import { ErrorsRepository } from '../../modules/errors/repositories/errors-repository';
+
 container.registerSingleton<IAddressesRepository>(
   'AddressesRepository',
   AddressesRepository,
@@ -233,4 +236,9 @@ container.registerSingleton<ITeamsRepository>(
 container.registerSingleton<ITeamProfessionalsRepository>(
   'TeamProfessionalsRepository',
   TeamProfessionalsRepository,
+);
+
+container.registerSingleton<IErrorsRepository>(
+  'ErrorsRepository',
+  ErrorsRepository,
 );
