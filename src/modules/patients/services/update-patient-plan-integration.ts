@@ -2,6 +2,8 @@ import { injectable, inject } from 'tsyringe';
 import { IPlansRepository } from '../../plans/contracts/repositories/plans';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { mailer } from '../../../shared/utils/mailer';
+import { AppError } from '../../../shared/errors/app-error';
+import { Patient } from '../entities/patient';
 
 interface Props {
   periodEnd: number;
@@ -23,17 +25,19 @@ export class UpdatePatientPlanPartnerService {
     patientId,
     priceId,
     periodEnd,
-  }: Props): Promise<void> {
+  }: Props): Promise<Patient> {
     const patient = await this.patientsRepository.findById(patientId);
 
     if (!patient) {
-      console.error('Paciente não encontrado!');
+      throw new AppError(
+        'Paciente não encontrado, verifique e tente novamente!',
+      );
     }
 
     const plan = await this.plansRepository.findyByPriceId(priceId);
 
     if (!plan) {
-      console.error('Plano não encontrado!');
+      throw new AppError('Plano não encontrado, verifique e tente novamente!');
     }
 
     patient.planId = plan.id;
@@ -56,6 +60,8 @@ export class UpdatePatientPlanPartnerService {
     `,
     });
 
-    await this.patientsRepository.save(patient);
+    const patientUpdated = await this.patientsRepository.save(patient);
+
+    return patientUpdated;
   }
 }
