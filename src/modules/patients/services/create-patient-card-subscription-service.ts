@@ -62,12 +62,10 @@ export class CreatePatientCardSubscriptionService {
     const split = [];
     const discounts = [];
     if (patient.sellerId) {
-      let { price } = plan;
       const sellerCode = await this.sellerCodesRepository.findBySellerId(
         patient.sellerId,
       );
       if (sellerCode.discount) {
-        price = plan.price - sellerCode.discount;
         discounts.push({
           discountType: 'flat',
           value: sellerCode.discount,
@@ -77,7 +75,7 @@ export class CreatePatientCardSubscriptionService {
         split.push({
           amount: plan.sellerPart,
           recipientId: patient.seller.recipientId,
-          type: 'flat',
+          type: 'percentage',
           options: {
             chargeProcessingFee: false,
             chargeRemainderFee: false,
@@ -85,9 +83,9 @@ export class CreatePatientCardSubscriptionService {
           },
         });
         split.push({
-          amount: price - plan.sellerPart,
+          amount: 100 - plan.sellerPart,
           recipientId: process.env.PAGARME_RECIPIENT_ID,
-          type: 'flat',
+          type: 'percentage',
           options: {
             chargeProcessingFee: true,
             chargeRemainderFee: true,
