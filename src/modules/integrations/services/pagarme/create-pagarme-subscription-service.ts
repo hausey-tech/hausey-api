@@ -152,6 +152,7 @@ export class CreatePagarmeSubscriptionService {
       );
       return data.current_cycle.end_at;
     } catch (error) {
+      console.error('Assinatura: ', error.response.data);
       throw new AppError(
         `Erro ao criar assinatura: ${error.response.data.message as string}`,
       );
