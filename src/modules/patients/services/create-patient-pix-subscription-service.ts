@@ -46,14 +46,14 @@ export class CreatePatientPixSubscriptionService {
       );
     }
     const split = [];
-    let price = plan.price * months;
+    let { price } = plan;
 
     if (patient.sellerId) {
       const sellerCode = await this.sellerCodesRepository.findBySellerId(
         patient.sellerId,
       );
       if (sellerCode.discount) {
-        price -= sellerCode.discount * months;
+        price -= sellerCode.discount;
       }
       if (plan.sellerPart && patient.seller.recipientId) {
         split.push({
