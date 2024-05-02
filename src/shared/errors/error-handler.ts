@@ -14,10 +14,12 @@ export function errorHandler(
 ): Response {
   const createErrorService = container.resolve(CreateErrorService);
   if (err instanceof AppError) {
-    createErrorService.execute({
-      statusCode: err.statusCode,
-      message: err.message,
-    });
+    if (err.statusCode !== 401) {
+      createErrorService.execute({
+        statusCode: err.statusCode,
+        message: err.message,
+      });
+    }
     return response.status(err.statusCode).json({
       status: 'error',
       message: err.message,
