@@ -7,5 +7,7 @@ export interface IGroupTypesRepository {
   findById(id: string): Promise<GroupType | null>;
   findByRoleId(roleId: string): Promise<GroupType[] | null>;
   create(payload: ICreateGroupTypeDto): Promise<GroupType>;
+  update(groupId: string, payload: ICreateGroupTypeDto): Promise<GroupType>;
   save(patient: GroupType): Promise<GroupType>;
+  delete(groupId: string): Promise<GroupType>;
 }

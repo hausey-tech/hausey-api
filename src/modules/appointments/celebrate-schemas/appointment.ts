@@ -35,6 +35,10 @@ export const UpdateAppointmentSchema = {
   [Segments.BODY]: Joi.object().keys({
     anamnesis: Joi.string(),
     primaryDiagnosis: Joi.string(),
+    date: Joi.string(),
+    professionalId: Joi.string().uuid(),
+    patientId: Joi.string().uuid(),
+    emergency: Joi.boolean(),
   }),
 };
 

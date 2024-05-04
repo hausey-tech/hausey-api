@@ -34,4 +34,17 @@ export class GroupTypesRepository implements IGroupTypesRepository {
   public async save(groupType: GroupType): Promise<GroupType> {
     return this.ormRepository.save(groupType);
   }
+
+  public async update(
+    groupId: string,
+    payload: ICreateGroupTypeDto,
+  ): Promise<GroupType> {
+    await this.ormRepository.update(groupId, payload);
+    return this.findById(groupId);
+  }
+
+  public async delete(groupId: string): Promise<GroupType> {
+    await this.ormRepository.softDelete(groupId);
+    return this.findById(groupId);
+  }
 }

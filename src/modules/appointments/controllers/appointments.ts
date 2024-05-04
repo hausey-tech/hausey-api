@@ -11,6 +11,7 @@ import { SetProfessionalService } from '../services/set-professional';
 import { CheckAppointmentPrice } from '../services/check-appointment-price';
 import { ToggleFinishedService } from '../services/toggle-finished';
 import { Appointment } from '../entities/appointment';
+import { ToggleCanceledService } from '../services/toggle-canceled';
 
 export class AppointmentsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -166,6 +167,21 @@ export class AppointmentsController {
     const toggleFinishedService = container.resolve(ToggleFinishedService);
 
     const appointment = await toggleFinishedService.execute({
+      appointmentId,
+    });
+
+    return response.json(appointment);
+  }
+
+  public async toggleCanceled(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { appointmentId } = request.params;
+
+    const toggleCanceledService = container.resolve(ToggleCanceledService);
+
+    const appointment = await toggleCanceledService.execute({
       appointmentId,
     });
 

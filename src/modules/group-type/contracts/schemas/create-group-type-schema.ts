@@ -7,3 +7,13 @@ export const CreateGroupTypeSchema = {
     roleId: Joi.string().uuid().required(),
   }),
 };
+export const UpdateGroupTypeSchema = {
+  [Segments.PARAMS]: Joi.object().keys({
+    groupTypeId: Joi.string().required(),
+  }),
+  [Segments.BODY]: Joi.object().keys({
+    name: Joi.string(),
+    description: Joi.string(),
+    roleId: Joi.string().uuid(),
+  }),
+};
