@@ -1,5 +1,5 @@
 import { injectable } from 'tsyringe';
-import { IPagarmeChargeDTO } from 'modules/integrations/contracts/dtos/pagarme/pagarme-charge-dto';
+import { IPagarmeChargeDTO } from '../../contracts/dtos/pagarme/pagarme-charge-dto';
 import { AppError } from '../../../../shared/errors/app-error';
 import { pagarmeInstance } from '../../utils/pagarme-instance';
 
