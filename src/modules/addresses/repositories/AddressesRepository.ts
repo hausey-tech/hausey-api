@@ -27,4 +27,8 @@ export class AddressesRepository implements IAddressesRepository {
   public async save(address: Address): Promise<Address> {
     return this.ormRepository.save(address);
   }
+
+  public async delete(id: string): Promise<void> {
+    await this.ormRepository.delete(id);
+  }
 }
