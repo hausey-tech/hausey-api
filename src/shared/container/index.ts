@@ -82,6 +82,9 @@ import { MessagesRepository } from '../../modules/messages/repositories/messages
 import { ITeamsRepository } from '../../modules/teams/contracts/repositories/teams-repository';
 import { TeamsRepository } from '../../modules/teams/repositories/teams-repository';
 
+import { IPatientFilesRepository } from '../../modules/patients/contracts/repositories/patient-files';
+import { PatientFilesRepository } from '../../modules/patients/repositories/patient-files';
+
 import { ITeamProfessionalsRepository } from '../../modules/teams/contracts/repositories/team-professionals-repository';
 import { TeamProfessionalsRepository } from '../../modules/teams/repositories/team-professionals-repository';
 import { ITeamResumesRepository } from '../../modules/team-resumes/contracts/repositories/team-resumes';
@@ -241,4 +244,9 @@ container.registerSingleton<ITeamProfessionalsRepository>(
 container.registerSingleton<IErrorsRepository>(
   'ErrorsRepository',
   ErrorsRepository,
+);
+
+container.registerSingleton<IPatientFilesRepository>(
+  'PatientFilesRepository',
+  PatientFilesRepository,
 );

@@ -17,6 +17,7 @@ import { GetGroupsByPatientService } from '../services/get-groups-by-patient';
 import { UpdatePatientPlanPartnerService } from '../services/update-patient-plan-integration';
 import { CreatePatientCardSubscriptionService } from '../services/create-patient-card-subscription-service';
 import { CreatePatientPixSubscriptionService } from '../services/create-patient-pix-subscription-service';
+import { UploadPatientFileService } from '../services/upload-patient-file';
 
 export class PatientsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -47,6 +48,26 @@ export class PatientsController {
     });
 
     return response.json(session);
+  }
+
+  public async createPatientFile(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { file, body } = request;
+    const { patientId } = request.params;
+
+    const createPatientFileService = container.resolve(
+      UploadPatientFileService,
+    );
+
+    const patientFile = await createPatientFileService.execute({
+      patientId,
+      file,
+      ...body,
+    });
+
+    return response.json(patientFile);
   }
 
   public async getPatientsByGroup(

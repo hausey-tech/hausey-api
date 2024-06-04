@@ -1,6 +1,6 @@
 import { celebrate } from 'celebrate';
 import { Router } from 'express';
-
+import { upload } from '../../../shared/utils';
 import {
   ListPatientsSchema,
   CreatePatientSchema,
@@ -44,6 +44,14 @@ patientsRouter.get(
   '/get-group-by-patient',
   celebrate(GetGroupByPatientSchema),
   patientsController.getGroupsByPatient,
+);
+
+patientsRouter.post(
+  '/:patientId/patient-files',
+  ensureAuthentication,
+  // celebrate(CreatePatientFileSchema),
+  upload.single('file'),
+  patientsController.createPatientFile,
 );
 
 patientsRouter.post(

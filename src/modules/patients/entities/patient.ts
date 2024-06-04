@@ -15,6 +15,7 @@ import { User } from '../../users/entities/user';
 import { PatientGroup } from './patient-group';
 import { PatientProfessionalAssistance } from './patient-professional-assistance';
 import { Team } from '../../teams/entities/team-entity';
+import { PatientFiles } from './patient-files';
 
 @Entity('patients')
 export class Patient extends UserEntity {
@@ -71,4 +72,7 @@ export class Patient extends UserEntity {
 
   @Column('timestamp', { nullable: true })
   resetPasswordTokenExpiresIn: Date | null;
+
+  @OneToMany(() => PatientFiles, patientFiles => patientFiles.patient)
+  files: PatientFiles[];
 }
