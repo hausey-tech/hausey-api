@@ -16,6 +16,7 @@ import {
   GetGroupByPatientSchema,
   UpdatePatientPlanSchema,
   CreateSubscriptionSchema,
+  GetPatientFilesSchema,
 } from '../celebrate-schemas/patient';
 import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
 import { PatientsController } from '../controllers/patients';
@@ -44,6 +45,13 @@ patientsRouter.get(
   '/get-group-by-patient',
   celebrate(GetGroupByPatientSchema),
   patientsController.getGroupsByPatient,
+);
+
+patientsRouter.get(
+  '/:patientId/patient-files',
+  ensureAuthentication,
+  celebrate(GetPatientFilesSchema),
+  patientsController.getPatientFiles,
 );
 
 patientsRouter.post(

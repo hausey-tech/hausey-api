@@ -18,6 +18,7 @@ import { UpdatePatientPlanPartnerService } from '../services/update-patient-plan
 import { CreatePatientCardSubscriptionService } from '../services/create-patient-card-subscription-service';
 import { CreatePatientPixSubscriptionService } from '../services/create-patient-pix-subscription-service';
 import { UploadPatientFileService } from '../services/upload-patient-file';
+import { GetPatientFilesByPatientService } from '../services/get-patient-files-by-patient copy';
 
 export class PatientsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -48,6 +49,23 @@ export class PatientsController {
     });
 
     return response.json(session);
+  }
+
+  public async getPatientFiles(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { patientId } = request.params;
+
+    const getPatientFilesByPatientService = container.resolve(
+      GetPatientFilesByPatientService,
+    );
+
+    const patients = await getPatientFilesByPatientService.execute({
+      patientId,
+    });
+
+    return response.json(patients);
   }
 
   public async createPatientFile(
