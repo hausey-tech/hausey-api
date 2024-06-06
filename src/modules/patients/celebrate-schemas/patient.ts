@@ -28,6 +28,16 @@ export const GetGroupByPatientSchema = {
     patientId: Joi.string().uuid().required(),
   }),
 };
+export const GetPatientFilesSchema = {
+  [Segments.PARAMS]: Joi.object().keys({
+    patientId: Joi.string().uuid().required(),
+  }),
+};
+export const DeletePatientFileSchema = {
+  [Segments.PARAMS]: Joi.object().keys({
+    id: Joi.string().uuid().required(),
+  }),
+};
 export const CreatePatientFileSchema = {
   [Segments.PARAMS]: Joi.object().keys({
     patientId: Joi.string().uuid().required(),

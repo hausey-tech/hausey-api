@@ -12,7 +12,7 @@ export class PatientFilesRepository implements IPatientFilesRepository {
 
   constructor() {
     this.ormRepository = PostgresDataSource.getRepository(PatientFiles);
-    this.relations = ['patient', 'patient_files'];
+    // this.relations = ['patient'];
   }
 
   public async find(): Promise<PatientFiles[]> {
@@ -38,6 +38,14 @@ export class PatientFilesRepository implements IPatientFilesRepository {
       where: { id: In(ids) },
       relations: this.relations,
     });
+  }
+
+  public async softDeleteById(id: string): Promise<void> {
+    await this.ormRepository.softDelete(id);
+  }
+
+  public async hardDeleteById(id: string): Promise<void> {
+    await this.ormRepository.delete(id);
   }
 
   public async create(payload: ICreatePatientFileDto): Promise<PatientFiles> {

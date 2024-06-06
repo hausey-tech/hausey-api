@@ -80,6 +80,8 @@ export function errorHandler(
     });
   }
 
+  console.log(err.message);
+
   createErrorService.execute({
     statusCode: 500,
     message: err.message,
