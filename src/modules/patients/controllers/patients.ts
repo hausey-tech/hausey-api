@@ -19,6 +19,7 @@ import { CreatePatientCardSubscriptionService } from '../services/create-patient
 import { CreatePatientPixSubscriptionService } from '../services/create-patient-pix-subscription-service';
 import { UploadPatientFileService } from '../services/upload-patient-file';
 import { GetPatientFilesByPatientService } from '../services/get-patient-files-by-patient copy';
+import { DeletePatientFileService } from '../services/delete-patient-file';
 
 export class PatientsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -86,6 +87,23 @@ export class PatientsController {
     });
 
     return response.json(patientFile);
+  }
+
+  public async deletePatientFile(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { id } = request.params;
+
+    const deletePatientFileService = container.resolve(
+      DeletePatientFileService,
+    );
+
+    const message = await deletePatientFileService.execute({
+      id,
+    });
+
+    return response.json(message);
   }
 
   public async getPatientsByGroup(

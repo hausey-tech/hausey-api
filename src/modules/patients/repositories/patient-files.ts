@@ -40,6 +40,14 @@ export class PatientFilesRepository implements IPatientFilesRepository {
     });
   }
 
+  public async softDeleteById(id: string): Promise<void> {
+    await this.ormRepository.softDelete(id);
+  }
+
+  public async hardDeleteById(id: string): Promise<void> {
+    await this.ormRepository.delete(id);
+  }
+
   public async create(payload: ICreatePatientFileDto): Promise<PatientFiles> {
     return this.ormRepository.create(payload);
   }

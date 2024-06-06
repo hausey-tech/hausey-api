@@ -17,6 +17,7 @@ import {
   UpdatePatientPlanSchema,
   CreateSubscriptionSchema,
   GetPatientFilesSchema,
+  DeletePatientFileSchema,
 } from '../celebrate-schemas/patient';
 import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
 import { PatientsController } from '../controllers/patients';
@@ -52,6 +53,13 @@ patientsRouter.get(
   ensureAuthentication,
   celebrate(GetPatientFilesSchema),
   patientsController.getPatientFiles,
+);
+
+patientsRouter.delete(
+  '/:id/patient-files',
+  ensureAuthentication,
+  celebrate(DeletePatientFileSchema),
+  patientsController.deletePatientFile,
 );
 
 patientsRouter.post(
