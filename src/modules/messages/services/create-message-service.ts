@@ -26,6 +26,7 @@ export class CreateMessageService {
     to,
     title,
     body,
+    link,
   }: ICreateMessageDTO): Promise<void> {
     if (typeof title === 'string' && typeof body === 'string') {
       let users: Patient[] = [];
@@ -68,6 +69,7 @@ export class CreateMessageService {
         to,
         title,
         body,
+        link,
       });
     }
   }

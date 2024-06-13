@@ -18,6 +18,9 @@ export class Message extends BaseEntity {
   @Column('varchar', { nullable: true })
   body: string;
 
+  @Column('varchar', { nullable: true })
+  link: string;
+
   @Column('timestamp', { nullable: true })
   startsAt: Date;
 

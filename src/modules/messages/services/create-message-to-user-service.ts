@@ -21,6 +21,7 @@ export class CreateMessageToUserService {
     to,
     title,
     body,
+    link,
   }: ICreateMessageDTO): Promise<void> {
     const user = await this.patientsRepository.findById(to);
     if (!user) {
@@ -45,6 +46,7 @@ export class CreateMessageToUserService {
       to,
       title,
       body,
+      link,
     });
   }
 }
