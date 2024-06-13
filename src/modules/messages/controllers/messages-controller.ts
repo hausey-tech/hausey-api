@@ -19,7 +19,7 @@ export class MessagesController {
 
   public async create(request: Request, response: Response): Promise<Response> {
     const { body: reqBody, file } = request;
-    const { type, to, title, body, startsAt, expiresAt } = reqBody;
+    const { type, to, title, body, link, startsAt, expiresAt } = reqBody;
     const createMessageService = container.resolve(CreateMessageService);
     await createMessageService.execute({
       type,
@@ -27,6 +27,7 @@ export class MessagesController {
       image: file,
       title,
       body,
+      link,
       startsAt,
       expiresAt,
     });

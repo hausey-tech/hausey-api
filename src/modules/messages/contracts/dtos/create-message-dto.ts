@@ -4,6 +4,7 @@ export interface ICreateMessageDTO {
   image?: Express.Multer.File;
   title?: string;
   body?: string;
+  link?: string;
   startsAt?: string;
   expiresAt?: string;
 }

@@ -6,6 +6,7 @@ export const CreateMessageSchema = {
     to: Joi.string().required(),
     title: Joi.string(),
     body: Joi.string(),
+    link: Joi.string(),
     startsAt: Joi.string(),
     expiresAt: Joi.string(),
   }),

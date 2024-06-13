@@ -6,6 +6,7 @@ export interface ICreateMessage {
   image?: string;
   title?: string;
   body?: string;
+  link?: string;
   startsAt?: string;
   expiresAt?: string;
 }
