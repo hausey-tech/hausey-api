@@ -7,13 +7,16 @@ interface IProps {
     title: string;
     body: string;
   };
+  data?: {
+    link: string;
+  };
 }
 
 @injectable()
 export class SendFirebaseMessagingService {
-  public async execute({ token, notification }: IProps): Promise<void> {
+  public async execute({ token, notification, data }: IProps): Promise<void> {
     try {
-      await firebaseMessagingInstance.send({ token, notification });
+      await firebaseMessagingInstance.send({ token, notification, data });
     } catch (error) {
       console.error({
         message: 'Error on sending notification',

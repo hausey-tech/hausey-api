@@ -35,6 +35,7 @@ export class CreateMessageToUserService {
         await sendPushService.execute({
           token: user.fcmToken as string,
           notification: { title, body },
+          data: { link },
         });
       } catch {
         console.log('Erro ao enviar FCM');

@@ -38,7 +38,7 @@ export class MessagesController {
     request: Request,
     response: Response,
   ): Promise<Response> {
-    const { type, to, title, body } = request.body;
+    const { type, to, title, body, link } = request.body;
     const createMessageToUserService = container.resolve(
       CreateMessageToUserService,
     );
@@ -47,6 +47,7 @@ export class MessagesController {
       to,
       title,
       body,
+      link,
     });
     return response.json({ message: 'Mensagem enviada com sucesso!' });
   }

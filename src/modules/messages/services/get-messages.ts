@@ -74,22 +74,22 @@ export class GetUserMessagesService {
       });
     }
 
-    const readMessages = await this.readMessagesRepository.findByUserId(userId);
+    // const readMessages = await this.readMessagesRepository.findByUserId(userId);
 
-    const unreadMessages = messages.filter(message => {
-      return !readMessages.some(
-        readMessage => readMessage.messageId === message.id,
-      );
-    });
+    // const unreadMessages = messages.filter(message => {
+    //   return !readMessages.some(
+    //     readMessage => readMessage.messageId === message.id,
+    //   );
+    // });
 
-    if (unreadMessages.length === 0) return null;
+    // if (unreadMessages.length === 0) return null;
 
-    const messageToSend = unreadMessages[0];
+    // const messageToSend = unreadMessages[0];
 
-    await this.readMessagesRepository.create({
-      messageId: messageToSend.id,
-      userId,
-    });
+    // await this.readMessagesRepository.create({
+    //   messageId: messageToSend.id,
+    //   userId,
+    // });
 
     return messages;
   }
