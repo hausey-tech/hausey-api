@@ -6,4 +6,5 @@ export interface IAddressesRepository {
   findByPatientId(patientId: string): Promise<Address>;
   create(address: ICreateAddressDTO): Promise<Address>;
   save(address: Address): Promise<Address>;
+  delete(id: string): Promise<void>;
 }

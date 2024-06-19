@@ -32,9 +32,7 @@ export class CreateAddressService {
     );
 
     if (patientAddress) {
-      throw new AppError(
-        'Esse paciente já possui um endereço cadastrado, edite-o!',
-      );
+      await this.addressesRepository.delete(patientAddress.id);
     }
 
     const address = await this.addressesRepository.create(payload);

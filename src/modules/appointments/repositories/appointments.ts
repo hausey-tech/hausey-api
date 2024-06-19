@@ -14,6 +14,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     this.ormRepository = PostgresDataSource.getRepository(Appointment);
     this.relations = [
       'patient',
+      'patient.address',
       'professional',
       'professional.role',
       'specialty',
