@@ -55,23 +55,35 @@ export class GetUserMessagesService {
     );
 
     const GroupNames = [];
+    const GroupEnterDate = [];
 
     if (patientGroups.length > 0) {
-      patientGroups.map(pgroup => {
-        return pgroup.patientGroupTypes.map(groupType => {
-          return GroupNames.push(groupType.grouptype.name);
-        });
-      });
-    }
-    if (GroupNames.length > 0) {
-      GroupNames.map(async nameGroup => {
-        const messagesByGroup =
-          await this.messagesRepository.findByTypeAndDestination({
-            type: 'push',
-            destination: nameGroup,
+      // eslint-disable-next-line array-callback-return
+      await Promise.all(
+        patientGroups.map(async pgroup => {
+          // eslint-disable-next-line array-callback-return
+          await pgroup.patientGroupTypes.map(groupType => {
+            GroupNames.push(groupType.grouptype.name);
+            GroupEnterDate.push(groupType.createdAt);
           });
-        return messages.push(...messagesByGroup);
-      });
+        }),
+      );
+    }
+
+    if (GroupNames.length > 0) {
+      await Promise.all(
+        GroupNames.map(async (nameGroup, index) => {
+          const messagesByGroup =
+            await this.messagesRepository.findByTypeAndDestination({
+              type: 'push',
+              destination: nameGroup,
+            });
+          const filteredMessages = messagesByGroup.filter(
+            item => new Date(item.createdAt) > new Date(GroupEnterDate[index]),
+          );
+          messages.push(...filteredMessages);
+        }),
+      );
     }
 
     // const readMessages = await this.readMessagesRepository.findByUserId(userId);
@@ -90,7 +102,6 @@ export class GetUserMessagesService {
     //   messageId: messageToSend.id,
     //   userId,
     // });
-
     return messages;
   }
 }
