@@ -49,3 +49,10 @@ usersRouter.post(
   celebrate(CreateBankAccountSchema),
   usersController.createBankAccount,
 );
+
+usersRouter.post(
+  '/update-bank-account',
+  ensureAuthentication,
+  celebrate(CreateBankAccountSchema),
+  usersController.updateBankAccount,
+);
