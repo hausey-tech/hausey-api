@@ -1,5 +1,5 @@
 import { injectable } from 'tsyringe';
-import { pagarmeInstance } from 'modules/integrations/utils/pagarme-instance';
+import { pagarmeInstance } from '../../integrations/utils/pagarme-instance';
 import { AppError } from '../../../shared/errors/app-error';
 import { IUpdateBankAccount } from '../contracts/dtos/update-bank-account-dto';
 
