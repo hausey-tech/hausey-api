@@ -1,4 +1,5 @@
 import { injectable, inject, container } from 'tsyringe';
+import { isBefore } from 'date-fns';
 import { CreatePagarmeSubscriptionService } from '../../integrations/services/pagarme/create-pagarme-subscription-service';
 import { ISellerCodesRepository } from '../../seller-codes/contracts/repositories/seller-codes';
 import { AppError } from '../../../shared/errors/app-error';
@@ -52,6 +53,9 @@ export class CreatePatientCardSubscriptionService {
       throw new AppError(
         'Paciente não possui conta de pagamento, entre em contato com o suporte!',
       );
+    }
+    if (patient.planExpiresAt && isBefore(new Date(), patient.planExpiresAt)) {
+      throw new AppError('Paciente já possui assinatura vigente!');
     }
     const plan = await this.plansRepository.findyByPriceId(planId);
     if (!plan.stripePriceId) {
