@@ -80,11 +80,11 @@ export class UsersController {
     request: Request,
     response: Response,
   ): Promise<Response> {
-    const { id, bankAccount } = request.body;
+    const { recipientId, bankAccount } = request.body;
     const updateBankAccountService = container.resolve(
       UpdateBankAccountService,
     );
-    await updateBankAccountService.execute({ id, bankAccount });
+    await updateBankAccountService.execute({ recipientId, bankAccount });
     return response.json({ message: 'Conta bancária atualizada com sucesso!' });
   }
 }
