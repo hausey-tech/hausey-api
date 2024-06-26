@@ -27,10 +27,8 @@ export class UpdateBankAccountService {
         },
       );
     } catch (error) {
-      throw new AppError(
-        'Erro ao editar conta bancária: ',
-        error.response.data.message,
-      );
+      console.log('Erro editar conta bancária:', error.response.data);
+      throw new AppError('Erro ao editar conta bancária');
     }
   }
 }
