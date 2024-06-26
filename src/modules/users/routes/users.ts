@@ -11,6 +11,7 @@ import { ensureAuthentication } from '../../../shared/middlewares/ensure-authent
 import { cors } from '../../../shared/middlewares/cors';
 import { UsersController } from '../controllers/users';
 import { CreateBankAccountSchema } from '../contracts/schemas/create-bank-account-schema';
+import { UpdateBankAccountSchema } from '../contracts/schemas/update-bank-account-schema';
 
 export const usersRouter = Router();
 const usersController = new UsersController();
@@ -53,6 +54,6 @@ usersRouter.post(
 usersRouter.post(
   '/update-bank-account',
   ensureAuthentication,
-  celebrate(CreateBankAccountSchema),
+  celebrate(UpdateBankAccountSchema),
   usersController.updateBankAccount,
 );
