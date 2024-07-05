@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 import { PagarmeWebhookService } from '../services/pagarme/pagarme-webhook-service';
 import { ListPagarmeCustomerChargesService } from '../services/pagarme/list-pagarme-customer-charges-service';
+import { CreatePagarmeBoletoOrderService } from '../services/pagarme/create-pagarme-boleto-order-service';
 
 export class PagarmeController {
   public async webhook(
@@ -26,5 +27,22 @@ export class PagarmeController {
       customerId,
     });
     return response.json(charges);
+  }
+
+  public async createBoletoOrder(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { planId, quantity, userId, customer } = request.body;
+    const createPagarmeBoletoOrderService = container.resolve(
+      CreatePagarmeBoletoOrderService,
+    );
+    const pdfLink = await createPagarmeBoletoOrderService.execute({
+      planId,
+      quantity,
+      userId,
+      customer,
+    });
+    return response.json({ link: pdfLink });
   }
 }

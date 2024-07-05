@@ -3,6 +3,7 @@ import { celebrate } from 'celebrate';
 import { PagarmeController } from '../controllers/pagarme-controller';
 import { ListPagarmeCustomerChargesSchema } from '../contracts/schemas/list-pagarme-customer-charges-schema';
 import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
+import { CreatePagarmeBoletoOrderSchema } from '../contracts/schemas/create-pagarme-boleto-order-schema';
 
 export const pagarmeRouter = Router();
 const pagarmeController = new PagarmeController();
@@ -13,4 +14,11 @@ pagarmeRouter.get(
   ensureAuthentication,
   celebrate(ListPagarmeCustomerChargesSchema),
   pagarmeController.listCharges,
+);
+
+pagarmeRouter.post(
+  '/pagarme/boleto',
+  ensureAuthentication,
+  celebrate(CreatePagarmeBoletoOrderSchema),
+  pagarmeController.createBoletoOrder,
 );

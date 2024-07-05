@@ -11,6 +11,10 @@ export class PlansRepository implements IPlansRepository {
     this.ormRepository = PostgresDataSource.getRepository(Plan);
   }
 
+  public async findById(id: string): Promise<Plan | null> {
+    return this.ormRepository.findOne({ where: { id } });
+  }
+
   public async findAll(): Promise<Plan[]> {
     return this.ormRepository.find();
   }
