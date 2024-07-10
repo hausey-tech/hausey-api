@@ -21,6 +21,8 @@ interface Props {
   sellerCode?: string;
   fcmToken?: string;
   responsibleTeamId?: string;
+  language?: string;
+  region?: string;
 }
 @injectable()
 export class UpdatePatientService {

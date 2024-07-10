@@ -13,4 +13,6 @@ export interface IUpdatePatientDTO {
   resetPasswordToken?: string | null;
   resetPasswordTokenExpiresIn?: Date | null;
   stripeCustomerId?: string;
+  language?: string;
+  region?: string;
 }

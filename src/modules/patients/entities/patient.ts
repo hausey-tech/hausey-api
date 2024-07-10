@@ -58,6 +58,12 @@ export class Patient extends UserEntity {
   questionnaireUrl: string | null;
 
   @Column('varchar', { nullable: true })
+  region: string | null;
+
+  @Column('varchar', { nullable: true })
+  language: string | null;
+
+  @Column('varchar', { nullable: true })
   fcmToken: string | null;
 
   @Column('varchar', { nullable: true })

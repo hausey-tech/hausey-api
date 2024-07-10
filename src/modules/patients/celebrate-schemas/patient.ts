@@ -85,6 +85,8 @@ export const UpdatePatientSchema = {
     fcmToken: Joi.string(),
     sex: Joi.string().equal('M', 'F'),
     responsibleTeamId: Joi.string().uuid(),
+    language: Joi.string(),
+    region: Joi.string(),
   }),
 };
 export const UpdatePatientPlanSchema = {
