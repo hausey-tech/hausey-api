@@ -33,13 +33,13 @@ export class PagarmeController {
     request: Request,
     response: Response,
   ): Promise<Response> {
-    const { planId, quantity, userId, customer } = request.body;
+    const { price, date, userId, customer } = request.body;
     const createPagarmeBoletoOrderService = container.resolve(
       CreatePagarmeBoletoOrderService,
     );
     const pdfLink = await createPagarmeBoletoOrderService.execute({
-      planId,
-      quantity,
+      price,
+      date,
       userId,
       customer,
     });

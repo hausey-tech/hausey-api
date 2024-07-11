@@ -3,7 +3,6 @@ import { AppError } from '../../../../shared/errors/app-error';
 import { ICreatePagarmeBoletoOrderDTO } from '../../contracts/dtos/create-pagarme-boleto-order-dto';
 import { pagarmeInstance } from '../../utils/pagarme-instance';
 import { IUsersRepository } from '../../../users/contracts/repositories/users';
-import { IPlansRepository } from '../../../plans/contracts/repositories/plans';
 
 export interface IPix {
   qrCode: string;
@@ -15,22 +14,14 @@ export class CreatePagarmeBoletoOrderService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
-
-    @inject('PlansRepository')
-    private plansRepository: IPlansRepository,
   ) {}
 
   public async execute({
-    planId,
-    quantity,
+    price,
+    date,
     userId,
     customer,
   }: ICreatePagarmeBoletoOrderDTO): Promise<string> {
-    const plan = await this.plansRepository.findById(planId);
-    if (!plan) {
-      throw new AppError('Plano não encontrado, verifique e tente novamente!');
-    }
-
     const user = await this.usersRepository.findById(userId);
     if (!user) {
       throw new AppError(
@@ -48,17 +39,17 @@ export class CreatePagarmeBoletoOrderService {
         customer,
         items: [
           {
-            amount: plan.price,
-            description: `${quantity}x Plano ${planId}`,
-            quantity,
-            code: planId,
+            amount: price,
+            description: `Boleto para ${customer.name} com vencimento em ${date}`,
+            quantity: 1,
+            code: `${new Date().toISOString()}:${customer.document}:${date}`,
           },
         ],
         payments: [
           {
             split: [
               {
-                amount: plan.sellerPart,
+                amount: 43,
                 recipient_id: user.recipientId,
                 type: 'percentage',
                 options: {
@@ -68,7 +59,7 @@ export class CreatePagarmeBoletoOrderService {
                 },
               },
               {
-                amount: 100 - plan.sellerPart,
+                amount: 57,
                 recipient_id: process.env.PAGARME_RECIPIENT_ID,
                 type: 'percentage',
                 options: {
@@ -80,7 +71,8 @@ export class CreatePagarmeBoletoOrderService {
             ],
             payment_method: 'boleto',
             boleto: {
-              instructions: `Pague para liberar ${quantity} acessos ao app Hausey`,
+              due_at: date,
+              instructions: `Pague para liberar acesso ao app Hausey`,
               document_number: Math.random().toString(16).substring(2),
               type: 'BDP',
             },
@@ -94,7 +86,7 @@ export class CreatePagarmeBoletoOrderService {
         'Erro ao criar pedido, entre em contato com o suporte!',
       );
     } catch (error) {
-      console.error(error.response.data);
+      console.error(error);
       throw new AppError('Erro ao criar pedido, tente novamente mais tarde!');
     }
   }

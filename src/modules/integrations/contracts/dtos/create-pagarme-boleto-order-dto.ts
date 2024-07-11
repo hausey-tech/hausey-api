@@ -1,6 +1,6 @@
 export interface ICreatePagarmeBoletoOrderDTO {
-  planId: string;
-  quantity: number;
+  price: number;
+  date: string;
   userId: string;
   customer: {
     name: string;

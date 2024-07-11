@@ -2,8 +2,8 @@ import { Joi, Segments } from 'celebrate';
 
 export const CreatePagarmeBoletoOrderSchema = {
   [Segments.BODY]: Joi.object().keys({
-    planId: Joi.string().uuid().required(),
-    quantity: Joi.number().required(),
+    price: Joi.number().required(),
+    date: Joi.string().length(10).required(),
     userId: Joi.string().uuid().required(),
     customer: Joi.object()
       .keys({
