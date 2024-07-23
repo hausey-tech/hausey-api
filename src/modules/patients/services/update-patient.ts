@@ -1,5 +1,4 @@
 import { injectable, inject, container } from 'tsyringe';
-import { cpf } from 'cpf-cnpj-validator';
 
 import { addYears } from 'date-fns';
 import { CreatePagarmeCustomerService } from '../../integrations/services/pagarme/create-pagarme-customer-service';
@@ -78,12 +77,6 @@ export class UpdatePatientService {
     }
 
     if (document) {
-      const isCpfValid = cpf.isValid(document);
-
-      if (!isCpfValid) {
-        throw new AppError('CPF inválido, verifique e tente novamente!');
-      }
-
       const patientWithDocumentExists =
         await this.patientsRepository.findByDocument(document);
 

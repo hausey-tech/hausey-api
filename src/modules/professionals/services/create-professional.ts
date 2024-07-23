@@ -1,6 +1,5 @@
 import { injectable, inject, container } from 'tsyringe';
 
-import { cpf } from 'cpf-cnpj-validator';
 import { IRolesRepository } from '../../roles/contracts/repositories/roles';
 import { IProfessionalSpecialtiesRepository } from '../contracts/repositories/professional-specialties';
 import { CheckIfMemedUserAlreadyExists } from '../../integrations/services/check-if-memed-user-already-exists';
@@ -76,12 +75,6 @@ export class CreateUserAndProfessionalService {
     let specialtyMemedId: number;
 
     if (document) {
-      const isCpfValid = cpf.isValid(document);
-
-      if (!isCpfValid) {
-        throw new AppError('CPF inválido, verifique e tente novamente!');
-      }
-
       const userWithDocumentExists =
         await this.professionalsRepository.findByDocument(document);
 

@@ -1,5 +1,4 @@
 import { injectable, inject, container } from 'tsyringe';
-import { cpf } from 'cpf-cnpj-validator';
 
 import { addYears } from 'date-fns';
 import { AppError } from '../../../shared/errors/app-error';
@@ -69,12 +68,6 @@ export class CreatePatientService {
     }
 
     if (document) {
-      const isCpfValid = cpf.isValid(document);
-
-      if (!isCpfValid) {
-        throw new AppError('CPF inválido, verifique e tente novamente!');
-      }
-
       const patientWithDocumentExists =
         await this.patientsRepository.findByDocument(document);
 

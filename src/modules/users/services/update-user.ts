@@ -1,5 +1,4 @@
 import { injectable, inject } from 'tsyringe';
-import { cpf } from 'cpf-cnpj-validator';
 
 import { AppError } from '../../../shared/errors/app-error';
 import { IUsersRepository } from '../contracts/repositories/users';
@@ -25,12 +24,6 @@ export class UpdateUserService {
     }
 
     if (document) {
-      const isCpfValid = cpf.isValid(document);
-
-      if (!isCpfValid) {
-        throw new AppError('CPF inválido, verifique e tente novamente!');
-      }
-
       const userWithDocumentExists = await this.usersRepository.findByDocument(
         document,
       );
