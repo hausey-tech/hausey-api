@@ -27,5 +27,5 @@ export class GroupType extends BaseEntity {
 
   @ManyToOne(() => Specialty)
   @JoinColumn()
-  specialty: Specialty;
+  specialty: Specialty | null;
 }
