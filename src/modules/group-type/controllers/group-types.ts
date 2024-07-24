@@ -4,6 +4,7 @@ import { FindGroupTypes } from '../services/find-all-group-types';
 import { CreateGroupType } from '../services/create-group-type';
 import { UpdateGroupType } from '../services/update-group-type';
 import { DeleteGroupType } from '../services/delete-group-type';
+import { ICreateGroupTypeDto } from '../contracts/dtos/create-group-type';
 
 export class GroupTypesController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -18,11 +19,17 @@ export class GroupTypesController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const { name, description, roleId } = request.body;
+    const { name, description, roleId, specialtyId } =
+      request.body as ICreateGroupTypeDto;
 
     const createPlanService = container.resolve(CreateGroupType);
 
-    const plan = await createPlanService.execute({ name, description, roleId });
+    const plan = await createPlanService.execute({
+      name,
+      description,
+      roleId,
+      specialtyId,
+    });
 
     return response.json(plan);
   }

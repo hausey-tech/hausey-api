@@ -14,6 +14,7 @@ export class CreateGroupType {
     name,
     description,
     roleId,
+    specialtyId,
   }: ICreateGroupTypeDto): Promise<GroupType> {
     // const planExists = await this.groupTypesRepository.f(name);
 
@@ -25,6 +26,7 @@ export class CreateGroupType {
       name,
       description,
       roleId,
+      specialtyId,
     });
 
     return this.groupTypesRepository.save(groupType);
