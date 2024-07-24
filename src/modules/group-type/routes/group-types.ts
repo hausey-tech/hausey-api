@@ -7,11 +7,17 @@ import {
   UpdateGroupTypeSchema,
 } from '../contracts/schemas/create-group-type-schema';
 import { GroupTypesController } from '../controllers/group-types';
+import { FindAllGroupTypesSchema } from '../contracts/schemas/find-all-group-types-schema';
 
 export const groupTypesRouter = Router();
 const groupTypesController = new GroupTypesController();
 
-groupTypesRouter.get('/', ensureAuthentication, groupTypesController.index);
+groupTypesRouter.get(
+  '/',
+  ensureAuthentication,
+  celebrate(FindAllGroupTypesSchema),
+  groupTypesController.index,
+);
 groupTypesRouter.post(
   '/',
   celebrate(CreateGroupTypeSchema),

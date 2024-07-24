@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { PostgresDataSource } from '../../../shared/typeorm';
 import { ICreateGroupTypeDto } from '../contracts/dtos/create-group-type';
 import { GroupType } from '../entities/group-type';
@@ -11,8 +11,10 @@ export class GroupTypesRepository implements IGroupTypesRepository {
     this.ormRepository = PostgresDataSource.getRepository(GroupType);
   }
 
-  public async findAll(): Promise<GroupType[]> {
-    return this.ormRepository.find();
+  public async findAll(
+    options?: FindOptionsWhere<GroupType>,
+  ): Promise<GroupType[]> {
+    return this.ormRepository.find({ where: options });
   }
 
   public async findByName(name: string): Promise<GroupType | null> {

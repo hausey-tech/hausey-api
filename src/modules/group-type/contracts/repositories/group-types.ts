@@ -1,8 +1,9 @@
+import { FindOptionsWhere } from 'typeorm';
 import { GroupType } from '../../entities/group-type';
 import { ICreateGroupTypeDto } from '../dtos/create-group-type';
 
 export interface IGroupTypesRepository {
-  findAll(): Promise<GroupType[]>;
+  findAll(options?: FindOptionsWhere<GroupType>): Promise<GroupType[]>;
   findByName(name: string): Promise<GroupType | null>;
   findById(id: string): Promise<GroupType | null>;
   findByRoleId(roleId: string): Promise<GroupType[] | null>;

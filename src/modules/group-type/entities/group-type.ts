@@ -2,6 +2,7 @@ import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 
 import { Role } from '../../roles/entities/role';
 import { BaseEntity } from '../../../shared/typeorm/entities/base';
+import { Specialty } from '../../specialties/entities/specialty';
 
 @Entity('group_types')
 export class GroupType extends BaseEntity {
@@ -20,4 +21,11 @@ export class GroupType extends BaseEntity {
   })
   @JoinColumn({ name: 'role_id' })
   role: Role;
+
+  @Column('varchar', { nullable: true })
+  specialtyId: string | null;
+
+  @ManyToOne(() => Specialty)
+  @JoinColumn()
+  specialty: Specialty;
 }

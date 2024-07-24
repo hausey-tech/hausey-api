@@ -7,9 +7,12 @@ import { DeleteGroupType } from '../services/delete-group-type';
 
 export class GroupTypesController {
   public async index(request: Request, response: Response): Promise<Response> {
+    const { withSpecialty } = request.query;
     const findAllPlansService = container.resolve(FindGroupTypes);
 
-    const plans = await findAllPlansService.execute();
+    const plans = await findAllPlansService.execute({
+      withSpecialty: withSpecialty === 'true',
+    });
 
     return response.json(plans);
   }
