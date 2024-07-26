@@ -41,12 +41,13 @@ export class PatientProfessionalAssistancesRepository
     });
   }
 
-  public async findByPatientAndRole(
+  public async findByPatientRoleAndSpecialty(
     patientId: string,
     roleId: string,
+    specialtyId?: string,
   ): Promise<PatientProfessionalAssistance> {
     return this.ormRepository.findOne({
-      where: { patientId, roleId },
+      where: { patientId, roleId, specialtyId },
       relations: this.relations,
     });
   }

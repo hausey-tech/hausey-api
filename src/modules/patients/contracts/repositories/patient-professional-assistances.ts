@@ -5,9 +5,10 @@ export interface IPatientProfessionalAssistancesRepository {
   find(): Promise<PatientProfessionalAssistance[]>;
   findById(id: string): Promise<PatientProfessionalAssistance | null>;
   findByIds(ids: string[]): Promise<PatientProfessionalAssistance[]>;
-  findByPatientAndRole(
+  findByPatientRoleAndSpecialty(
     patientId: string,
     roleId: string,
+    specialtyId?: string,
   ): Promise<PatientProfessionalAssistance | null>;
   create(
     payload: ICreatePatientProfessionalAssistanceDto,

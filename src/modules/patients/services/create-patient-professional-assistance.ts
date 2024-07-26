@@ -19,7 +19,7 @@ export class CreatePatientProfessionalAssistanceService {
   public async execute(
     payload: ICreatePatientProfessionalAssistanceDto,
   ): Promise<PatientProfessionalAssistance> {
-    const { assistanceType, patientId, roleId } = payload;
+    const { assistanceType, patientId, roleId, specialtyId } = payload;
     const patientExists = await this.patientsRepository.findById(patientId);
 
     if (!patientExists) {
@@ -28,9 +28,10 @@ export class CreatePatientProfessionalAssistanceService {
       );
     }
     const assistanceExists =
-      await this.patientProfessionalAssistanceRepository.findByPatientAndRole(
+      await this.patientProfessionalAssistanceRepository.findByPatientRoleAndSpecialty(
         patientId,
         roleId,
+        specialtyId,
       );
     if (!assistanceExists) {
       const patientProfesionalAssistance =
@@ -38,6 +39,7 @@ export class CreatePatientProfessionalAssistanceService {
           assistanceType,
           patientId,
           roleId,
+          specialtyId,
         });
 
       return this.patientProfessionalAssistanceRepository.save(
