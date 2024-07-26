@@ -3,6 +3,7 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../../shared/typeorm/entities/base';
 import { Patient } from './patient';
 import { Role } from '../../roles/entities/role';
+import { Specialty } from '../../specialties/entities/specialty';
 
 @Entity('patient_professional_assistance')
 export class PatientProfessionalAssistance extends BaseEntity {
@@ -25,4 +26,11 @@ export class PatientProfessionalAssistance extends BaseEntity {
 
   @Column('varchar', { name: 'assistance_type' })
   assistanceType: 'Grupo' | 'Individual' | 'Não Necessita';
+
+  @Column('varchar', { nullable: true })
+  specialtyId: string | null;
+
+  @ManyToOne(() => Specialty)
+  @JoinColumn()
+  specialty: Specialty | null;
 }
