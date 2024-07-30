@@ -6,6 +6,7 @@ import {
   FormattedSpecialty,
   groupSpecialtiesByGroup,
 } from '../utils/group-specialties-by-group';
+import { Specialty } from '../entities/specialty';
 
 @injectable()
 export class FindSpecialtiesService {
@@ -17,7 +18,10 @@ export class FindSpecialtiesService {
     private professionalSpecialtiesRepository: IProfessionalSpecialtiesRepository,
   ) {}
 
-  public async execute(available?: string): Promise<FormattedSpecialty[]> {
+  public async execute(
+    available?: string,
+    grouped = 'true',
+  ): Promise<FormattedSpecialty[] | Specialty[]> {
     if (available === 'true') {
       const professionalSpecialties =
         await this.professionalSpecialtiesRepository.findAll();
@@ -30,11 +34,15 @@ export class FindSpecialtiesService {
         specialtiesIds,
       );
 
-      return groupSpecialtiesByGroup(specialties);
+      return grouped === 'true'
+        ? groupSpecialtiesByGroup(specialties)
+        : specialties;
     }
 
     const specialties = await this.specialtiesRepository.find();
 
-    return groupSpecialtiesByGroup(specialties);
+    return grouped === 'true'
+      ? groupSpecialtiesByGroup(specialties)
+      : specialties;
   }
 }
