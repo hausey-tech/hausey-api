@@ -68,7 +68,7 @@ export const CreatePatientProfessionalAssistanceSchema = {
     roleId: Joi.string().uuid().required(),
     patientId: Joi.string().uuid().required(),
     assistanceType: Joi.string()
-      .equal('Grupo', 'Individual', 'Não Necessita')
+      .equal('Grupo', 'Individual', 'Não Necessita', 'Crítico', 'Rotina')
       .required(),
   }),
 };
