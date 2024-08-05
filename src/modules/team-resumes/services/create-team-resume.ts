@@ -7,6 +7,7 @@ import { AppError } from '../../../shared/errors/app-error';
 import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 import { IRolesRepository } from '../../roles/contracts/repositories/roles';
 import { CreateMessageToUserService } from '../../messages/services/create-message-to-user-service';
+import { ISpecialtiesRepository } from '../../specialties/contracts/repositories/specialties';
 
 @injectable()
 export class CreateTeamResume {
@@ -22,6 +23,9 @@ export class CreateTeamResume {
 
     @inject('RolesRepository')
     private rolesRepository: IRolesRepository,
+
+    @inject('SpecialtiesRepository')
+    private specialtiesRepository: ISpecialtiesRepository,
   ) {}
 
   public async execute({
@@ -30,6 +34,7 @@ export class CreateTeamResume {
     patientId,
     professionalId,
     fileUrl,
+    specialtyId,
   }: ICreateTeamResumeDto): Promise<TeamResume> {
     const patientExists = await this.patientsRepository.findById(patientId);
 
@@ -55,10 +60,24 @@ export class CreateTeamResume {
         'Role não encontrado, verifique o id e tente novamente!',
       );
     }
+
+    if (specialtyId) {
+      const specialtyExists = await this.specialtiesRepository.findById(
+        specialtyId,
+      );
+
+      if (!specialtyExists) {
+        throw new AppError(
+          'Especialidade não encontrada, verifique o id e tente novamente!',
+        );
+      }
+    }
+
     const teamResumeExists =
       await this.teamResumesRepository.findByPatientAndRoleId(
         patientId,
         roleId,
+        specialtyId,
       );
     const sendUserMessagePushService = container.resolve(
       CreateMessageToUserService,
@@ -78,6 +97,7 @@ export class CreateTeamResume {
         observation,
         fileUrl,
         professionalId,
+        specialtyId,
       });
     }
 

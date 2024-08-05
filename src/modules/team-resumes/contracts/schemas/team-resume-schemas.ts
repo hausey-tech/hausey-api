@@ -6,6 +6,7 @@ export const CreateTeamResumeSchema = {
     professionalId: Joi.string().uuid().required(),
     observation: Joi.string().required(),
     roleId: Joi.string().uuid().required(),
+    specialtyId: Joi.string().uuid(),
   }),
 };
 export const FindTeamResumesSchema = {

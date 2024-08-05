@@ -4,4 +4,5 @@ export interface ICreateTeamResumeDto {
   patientId: string;
   roleId: string;
   professionalId: string;
+  specialtyId?: string;
 }

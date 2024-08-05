@@ -4,6 +4,7 @@ import { Patient } from '../../patients/entities/patient';
 import { Professional } from '../../professionals/entities/professional';
 import { BaseEntity } from '../../../shared/typeorm/entities/base';
 import { Role } from '../../roles/entities/role';
+import { Specialty } from '../../specialties/entities/specialty';
 
 @Entity('team_resumes')
 export class TeamResume extends BaseEntity {
@@ -36,4 +37,14 @@ export class TeamResume extends BaseEntity {
   @ManyToOne(() => Professional, { onDelete: 'SET NULL', onUpdate: 'CASCADE' })
   @JoinColumn({ name: 'professional_id' })
   professional: Professional;
+
+  @Column('varchar', { nullable: true })
+  specialtyId: string | null;
+
+  @ManyToOne(() => Specialty, {
+    onDelete: 'SET NULL',
+    onUpdate: 'CASCADE',
+  })
+  @JoinColumn()
+  specialty: Specialty;
 }

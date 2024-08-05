@@ -15,7 +15,8 @@ export class TeamResumeController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const { roleId, observation, patientId, professionalId } = request.body;
+    const { roleId, observation, patientId, professionalId, specialtyId } =
+      request.body;
 
     const createClinicalCategoryService = container.resolve(CreateTeamResume);
 
@@ -24,6 +25,7 @@ export class TeamResumeController {
       observation,
       patientId,
       professionalId,
+      specialtyId,
     });
 
     return response.json(plan);

@@ -44,8 +44,11 @@ export class TeamResumesRepository implements ITeamResumesRepository {
   public async findByPatientAndRoleId(
     patientId: string,
     roleId: string,
+    specialtyId?: string,
   ): Promise<TeamResume | null> {
-    return this.ormRepository.findOne({ where: { patientId, roleId } });
+    return this.ormRepository.findOne({
+      where: { patientId, roleId, specialtyId },
+    });
   }
 
   public async create(

@@ -9,6 +9,7 @@ export interface ITeamResumesRepository {
   findByPatientAndRoleId(
     patientId: string,
     roleId: string,
+    specialtyId?: string,
   ): Promise<TeamResume | null>;
   findById(id: string): Promise<TeamResume | null>;
   findByProfessionalId(professionalId: string): Promise<TeamResume[] | null>;
