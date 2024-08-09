@@ -24,6 +24,17 @@ export class DeletePatientGroupTypeService {
       );
     }
 
+    const patientGroup = await this.patientGroupsRepository.findById(
+      patientGroupType.patientGroupId,
+    );
+
+    if (patientGroup && patientGroup.patientGroupTypes.length === 1) {
+      await this.patientGroupsRepository.delete(
+        patientGroupType.patientGroupId,
+      );
+      return;
+    }
+
     await this.patientGroupTypesRepository.delete(patientGroupTypeId);
   }
 }
