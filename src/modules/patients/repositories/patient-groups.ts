@@ -54,4 +54,8 @@ export class PatientGroupsRepository implements IPatientGroupsRepository {
   public async save(patient: PatientGroup): Promise<PatientGroup> {
     return this.ormRepository.save(patient);
   }
+
+  public async delete(patientGroupId: string): Promise<void> {
+    await this.ormRepository.delete(patientGroupId);
+  }
 }

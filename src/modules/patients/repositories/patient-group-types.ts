@@ -51,4 +51,8 @@ export class PatientGroupTypesRepository
   public async save(patient: PatientGroupType): Promise<PatientGroupType> {
     return this.ormRepository.save(patient);
   }
+
+  public async delete(patientGroupTypeId: string): Promise<void> {
+    await this.ormRepository.delete(patientGroupTypeId);
+  }
 }

@@ -8,4 +8,5 @@ export interface IPatientGroupTypesRepository {
   findByGroupTypeIds(ids: string[]): Promise<PatientGroupType[] | null>;
   create(payload: ICreatePatientGroupTypeDto): Promise<PatientGroupType>;
   save(patient: PatientGroupType): Promise<PatientGroupType>;
+  delete(patientGroupTypeId: string): Promise<void>;
 }

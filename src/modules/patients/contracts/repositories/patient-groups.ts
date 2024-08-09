@@ -8,4 +8,5 @@ export interface IPatientGroupsRepository {
   findByIds(ids: string[]): Promise<PatientGroup[]>;
   create(payload: ICreatePatientGroupDto): Promise<PatientGroup>;
   save(patient: PatientGroup): Promise<PatientGroup>;
+  delete(patientGroupId: string): Promise<void>;
 }

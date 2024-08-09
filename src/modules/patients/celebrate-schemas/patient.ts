@@ -55,6 +55,11 @@ export const CreatePatientGroupSchema = {
     groupTypes: Joi.array().items(Joi.string().required()).required(),
   }),
 };
+export const DeletePatientGroupTypeSchema = {
+  [Segments.PARAMS]: Joi.object().keys({
+    patientGroupTypeId: Joi.string().uuid().required(),
+  }),
+};
 export const CreateForwardRequestSchema = {
   [Segments.BODY]: Joi.object().keys({
     observation: Joi.string().required(),

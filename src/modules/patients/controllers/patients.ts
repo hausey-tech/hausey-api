@@ -20,6 +20,7 @@ import { CreatePatientPixSubscriptionService } from '../services/create-patient-
 import { UploadPatientFileService } from '../services/upload-patient-file';
 import { GetPatientFilesByPatientService } from '../services/get-patient-files-by-patient copy';
 import { DeletePatientFileService } from '../services/delete-patient-file';
+import { DeletePatientGroupTypeService } from '../services/delete-patient-group-type';
 
 export class PatientsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -151,6 +152,21 @@ export class PatientsController {
     const patientGroup = await createPatientGroupService.execute(payload);
 
     return response.json(patientGroup);
+  }
+
+  public async deletePatientGroupType(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { patientGroupTypeId } = request.params;
+
+    const deletePatientGroupTypeService = container.resolve(
+      DeletePatientGroupTypeService,
+    );
+
+    await deletePatientGroupTypeService.execute(patientGroupTypeId);
+
+    return response.json({ message: 'Paciente desvinculado com sucesso!' });
   }
 
   public async createPatientProfessionalAssistance(

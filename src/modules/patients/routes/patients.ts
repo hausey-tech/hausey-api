@@ -18,6 +18,7 @@ import {
   CreateSubscriptionSchema,
   GetPatientFilesSchema,
   DeletePatientFileSchema,
+  DeletePatientGroupTypeSchema,
 } from '../celebrate-schemas/patient';
 import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
 import { PatientsController } from '../controllers/patients';
@@ -75,6 +76,12 @@ patientsRouter.post(
   ensureAuthentication,
   celebrate(CreatePatientGroupSchema),
   patientsController.createPatientGroup,
+);
+patientsRouter.delete(
+  '/patient-group-types/:patientGroupTypeId',
+  ensureAuthentication,
+  celebrate(DeletePatientGroupTypeSchema),
+  patientsController.deletePatientGroupType,
 );
 patientsRouter.post(
   '/forward-request',
