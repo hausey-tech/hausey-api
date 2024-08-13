@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 import { PagarmeWebhookService } from '../services/pagarme/pagarme-webhook-service';
 import { ListPagarmeCustomerChargesService } from '../services/pagarme/list-pagarme-customer-charges-service';
 import { CreatePagarmeBoletoOrderService } from '../services/pagarme/create-pagarme-boleto-order-service';
+import { CreatePagarmeCustomerService } from '../services/pagarme/create-pagarme-customer-service';
 
 export class PagarmeController {
   public async webhook(
@@ -44,5 +45,17 @@ export class PagarmeController {
       customer,
     });
     return response.json({ link: pdfLink });
+  }
+
+  public async createCustomer(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { body } = request;
+    const createPagarmeCustomerService = container.resolve(
+      CreatePagarmeCustomerService,
+    );
+    await createPagarmeCustomerService.execute(body);
+    return response.json({ message: 'Conta de pagamento criada com sucesso!' });
   }
 }

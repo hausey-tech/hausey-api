@@ -28,9 +28,9 @@ export class CreatePagarmeCustomerService {
         type: 'individual',
         phones: {
           mobile_phone: {
-            country_code: '55',
-            area_code: phoneNumber.slice(0, 2),
-            number: phoneNumber.slice(2),
+            country_code: phoneNumber.slice(1, 3),
+            area_code: phoneNumber.slice(3, 5),
+            number: phoneNumber.slice(5),
           },
         },
       });

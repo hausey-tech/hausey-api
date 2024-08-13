@@ -22,3 +22,9 @@ pagarmeRouter.post(
   celebrate(CreatePagarmeBoletoOrderSchema),
   pagarmeController.createBoletoOrder,
 );
+
+pagarmeRouter.post(
+  '/pagarme/customers',
+  ensureAuthentication,
+  pagarmeController.createCustomer,
+);
