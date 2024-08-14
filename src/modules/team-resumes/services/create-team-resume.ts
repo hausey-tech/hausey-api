@@ -97,7 +97,6 @@ export class CreateTeamResume {
         observation,
         fileUrl,
         professionalId,
-        specialtyId,
       });
     }
 
@@ -113,6 +112,7 @@ export class CreateTeamResume {
       patientId,
       professionalId,
       fileUrl,
+      specialtyId,
     });
 
     return this.teamResumesRepository.save(resumeTeam);

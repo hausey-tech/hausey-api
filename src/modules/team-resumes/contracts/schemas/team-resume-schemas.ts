@@ -13,5 +13,6 @@ export const FindTeamResumesSchema = {
   [Segments.QUERY]: Joi.object().keys({
     patientId: Joi.string().uuid(),
     roleId: Joi.string().uuid(),
+    specialtyId: Joi.string().uuid(),
   }),
 };

@@ -12,7 +12,7 @@ export class FindTeamResumes {
   ) {}
 
   public async execute(query: any): Promise<TeamResume[]> {
-    const { patientId, roleId } = query;
+    const { patientId, roleId, specialtyId } = query;
 
     const where: FindOptionsWhere<TeamResume> = {};
 
@@ -22,6 +22,10 @@ export class FindTeamResumes {
     if (roleId) {
       where.roleId = roleId;
     }
+    if (specialtyId) {
+      where.specialtyId = specialtyId;
+    }
+
     const clinicalResumes = await this.teamResumesRepository.find(where);
 
     return clinicalResumes;
