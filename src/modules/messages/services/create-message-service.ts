@@ -57,7 +57,7 @@ export class CreateMessageService {
               await sendPushService.execute({
                 token: user.fcmToken as string,
                 notification: { title, body },
-                data: { link },
+                data: link ? { link } : undefined,
               });
             }),
           );

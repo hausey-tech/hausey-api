@@ -27,18 +27,14 @@ export class CreateMessageToUserService {
           const user = await this.patientsRepository.findById(userId);
           if (user) {
             if (user.fcmToken) {
-              try {
-                const sendPushService = container.resolve(
-                  SendFirebaseMessagingService,
-                );
-                await sendPushService.execute({
-                  token: user.fcmToken as string,
-                  notification: { title, body },
-                  data: { link },
-                });
-              } catch {
-                console.log('Erro ao enviar FCM (265)');
-              }
+              const sendPushService = container.resolve(
+                SendFirebaseMessagingService,
+              );
+              await sendPushService.execute({
+                token: user.fcmToken as string,
+                notification: { title, body },
+                data: link ? { link } : undefined,
+              });
             }
             await this.messagesRepository.create({
               type,
