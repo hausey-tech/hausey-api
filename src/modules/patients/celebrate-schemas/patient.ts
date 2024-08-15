@@ -75,6 +75,7 @@ export const CreatePatientProfessionalAssistanceSchema = {
     assistanceType: Joi.string()
       .equal('Grupo', 'Individual', 'Não Necessita', 'Crítico', 'Rotina')
       .required(),
+    specialtyId: Joi.string().uuid(),
   }),
 };
 
