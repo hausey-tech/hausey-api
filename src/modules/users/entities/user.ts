@@ -1,7 +1,8 @@
-import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 
 import { Role } from '../../roles/entities/role';
 import { UserEntity } from '../../../shared/typeorm/entities';
+import { SellerCode } from '../../seller-codes/entities/seller-code';
 
 @Entity('users')
 export class User extends UserEntity {
@@ -20,4 +21,7 @@ export class User extends UserEntity {
 
   @Column('varchar', { nullable: true })
   recipientId: string | null;
+
+  @OneToOne(() => SellerCode, code => code.seller)
+  sellerCode: SellerCode | null;
 }
