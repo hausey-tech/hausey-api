@@ -75,9 +75,9 @@ export class CreatePatientCardSubscriptionService {
           value: sellerCode.discount,
         });
       }
-      if (plan.sellerPart && patient.seller.recipientId) {
+      if ((sellerCode.fee ?? plan.sellerPart) && patient.seller.recipientId) {
         split.push({
-          amount: plan.sellerPart,
+          amount: sellerCode.fee ?? plan.sellerPart,
           recipientId: patient.seller.recipientId,
           type: 'percentage',
           options: {
@@ -87,7 +87,7 @@ export class CreatePatientCardSubscriptionService {
           },
         });
         split.push({
-          amount: 100 - plan.sellerPart,
+          amount: 100 - (sellerCode.fee ?? plan.sellerPart),
           recipientId: process.env.PAGARME_RECIPIENT_ID,
           type: 'percentage',
           options: {

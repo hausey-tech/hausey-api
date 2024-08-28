@@ -118,7 +118,6 @@ export class CreateUserService {
             sellerId: savedUser.id,
             promotionCodeId: promotionCode.id,
             discount: 1500,
-            fee: 20,
           });
           await this.sellerCodesRepository.save(sellerCode);
         }

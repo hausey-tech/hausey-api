@@ -2,16 +2,7 @@ import { injectable, inject } from 'tsyringe';
 import { AppError } from '../../../shared/errors/app-error';
 import { ISellerCodesRepository } from '../contracts/repositories/seller-codes';
 import { SellerCode } from '../entities/seller-code';
-
-interface Props {
-  code: string;
-  sellerId: string;
-  promotionCodeId: string;
-  discount: number;
-  fee: number;
-  maxUse?: number;
-  free?: boolean;
-}
+import { ICreateSellerCodeDTO } from '../contracts/dtos/create-seller-code-dto';
 
 @injectable()
 export class CreateSellerCode {
@@ -28,7 +19,7 @@ export class CreateSellerCode {
     fee,
     maxUse,
     free,
-  }: Props): Promise<SellerCode> {
+  }: ICreateSellerCodeDTO): Promise<SellerCode> {
     const codeExists = await this.sellerCodesRepository.findByCode(code);
 
     if (codeExists) {

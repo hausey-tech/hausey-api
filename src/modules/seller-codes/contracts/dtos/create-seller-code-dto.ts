@@ -3,7 +3,7 @@ export interface ICreateSellerCodeDTO {
   sellerId: string;
   promotionCodeId: string;
   discount: number;
-  fee: number;
+  fee?: number;
   maxUse?: number;
   free?: boolean;
 }
