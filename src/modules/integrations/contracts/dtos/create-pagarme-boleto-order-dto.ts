@@ -1,7 +1,10 @@
 export interface ICreatePagarmeBoletoOrderDTO {
   price: number;
   date: string;
-  userId: string;
+  users: {
+    id: string;
+    amount: number;
+  }[];
   customer: {
     name: string;
     type: string;
