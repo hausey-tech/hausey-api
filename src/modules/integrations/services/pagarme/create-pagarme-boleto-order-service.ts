@@ -19,18 +19,42 @@ export class CreatePagarmeBoletoOrderService {
   public async execute({
     price,
     date,
-    userId,
+    users,
     customer,
   }: ICreatePagarmeBoletoOrderDTO): Promise<string> {
-    const user = await this.usersRepository.findById(userId);
-    if (!user) {
+    const split = [];
+    let hauseyPart = 100;
+
+    await Promise.all(
+      users.map(async ({ id, amount }) => {
+        const user = await this.usersRepository.findById(id);
+        if (!user) {
+          throw new AppError(
+            `Usuário não encontrado, verifique e tente novamente! (userId: ${id})`,
+          );
+        }
+        if (!user.recipientId) {
+          throw new AppError(
+            `Usuário não está configurado para receber pagamentos, entre em contato com o suporte! (userId: ${id})`,
+          );
+        }
+        hauseyPart -= amount;
+        split.push({
+          amount,
+          recipient_id: user.recipientId,
+          type: 'percentage',
+          options: {
+            charge_processing_fee: false,
+            charge_remainder_fee: false,
+            liable: false,
+          },
+        });
+      }),
+    );
+
+    if (hauseyPart < 0) {
       throw new AppError(
-        'Usuário não encontrado, verifique e tente novamente!',
-      );
-    }
-    if (!user.recipientId) {
-      throw new AppError(
-        'Usuário não está configurado para receber pagamentos, entre em contato com o suporte!',
+        'A soma das comissões dos recebedores não pode ser maior que 100%, verifique e tente novamente',
       );
     }
 
@@ -48,18 +72,9 @@ export class CreatePagarmeBoletoOrderService {
         payments: [
           {
             split: [
+              ...split,
               {
-                amount: 43,
-                recipient_id: user.recipientId,
-                type: 'percentage',
-                options: {
-                  charge_processing_fee: false,
-                  charge_remainder_fee: false,
-                  liable: false,
-                },
-              },
-              {
-                amount: 57,
+                amount: hauseyPart,
                 recipient_id: process.env.PAGARME_RECIPIENT_ID,
                 type: 'percentage',
                 options: {
