@@ -34,14 +34,14 @@ export class PagarmeController {
     request: Request,
     response: Response,
   ): Promise<Response> {
-    const { price, date, userId, customer } = request.body;
+    const { price, date, users, customer } = request.body;
     const createPagarmeBoletoOrderService = container.resolve(
       CreatePagarmeBoletoOrderService,
     );
     const pdfLink = await createPagarmeBoletoOrderService.execute({
       price,
       date,
-      userId,
+      users,
       customer,
     });
     return response.json({ link: pdfLink });
