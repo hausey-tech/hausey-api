@@ -7,7 +7,7 @@ import { User } from '../entities/user';
 import { IRolesRepository } from '../../roles/contracts/repositories/roles';
 import { ISellerCodesRepository } from '../../seller-codes/contracts/repositories/seller-codes';
 import { generateRandomCode } from '../utils/create-random-code';
-import { CreateCoupon } from '../../integrations/services/stripe/create-coupon';
+import { CreateSellerCode } from '../../seller-codes/services/create-seller-code';
 import { mailer } from '../../../shared/utils/mailer';
 import { WelcomeRepresentantHtmlText } from '../../../shared/utils/html-texts';
 
@@ -20,6 +20,10 @@ interface CreateUser {
   phoneNumber: string;
   sex: 'M' | 'F';
   roleType: string;
+  discounts?: {
+    planId: string;
+    discount: number;
+  }[];
 }
 @injectable()
 export class CreateUserService {
@@ -38,7 +42,8 @@ export class CreateUserService {
   ) {}
 
   public async execute(payload: CreateUser): Promise<User> {
-    const { email, document, password, phoneNumber, roleType } = payload;
+    const { email, document, password, phoneNumber, roleType, discounts } =
+      payload;
 
     const userExists = await this.usersRepository.findByEmail(email);
 
@@ -109,17 +114,12 @@ export class CreateUserService {
 
         if (!codeExists) {
           isUnique = true;
-          const createCouponService = container.resolve(CreateCoupon);
-          const promotionCode = await createCouponService.execute({
-            code,
-          });
-          const sellerCode = await this.sellerCodesRepository.create({
+          const createSellerCode = container.resolve(CreateSellerCode);
+          await createSellerCode.execute({
             code,
             sellerId: savedUser.id,
-            promotionCodeId: promotionCode.id,
-            discount: 1500,
+            discounts,
           });
-          await this.sellerCodesRepository.save(sellerCode);
         }
         mailer({
           to: savedUser.email,

@@ -15,6 +15,12 @@ export const CreateUserSchema = {
     phoneNumber: Joi.string().required(),
     roleType: Joi.string().required(),
     sex: Joi.string().equal('M', 'F'),
+    discounts: Joi.array().items(
+      Joi.object().keys({
+        planId: Joi.string().required(),
+        discount: Joi.number().required(),
+      }),
+    ),
   }),
 };
 

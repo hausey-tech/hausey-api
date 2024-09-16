@@ -95,6 +95,9 @@ import { IReadMessagesRepository } from '../../modules/messages/contracts/reposi
 import { IErrorsRepository } from '../../modules/errors/contracts/repositories/errors-repository';
 import { ErrorsRepository } from '../../modules/errors/repositories/errors-repository';
 
+import { ISellerCodeDiscountsRepository } from '../../modules/seller-code-discounts/contracts/repositories/seller-code-discounts-repository';
+import { SellerCodeDiscountsRepository } from '../../modules/seller-code-discounts/repositories/seller-code-discounts-repository';
+
 container.registerSingleton<IAddressesRepository>(
   'AddressesRepository',
   AddressesRepository,
@@ -249,4 +252,9 @@ container.registerSingleton<IErrorsRepository>(
 container.registerSingleton<IPatientFilesRepository>(
   'PatientFilesRepository',
   PatientFilesRepository,
+);
+
+container.registerSingleton<ISellerCodeDiscountsRepository>(
+  'SellerCodeDiscountsRepository',
+  SellerCodeDiscountsRepository,
 );

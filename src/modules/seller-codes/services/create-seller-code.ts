@@ -3,19 +3,21 @@ import { AppError } from '../../../shared/errors/app-error';
 import { ISellerCodesRepository } from '../contracts/repositories/seller-codes';
 import { SellerCode } from '../entities/seller-code';
 import { ICreateSellerCodeDTO } from '../contracts/dtos/create-seller-code-dto';
+import { ISellerCodeDiscountsRepository } from '../../seller-code-discounts/contracts/repositories/seller-code-discounts-repository';
 
 @injectable()
 export class CreateSellerCode {
   constructor(
     @inject('SellerCodesRepository')
     private sellerCodesRepository: ISellerCodesRepository,
+    @inject('SellerCodeDiscountsRepository')
+    private sellerCodeDiscountsRepository: ISellerCodeDiscountsRepository,
   ) {}
 
   public async execute({
     code,
     sellerId,
-    promotionCodeId,
-    discount,
+    discounts,
     fee,
     maxUse,
     free,
@@ -29,13 +31,25 @@ export class CreateSellerCode {
     const sellerCode = await this.sellerCodesRepository.create({
       code,
       sellerId,
-      promotionCodeId,
-      discount,
       fee,
       maxUse,
       free,
     });
 
-    return this.sellerCodesRepository.save(sellerCode);
+    await this.sellerCodesRepository.save(sellerCode);
+
+    await Promise.all(
+      discounts.map(async discount => {
+        const sellerCodeDiscount =
+          await this.sellerCodeDiscountsRepository.create({
+            sellerCodeId: sellerCode.id,
+            planId: discount.planId,
+            discount: discount.discount,
+          });
+        await this.sellerCodeDiscountsRepository.save(sellerCodeDiscount);
+      }),
+    );
+
+    return sellerCode;
   }
 }
