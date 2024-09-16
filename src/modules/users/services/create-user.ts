@@ -10,6 +10,7 @@ import { generateRandomCode } from '../utils/create-random-code';
 import { CreateSellerCode } from '../../seller-codes/services/create-seller-code';
 import { mailer } from '../../../shared/utils/mailer';
 import { WelcomeRepresentantHtmlText } from '../../../shared/utils/html-texts';
+import { CreateSellerCodeSellerService } from '../../seller-code-sellers/services/create-seller-code-seller-service';
 
 interface CreateUser {
   email: string;
@@ -23,6 +24,10 @@ interface CreateUser {
   discounts?: {
     planId: string;
     discount: number;
+  }[];
+  sellers?: {
+    sellerId: string;
+    fee: number;
   }[];
 }
 @injectable()
@@ -42,8 +47,15 @@ export class CreateUserService {
   ) {}
 
   public async execute(payload: CreateUser): Promise<User> {
-    const { email, document, password, phoneNumber, roleType, discounts } =
-      payload;
+    const {
+      email,
+      document,
+      password,
+      phoneNumber,
+      roleType,
+      discounts,
+      sellers,
+    } = payload;
 
     const userExists = await this.usersRepository.findByEmail(email);
 
@@ -115,19 +127,39 @@ export class CreateUserService {
         if (!codeExists) {
           isUnique = true;
           const createSellerCode = container.resolve(CreateSellerCode);
-          await createSellerCode.execute({
+          const { id } = await createSellerCode.execute({
             code,
             sellerId: savedUser.id,
             discounts,
           });
+          if (sellers?.length > 0) {
+            const createSellerCodeSellerService = container.resolve(
+              CreateSellerCodeSellerService,
+            );
+            await Promise.all(
+              sellers.map(async seller => {
+                try {
+                  await createSellerCodeSellerService.execute({
+                    sellerCodeId: id,
+                    sellerId: seller.sellerId,
+                    fee: seller.fee,
+                  });
+                } catch (error) {
+                  console.error(
+                    'Erro ao vincular vendedor à um código: ',
+                    error,
+                  );
+                }
+              }),
+            );
+          }
+          mailer({
+            to: savedUser.email,
+            subject: `💙Boas Vindas à Hausey!`,
+            body: WelcomeRepresentantHtmlText(savedUser.email, password),
+          });
         }
-        mailer({
-          to: savedUser.email,
-          subject: `💙Boas Vindas à Hausey!`,
-          body: WelcomeRepresentantHtmlText(savedUser.email, password),
-        });
       }
-      /* eslint-enable no-await-in-loop */
     }
 
     return savedUser;

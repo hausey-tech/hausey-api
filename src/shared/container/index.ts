@@ -98,6 +98,9 @@ import { ErrorsRepository } from '../../modules/errors/repositories/errors-repos
 import { ISellerCodeDiscountsRepository } from '../../modules/seller-code-discounts/contracts/repositories/seller-code-discounts-repository';
 import { SellerCodeDiscountsRepository } from '../../modules/seller-code-discounts/repositories/seller-code-discounts-repository';
 
+import { ISellerCodeSellersRepository } from '../../modules/seller-code-sellers/contracts/repositories/seller-code-sellers-repository';
+import { SellerCodeSellersRepository } from '../../modules/seller-code-sellers/repositories/seller-code-sellers-repository';
+
 container.registerSingleton<IAddressesRepository>(
   'AddressesRepository',
   AddressesRepository,
@@ -257,4 +260,9 @@ container.registerSingleton<IPatientFilesRepository>(
 container.registerSingleton<ISellerCodeDiscountsRepository>(
   'SellerCodeDiscountsRepository',
   SellerCodeDiscountsRepository,
+);
+
+container.registerSingleton<ISellerCodeSellersRepository>(
+  'SellerCodeSellersRepository',
+  SellerCodeSellersRepository,
 );

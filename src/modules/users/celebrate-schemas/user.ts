@@ -21,6 +21,12 @@ export const CreateUserSchema = {
         discount: Joi.number().required(),
       }),
     ),
+    sellers: Joi.array().items(
+      Joi.object().keys({
+        sellerId: Joi.string().required(),
+        fee: Joi.number().required(),
+      }),
+    ),
   }),
 };
 
