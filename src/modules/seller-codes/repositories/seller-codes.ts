@@ -8,8 +8,11 @@ import { IUpdateSellerCodeDto } from '../contracts/dtos/update-seller-code-dto';
 export class SellerCodesRepository implements ISellerCodesRepository {
   private ormRepository: Repository<SellerCode>;
 
+  private relations: string[];
+
   constructor() {
     this.ormRepository = PostgresDataSource.getRepository(SellerCode);
+    this.relations = ['discounts.plan', 'sellers.seller'];
   }
 
   public async find(
@@ -17,6 +20,7 @@ export class SellerCodesRepository implements ISellerCodesRepository {
   ): Promise<SellerCode[]> {
     return this.ormRepository.find({
       where,
+      relations: this.relations,
     });
   }
 
@@ -39,6 +43,7 @@ export class SellerCodesRepository implements ISellerCodesRepository {
   public async findBySellerId(sellerId: string): Promise<SellerCode | null> {
     return this.ormRepository.findOne({
       where: { sellerId },
+      relations: this.relations,
     });
   }
 

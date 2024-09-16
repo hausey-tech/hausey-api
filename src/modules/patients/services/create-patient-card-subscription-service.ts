@@ -69,16 +69,21 @@ export class CreatePatientCardSubscriptionService {
       const sellerCode = await this.sellerCodesRepository.findBySellerId(
         patient.sellerId,
       );
-      if (sellerCode.discount) {
+      const sellerCodeDiscount = sellerCode.discounts.find(
+        d => d.planId === planId,
+      );
+      if (sellerCodeDiscount) {
         discounts.push({
           discountType: 'flat',
-          value: sellerCode.discount,
+          value: sellerCodeDiscount.discount,
         });
       }
-      if ((sellerCode.fee ?? plan.sellerPart) && patient.seller.recipientId) {
+      let sellersPart = 0;
+      sellerCode.sellers.forEach(sellerCodeSeller => {
+        sellersPart += sellerCodeSeller.fee;
         split.push({
-          amount: sellerCode.fee ?? plan.sellerPart,
-          recipientId: patient.seller.recipientId,
+          amount: sellerCodeSeller.fee,
+          recipientId: sellerCodeSeller.seller.recipientId,
           type: 'percentage',
           options: {
             chargeProcessingFee: false,
@@ -86,8 +91,10 @@ export class CreatePatientCardSubscriptionService {
             liable: false,
           },
         });
+      });
+      if (sellersPart > 0) {
         split.push({
-          amount: 100 - (sellerCode.fee ?? plan.sellerPart),
+          amount: 100 - sellersPart,
           recipientId: process.env.PAGARME_RECIPIENT_ID,
           type: 'percentage',
           options: {
