@@ -53,7 +53,7 @@ export class CreatePatientPixSubscriptionService {
         patient.sellerId,
       );
       const sellerCodeDiscount = sellerCode.discounts.find(
-        d => d.planId === planId,
+        d => d.planId === plan.id,
       );
       if (sellerCodeDiscount) {
         price -= sellerCodeDiscount.discount;
@@ -77,6 +77,26 @@ export class CreatePatientPixSubscriptionService {
           },
         });
       });
+
+      if (sellerCode.fee && sellerCode.fee > 0) {
+        if (!sellerCode.seller.recipientId) {
+          throw new AppError(
+            'Há um problema com seu código de desconto, entre em contato com o suporte!',
+          );
+        }
+        sellersPart += sellerCode.fee;
+        split.push({
+          amount: sellerCode.fee,
+          recipientId: sellerCode.seller.recipientId,
+          type: 'percentage',
+          options: {
+            chargeProcessingFee: false,
+            chargeRemainderFee: false,
+            liable: false,
+          },
+        });
+      }
+
       if (sellersPart > 0) {
         split.push({
           amount: 100 - sellersPart,
