@@ -60,6 +60,11 @@ export class CreatePatientPixSubscriptionService {
       }
       let sellersPart = 0;
       sellerCode.sellers.forEach(sellerCodeSeller => {
+        if (!sellerCodeSeller.seller.recipientId) {
+          throw new AppError(
+            'Há um problema com seu cupom, entre em contato com o suporte!',
+          );
+        }
         sellersPart += sellerCodeSeller.fee;
         split.push({
           amount: sellerCodeSeller.fee,
