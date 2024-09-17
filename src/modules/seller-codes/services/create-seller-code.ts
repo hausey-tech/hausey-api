@@ -1,9 +1,10 @@
-import { injectable, inject } from 'tsyringe';
+import { injectable, inject, container } from 'tsyringe';
 import { AppError } from '../../../shared/errors/app-error';
 import { ISellerCodesRepository } from '../contracts/repositories/seller-codes';
 import { SellerCode } from '../entities/seller-code';
 import { ICreateSellerCodeDTO } from '../contracts/dtos/create-seller-code-dto';
 import { ISellerCodeDiscountsRepository } from '../../seller-code-discounts/contracts/repositories/seller-code-discounts-repository';
+import { CreateSellerCodeSellerService } from '../../seller-code-sellers/services/create-seller-code-seller-service';
 
 @injectable()
 export class CreateSellerCode {
@@ -17,10 +18,11 @@ export class CreateSellerCode {
   public async execute({
     code,
     sellerId,
-    discounts,
     fee,
-    maxUse,
     free,
+    maxUse,
+    discounts,
+    sellers,
   }: ICreateSellerCodeDTO): Promise<SellerCode> {
     const codeExists = await this.sellerCodesRepository.findByCode(code);
 
@@ -32,23 +34,44 @@ export class CreateSellerCode {
       code,
       sellerId,
       fee,
-      maxUse,
       free,
+      maxUse,
     });
 
     await this.sellerCodesRepository.save(sellerCode);
 
-    await Promise.all(
-      discounts.map(async discount => {
-        const sellerCodeDiscount =
-          await this.sellerCodeDiscountsRepository.create({
-            sellerCodeId: sellerCode.id,
-            planId: discount.planId,
-            discount: discount.discount,
-          });
-        await this.sellerCodeDiscountsRepository.save(sellerCodeDiscount);
-      }),
-    );
+    if (discounts?.length > 0) {
+      await Promise.all(
+        discounts?.map(async discount => {
+          const sellerCodeDiscount =
+            await this.sellerCodeDiscountsRepository.create({
+              sellerCodeId: sellerCode.id,
+              planId: discount.planId,
+              discount: discount.discount,
+            });
+          await this.sellerCodeDiscountsRepository.save(sellerCodeDiscount);
+        }),
+      );
+    }
+
+    if (sellers?.length > 0) {
+      const createSellerCodeSellerService = container.resolve(
+        CreateSellerCodeSellerService,
+      );
+      await Promise.all(
+        sellers?.map(async seller => {
+          try {
+            await createSellerCodeSellerService.execute({
+              sellerCodeId: sellerCode.id,
+              sellerId: seller.sellerId,
+              fee: seller.fee,
+            });
+          } catch (error) {
+            console.error('Erro ao vincular vendedor ao código: ', error);
+          }
+        }),
+      );
+    }
 
     return sellerCode;
   }
