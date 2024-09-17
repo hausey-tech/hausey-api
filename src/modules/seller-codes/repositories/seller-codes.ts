@@ -12,7 +12,7 @@ export class SellerCodesRepository implements ISellerCodesRepository {
 
   constructor() {
     this.ormRepository = PostgresDataSource.getRepository(SellerCode);
-    this.relations = ['discounts.plan', 'sellers.seller'];
+    this.relations = ['seller', 'discounts.plan', 'sellers.seller'];
   }
 
   public async find(
