@@ -28,16 +28,14 @@ export class SellerCodesController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const { code, sellerId, promotionCodeId, discount, fee, maxUse, free } =
-      request.body;
+    const { code, sellerId, discounts, fee, maxUse, free } = request.body;
 
     const createPlanService = container.resolve(CreateSellerCode);
 
     const plan = await createPlanService.execute({
       code,
       sellerId,
-      promotionCodeId,
-      discount,
+      discounts,
       fee,
       maxUse,
       free,

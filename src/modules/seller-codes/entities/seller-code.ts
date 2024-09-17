@@ -1,7 +1,9 @@
-import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 
 import { BaseEntity } from '../../../shared/typeorm/entities/base';
 import { User } from '../../users/entities/user';
+import { SellerCodeSeller } from '../../seller-code-sellers/entities/seller-code-seller';
+import { SellerCodeDiscount } from '../../seller-code-discounts/entities/seller-code-discount';
 
 @Entity('seller_codes')
 export class SellerCode extends BaseEntity {
@@ -10,9 +12,6 @@ export class SellerCode extends BaseEntity {
 
   @Column('varchar', { name: 'seller_id', nullable: true })
   sellerId: string;
-
-  @Column('varchar', { name: 'promo_code_id', nullable: true })
-  promotionCodeId: string;
 
   @ManyToOne(() => User)
   @JoinColumn({ name: 'seller_id' })
@@ -25,9 +24,6 @@ export class SellerCode extends BaseEntity {
   active: boolean;
 
   @Column('int', { nullable: true })
-  discount: number | null;
-
-  @Column('int', { nullable: true })
   fee: number | null;
 
   @Column('int', { nullable: true })
@@ -35,4 +31,10 @@ export class SellerCode extends BaseEntity {
 
   @Column('boolean', { default: false })
   free: boolean;
+
+  @OneToMany(() => SellerCodeDiscount, discount => discount.sellerCode)
+  discounts: SellerCodeDiscount[];
+
+  @OneToMany(() => SellerCodeSeller, seller => seller.sellerCode)
+  sellers: SellerCodeSeller[];
 }

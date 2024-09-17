@@ -7,7 +7,7 @@ import { User } from '../entities/user';
 import { IRolesRepository } from '../../roles/contracts/repositories/roles';
 import { ISellerCodesRepository } from '../../seller-codes/contracts/repositories/seller-codes';
 import { generateRandomCode } from '../utils/create-random-code';
-import { CreateCoupon } from '../../integrations/services/stripe/create-coupon';
+import { CreateSellerCode } from '../../seller-codes/services/create-seller-code';
 import { mailer } from '../../../shared/utils/mailer';
 import { WelcomeRepresentantHtmlText } from '../../../shared/utils/html-texts';
 
@@ -20,6 +20,19 @@ interface CreateUser {
   phoneNumber: string;
   sex: 'M' | 'F';
   roleType: string;
+  sellerCode?: {
+    fee?: number;
+    free?: boolean;
+    maxUse?: number;
+    discounts?: {
+      planId: string;
+      discount: number;
+    }[];
+    sellers?: {
+      sellerId: string;
+      fee: number;
+    }[];
+  };
 }
 @injectable()
 export class CreateUserService {
@@ -38,7 +51,8 @@ export class CreateUserService {
   ) {}
 
   public async execute(payload: CreateUser): Promise<User> {
-    const { email, document, password, phoneNumber, roleType } = payload;
+    const { email, document, password, phoneNumber, roleType, sellerCode } =
+      payload;
 
     const userExists = await this.usersRepository.findByEmail(email);
 
@@ -109,25 +123,24 @@ export class CreateUserService {
 
         if (!codeExists) {
           isUnique = true;
-          const createCouponService = container.resolve(CreateCoupon);
-          const promotionCode = await createCouponService.execute({
-            code,
-          });
-          const sellerCode = await this.sellerCodesRepository.create({
-            code,
+          const { fee, free, maxUse, discounts, sellers } = sellerCode;
+          const createSellerCode = container.resolve(CreateSellerCode);
+          await createSellerCode.execute({
             sellerId: savedUser.id,
-            promotionCodeId: promotionCode.id,
-            discount: 1500,
+            code,
+            fee,
+            free,
+            maxUse,
+            discounts,
+            sellers,
           });
-          await this.sellerCodesRepository.save(sellerCode);
+          mailer({
+            to: savedUser.email,
+            subject: `💙Boas Vindas à Hausey!`,
+            body: WelcomeRepresentantHtmlText(savedUser.email, password),
+          });
         }
-        mailer({
-          to: savedUser.email,
-          subject: `💙Boas Vindas à Hausey!`,
-          body: WelcomeRepresentantHtmlText(savedUser.email, password),
-        });
       }
-      /* eslint-enable no-await-in-loop */
     }
 
     return savedUser;

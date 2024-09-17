@@ -5,7 +5,6 @@ import { IPlansRepository } from '../../../plans/contracts/repositories/plans';
 import { IPatientsRepository } from '../../../patients/contracts/repositories/patients';
 import { stripeInstance } from '../../utils/stripe-instance';
 import { CreateCustomer } from './create-customer';
-import { ISellerCodesRepository } from '../../../seller-codes/contracts/repositories/seller-codes';
 
 interface Props {
   patientId: string;
@@ -21,9 +20,6 @@ export class CreateCheckoutSession {
 
     @inject('PlansRepository')
     private plansRepository: IPlansRepository,
-
-    @inject('SellerCodesRepository')
-    private sellerCodesRepository: ISellerCodesRepository,
   ) {}
 
   public async execute({
@@ -64,18 +60,6 @@ export class CreateCheckoutSession {
         mode: 'subscription',
         cancel_url: 'https://hausey.com.br/app',
       };
-      if (patient.sellerId) {
-        const sellerCode = await this.sellerCodesRepository.findBySellerId(
-          patient.sellerId,
-        );
-        if (sellerCode?.promotionCodeId) {
-          sessionParams.discounts = [
-            {
-              promotion_code: sellerCode?.promotionCodeId,
-            },
-          ];
-        }
-      }
       session = await stripeInstance.checkout.sessions.create(sessionParams);
     } catch (err) {
       throw new AppError(err.raw.message, err.statusCode);
