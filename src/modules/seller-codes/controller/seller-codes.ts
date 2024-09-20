@@ -3,6 +3,7 @@ import { container } from 'tsyringe';
 import { FindAllSellerCodes } from '../services/find-all-seller-codes';
 import { CreateSellerCode } from '../services/create-seller-code';
 import { FindSellerCode } from '../services/find-seller-code';
+import { MigrateSellerCodesService } from '../services/migrate-seller-codes-service';
 
 export class SellerCodesController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -42,5 +43,16 @@ export class SellerCodesController {
     });
 
     return response.json(plan);
+  }
+
+  public async migrate(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const migrateSellerCodesService = container.resolve(
+      MigrateSellerCodesService,
+    );
+    await migrateSellerCodesService.execute();
+    return response.json({ message: 'Códigos migrados com sucesso!' });
   }
 }
