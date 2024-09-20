@@ -13,7 +13,7 @@ export class UsersRepository implements IUsersRepository {
 
   constructor() {
     this.ormRepository = PostgresDataSource.getRepository(User);
-    this.relations = ['role'];
+    this.relations = ['role', 'sellerCode.sellers.seller'];
   }
 
   public async find(): Promise<User[]> {
