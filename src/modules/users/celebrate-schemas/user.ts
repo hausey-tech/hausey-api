@@ -19,6 +19,7 @@ export const CreateUserSchema = {
       fee: Joi.number(),
       free: Joi.boolean(),
       maxUse: Joi.number(),
+      type: Joi.string(),
       discounts: Joi.array().items(
         Joi.object().keys({
           planId: Joi.string().required(),
