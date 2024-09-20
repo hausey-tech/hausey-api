@@ -13,5 +13,6 @@ export const CreateSellerCodeSchema = {
     fee: Joi.number().default(20),
     maxUse: Joi.number(),
     free: Joi.boolean(),
+    type: Joi.string(),
   }),
 };

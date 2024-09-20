@@ -29,7 +29,8 @@ export class SellerCodesController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const { code, sellerId, discounts, fee, maxUse, free } = request.body;
+    const { code, sellerId, discounts, sellers, fee, maxUse, free, type } =
+      request.body;
 
     const createPlanService = container.resolve(CreateSellerCode);
 
@@ -37,9 +38,11 @@ export class SellerCodesController {
       code,
       sellerId,
       discounts,
+      sellers,
       fee,
       maxUse,
       free,
+      type,
     });
 
     return response.json(plan);

@@ -21,6 +21,7 @@ export class CreateSellerCode {
     fee,
     free,
     maxUse,
+    type,
     discounts,
     sellers,
   }: ICreateSellerCodeDTO): Promise<SellerCode> {
@@ -36,6 +37,7 @@ export class CreateSellerCode {
       fee,
       free,
       maxUse,
+      type,
     });
 
     await this.sellerCodesRepository.save(sellerCode);

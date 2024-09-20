@@ -32,6 +32,9 @@ export class SellerCode extends BaseEntity {
   @Column('boolean', { default: false })
   free: boolean;
 
+  @Column('varchar', { nullable: true })
+  type: string | null;
+
   @OneToMany(() => SellerCodeDiscount, discount => discount.sellerCode)
   discounts: SellerCodeDiscount[];
 

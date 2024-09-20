@@ -4,6 +4,7 @@ export interface ICreateSellerCodeDTO {
   fee?: number;
   free?: boolean;
   maxUse?: number;
+  type?: string;
   discounts?: {
     planId: string;
     discount: number;

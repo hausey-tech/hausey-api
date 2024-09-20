@@ -24,6 +24,7 @@ interface CreateUser {
     fee?: number;
     free?: boolean;
     maxUse?: number;
+    type?: string;
     discounts?: {
       planId: string;
       discount: number;
@@ -51,35 +52,12 @@ export class CreateUserService {
   ) {}
 
   public async execute(payload: CreateUser): Promise<User> {
-    const { email, document, password, phoneNumber, roleType, sellerCode } =
-      payload;
+    const { email, password, roleType, sellerCode } = payload;
 
     const userExists = await this.usersRepository.findByEmail(email);
 
     if (userExists) {
       throw new AppError('Já existe um usuário com este email, faça o login!');
-    }
-
-    const hasUserWithPhoneNumber = await this.usersRepository.findByPhoneNumber(
-      phoneNumber,
-    );
-
-    if (hasUserWithPhoneNumber?.deletedAt === null) {
-      throw new AppError(
-        'Já existe um usuário cadastrado com esse celular, faça o login!',
-      );
-    }
-
-    if (document) {
-      const userWithDocumentExists = await this.usersRepository.findByDocument(
-        document,
-      );
-
-      if (userWithDocumentExists) {
-        throw new AppError(
-          'Já existe um usuário com este CPF, verifique e tente novamente!',
-        );
-      }
     }
 
     let hashedPassword: string;
@@ -123,7 +101,7 @@ export class CreateUserService {
 
         if (!codeExists) {
           isUnique = true;
-          const { fee, free, maxUse, discounts, sellers } = sellerCode;
+          const { fee, free, maxUse, discounts, sellers, type } = sellerCode;
           const createSellerCode = container.resolve(CreateSellerCode);
           await createSellerCode.execute({
             sellerId: savedUser.id,
@@ -131,6 +109,7 @@ export class CreateUserService {
             fee,
             free,
             maxUse,
+            type,
             discounts,
             sellers,
           });
