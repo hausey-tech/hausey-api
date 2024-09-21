@@ -22,8 +22,7 @@ export class PatientsRepository implements IPatientsRepository {
       'responsibleTeam',
       'patientGroups.patientGroupTypes',
       'patientGroups.patientGroupTypes.grouptype',
-      'seller',
-      'seller.sellerCode',
+      'seller.sellerCode.discounts',
     ];
   }
 

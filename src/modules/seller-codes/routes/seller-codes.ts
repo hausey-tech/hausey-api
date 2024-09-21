@@ -19,3 +19,8 @@ sellerCodesRouter.post(
   ensureAuthentication,
   sellerCodesController.findSellerCode,
 );
+sellerCodesRouter.get(
+  '/migrate',
+  ensureAuthentication,
+  sellerCodesController.migrate,
+);

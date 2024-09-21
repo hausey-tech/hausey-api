@@ -52,13 +52,23 @@ export class CreatePatientPixSubscriptionService {
       const sellerCode = await this.sellerCodesRepository.findBySellerId(
         patient.sellerId,
       );
-      if (sellerCode.discount) {
-        price -= sellerCode.discount;
+      const sellerCodeDiscount = sellerCode.discounts.find(
+        d => d.planId === plan.id,
+      );
+      if (sellerCodeDiscount) {
+        price -= sellerCodeDiscount.discount;
       }
-      if ((sellerCode.fee ?? plan.sellerPart) && patient.seller.recipientId) {
+      let sellersPart = 0;
+      sellerCode.sellers.forEach(sellerCodeSeller => {
+        if (!sellerCodeSeller.seller.recipientId) {
+          throw new AppError(
+            'Há um problema com seu cupom, entre em contato com o suporte!',
+          );
+        }
+        sellersPart += sellerCodeSeller.fee;
         split.push({
-          amount: sellerCode.fee ?? plan.sellerPart,
-          recipientId: patient.seller.recipientId,
+          amount: sellerCodeSeller.fee,
+          recipientId: sellerCodeSeller.seller.recipientId,
           type: 'percentage',
           options: {
             chargeProcessingFee: false,
@@ -66,8 +76,30 @@ export class CreatePatientPixSubscriptionService {
             liable: false,
           },
         });
+      });
+
+      if (sellerCode.fee && sellerCode.fee > 0) {
+        if (!sellerCode.seller.recipientId) {
+          throw new AppError(
+            'Há um problema com seu código de desconto, entre em contato com o suporte!',
+          );
+        }
+        sellersPart += sellerCode.fee;
         split.push({
-          amount: 100 - (sellerCode.fee ?? plan.sellerPart),
+          amount: sellerCode.fee,
+          recipientId: sellerCode.seller.recipientId,
+          type: 'percentage',
+          options: {
+            chargeProcessingFee: false,
+            chargeRemainderFee: false,
+            liable: false,
+          },
+        });
+      }
+
+      if (sellersPart > 0) {
+        split.push({
+          amount: 100 - sellersPart,
           recipientId: process.env.PAGARME_RECIPIENT_ID,
           type: 'percentage',
           options: {

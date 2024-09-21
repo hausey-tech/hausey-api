@@ -7,7 +7,7 @@ import { User } from '../entities/user';
 import { IRolesRepository } from '../../roles/contracts/repositories/roles';
 import { ISellerCodesRepository } from '../../seller-codes/contracts/repositories/seller-codes';
 import { generateRandomCode } from '../utils/create-random-code';
-import { CreateCoupon } from '../../integrations/services/stripe/create-coupon';
+import { CreateSellerCode } from '../../seller-codes/services/create-seller-code';
 import { mailer } from '../../../shared/utils/mailer';
 import { WelcomeRepresentantHtmlText } from '../../../shared/utils/html-texts';
 
@@ -20,6 +20,20 @@ interface CreateUser {
   phoneNumber: string;
   sex: 'M' | 'F';
   roleType: string;
+  sellerCode?: {
+    fee?: number;
+    free?: boolean;
+    maxUse?: number;
+    type?: string;
+    discounts?: {
+      planId: string;
+      discount: number;
+    }[];
+    sellers?: {
+      sellerId: string;
+      fee: number;
+    }[];
+  };
 }
 @injectable()
 export class CreateUserService {
@@ -38,34 +52,12 @@ export class CreateUserService {
   ) {}
 
   public async execute(payload: CreateUser): Promise<User> {
-    const { email, document, password, phoneNumber, roleType } = payload;
+    const { email, password, roleType, sellerCode } = payload;
 
     const userExists = await this.usersRepository.findByEmail(email);
 
     if (userExists) {
       throw new AppError('Já existe um usuário com este email, faça o login!');
-    }
-
-    const hasUserWithPhoneNumber = await this.usersRepository.findByPhoneNumber(
-      phoneNumber,
-    );
-
-    if (hasUserWithPhoneNumber?.deletedAt === null) {
-      throw new AppError(
-        'Já existe um usuário cadastrado com esse celular, faça o login!',
-      );
-    }
-
-    if (document) {
-      const userWithDocumentExists = await this.usersRepository.findByDocument(
-        document,
-      );
-
-      if (userWithDocumentExists) {
-        throw new AppError(
-          'Já existe um usuário com este CPF, verifique e tente novamente!',
-        );
-      }
     }
 
     let hashedPassword: string;
@@ -109,25 +101,25 @@ export class CreateUserService {
 
         if (!codeExists) {
           isUnique = true;
-          const createCouponService = container.resolve(CreateCoupon);
-          const promotionCode = await createCouponService.execute({
-            code,
-          });
-          const sellerCode = await this.sellerCodesRepository.create({
-            code,
+          const { fee, free, maxUse, discounts, sellers, type } = sellerCode;
+          const createSellerCode = container.resolve(CreateSellerCode);
+          await createSellerCode.execute({
             sellerId: savedUser.id,
-            promotionCodeId: promotionCode.id,
-            discount: 1500,
+            code,
+            fee,
+            free,
+            maxUse,
+            type,
+            discounts,
+            sellers,
           });
-          await this.sellerCodesRepository.save(sellerCode);
+          mailer({
+            to: savedUser.email,
+            subject: `💙Boas Vindas à Hausey!`,
+            body: WelcomeRepresentantHtmlText(savedUser.email, password),
+          });
         }
-        mailer({
-          to: savedUser.email,
-          subject: `💙Boas Vindas à Hausey!`,
-          body: WelcomeRepresentantHtmlText(savedUser.email, password),
-        });
       }
-      /* eslint-enable no-await-in-loop */
     }
 
     return savedUser;

@@ -15,6 +15,24 @@ export const CreateUserSchema = {
     phoneNumber: Joi.string().required(),
     roleType: Joi.string().required(),
     sex: Joi.string().equal('M', 'F'),
+    sellerCode: Joi.object().keys({
+      fee: Joi.number(),
+      free: Joi.boolean(),
+      maxUse: Joi.number(),
+      type: Joi.string(),
+      discounts: Joi.array().items(
+        Joi.object().keys({
+          planId: Joi.string().required(),
+          discount: Joi.number().required(),
+        }),
+      ),
+      sellers: Joi.array().items(
+        Joi.object().keys({
+          sellerId: Joi.string().required(),
+          fee: Joi.number().required(),
+        }),
+      ),
+    }),
   }),
 };
 
