@@ -81,4 +81,7 @@ export class Patient extends UserEntity {
 
   @OneToMany(() => PatientFiles, patientFiles => patientFiles.patient)
   files: PatientFiles[];
+
+  @Column('boolean', { default: false })
+  nipomed: boolean;
 }

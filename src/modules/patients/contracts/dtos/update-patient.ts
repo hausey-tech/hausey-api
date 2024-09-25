@@ -15,4 +15,5 @@ export interface IUpdatePatientDTO {
   stripeCustomerId?: string;
   language?: string;
   region?: string;
+  nipomed?: boolean;
 }
