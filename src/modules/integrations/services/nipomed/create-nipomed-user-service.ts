@@ -18,7 +18,10 @@ export class CreateNipomedUserService {
 
   public async execute({ patient, expiresAt }: IProps): Promise<void> {
     try {
-      if (patient.address) {
+      if (
+        patient.planId === '938ef52c-bd6a-4e21-a6e5-e2eba8b5e60f' &&
+        patient.address
+      ) {
         await nipomedInstance.post('', {
           token: process.env.NIPOMED_TOKEN,
           clientes: [
