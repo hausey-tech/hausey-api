@@ -1,5 +1,7 @@
-import { injectable, inject } from 'tsyringe';
+import { injectable, inject, container } from 'tsyringe';
 
+import { isBefore } from 'date-fns';
+import { CreateNipomedUserService } from '../../integrations/services/nipomed/create-nipomed-user-service';
 import { IAddressesRepository } from '../contracts/repositories/IAddressesRepository';
 import { IPatientsRepository } from '../../patients/contracts/repositories/patients';
 import { ICreateAddressDTO } from '../contracts/dtos/ICreateAddressDTO';
@@ -36,6 +38,20 @@ export class CreateAddressService {
     }
 
     const address = await this.addressesRepository.create(payload);
+
+    if (
+      !patient.nipomed &&
+      patient.planExpiresAt &&
+      isBefore(new Date(), patient.planExpiresAt)
+    ) {
+      const createNipomedUserService = container.resolve(
+        CreateNipomedUserService,
+      );
+      createNipomedUserService.execute({
+        patient: { ...patient, address },
+        expiresAt: patient.planExpiresAt.toISOString(),
+      });
+    }
 
     return this.addressesRepository.save(address);
   }
