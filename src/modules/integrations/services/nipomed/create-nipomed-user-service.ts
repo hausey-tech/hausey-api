@@ -1,8 +1,9 @@
-import { inject, injectable } from 'tsyringe';
+import { container, inject, injectable } from 'tsyringe';
 import { format } from 'date-fns';
 import { nipomedInstance } from '../../utils/nipomed-instance';
 import { Patient } from '../../../patients/entities/patient';
 import { IPatientsRepository } from '../../../patients/contracts/repositories/patients';
+import { CreateErrorService } from '../../../errors/service/create-error-service';
 
 interface IProps {
   patient: Patient;
@@ -51,10 +52,19 @@ export class CreateNipomedUserService {
         }
       }
     } catch (err) {
-      console.error(
-        'ERROR ON CREATE USER AT NIPOMED:',
-        err?.response?.data?.clientes?.errors ?? 'Indefinido',
-      );
+      const createErrorService = container.resolve(CreateErrorService);
+      createErrorService.execute({
+        statusCode: 500,
+        message: `Erro ao criar usuário na Nipomed\nPatientId: ${
+          patient.id
+        }\nMensagem:${
+          err?.response?.data?.clientes?.message ?? 'Indefinido'
+        }\nErros: ${
+          err?.response?.data?.clientes?.errors
+            ?.map(e => e?.mensagem)
+            .join(', ') ?? 'Indefinido'
+        }`,
+      });
     }
   }
 }
