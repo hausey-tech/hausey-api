@@ -133,7 +133,7 @@ export class CreatePatientCardSubscriptionService {
     const createPagarmeSubscriptionService = container.resolve(
       CreatePagarmeSubscriptionService,
     );
-    const expiresAt = await createPagarmeSubscriptionService.execute({
+    await createPagarmeSubscriptionService.execute({
       planId,
       paymentMethod,
       cardToken,
@@ -145,7 +145,6 @@ export class CreatePatientCardSubscriptionService {
 
     await this.patientsRepository.update(patient.id, {
       planId: plan.id,
-      planExpiresAt: expiresAt,
     });
   }
 }
