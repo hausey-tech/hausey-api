@@ -156,12 +156,14 @@ export class CreatePagarmeSubscriptionService {
       }
       return data.current_cycle.end_at;
     } catch (error) {
-      console.error('Assinatura: ', error.response.data);
+      console.error('Assinatura: ', error?.response?.data);
+      console.log('ERROR -> ', error);
+      console.log('ERROR MESSAGE -> ', error?.message);
       throw new AppError(
         error?.message === 'FAILED'
           ? 'Ocorreu um erro ao capturar seu pagamento, tente novamente ou entre em contato com o suporte para obter mais detalhes!'
           : `Erro ao criar assinatura: ${
-              error.response.data.message as string
+              error?.response?.data?.message as string
             }`,
       );
     }
