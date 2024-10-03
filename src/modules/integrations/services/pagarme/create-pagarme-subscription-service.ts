@@ -150,6 +150,7 @@ export class CreatePagarmeSubscriptionService {
               : undefined,
         },
       );
+      console.log('RETORNO ASSINATURA: ', data);
       return data.current_cycle.end_at;
     } catch (error) {
       console.error('Assinatura: ', error.response.data);
