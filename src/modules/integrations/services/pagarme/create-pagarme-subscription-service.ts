@@ -150,7 +150,12 @@ export class CreatePagarmeSubscriptionService {
               : undefined,
         },
       );
-      console.log('RETORNO ASSINATURA: ', data);
+      console.log('STATUS RETORNO ASSINATURA -> ', data.status);
+      if (data.status !== 'active') {
+        throw new AppError(
+          `Ocorreu um erro ao capturar seu pagamento, tente novamente ou entre em contato com o suporte para obter mais detalhes!`,
+        );
+      }
       return data.current_cycle.end_at;
     } catch (error) {
       console.error('Assinatura: ', error.response.data);
