@@ -58,6 +58,7 @@ export class CreateCheckoutSession {
         success_url: 'https://hausey.com.br/app',
         line_items: [{ price: priceId, quantity: 1 }],
         mode: 'subscription',
+        allow_promotion_codes: true,
         cancel_url: 'https://hausey.com.br/app',
       };
       session = await stripeInstance.checkout.sessions.create(sessionParams);
