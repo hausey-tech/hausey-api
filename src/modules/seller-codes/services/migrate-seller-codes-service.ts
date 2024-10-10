@@ -18,7 +18,7 @@ export class MigrateSellerCodesService {
   ) {}
 
   public async execute(): Promise<void> {
-    const plans = await this.plansRepository.findAll();
+    const plans = await this.plansRepository.find();
     const sellerCodes = await this.sellerCodesRepository.findAll();
     await Promise.all(
       sellerCodes.map(async sellerCode => {
