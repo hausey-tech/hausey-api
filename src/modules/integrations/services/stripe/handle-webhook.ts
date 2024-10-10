@@ -25,21 +25,12 @@ export class HandleWebhook {
         const priceId = invoice.lines.data[0].price.id;
         const customerId = invoice.customer;
 
-        // foi pago atualiza paciente
         const updatePatientPlan = container.resolve(UpdatePatientPlanService);
         updatePatientPlan.execute({
           periodEnd,
           priceId,
           customerId: customerId as string,
         });
-        console.log(
-          'Entrou no webhook e atualizou os dados: ',
-          periodEnd,
-          priceId,
-          customerId,
-        );
-      } else {
-        // envia email avisando paciente que pagamento foi negado
       }
     }
   }
