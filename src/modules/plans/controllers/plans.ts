@@ -1,14 +1,15 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
-import { FindAllPlans } from '../services/find-all-plans';
+import { FindPlans } from '../services/find-plans';
 import { CreatePlanService } from '../services/create-plan-service';
 
 export class PlansController {
   public async index(request: Request, response: Response): Promise<Response> {
-    const findAllPlansService = container.resolve(FindAllPlans);
-
-    const plans = await findAllPlansService.execute();
-
+    const { regions } = request.query;
+    const findPlansService = container.resolve(FindPlans);
+    const plans = await findPlansService.execute({
+      regions: regions as string,
+    });
     return response.json(plans);
   }
 

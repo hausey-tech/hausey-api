@@ -6,4 +6,7 @@ export const CreatePlanSchema = {
     description: Joi.string(),
     price: Joi.number().required(),
   }),
+  [Segments.QUERY]: Joi.object().keys({
+    regions: Joi.string(),
+  }),
 };
