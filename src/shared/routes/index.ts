@@ -2,6 +2,7 @@ import fs from 'fs';
 import pathJS from 'path';
 import { json, Router } from 'express';
 
+import { sellersRouter } from 'modules/seller-code-sellers/routes/sellers.routes';
 import { stripeRoutes } from '../../modules/integrations/routes/stripe.routes';
 import { stripeWebhookRoutes } from '../../modules/integrations/routes/stripe-webhook.routes';
 
@@ -73,6 +74,7 @@ routes.use('/group-types', groupTypesRouter);
 routes.use('/users', usersRouter);
 routes.use('/roles', rolesRouter);
 routes.use('/seller-codes', sellerCodesRouter);
+routes.use('/sellers', sellersRouter);
 routes.use('/appointments', appointmentsRouter);
 routes.use('/prescriptions', prescriptionsRouter);
 routes.use('/slots', slotsRouter);
