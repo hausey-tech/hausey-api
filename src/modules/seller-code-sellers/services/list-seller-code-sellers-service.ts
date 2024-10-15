@@ -13,7 +13,7 @@ export class ListSellerCodeSellersService {
     const idSeller = 'de3514fc-0009-43b0-878d-28944b67e463';
     const sellers: SellerCodeSeller[] =
       await this.sellerCodeSellersRepository.findBySellerId(idSeller);
-    console.log('ListSellerCodeSellersService.execute()', sellers);
+    console.log('Service.execute()');
     return sellers;
   }
 }

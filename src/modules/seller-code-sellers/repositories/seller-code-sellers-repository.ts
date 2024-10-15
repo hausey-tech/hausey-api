@@ -1,4 +1,5 @@
 import { Equal, In, Repository } from 'typeorm';
+import { Patient } from 'modules/patients/entities/patient';
 import { PostgresDataSource } from '../../../shared/typeorm';
 import { SellerCodeSeller } from '../entities/seller-code-seller';
 import { SellerCode } from '../../seller-codes/entities/seller-code';
@@ -12,9 +13,12 @@ export class SellerCodeSellersRepository
 
   private ormRepositoryCode: Repository<SellerCode>;
 
+  private ormRepositoryPatient: Repository<Patient>;
+
   constructor() {
     this.ormRepository = PostgresDataSource.getRepository(SellerCodeSeller);
     this.ormRepositoryCode = PostgresDataSource.getRepository(SellerCode);
+    this.ormRepositoryPatient = PostgresDataSource.getRepository(Patient);
   }
 
   public async create(
@@ -57,6 +61,22 @@ export class SellerCodeSellersRepository
       relations: ['sellerCode', 'seller'], // Incluindo as relações apropriadas
     });
 
-    return sellers;
+    // Adicionando o campo qtdPacients baseado no sellerId
+    const sellersWithPatientsCount = await Promise.all(
+      sellers.map(async sellerCodeSeller => {
+        // Contar pacientes que possuem o mesmo sellerId
+        const patientCount = await this.ormRepositoryPatient.count({
+          where: { sellerId: sellerCodeSeller.sellerId }, // Contar pacientes com sellerId igual
+        });
+
+        // Retornar o objeto com o campo adicional qtdPacients
+        return {
+          ...sellerCodeSeller,
+          qtdPacients: patientCount, // Adicionando o campo qtdPacients
+        };
+      }),
+    );
+
+    return sellersWithPatientsCount;
   }
 }
