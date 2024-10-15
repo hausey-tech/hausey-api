@@ -37,5 +37,8 @@ declare namespace NodeJS {
 
     SURVEY_MONKEY_URL: string;
     SURVEY_MONKEY_KEY: string;
+
+    NIPOMED_URL: string;
+    NIPOMED_TOKEN: string;
   }
 }

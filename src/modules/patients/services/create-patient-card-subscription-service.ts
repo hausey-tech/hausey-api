@@ -5,6 +5,7 @@ import { ISellerCodesRepository } from '../../seller-codes/contracts/repositorie
 import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { IPlansRepository } from '../../plans/contracts/repositories/plans';
+import { CancelPagarmeCustomerSubscriptionsService } from '../../integrations/services/pagarme/cancel-pagarme-customer-subscriptions-service';
 
 interface IProps {
   patientId: string;
@@ -130,10 +131,19 @@ export class CreatePatientCardSubscriptionService {
         });
       }
     }
+
+    const cancelPagarmeCustomerSubscriptionsService = container.resolve(
+      CancelPagarmeCustomerSubscriptionsService,
+    );
+
+    await cancelPagarmeCustomerSubscriptionsService.execute({
+      customerId: patient.stripeCustomerId,
+    });
+
     const createPagarmeSubscriptionService = container.resolve(
       CreatePagarmeSubscriptionService,
     );
-    const expiresAt = await createPagarmeSubscriptionService.execute({
+    await createPagarmeSubscriptionService.execute({
       planId,
       paymentMethod,
       cardToken,
@@ -145,7 +155,6 @@ export class CreatePatientCardSubscriptionService {
 
     await this.patientsRepository.update(patient.id, {
       planId: plan.id,
-      planExpiresAt: expiresAt,
     });
   }
 }

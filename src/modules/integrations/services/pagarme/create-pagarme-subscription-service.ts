@@ -150,11 +150,18 @@ export class CreatePagarmeSubscriptionService {
               : undefined,
         },
       );
+      if (data.status !== 'active') {
+        throw new AppError('FAILED');
+      }
       return data.current_cycle.end_at;
     } catch (error) {
-      console.error('Assinatura: ', error.response.data);
+      console.error('Assinatura: ', error?.response?.data);
       throw new AppError(
-        `Erro ao criar assinatura: ${error.response.data.message as string}`,
+        error?.message === 'FAILED'
+          ? 'Ocorreu um erro ao capturar seu pagamento, tente novamente ou entre em contato com o suporte para obter mais detalhes!'
+          : `Erro ao criar assinatura: ${
+              error?.response?.data?.message as string
+            }`,
       );
     }
   }

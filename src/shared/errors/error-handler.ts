@@ -12,14 +12,7 @@ export function errorHandler(
   response: Response,
   _: NextFunction,
 ): Response {
-  const createErrorService = container.resolve(CreateErrorService);
   if (err instanceof AppError) {
-    if (err.statusCode !== 401) {
-      createErrorService.execute({
-        statusCode: err.statusCode,
-        message: err.message,
-      });
-    }
     return response.status(err.statusCode).json({
       status: 'error',
       message: err.message,
@@ -31,10 +24,6 @@ export function errorHandler(
       err.details.get('body') ??
       err.details.get('params') ??
       err.details.get('query');
-    createErrorService.execute({
-      statusCode: 400,
-      message: error?.message,
-    });
     return response.status(400).json({
       status: 'error',
       message: error?.message,
@@ -42,10 +31,6 @@ export function errorHandler(
   }
 
   if (err instanceof multer.MulterError) {
-    createErrorService.execute({
-      statusCode: 400,
-      message: err.code,
-    });
     if (err.code === 'LIMIT_FILE_SIZE') {
       return response.status(400).json({
         status: 'error',
@@ -70,22 +55,18 @@ export function errorHandler(
 
   if (err instanceof QueryFailedError) {
     const error = err.driverError?.detail ?? err.message;
-    createErrorService.execute({
-      statusCode: 400,
-      message: error,
-    });
     return response.status(400).json({
       status: 'error',
       message: error,
     });
   }
 
-  console.log(err.message);
-
+  const createErrorService = container.resolve(CreateErrorService);
   createErrorService.execute({
     statusCode: 500,
     message: err.message,
   });
+
   return response.status(500).json({
     status: 'error',
     message: 'Erro interno ao servidor',

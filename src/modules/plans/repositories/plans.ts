@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { PostgresDataSource } from '../../../shared/typeorm';
 import { ICreatePlanDTO } from '../contracts/dtos/create-plan-dto';
 import { IPlansRepository } from '../contracts/repositories/plans';
@@ -15,8 +15,8 @@ export class PlansRepository implements IPlansRepository {
     return this.ormRepository.findOne({ where: { id } });
   }
 
-  public async findAll(): Promise<Plan[]> {
-    return this.ormRepository.find();
+  public async find(options?: FindOptionsWhere<Plan>): Promise<Plan[]> {
+    return this.ormRepository.find({ where: options });
   }
 
   public async findByName(name: string): Promise<Plan | null> {

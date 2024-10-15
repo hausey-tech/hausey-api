@@ -76,6 +76,7 @@ export class PatientsRepository implements IPatientsRepository {
   public async findByCustomerId(customerId: string): Promise<Patient | null> {
     return this.ormRepository.findOne({
       where: { stripeCustomerId: customerId },
+      relations: ['address'],
     });
   }
 
