@@ -1,5 +1,5 @@
 import { Equal, In, Repository } from 'typeorm';
-import { Patient } from 'modules/patients/entities/patient';
+import { Patient } from '../../patients/entities/patient';
 import { PostgresDataSource } from '../../../shared/typeorm';
 import { SellerCodeSeller } from '../entities/seller-code-seller';
 import { SellerCode } from '../../seller-codes/entities/seller-code';

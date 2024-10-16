@@ -2,7 +2,6 @@ import fs from 'fs';
 import pathJS from 'path';
 import { json, Router } from 'express';
 
-import { sellersRouter } from 'modules/seller-code-sellers/routes/sellers.routes';
 import { stripeRoutes } from '../../modules/integrations/routes/stripe.routes';
 import { stripeWebhookRoutes } from '../../modules/integrations/routes/stripe-webhook.routes';
 
@@ -50,6 +49,7 @@ import { pagarmeRouter } from '../../modules/integrations/routes/pagarme.routes'
 
 import { teamsRouter } from '../../modules/teams/routes/teams.routes';
 import { teamResumeRouter } from '../../modules/team-resumes/routes/team-resumes';
+import { sellersRouter } from '../../modules/seller-code-sellers/routes/sellers.routes';
 
 export const routes = Router();
 
