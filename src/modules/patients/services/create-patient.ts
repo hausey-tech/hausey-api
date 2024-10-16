@@ -28,7 +28,7 @@ export class CreatePatientService {
   ) {}
 
   public async execute(payload: Props): Promise<Patient> {
-    const { email, document, password, phoneNumber, sellerCode } = payload;
+    const { email, document, password, sellerCode } = payload;
 
     const patientExists = await this.patientsRepository.findByEmail(email);
 
@@ -36,14 +36,6 @@ export class CreatePatientService {
       throw new AppError('Já existe um usuário com este email, faça o login!');
     }
 
-    const hasUserWithPhoneNumber =
-      await this.patientsRepository.findByPhoneNumber(phoneNumber);
-
-    if (hasUserWithPhoneNumber?.deletedAt === null) {
-      throw new AppError(
-        'Já existe um usuário cadastrado com esse celular, faça o login!',
-      );
-    }
     let sellerId: string;
     let planId: string;
     let planExpiresAt: Date;
