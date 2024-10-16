@@ -9,11 +9,9 @@ export class ListSellerCodeSellersService {
     private sellerCodeSellersRepository: ISellerCodeSellersRepository,
   ) {}
 
-  public async execute(): Promise<SellerCodeSeller[]> {
-    const idSeller = 'de3514fc-0009-43b0-878d-28944b67e463';
+  public async execute(idSeller: string): Promise<SellerCodeSeller[]> {
     const sellers: SellerCodeSeller[] =
       await this.sellerCodeSellersRepository.findBySellerId(idSeller);
-    console.log('Service.execute()');
     return sellers;
   }
 }
