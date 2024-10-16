@@ -6,7 +6,7 @@ const sellersRouter = Router();
 const sellerCodeSellersController = new SellerCodeSellersController();
 
 // Rota para listar todos os registros
-sellersRouter.get('/', ensureAuthentication, (request, response) => {
+sellersRouter.get('/:idSeller', ensureAuthentication, (request, response) => {
   return sellerCodeSellersController.index(request, response);
 });
 
