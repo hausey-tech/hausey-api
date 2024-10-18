@@ -44,8 +44,6 @@ export class SellerCodeSellersRepository
 
   // Adicionando o método para buscar registros com base no id
   public async findBySellerId(sellerId: string): Promise<SellerCodeSeller[]> {
-    console.log('SellerCodeSellersRepository.findBySellerId()...', sellerId);
-
     const sellers = await this.ormRepository.find({
       where: { sellerId },
       relations: ['sellerCode'],
@@ -58,6 +56,7 @@ export class SellerCodeSellersRepository
 
     const sellerCodes = await this.ormRepositoryCode.find({
       where: { id: In(sellerCodeIds) },
+      select: ['id', 'createdAt', 'sellerId', 'code', 'active', 'fee', 'type'],
     });
 
     const sellersWithDetails = await Promise.all(
@@ -77,6 +76,14 @@ export class SellerCodeSellersRepository
 
         const numberPatients = await this.ormRepositoryPatient.count({
           where: { sellerId: sellerCode.sellerId },
+          select: [
+            'id',
+            'createdAt',
+            'sellerId',
+            'email',
+            'name',
+            'phoneNumber',
+          ],
         });
 
         const sellerUser = await this.ormRepositoryUser.findOne({

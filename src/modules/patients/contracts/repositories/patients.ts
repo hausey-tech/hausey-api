@@ -15,4 +15,5 @@ export interface IPatientsRepository {
   create(payload: ICreatePatientDTO): Promise<Patient>;
   save(patient: Patient): Promise<Patient>;
   update(id: string, payload: IUpdatePatientDTO): Promise<Patient>;
+  findBySellerId(sellerId: string): Promise<Patient[] | null>;
 }
