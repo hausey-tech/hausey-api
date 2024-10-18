@@ -1,10 +1,11 @@
-import { Equal, In, Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Patient } from '../../patients/entities/patient';
 import { PostgresDataSource } from '../../../shared/typeorm';
 import { SellerCodeSeller } from '../entities/seller-code-seller';
 import { SellerCode } from '../../seller-codes/entities/seller-code';
 import { ISellerCodeSellersRepository } from '../contracts/repositories/seller-code-sellers-repository';
 import { ICreateSellerCodeSellerDTO } from '../contracts/dtos/create-seller-code-seller-dto';
+import { User } from '../../users/entities/user';
 
 export class SellerCodeSellersRepository
   implements ISellerCodeSellersRepository
@@ -15,10 +16,13 @@ export class SellerCodeSellersRepository
 
   private ormRepositoryPatient: Repository<Patient>;
 
+  private ormRepositoryUser: Repository<User>;
+
   constructor() {
     this.ormRepository = PostgresDataSource.getRepository(SellerCodeSeller);
     this.ormRepositoryCode = PostgresDataSource.getRepository(SellerCode);
     this.ormRepositoryPatient = PostgresDataSource.getRepository(Patient);
+    this.ormRepositoryUser = PostgresDataSource.getRepository(User);
   }
 
   public async create(
@@ -42,41 +46,52 @@ export class SellerCodeSellersRepository
   public async findBySellerId(sellerId: string): Promise<SellerCodeSeller[]> {
     console.log('SellerCodeSellersRepository.findBySellerId()...', sellerId);
 
-    // Buscar na tabela seller_code onde seller_id é igual ao sellerId fornecido
-    const sellerCodes = await this.ormRepositoryCode.find({
-      where: { sellerId: Equal(sellerId) }, // Usando Equal para verificar pelo sellerId fornecido
+    const sellers = await this.ormRepository.find({
+      where: { sellerId },
+      relations: ['sellerCode'],
     });
 
-    // Se não encontrar nenhum sellerCode, retornar uma lista vazia
-    if (sellerCodes.length === 0) {
+    if (sellers.length === 0) {
       return [];
     }
+    const sellerCodeIds = sellers.map(seller => seller.sellerCodeId);
 
-    // Extraindo os IDs de seller_code encontrados
-    const sellerCodeIds = sellerCodes.map(sellerCode => sellerCode.id);
-
-    // Buscar na tabela seller_code_sellers onde seller_code_id está nos IDs encontrados
-    const sellers = await this.ormRepository.find({
-      where: { sellerCodeId: In(sellerCodeIds) }, // Verificando pelo seller_code_id
-      relations: ['sellerCode', 'seller'], // Incluindo as relações apropriadas
+    const sellerCodes = await this.ormRepositoryCode.find({
+      where: { id: In(sellerCodeIds) },
     });
 
-    // Adicionando o campo qtdPacients baseado no sellerId
-    const sellersWithPatientsCount = await Promise.all(
-      sellers.map(async sellerCodeSeller => {
-        // Contar pacientes que possuem o mesmo sellerId
-        const patientCount = await this.ormRepositoryPatient.count({
-          where: { sellerId: sellerCodeSeller.sellerId }, // Contar pacientes com sellerId igual
+    const sellersWithDetails = await Promise.all(
+      sellers.map(async seller => {
+        const sellerCode = sellerCodes.find(
+          code => code.id === seller.sellerCodeId,
+        );
+
+        if (!sellerCode) {
+          return {
+            ...seller,
+            sellerCode: null,
+            numberPatients: 0,
+            sellerUser: null,
+          };
+        }
+
+        const numberPatients = await this.ormRepositoryPatient.count({
+          where: { sellerId: sellerCode.sellerId },
         });
 
-        // Retornar o objeto com o campo adicional qtdPacients
+        const sellerUser = await this.ormRepositoryUser.findOne({
+          where: { id: sellerCode.sellerId },
+        });
+
         return {
-          ...sellerCodeSeller,
-          qtdPacients: patientCount, // Adicionando o campo qtdPacients
+          ...seller,
+          sellerCode,
+          numberPatients,
+          sellerUser,
         };
       }),
     );
 
-    return sellersWithPatientsCount;
+    return sellersWithDetails;
   }
 }
