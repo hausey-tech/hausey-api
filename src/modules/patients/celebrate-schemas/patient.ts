@@ -83,6 +83,9 @@ export const UpdatePatientSchema = {
   [Segments.PARAMS]: Joi.object().keys({
     patientId: Joi.string().uuid().required(),
   }),
+  [Segments.QUERY]: Joi.object().keys({
+    disableCustomerCreation: Joi.equal('true'),
+  }),
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string(),
     sellerCode: Joi.string().max(6),
