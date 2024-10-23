@@ -187,11 +187,16 @@ export class PatientsController {
 
   public async update(request: Request, response: Response): Promise<Response> {
     const { patientId } = request.params;
+    const { disableCustomerCreation } = request.query;
     const payload = request.body;
 
     const updatePatientService = container.resolve(UpdatePatientService);
 
-    const patient = await updatePatientService.execute(patientId, payload);
+    const patient = await updatePatientService.execute(
+      patientId,
+      payload,
+      disableCustomerCreation as string,
+    );
 
     return response.json(patient);
   }

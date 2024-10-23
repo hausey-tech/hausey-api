@@ -36,7 +36,11 @@ export class UpdatePatientService {
     private plansRepository: IPlansRepository,
   ) {}
 
-  public async execute(id: string, payload: Props): Promise<Patient> {
+  public async execute(
+    id: string,
+    payload: Props,
+    disableCustomerCreation?: string,
+  ): Promise<Patient> {
     const { document, sellerCode, responsibleTeamId, ...restOfPayload } =
       payload;
 
@@ -86,7 +90,7 @@ export class UpdatePatientService {
         );
       }
 
-      if (!patientExists.stripeCustomerId) {
+      if (!disableCustomerCreation && !patientExists.stripeCustomerId) {
         try {
           const createPagarmeCustomerService = container.resolve(
             CreatePagarmeCustomerService,
