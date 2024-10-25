@@ -1,4 +1,6 @@
-import { injectable, inject } from 'tsyringe';
+import { injectable, inject, container } from 'tsyringe';
+import { format, subHours } from 'date-fns';
+import { CreateAppointmentService } from 'modules/appointments/services/create-appointment';
 import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
@@ -19,9 +21,15 @@ export class CreateForwardRequest {
     professionalIdFrom: string;
     professionalIdTo: string;
     observation: string;
+    shouldCreateAppointment: boolean;
   }): Promise<string> {
-    const { patientId, professionalIdFrom, professionalIdTo, observation } =
-      payload;
+    const {
+      patientId,
+      professionalIdFrom,
+      professionalIdTo,
+      observation,
+      shouldCreateAppointment,
+    } = payload;
 
     const patient = await this.patientsRepository.findById(patientId);
 
@@ -49,6 +57,23 @@ export class CreateForwardRequest {
         'Profissional não encontrado, verifique e tente novamente!',
       );
     }
+
+    if (shouldCreateAppointment) {
+      const now = new Date();
+      const formattedDate = format(subHours(now, 3), "yyyy-MM-dd'T'HH:mm");
+
+      const payloadAppointment = {
+        patientId,
+        professionalId: professionalIdTo,
+        date: formattedDate,
+      };
+
+      const createAppointmentService = container.resolve(
+        CreateAppointmentService,
+      );
+      await createAppointmentService.execute(payloadAppointment);
+    }
+
     const patientStringfied = JSON.stringify(patient);
 
     mailer({
