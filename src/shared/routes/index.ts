@@ -49,6 +49,7 @@ import { pagarmeRouter } from '../../modules/integrations/routes/pagarme.routes'
 
 import { teamsRouter } from '../../modules/teams/routes/teams.routes';
 import { teamResumeRouter } from '../../modules/team-resumes/routes/team-resumes';
+import { sellersRouter } from '../../modules/seller-code-sellers/routes/sellers.routes';
 
 export const routes = Router();
 
@@ -73,6 +74,7 @@ routes.use('/group-types', groupTypesRouter);
 routes.use('/users', usersRouter);
 routes.use('/roles', rolesRouter);
 routes.use('/seller-codes', sellerCodesRouter);
+routes.use('/sellers', sellersRouter);
 routes.use('/appointments', appointmentsRouter);
 routes.use('/prescriptions', prescriptionsRouter);
 routes.use('/slots', slotsRouter);

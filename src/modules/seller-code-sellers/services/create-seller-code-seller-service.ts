@@ -33,4 +33,14 @@ export class CreateSellerCodeSellerService {
       fee,
     });
   }
+
+  // Novo método para encontrar todos os SellerCodeSellers
+  public async findAll(): Promise<SellerCodeSeller[]> {
+    const sellerCodeSellers = await this.sellerCodeSellersRepository.findAll();
+    if (!sellerCodeSellers || sellerCodeSellers.length === 0) {
+      throw new AppError('Nenhum vendedor encontrado.');
+    }
+
+    return sellerCodeSellers;
+  }
 }
