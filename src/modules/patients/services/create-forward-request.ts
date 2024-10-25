@@ -1,6 +1,6 @@
 import { injectable, inject, container } from 'tsyringe';
 import { format, subHours } from 'date-fns';
-import { CreateAppointmentService } from 'modules/appointments/services/create-appointment';
+import { CreateAppointmentService } from '../../appointments/services/create-appointment';
 import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
