@@ -24,4 +24,7 @@ export class User extends UserEntity {
 
   @OneToOne(() => SellerCode, code => code.seller)
   sellerCode: SellerCode | null;
+
+  @Column('varchar', { nullable: true })
+  region: string | null;
 }
