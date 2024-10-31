@@ -10,5 +10,9 @@ export interface ICreateBankAccount {
     holderType: 'individual' | 'company';
     holderDocument: string;
     type: 'checking' | 'savings';
+    // stripe
+    country: string;
+    currency: string;
+    routingNumber: string;
   };
 }
