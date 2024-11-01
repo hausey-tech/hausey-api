@@ -20,12 +20,7 @@ export class CreateConnectAccountService {
       });
       return data.id;
     } catch (error) {
-      console.log('error: ', error);
-      throw new AppError(
-        `Erro ao criar conta conectada: ${
-          error.response.data.message as string
-        }`,
-      );
+      throw new AppError(`Erro ao criar conta conectada: ${error}`);
     }
   }
 }

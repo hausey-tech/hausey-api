@@ -38,11 +38,7 @@ export class CreateAccountLinkService {
       });
       return data.url;
     } catch (error) {
-      throw new AppError(
-        `Erro ao criar link para conta conectada: ${
-          error.response.data.message as string
-        }`,
-      );
+      throw new AppError(`Erro ao criar link para conta conectada: ${error}`);
     }
   }
 }
