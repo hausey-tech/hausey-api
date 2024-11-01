@@ -7,6 +7,7 @@ import {
   CreateCheckoutSessionSchema,
 } from '../celebrate-schemas/stripe';
 import { StripeController } from '../controllers/stripe-controller';
+import { CreateAccountLinkSchema } from '../contracts/schemas/stripe/create-account-link-schema';
 
 export const stripeRoutes = Router();
 const stripeController = new StripeController();
@@ -36,4 +37,11 @@ stripeRoutes.get(
   '/stripe/billing-portal-session',
   ensureAuthentication,
   stripeController.createBillingPortalSession,
+);
+
+stripeRoutes.post(
+  '/stripe/account-link',
+  ensureAuthentication,
+  celebrate(CreateAccountLinkSchema),
+  stripeController.createAccountLink,
 );

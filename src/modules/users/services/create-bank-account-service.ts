@@ -29,7 +29,6 @@ export class CreateBankAccountService {
         recipientId = await createConnectedAccountService.execute({
           id,
           email: user.email,
-          bankAccount,
         });
       } else {
         const createPagarmeRecipientService = container.resolve(
