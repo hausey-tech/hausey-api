@@ -18,7 +18,7 @@ export class CreateCallService {
 
   public async createCall(): Promise<string> {
     const call = await this.client.calls.create({
-      to: '+5585981474352',
+      to: '+5585999246230',
       from: this.twilioNumber,
       twiml:
         '<Response><Say voice="alice" language="pt-BR" rate="0.9">Há um paciente aguardando atendimento na emergência</Say></Response>',

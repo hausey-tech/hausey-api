@@ -2,7 +2,8 @@ import fs from 'fs';
 import pathJS from 'path';
 import { json, Router } from 'express';
 
-import { alertProfessionalRouter } from 'modules/alertProfessional/routes/alertProfessional.routes';
+import { alertProfessionalRouter } from 'modules/alert-professional/routes/alertProfessional.routes';
+
 import { stripeRoutes } from '../../modules/integrations/routes/stripe.routes';
 import { stripeWebhookRoutes } from '../../modules/integrations/routes/stripe-webhook.routes';
 
