@@ -2,7 +2,7 @@ import { container } from 'tsyringe';
 
 import '../providers';
 
-import { AlertProfessionalService } from 'modules/alert-professional/services/alertProfessional.service';
+import { AlertProfessionalService } from '../../modules/alert-professional/services/alertProfessional.service';
 import { CreateCallService } from '../../modules/integrations/services/programmable-voice-twilio';
 import { IAddressesRepository } from '../../modules/addresses/contracts/repositories/IAddressesRepository';
 import { AddressesRepository } from '../../modules/addresses/repositories/AddressesRepository';
