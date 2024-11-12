@@ -42,11 +42,9 @@ export const createVideoRoomCode = async () => {
     );
     return data as RoomResponse;
   } catch (err) {
-    const error =
-      err?.response?.data?.errors.length > 0
-        ? err?.response?.data?.errors[0]?.detail
-        : err.message;
-    const statusCode = err?.response?.status;
-    throw new AppError(error, statusCode);
+    throw new AppError(
+      'Erro ao criar sala de atendimento, entre em contato com o suporte!',
+      500,
+    );
   }
 };
