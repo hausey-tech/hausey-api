@@ -15,7 +15,7 @@ export class Slot extends BaseEntity {
   @JoinColumn({ name: 'professional_id' })
   professional: Professional;
 
-  @Column('varchar', { name: 'professionalType' })
+  @Column('varchar', { name: 'professionalType', default: null })
   professionalType: string;
 
   @Column('int', { name: 'week_day', nullable: true })
