@@ -1,5 +1,5 @@
-import { CreateCallService } from 'modules/integrations/services/programmable-voice-twilio';
 import { inject, injectable } from 'tsyringe';
+import { CreateCallService } from '../../integrations/services/programmable-voice-twilio';
 
 @injectable()
 export class AlertProfessionalService {
