@@ -33,6 +33,7 @@ export const CreateUserSchema = {
         }),
       ),
     }),
+    region: Joi.string().equal('br', 'us', 'uk'),
   }),
 };
 

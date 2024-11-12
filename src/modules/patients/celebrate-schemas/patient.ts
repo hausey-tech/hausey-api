@@ -66,6 +66,7 @@ export const CreateForwardRequestSchema = {
     professionalIdFrom: Joi.string().uuid().required(),
     professionalIdTo: Joi.string().uuid().required(),
     patientId: Joi.string().uuid().required(),
+    shouldCreateAppointment: Joi.boolean(),
   }),
 };
 export const CreatePatientProfessionalAssistanceSchema = {

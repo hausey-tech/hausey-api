@@ -3,6 +3,7 @@ import { container, inject, injectable } from 'tsyringe';
 import { AppError } from '../../../../shared/errors/app-error';
 import { IPlansRepository } from '../../../plans/contracts/repositories/plans';
 import { IPatientsRepository } from '../../../patients/contracts/repositories/patients';
+import { ISellerCodesRepository } from '../../../seller-codes/contracts/repositories/seller-codes';
 import { stripeInstance } from '../../utils/stripe-instance';
 import { CreateCustomer } from './create-customer';
 
@@ -20,6 +21,9 @@ export class CreateCheckoutSession {
 
     @inject('PlansRepository')
     private plansRepository: IPlansRepository,
+
+    @inject('SellerCodesRepository')
+    private sellerCodesRepository: ISellerCodesRepository,
   ) {}
 
   public async execute({
@@ -43,6 +47,19 @@ export class CreateCheckoutSession {
     let customerId = patient.stripeCustomerId;
     let sessionParams: Stripe.Checkout.SessionCreateParams;
     let session: Stripe.Response<Stripe.Checkout.Session>;
+    let promoCodeId: string;
+
+    if (patient.sellerId) {
+      const sellerCode = await this.sellerCodesRepository.findBySellerId(
+        patient.sellerId,
+      );
+      const sellerCodeDiscount = sellerCode.discounts.find(
+        d => d.planId === plan.id,
+      );
+      if (sellerCodeDiscount && sellerCodeDiscount.stripePromoCodeId) {
+        promoCodeId = sellerCodeDiscount.stripePromoCodeId;
+      }
+    }
 
     try {
       if (!customerId) {
@@ -58,8 +75,8 @@ export class CreateCheckoutSession {
         success_url: 'https://hausey.com.br/app',
         line_items: [{ price: priceId, quantity: 1 }],
         mode: 'subscription',
-        allow_promotion_codes: true,
         cancel_url: 'https://hausey.com.br/app',
+        discounts: [{ promotion_code: promoCodeId }],
       };
       session = await stripeInstance.checkout.sessions.create(sessionParams);
     } catch (err) {

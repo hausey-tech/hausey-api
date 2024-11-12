@@ -21,6 +21,7 @@ import { UploadPatientFileService } from '../services/upload-patient-file';
 import { GetPatientFilesByPatientService } from '../services/get-patient-files-by-patient copy';
 import { DeletePatientFileService } from '../services/delete-patient-file';
 import { DeletePatientGroupTypeService } from '../services/delete-patient-group-type';
+import { GetPatientSellerId } from '../services/get-patient-sellerid';
 
 export class PatientsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -31,6 +32,21 @@ export class PatientsController {
     const patients = await listPatientsService.execute(query);
 
     return response.json(patients);
+  }
+
+  public async findBySellerId(req: Request, res: Response): Promise<Response> {
+    const { sellerId } = req.params;
+
+    try {
+      // Usando tsyringe para injeção de dependência
+      const getPatientSellerId = container.resolve(GetPatientSellerId);
+
+      const patientsSeller = await getPatientSellerId.findBySellerId(sellerId);
+      return res.json(patientsSeller);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
   }
 
   public async create(request: Request, response: Response): Promise<Response> {

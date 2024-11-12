@@ -34,6 +34,7 @@ interface CreateUser {
       fee: number;
     }[];
   };
+  region?: string;
 }
 @injectable()
 export class CreateUserService {
@@ -52,7 +53,7 @@ export class CreateUserService {
   ) {}
 
   public async execute(payload: CreateUser): Promise<User> {
-    const { email, password, roleType, sellerCode } = payload;
+    const { email, password, roleType, sellerCode, region } = payload;
 
     const userExists = await this.usersRepository.findByEmail(email);
 
@@ -112,6 +113,7 @@ export class CreateUserService {
             type,
             discounts,
             sellers,
+            region,
           });
           mailer({
             to: savedUser.email,
