@@ -6,6 +6,7 @@ import { CreateCheckoutSession } from '../services/stripe/create-checkout-sessio
 import { HandleWebhook } from '../services/stripe/handle-webhook';
 import { ListCards } from '../services/stripe/list-cards';
 import { CreateBillingPortalSession } from '../services/stripe/create-billing-portal-session';
+import { CreateAccountLinkService } from '../services/stripe/create-account-link';
 
 export class StripeController {
   public async listCards(
@@ -87,5 +88,20 @@ export class StripeController {
       patientId: id,
     });
     return response.json(session);
+  }
+
+  public async createAccountLink(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { userId, type } = request.body;
+    const createAccountLinkService = container.resolve(
+      CreateAccountLinkService,
+    );
+    const url = await createAccountLinkService.execute({
+      userId,
+      type,
+    });
+    return response.json({ url });
   }
 }

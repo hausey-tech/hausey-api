@@ -2,6 +2,7 @@ import { container, injectable } from 'tsyringe';
 import Stripe from 'stripe';
 import { stripeInstance } from '../../utils/stripe-instance';
 import { UpdatePatientPlanService } from '../../../patients/services/update-patient-plan';
+import { CreateTransfers } from './create-transfers';
 
 interface Props {
   sig: string | string[];
@@ -30,6 +31,12 @@ export class HandleWebhook {
           periodEnd,
           priceId,
           customerId: customerId as string,
+        });
+
+        const createTransfers = container.resolve(CreateTransfers);
+        createTransfers.execute({
+          customerId: customerId as string,
+          amount: invoice.amount_paid,
         });
       }
     }
