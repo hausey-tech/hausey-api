@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
-import { AppError } from 'shared/errors/app-error';
+import { AppError } from '../../../shared/errors/app-error';
 import { AlertProfessionalService } from '../services/alertProfessional.service';
 
 export class AlertProfessionalController {
