@@ -1,7 +1,8 @@
 import { container, inject, injectable } from 'tsyringe';
-import { FindSlotsByDateService } from 'modules/slots/services/find-slots-by-Date';
-import { IAppointmentsRepository } from 'modules/appointments/contracts/repositories/appointments';
+
 import { AppError } from 'shared/errors/app-error';
+import { IAppointmentsRepository } from '../../appointments/contracts/repositories/appointments';
+import { FindSlotsByDateService } from '../../slots/services/find-slots-by-Date';
 import { CreateCallService } from '../../integrations/services/programmable-voice-twilio';
 import { Professional } from '../../professionals/entities/professional';
 
