@@ -19,7 +19,7 @@ export class TryCallProfessionalService {
     @inject('ProfessionalsRepository')
     private professionalsRepository: IProfessionalsRepository,
   ) {
-    this.doctorMaster = process.env.TWILIO_ACOUNT_SID_DEV;
+    this.doctorMaster = process.env.DOCTOR_MASTER;
   }
 
   public async execute(To: string): Promise<any> {
@@ -39,7 +39,6 @@ export class TryCallProfessionalService {
 
     if (count < 14) {
       if (isAwaiting && isNotRunning && count <= 4) {
-        await new Promise(resolve => setTimeout(resolve, 10000));
         await callService.createCall({ to: To });
       }
       if (isAwaiting && isNotRunning && count >= 5 && count <= 10) {
@@ -48,14 +47,12 @@ export class TryCallProfessionalService {
           item => item.professionalType === 'secundary',
         );
         if (secundary) {
-          await new Promise(resolve => setTimeout(resolve, 10000));
           await callService.createCall({
             to: secundary.professional.phoneNumber,
           });
         }
       }
       if (isAwaiting && isNotRunning && count >= 6 && count < 8) {
-        await new Promise(resolve => setTimeout(resolve, 10000));
         await callService.createCall({ to: this.doctorMaster });
         count = 0;
       }

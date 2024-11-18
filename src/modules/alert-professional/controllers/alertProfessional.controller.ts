@@ -6,6 +6,12 @@ import { TryCallProfessionalService } from '../services/statusProfessional.servi
 let status = false;
 
 export class AlertProfessionalController {
+  private readonly timeToCall: number;
+
+  constructor() {
+    this.timeToCall = Number(process.env.TIME_TO_CALL);
+  }
+
   public async create(request: Request, response: Response): Promise<Response> {
     if (status === false) {
       status = true;
@@ -25,6 +31,7 @@ export class AlertProfessionalController {
     try {
       const { To } = request.body;
       const alertProfessional = container.resolve(TryCallProfessionalService);
+      await new Promise(resolve => setTimeout(resolve, this.timeToCall));
       await alertProfessional.execute(To);
 
       return response.status(200).send({ message: 'Webhook recebido' });
