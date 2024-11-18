@@ -87,4 +87,20 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     await this.ormRepository.update(id, payload);
     return this.findById(id);
   }
+
+  public async findAllAppointmentsStatusIsAwaiting(): Promise<Appointment[]> {
+    return this.ormRepository.find({
+      where: {
+        status: 'awaiting',
+      },
+    });
+  }
+
+  public async findAppointmentStatusIsRunning(): Promise<Appointment[]> {
+    return this.ormRepository.find({
+      where: {
+        status: 'running',
+      },
+    });
+  }
 }

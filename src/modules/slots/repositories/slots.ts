@@ -40,6 +40,7 @@ export class SlotsRepository implements ISlotsRepository {
           endTime: Raw(alias => `${alias} >= :currentHour`, { currentHour }),
         },
       ],
+      relations: [...this.relations, 'professional'],
     });
   }
 

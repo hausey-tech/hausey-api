@@ -10,6 +10,7 @@ interface IAvailability {
   id: string;
   professional: Professional;
   date: Date;
+  profissionalType: string;
   slots: {
     startTime: string;
     endTime: string;
@@ -36,6 +37,7 @@ export class FindSlotsByDateService {
         id: slot.id,
         date: slot.date,
         professional: slot.professional,
+        profissionalType: slot.professionalType,
         slots: {
           startTime: slot.startTime,
           endTime: slot.endTime,

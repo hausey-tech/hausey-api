@@ -1,4 +1,21 @@
 import twilio from 'twilio';
+import { Professional } from '../../professionals/entities/professional';
+
+interface CreateCallResponse {
+  sid: string;
+  status: any;
+}
+
+interface IAvailability {
+  id: string;
+  professional: Professional;
+  date: Date;
+  profissionalType: string;
+  slots: {
+    startTime: string;
+    endTime: string;
+  };
+}
 
 export class CreateCallService {
   private readonly accountSid: string;
@@ -16,13 +33,33 @@ export class CreateCallService {
     this.client = twilio(this.accountSid, this.authToken);
   }
 
-  public async createCall(): Promise<string> {
+  public async createCall({
+    iAvailability,
+    to,
+  }: {
+    iAvailability?: IAvailability;
+    to?: string;
+  }): Promise<CreateCallResponse> {
+    console.log(
+      'Ligando para o número',
+      `${iAvailability?.professional?.phoneNumber ?? to}`,
+    );
     const call = await this.client.calls.create({
-      to: '+5585981474352',
+      to: iAvailability?.professional?.phoneNumber ?? to,
       from: this.twilioNumber,
+      method: 'POST',
+      statusCallback:
+        'https://6fa7-2804-248-f715-1701-6003-d7c1-27d5-6c97.ngrok-free.app/v1/alert-professional/webhook/call-status',
+      statusCallbackMethod: 'POST',
+      statusCallbackEvent: ['completed'],
       twiml:
-        '<Response><Say voice="alice" language="pt-BR" rate="0.9">Há um paciente aguardando atendimento na emergência</Say></Response>',
+        '<Response><Say voice="alice" language="pt-BR" rate="0.8">Olá. Tem paciente aguardando atendimento!</Say></Response>',
     });
-    return call.sid;
+    return call;
+  }
+
+  public async statusCall(callSid: string): Promise<string> {
+    const call = await this.client.calls(callSid).fetch();
+    return call.status;
   }
 }

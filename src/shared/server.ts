@@ -14,6 +14,8 @@ import {
 
 const app = express();
 
+app.use(express.urlencoded({ extended: true }));
+
 const start = async () => {
   try {
     await PostgresDataSource.initialize();

@@ -1,17 +1,35 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
-import { AppError } from '../../../shared/errors/app-error';
 import { AlertProfessionalService } from '../services/alertProfessional.service';
+import { TryCallProfessionalService } from '../services/statusProfessional.service';
+
+let status = false;
 
 export class AlertProfessionalController {
   public async create(request: Request, response: Response): Promise<Response> {
-    try {
+    if (status === false) {
+      status = true;
       const alertProfessional = container.resolve(AlertProfessionalService);
-      alertProfessional.execute();
+      const message = await alertProfessional.execute();
+      status = false;
+      return response.json({ message });
+    }
+    status = false;
+    return response.json({ message: 'Já existe uma ligação em andamento.' });
+  }
 
-      return response.json({ message: 'Ligação efetuada com sucesso' });
+  public async webhook(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    try {
+      const { To } = request.body;
+      const alertProfessional = container.resolve(TryCallProfessionalService);
+      await alertProfessional.execute(To);
+
+      return response.status(200).send({ message: 'Webhook recebido' });
     } catch (error) {
-      throw new AppError(error.message);
+      return response.status(400).send({ message: error.message });
     }
   }
 }
