@@ -3,7 +3,7 @@ import { container } from 'tsyringe';
 import { AlertProfessionalService } from '../services/alertProfessional.service';
 import { TryCallProfessionalService } from '../services/statusProfessional.service';
 
-let status = false;
+let status = true;
 
 export class AlertProfessionalController {
   private readonly timeToCall: number;
@@ -13,14 +13,14 @@ export class AlertProfessionalController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    if (status === false) {
-      status = true;
+    if (status === true) {
+      status = false;
       const alertProfessional = container.resolve(AlertProfessionalService);
       const message = await alertProfessional.execute();
-      status = false;
+      status = true;
       return response.json({ message });
     }
-    status = false;
+    status = true;
     return response.json({ message: 'Já existe uma ligação em andamento.' });
   }
 
