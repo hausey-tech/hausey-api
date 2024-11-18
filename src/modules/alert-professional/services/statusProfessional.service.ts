@@ -1,9 +1,9 @@
 import { container, inject, injectable } from 'tsyringe';
-import { IAppointmentsRepository } from 'modules/appointments/contracts/repositories/appointments';
-import { IProfessionalsRepository } from 'modules/professionals/contracts/repositories/professionals';
-import { ISlotsRepository } from 'modules/slots/contracts/repositories/slots';
-import { AppError } from 'shared/errors/app-error';
+import { IAppointmentsRepository } from '../../appointments/contracts/repositories/appointments';
+import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
+import { AppError } from '../../../shared/errors/app-error';
 import { CreateCallService } from '../../integrations/services/programmable-voice-twilio';
+import { ISlotsRepository } from '../../slots/contracts/repositories/slots';
 
 let count = 1;
 
