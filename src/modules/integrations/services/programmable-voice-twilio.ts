@@ -49,7 +49,7 @@ export class CreateCallService {
       from: this.twilioNumber,
       method: 'POST',
       statusCallback:
-        'https://6fa7-2804-248-f715-1701-6003-d7c1-27d5-6c97.ngrok-free.app/v1/alert-professional/webhook/call-status',
+        'https://hausey-staging-api-1a8e126728a0.herokuapp.com/v1/alert-professional/webhook/call-status',
       statusCallbackMethod: 'POST',
       statusCallbackEvent: ['completed'],
       twiml:
