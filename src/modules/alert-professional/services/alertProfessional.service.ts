@@ -1,6 +1,6 @@
 import { container, inject, injectable } from 'tsyringe';
 
-import { AppError } from 'shared/errors/app-error';
+import { AppError } from '../../../shared/errors/app-error';
 import { IAppointmentsRepository } from '../../appointments/contracts/repositories/appointments';
 import { FindSlotsByDateService } from '../../slots/services/find-slots-by-Date';
 import { CreateCallService } from '../../integrations/services/programmable-voice-twilio';
