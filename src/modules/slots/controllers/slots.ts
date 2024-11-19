@@ -19,12 +19,13 @@ export class SlotsController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const { professionalId, slots } = request.body;
+    const { professionalId, professionalType, slots } = request.body;
 
     const createSlotService = container.resolve(CreateSlotService);
 
     await createSlotService.execute({
       professionalId,
+      professionalType,
       slots,
     });
 
