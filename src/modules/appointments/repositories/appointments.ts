@@ -33,7 +33,10 @@ export class AppointmentsRepository implements IAppointmentsRepository {
   }
 
   public async create(payload: ICreateAppointmentDTO): Promise<Appointment> {
-    return this.ormRepository.create(payload);
+    return this.ormRepository.create({
+      ...payload,
+      status: 'awaiting',
+    });
   }
 
   public async save(appointment: Appointment): Promise<Appointment> {
