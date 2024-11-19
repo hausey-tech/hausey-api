@@ -44,7 +44,7 @@ export class TryCallProfessionalService {
       if (isAwaiting && isNotRunning && count >= 5 && count <= 10) {
         const slot = await this.slotsRepository.findByTodayDate();
         const secundary = slot.find(
-          item => item.professionalType === 'secundary',
+          item => item.professionalType === 'secondary',
         );
         if (secundary) {
           await callService.createCall({
