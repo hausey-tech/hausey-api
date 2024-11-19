@@ -30,7 +30,6 @@ export class TryCallProfessionalService {
     const isNotRunning =
       (await this.appointmentsRepository.findAppointmentStatusIsRunning())
         .length === 0;
-    console.log('isNotRunning', isNotRunning);
     await this.professionalsRepository.findByDocument('01705661963');
 
     if (!isNotRunning || !isAwaiting) {
@@ -52,7 +51,7 @@ export class TryCallProfessionalService {
           });
         }
       }
-      if (isAwaiting && isNotRunning && count >= 6 && count < 8) {
+      if (isAwaiting && isNotRunning && count >= 11 && count < 14) {
         await callService.createCall({ to: this.doctorMaster });
         count = 0;
       }

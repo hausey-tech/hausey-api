@@ -33,16 +33,23 @@ export class AlertProfessionalService {
         (profissional: IAvailability) =>
           profissional.profissionalType === 'principal',
       );
+      const isAwaiting =
+        (
+          await this.appointmentsRepository.findAllAppointmentsStatusIsAwaiting()
+        ).length > 0;
+      const isNotRunning =
+        (await this.appointmentsRepository.findAppointmentStatusIsRunning())
+          .length === 0;
 
       const hasAppointment =
         (await this.appointmentsRepository.findAppointmentStatusIsRunning())
           .length === 0;
 
-      if (hasAppointment) {
+      if (hasAppointment && isAwaiting && isNotRunning) {
         await callService.createCall({ iAvailability: principalDoctor });
+        return 'Ligação efetuada com sucesso';
       }
-
-      return 'Ligação efetuada com sucesso';
+      throw new AppError('Há uma procedimento em execução.');
     } catch (error) {
       if (error instanceof AppError) {
         return error.message;
