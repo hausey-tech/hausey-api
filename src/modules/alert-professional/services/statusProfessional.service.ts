@@ -49,18 +49,7 @@ export class TryCallProfessionalService {
     try {
       if (count < 14) {
         count += 1;
-        this.logger.info(
-          {
-            count,
-            isAwaiting,
-            isNotRunning,
-            firsIf: isAwaiting && isNotRunning && count <= 2,
-            secondIf: isAwaiting && isNotRunning && count > 2 && count <= 4,
-            thirdIf: isAwaiting && isNotRunning && count > 4,
-          },
-          'Procedimento iniciado',
-        );
-        if (isAwaiting && isNotRunning && count <= 2) {
+        if (isAwaiting && isNotRunning && count <= 3) {
           await callService.createCall({ to: To });
           this.logger.info(
             {
@@ -69,7 +58,7 @@ export class TryCallProfessionalService {
             'Ligação realizada para o doutor principal.',
           );
         }
-        if (isAwaiting && isNotRunning && count > 2 && count <= 4) {
+        if (isAwaiting && isNotRunning && count > 3 && count <= 6) {
           const slot = await this.slotsRepository.findByTodayDate();
           const secondary = slot.find(
             item => item.professionalType === 'secondary',
@@ -105,7 +94,7 @@ export class TryCallProfessionalService {
             );
           }
         }
-        if (isAwaiting && isNotRunning && count > 4) {
+        if (isAwaiting && isNotRunning && count > 6) {
           await callService.createCall({ to: this.doctorMaster });
           count = 0;
           this.logger.info(
