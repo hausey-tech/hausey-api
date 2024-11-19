@@ -53,7 +53,7 @@ export class TryCallProfessionalService {
           count,
           isAwaiting,
           isNotRunning,
-          firsIf: isAwaiting && isNotRunning && count > 2 && count <= 4,
+          firsIf: isAwaiting && isNotRunning && count <= 2,
           secondIf: isAwaiting && isNotRunning && count > 2 && count <= 4,
           thirdIf: isAwaiting && isNotRunning && count > 4,
         },
@@ -69,10 +69,16 @@ export class TryCallProfessionalService {
         );
       }
       if (isAwaiting && isNotRunning && count > 2 && count <= 4) {
-        this.logger.info({}, 'Entrei no if');
         const slot = await this.slotsRepository.findByTodayDate();
         const secondary = slot.find(
           item => item.professionalType === 'secondary',
+        );
+        this.logger.info(
+          {
+            secondary: secondary.professionalType,
+            validate: secondary !== undefined && secondary !== null,
+          },
+          'Entrei no if',
         );
         if (secondary !== undefined && secondary !== null) {
           await callService.createCall({
