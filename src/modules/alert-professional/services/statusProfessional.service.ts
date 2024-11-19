@@ -62,6 +62,9 @@ export class TryCallProfessionalService {
           count,
           isAwaiting,
           isNotRunning,
+          firstIf: isAwaiting && isNotRunning && count <= 4,
+          secondIf: isAwaiting && isNotRunning && count > 4 && count <= 10,
+          thirdIf: isAwaiting && isNotRunning && count > 10 && count < 14,
         },
         'Procedimento dentro do IF 14',
       );
