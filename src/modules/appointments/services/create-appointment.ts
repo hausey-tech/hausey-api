@@ -109,15 +109,8 @@ export class CreateAppointmentService {
       appointment = appointmentProfessional;
     }
     if (emergency) {
-      this.logger.info({}, 'Antes de executar a chamada');
       const alertProfessional = container.resolve(AlertProfessionalService);
-      const result = await alertProfessional.execute();
-      this.logger.info(
-        {
-          message: result,
-        },
-        'Retorno da chamada',
-      );
+      await alertProfessional.execute();
 
       const appointmentEmergency = await this.appointmentsRepository.create({
         patientId,

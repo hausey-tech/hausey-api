@@ -37,10 +37,6 @@ export class AlertProfessionalService {
         (profissional: IAvailability) =>
           profissional.profissionalType === 'principal',
       );
-      const isAwaiting =
-        (
-          await this.appointmentsRepository.findAllAppointmentsStatusIsAwaiting()
-        ).length > 0;
       const isNotRunning =
         (await this.appointmentsRepository.findAppointmentStatusIsRunning())
           .length === 0;
@@ -49,9 +45,14 @@ export class AlertProfessionalService {
         (await this.appointmentsRepository.findAppointmentStatusIsRunning())
           .length === 0;
 
-      if (hasAppointment && isAwaiting && isNotRunning) {
+      if (hasAppointment && isNotRunning) {
         await callService.createCall({ iAvailability: principalDoctor });
-        this.logger.info({}, 'Ligação efetuada com sucesso');
+        this.logger.info(
+          {
+            to: principalDoctor,
+          },
+          'Ligação efetuada com sucesso',
+        );
         return 'Ligação efetuada com sucesso';
       }
       this.logger.info({}, 'Há uma procedimento em execução.');
