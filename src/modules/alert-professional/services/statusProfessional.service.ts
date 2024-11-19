@@ -35,15 +35,6 @@ export class TryCallProfessionalService {
         .length === 0;
     await this.professionalsRepository.findByDocument('01705661963');
 
-    this.logger.info(
-      {
-        count,
-        isAwaiting,
-        isNotRunning,
-      },
-      'Procedimento iniciado',
-    );
-
     if (!isNotRunning || !isAwaiting) {
       this.logger.info(
         {
@@ -57,6 +48,17 @@ export class TryCallProfessionalService {
 
     if (count < 14) {
       count += 1;
+      this.logger.info(
+        {
+          count,
+          isAwaiting,
+          isNotRunning,
+          firsIf: isAwaiting && isNotRunning && count > 2 && count <= 4,
+          secondIf: isAwaiting && isNotRunning && count > 2 && count <= 4,
+          thirdIf: isAwaiting && isNotRunning && count > 4,
+        },
+        'Procedimento iniciado',
+      );
       if (isAwaiting && isNotRunning && count <= 2) {
         await callService.createCall({ to: To });
         this.logger.info(
@@ -67,11 +69,12 @@ export class TryCallProfessionalService {
         );
       }
       if (isAwaiting && isNotRunning && count > 2 && count <= 4) {
+        this.logger.info({}, 'Entrei no if');
         const slot = await this.slotsRepository.findByTodayDate();
         const secondary = slot.find(
           item => item.professionalType === 'secondary',
         );
-        if (secondary !== undefined || secondary !== null) {
+        if (secondary !== undefined && secondary !== null) {
           await callService.createCall({
             to: secondary.professional.phoneNumber,
           });
