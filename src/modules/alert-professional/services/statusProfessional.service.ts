@@ -62,9 +62,9 @@ export class TryCallProfessionalService {
           count,
           isAwaiting,
           isNotRunning,
-          firstIf: isAwaiting && isNotRunning && count <= 4,
-          secondIf: isAwaiting && isNotRunning && count > 4 && count <= 10,
-          thirdIf: isAwaiting && isNotRunning && count > 10 && count < 14,
+          firstIf: isAwaiting && isNotRunning && count <= 2,
+          secondIf: isAwaiting && isNotRunning && count > 2 && count <= 4,
+          thirdIf: isAwaiting && isNotRunning && count > 4,
         },
         'Procedimento dentro do IF 14',
       );
@@ -85,7 +85,7 @@ export class TryCallProfessionalService {
           'Procedimento dentro do IF <= 4',
         );
       }
-      if (isAwaiting && isNotRunning && count > 3 && count <= 10) {
+      if (isAwaiting && isNotRunning && count > 2 && count <= 4) {
         const slot = await this.slotsRepository.findByTodayDate();
         this.logger.info(
           {
@@ -123,7 +123,7 @@ export class TryCallProfessionalService {
           'Procedimento dentro do IF >= 5 && <= 10',
         );
       }
-      if (isAwaiting && isNotRunning && count > 10 && count < 14) {
+      if (isAwaiting && isNotRunning && count > 4) {
         await callService.createCall({ to: this.doctorMaster });
         count = 0;
         this.logger.info(
@@ -138,7 +138,7 @@ export class TryCallProfessionalService {
           {
             to: To,
           },
-          'Ligação realizada para o número acima.',
+          'Ligação realizada para o Dr. Fuad.',
         );
       }
     } else {
