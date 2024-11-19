@@ -23,6 +23,9 @@ export class CreateAppointmentService {
 
     @inject('ProfessionalsRepository')
     private professionalsRepository: IProfessionalsRepository,
+
+    @inject('Logger')
+    private logger: Logger,
   ) {}
 
   public async execute({
@@ -105,8 +108,16 @@ export class CreateAppointmentService {
       appointment = appointmentProfessional;
     }
     if (emergency) {
+      this.logger.info({}, 'Antes de executar a chamada');
       const alertProfessional = container.resolve(AlertProfessionalService);
-      await alertProfessional.execute();
+      const result = await alertProfessional.execute();
+      this.logger.info(
+        {
+          message: result,
+        },
+        'Retorno da chamada',
+      );
+
       const appointmentEmergency = await this.appointmentsRepository.create({
         patientId,
         roomId,
