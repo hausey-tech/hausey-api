@@ -106,7 +106,7 @@ export class CreateAppointmentService {
     }
     if (emergency) {
       const alertProfessional = container.resolve(AlertProfessionalService);
-      await alertProfessional.execute();
+      alertProfessional.execute();
       const appointmentEmergency = await this.appointmentsRepository.create({
         patientId,
         roomId,

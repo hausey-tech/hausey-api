@@ -51,13 +51,16 @@ export class AlertProfessionalService {
 
       if (hasAppointment && isAwaiting && isNotRunning) {
         await callService.createCall({ iAvailability: principalDoctor });
+        this.logger.info({}, 'Ligação efetuada com sucesso');
         return 'Ligação efetuada com sucesso';
       }
+      this.logger.info({}, 'Há uma procedimento em execução.');
       throw new AppError('Há uma procedimento em execução.');
     } catch (error) {
       if (error instanceof AppError) {
         return error.message;
       }
+      this.logger.info({ error }, 'Erro interno do servidor.');
       return 'Erro interno do servidor';
     }
   }

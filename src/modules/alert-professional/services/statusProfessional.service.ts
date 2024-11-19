@@ -85,6 +85,7 @@ export class TryCallProfessionalService {
       }
       count += 1;
     } else {
+      this.logger.info({}, 'Contagem zerada.');
       count = 0;
     }
   }
