@@ -46,49 +46,49 @@ export class TryCallProfessionalService {
       throw new AppError('O doutor já está em um atendimento.');
     }
 
-    if (count < 14) {
-      count += 1;
-      this.logger.info(
-        {
-          count,
-          isAwaiting,
-          isNotRunning,
-          firsIf: isAwaiting && isNotRunning && count <= 2,
-          secondIf: isAwaiting && isNotRunning && count > 2 && count <= 4,
-          thirdIf: isAwaiting && isNotRunning && count > 4,
-        },
-        'Procedimento iniciado',
-      );
-      if (isAwaiting && isNotRunning && count <= 2) {
-        await callService.createCall({ to: To });
+    try {
+      if (count < 14) {
+        count += 1;
         this.logger.info(
           {
-            to: To,
+            count,
+            isAwaiting,
+            isNotRunning,
+            firsIf: isAwaiting && isNotRunning && count <= 2,
+            secondIf: isAwaiting && isNotRunning && count > 2 && count <= 4,
+            thirdIf: isAwaiting && isNotRunning && count > 4,
           },
-          'Ligação realizada para o doutor principal.',
+          'Procedimento iniciado',
         );
-      }
-      if (isAwaiting && isNotRunning && count > 2 && count <= 4) {
-        const slot = await this.slotsRepository.findByTodayDate();
-        const secondary = slot.find(
-          item => item.professionalType === 'secondary',
-        );
-        this.logger.info(
-          {
-            secondary: secondary.professionalType,
-            validate: secondary !== undefined && secondary !== null,
-            ligarPara: secondary.professional.phoneNumber,
-          },
-          'Entrei no if',
-        );
-        if (secondary !== undefined && secondary !== null) {
+        if (isAwaiting && isNotRunning && count <= 2) {
+          await callService.createCall({ to: To });
           this.logger.info(
             {
-              secondary,
+              to: To,
             },
-            'Console do secondary dentro do if',
+            'Ligação realizada para o doutor principal.',
           );
-          try {
+        }
+        if (isAwaiting && isNotRunning && count > 2 && count <= 4) {
+          const slot = await this.slotsRepository.findByTodayDate();
+          const secondary = slot.find(
+            item => item.professionalType === 'secondary',
+          );
+          this.logger.info(
+            {
+              secondary: secondary.professionalType,
+              validate: secondary !== undefined && secondary !== null,
+              ligarPara: secondary.professional.phoneNumber,
+            },
+            'Entrei no if',
+          );
+          if (secondary !== undefined && secondary !== null) {
+            this.logger.info(
+              {
+                secondary,
+              },
+              'Console do secondary dentro do if',
+            );
             await callService.createCall({
               to: secondary.professional.phoneNumber,
             });
@@ -98,33 +98,36 @@ export class TryCallProfessionalService {
               },
               'Ligação realizada para o doutor secundário.',
             );
-          } catch (error) {
+          } else {
             this.logger.info(
-              {
-                error: error.message,
-              },
-              'Houve um erro ao efetuar a ligação',
+              {},
+              'Não foi possível achar um doutor secundário.',
             );
           }
-        } else {
-          this.logger.info({}, 'Não foi possível achar um doutor secundário.');
         }
-      }
-      if (isAwaiting && isNotRunning && count > 4) {
-        await callService.createCall({ to: this.doctorMaster });
+        if (isAwaiting && isNotRunning && count > 4) {
+          await callService.createCall({ to: this.doctorMaster });
+          count = 0;
+          this.logger.info(
+            {
+              count,
+              isAwaiting,
+              isNotRunning,
+            },
+            'Ligando para o Doutor Master',
+          );
+        }
+      } else {
+        this.logger.info({}, 'Contagem zerada.');
         count = 0;
-        this.logger.info(
-          {
-            count,
-            isAwaiting,
-            isNotRunning,
-          },
-          'Ligando para o Doutor Master',
-        );
       }
-    } else {
-      this.logger.info({}, 'Contagem zerada.');
-      count = 0;
+    } catch (error) {
+      this.logger.info(
+        {
+          error: error.message,
+        },
+        'Houve um erro ao efetuar a ligação',
+      );
     }
   }
 }
