@@ -35,6 +35,15 @@ export class TryCallProfessionalService {
         .length === 0;
     await this.professionalsRepository.findByDocument('01705661963');
 
+    this.logger.info(
+      {
+        count,
+        isAwaiting,
+        isNotRunning,
+      },
+      'Procedimento iniciado',
+    );
+
     if (!isNotRunning || !isAwaiting) {
       this.logger.info(
         {
