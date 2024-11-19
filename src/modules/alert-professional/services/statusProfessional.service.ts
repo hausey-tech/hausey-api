@@ -57,6 +57,14 @@ export class TryCallProfessionalService {
 
     if (count < 14) {
       count += 1;
+      this.logger.info(
+        {
+          count,
+          isAwaiting,
+          isNotRunning,
+        },
+        'Procedimento dentro do IF 14',
+      );
       if (isAwaiting && isNotRunning && count <= 4) {
         await callService.createCall({ to: To });
         this.logger.info(
@@ -64,6 +72,14 @@ export class TryCallProfessionalService {
             to: To,
           },
           'Ligação realizada para o número acima.',
+        );
+        this.logger.info(
+          {
+            count,
+            isAwaiting,
+            isNotRunning,
+          },
+          'Procedimento dentro do IF <= 4',
         );
       }
       if (isAwaiting && isNotRunning && count >= 5 && count <= 10) {
@@ -82,10 +98,27 @@ export class TryCallProfessionalService {
             'Ligação realizada para o número acima.',
           );
         }
+        this.logger.info(
+          {
+            count,
+            isAwaiting,
+            isNotRunning,
+            secundary,
+          },
+          'Procedimento dentro do IF >= 5 && <= 10',
+        );
       }
       if (isAwaiting && isNotRunning && count >= 11 && count < 14) {
         await callService.createCall({ to: this.doctorMaster });
         count = 0;
+        this.logger.info(
+          {
+            count,
+            isAwaiting,
+            isNotRunning,
+          },
+          'Procedimento dentro do IF >= 11 && < 14',
+        );
         this.logger.info(
           {
             to: To,
