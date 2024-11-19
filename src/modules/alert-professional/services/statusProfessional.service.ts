@@ -68,7 +68,7 @@ export class TryCallProfessionalService {
         },
         'Procedimento dentro do IF 14',
       );
-      if (isAwaiting && isNotRunning && count <= 4) {
+      if (isAwaiting && isNotRunning && count <= 2) {
         await callService.createCall({ to: To });
         this.logger.info(
           {
@@ -85,10 +85,22 @@ export class TryCallProfessionalService {
           'Procedimento dentro do IF <= 4',
         );
       }
-      if (isAwaiting && isNotRunning && count > 4 && count <= 10) {
+      if (isAwaiting && isNotRunning && count > 3 && count <= 10) {
         const slot = await this.slotsRepository.findByTodayDate();
+        this.logger.info(
+          {
+            slot,
+          },
+          'Console do slot',
+        );
         const secondary = slot.find(
           item => item.professionalType === 'secondary',
+        );
+        this.logger.info(
+          {
+            secondary,
+          },
+          'Console do secondary',
         );
         if (secondary) {
           await callService.createCall({
