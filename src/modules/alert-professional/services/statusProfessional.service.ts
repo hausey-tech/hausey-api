@@ -82,6 +82,12 @@ export class TryCallProfessionalService {
           'Entrei no if',
         );
         if (secondary !== undefined && secondary !== null) {
+          this.logger.info(
+            {
+              secondary,
+            },
+            'Console do secondary dentro do if',
+          );
           try {
             await callService.createCall({
               to: secondary.professional.phoneNumber,
