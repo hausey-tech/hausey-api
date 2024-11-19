@@ -1,5 +1,6 @@
 import { container, inject, injectable } from 'tsyringe';
 
+import { Logger } from 'pino';
 import { AppError } from '../../../shared/errors/app-error';
 import { IAppointmentsRepository } from '../../appointments/contracts/repositories/appointments';
 import { FindSlotsByDateService } from '../../slots/services/find-slots-by-Date';
@@ -22,6 +23,9 @@ export class AlertProfessionalService {
   constructor(
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,
+
+    @inject('Logger')
+    private logger: Logger,
   ) {}
 
   public async execute(): Promise<string> {

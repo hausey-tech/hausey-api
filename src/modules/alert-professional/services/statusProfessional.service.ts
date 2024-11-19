@@ -1,4 +1,5 @@
 import { container, inject, injectable } from 'tsyringe';
+import { Logger } from 'pino';
 import { IAppointmentsRepository } from '../../appointments/contracts/repositories/appointments';
 import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 import { AppError } from '../../../shared/errors/app-error';
@@ -18,6 +19,8 @@ export class TryCallProfessionalService {
     private slotsRepository: ISlotsRepository,
     @inject('ProfessionalsRepository')
     private professionalsRepository: IProfessionalsRepository,
+    @inject('Logger')
+    private logger: Logger,
   ) {
     this.doctorMaster = process.env.DOCTOR_MASTER;
   }
@@ -33,12 +36,25 @@ export class TryCallProfessionalService {
     await this.professionalsRepository.findByDocument('01705661963');
 
     if (!isNotRunning || !isAwaiting) {
+      this.logger.info(
+        {
+          isNotRunning: !isNotRunning,
+          isAwaiting: !isAwaiting,
+        },
+        'O doutor já está em um atendimento',
+      );
       throw new AppError('O doutor já está em um atendimento.');
     }
 
     if (count < 14) {
       if (isAwaiting && isNotRunning && count <= 4) {
         await callService.createCall({ to: To });
+        this.logger.info(
+          {
+            to: To,
+          },
+          'Ligação realizada para o número acima.',
+        );
       }
       if (isAwaiting && isNotRunning && count >= 5 && count <= 10) {
         const slot = await this.slotsRepository.findByTodayDate();
@@ -49,11 +65,23 @@ export class TryCallProfessionalService {
           await callService.createCall({
             to: secundary.professional.phoneNumber,
           });
+          this.logger.info(
+            {
+              to: To,
+            },
+            'Ligação realizada para o número acima.',
+          );
         }
       }
       if (isAwaiting && isNotRunning && count >= 11 && count < 14) {
         await callService.createCall({ to: this.doctorMaster });
         count = 0;
+        this.logger.info(
+          {
+            to: To,
+          },
+          'Ligação realizada para o número acima.',
+        );
       }
       count += 1;
     } else {

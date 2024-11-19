@@ -4,6 +4,8 @@ import './container';
 
 import express from 'express';
 
+import pino from 'pino';
+import { pinoHttp } from 'pino-http';
 import { PostgresDataSource } from './typeorm';
 import {
   setupSwagger,
@@ -14,7 +16,17 @@ import {
 
 const app = express();
 
+const logger = pino({
+  level: 'info',
+  transport: {
+    target: 'pino-pretty',
+    options: {
+      colorize: true,
+    },
+  },
+});
 app.use(express.urlencoded({ extended: true }));
+app.use(pinoHttp({ logger }));
 
 const start = async () => {
   try {
