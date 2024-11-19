@@ -77,19 +77,29 @@ export class TryCallProfessionalService {
           {
             secondary: secondary.professionalType,
             validate: secondary !== undefined && secondary !== null,
+            ligarPara: secondary.professional.phoneNumber,
           },
           'Entrei no if',
         );
         if (secondary !== undefined && secondary !== null) {
-          await callService.createCall({
-            to: secondary.professional.phoneNumber,
-          });
-          this.logger.info(
-            {
-              to: To,
-            },
-            'Ligação realizada para o doutor secundário.',
-          );
+          try {
+            await callService.createCall({
+              to: secondary.professional.phoneNumber,
+            });
+            this.logger.info(
+              {
+                to: To,
+              },
+              'Ligação realizada para o doutor secundário.',
+            );
+          } catch (error) {
+            this.logger.info(
+              {
+                error: error.message,
+              },
+              'Houve um erro ao efetuar a ligação',
+            );
+          }
         } else {
           this.logger.info({}, 'Não foi possível achar um doutor secundário.');
         }
