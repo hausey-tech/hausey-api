@@ -57,52 +57,21 @@ export class TryCallProfessionalService {
 
     if (count < 14) {
       count += 1;
-      this.logger.info(
-        {
-          count,
-          isAwaiting,
-          isNotRunning,
-          firstIf: isAwaiting && isNotRunning && count <= 2,
-          secondIf: isAwaiting && isNotRunning && count > 2 && count <= 4,
-          thirdIf: isAwaiting && isNotRunning && count > 4,
-        },
-        'Procedimento dentro do IF 14',
-      );
       if (isAwaiting && isNotRunning && count <= 2) {
         await callService.createCall({ to: To });
         this.logger.info(
           {
             to: To,
           },
-          'Ligação realizada para o número acima.',
-        );
-        this.logger.info(
-          {
-            count,
-            isAwaiting,
-            isNotRunning,
-          },
-          'Procedimento dentro do IF <= 4',
+          'Ligação realizada para o doutor principal.',
         );
       }
       if (isAwaiting && isNotRunning && count > 2 && count <= 4) {
         const slot = await this.slotsRepository.findByTodayDate();
-        this.logger.info(
-          {
-            slot,
-          },
-          'Console do slot',
-        );
         const secondary = slot.find(
           item => item.professionalType === 'secondary',
         );
-        this.logger.info(
-          {
-            secondary,
-          },
-          'Console do secondary',
-        );
-        if (secondary) {
+        if (secondary !== undefined || secondary !== null) {
           await callService.createCall({
             to: secondary.professional.phoneNumber,
           });
@@ -110,18 +79,11 @@ export class TryCallProfessionalService {
             {
               to: To,
             },
-            'Ligação realizada para o número acima.',
+            'Ligação realizada para o doutor secundário.',
           );
+        } else {
+          this.logger.info({}, 'Não foi possível achar um doutor secundário.');
         }
-        this.logger.info(
-          {
-            count,
-            isAwaiting,
-            isNotRunning,
-            secondary,
-          },
-          'Procedimento dentro do IF >= 5 && <= 10',
-        );
       }
       if (isAwaiting && isNotRunning && count > 4) {
         await callService.createCall({ to: this.doctorMaster });
@@ -132,13 +94,7 @@ export class TryCallProfessionalService {
             isAwaiting,
             isNotRunning,
           },
-          'Procedimento dentro do IF >= 11 && < 14',
-        );
-        this.logger.info(
-          {
-            to: To,
-          },
-          'Ligação realizada para o Dr. Fuad.',
+          'Ligando para o Doutor Master',
         );
       }
     } else {
