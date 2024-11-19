@@ -6,7 +6,7 @@ import { AppError } from '../../../shared/errors/app-error';
 import { CreateCallService } from '../../integrations/services/programmable-voice-twilio';
 import { ISlotsRepository } from '../../slots/contracts/repositories/slots';
 
-let count = 1;
+let count = 0;
 
 @injectable()
 export class TryCallProfessionalService {
@@ -47,6 +47,7 @@ export class TryCallProfessionalService {
     }
 
     if (count < 14) {
+      count += 1;
       if (isAwaiting && isNotRunning && count <= 4) {
         await callService.createCall({ to: To });
         this.logger.info(
@@ -83,7 +84,6 @@ export class TryCallProfessionalService {
           'Ligação realizada para o número acima.',
         );
       }
-      count += 1;
     } else {
       this.logger.info({}, 'Contagem zerada.');
       count = 0;
