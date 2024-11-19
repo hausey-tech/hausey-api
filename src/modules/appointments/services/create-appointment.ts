@@ -1,5 +1,6 @@
 import { injectable, inject, container } from 'tsyringe';
 
+import { Logger } from 'pino';
 import { AlertProfessionalService } from '../../alert-professional/services/alertProfessional.service';
 import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 import { ICreateAppointmentDTO } from '../contracts/dtos/create-appointment';
