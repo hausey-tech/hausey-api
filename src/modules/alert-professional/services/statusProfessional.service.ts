@@ -87,12 +87,12 @@ export class TryCallProfessionalService {
       }
       if (isAwaiting && isNotRunning && count > 4 && count <= 10) {
         const slot = await this.slotsRepository.findByTodayDate();
-        const secundary = slot.find(
+        const secondary = slot.find(
           item => item.professionalType === 'secondary',
         );
-        if (secundary) {
+        if (secondary) {
           await callService.createCall({
-            to: secundary.professional.phoneNumber,
+            to: secondary.professional.phoneNumber,
           });
           this.logger.info(
             {
@@ -106,7 +106,7 @@ export class TryCallProfessionalService {
             count,
             isAwaiting,
             isNotRunning,
-            secundary,
+            secondary,
           },
           'Procedimento dentro do IF >= 5 && <= 10',
         );
