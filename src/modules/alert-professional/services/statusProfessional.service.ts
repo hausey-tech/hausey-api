@@ -48,7 +48,7 @@ export class TryCallProfessionalService {
     }
 
     try {
-      if (count < 13) {
+      if (count < 12) {
         count += 1;
         if (isAwaiting && isNotRunning && count <= 3) {
           const doctor = slots.find(
@@ -62,8 +62,7 @@ export class TryCallProfessionalService {
             },
             'Ligação realizada para o doutor principal.',
           );
-        }
-        if (isAwaiting && isNotRunning && count > 3 && count <= 8) {
+        } else if (isAwaiting && isNotRunning && count > 3 && count <= 7) {
           const slot = await this.slotsRepository.findByTodayDate();
           const secondary = slot.find(
             item => item.professionalType === 'secondary',
@@ -85,8 +84,7 @@ export class TryCallProfessionalService {
               'Não foi possível achar um doutor secundário.',
             );
           }
-        }
-        if (isAwaiting && isNotRunning && count > 8 && count <= 11) {
+        } else if (isAwaiting && isNotRunning && count > 7 && count <= 10) {
           await callService.createCall({ to: this.doctorMaster });
           this.logger.info(
             {
