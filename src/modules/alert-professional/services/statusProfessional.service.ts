@@ -44,6 +44,7 @@ export class TryCallProfessionalService {
         },
         'O doutor já está em um atendimento',
       );
+      count = 0;
       throw new AppError('O doutor já está em um atendimento.');
     }
 
