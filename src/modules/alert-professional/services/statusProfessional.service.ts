@@ -86,7 +86,7 @@ export class TryCallProfessionalService {
             );
           }
         }
-        if (isAwaiting && isNotRunning && count > 7 && count <= 12) {
+        if (isAwaiting && isNotRunning && count > 8 && count <= 12) {
           await callService.createCall({ to: this.doctorMaster });
           this.logger.info(
             {
