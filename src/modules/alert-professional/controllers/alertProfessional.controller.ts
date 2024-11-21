@@ -7,7 +7,7 @@ export class AlertProfessionalController {
   private readonly timeToCall: string;
 
   constructor() {
-    this.timeToCall = process.env.TIME_TO_CALL;
+    this.timeToCall = process.env.TIME_TO_CALL || '40000';
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
@@ -26,6 +26,7 @@ export class AlertProfessionalController {
       await new Promise(resolve =>
         setTimeout(resolve, Number(this.timeToCall)),
       );
+      console.log(Number(this.timeToCall));
       await alertProfessional.execute(To);
 
       return response.status(200).send({ message: 'Webhook recebido' });
