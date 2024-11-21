@@ -86,7 +86,7 @@ export class TryCallProfessionalService {
             );
           }
         }
-        if (isAwaiting && isNotRunning && count > 8 && count <= 12) {
+        if (isAwaiting && isNotRunning && count > 8 && count <= 11) {
           await callService.createCall({ to: this.doctorMaster });
           this.logger.info(
             {
@@ -98,6 +98,7 @@ export class TryCallProfessionalService {
         }
       } else {
         this.logger.info({}, 'Contagem zerada.');
+        await callService.createCall({ to: this.doctorMaster });
         count = 0;
       }
     } catch (error) {
