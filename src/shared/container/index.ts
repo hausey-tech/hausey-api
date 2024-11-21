@@ -2,6 +2,7 @@ import { container } from 'tsyringe';
 
 import '../providers';
 
+import pino from 'pino';
 import { IAddressesRepository } from '../../modules/addresses/contracts/repositories/IAddressesRepository';
 import { AddressesRepository } from '../../modules/addresses/repositories/AddressesRepository';
 
@@ -100,6 +101,14 @@ import { SellerCodeDiscountsRepository } from '../../modules/seller-code-discoun
 
 import { ISellerCodeSellersRepository } from '../../modules/seller-code-sellers/contracts/repositories/seller-code-sellers-repository';
 import { SellerCodeSellersRepository } from '../../modules/seller-code-sellers/repositories/seller-code-sellers-repository';
+
+const logger = pino({
+  level: 'info',
+  transport: {
+    target: 'pino-pretty',
+    options: { colorize: true },
+  },
+});
 
 container.registerSingleton<IAddressesRepository>(
   'AddressesRepository',
@@ -266,3 +275,5 @@ container.registerSingleton<ISellerCodeSellersRepository>(
   'SellerCodeSellersRepository',
   SellerCodeSellersRepository,
 );
+
+container.registerInstance('Logger', logger);

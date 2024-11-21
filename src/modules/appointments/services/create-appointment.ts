@@ -1,5 +1,7 @@
-import { injectable, inject } from 'tsyringe';
+import { injectable, inject, container } from 'tsyringe';
 
+import { Logger } from 'pino';
+import { AlertProfessionalService } from '../../alert-professional/services/alertProfessional.service';
 import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 import { ICreateAppointmentDTO } from '../contracts/dtos/create-appointment';
 import { AppError } from '../../../shared/errors/app-error';
@@ -22,6 +24,9 @@ export class CreateAppointmentService {
 
     @inject('ProfessionalsRepository')
     private professionalsRepository: IProfessionalsRepository,
+
+    @inject('Logger')
+    private logger: Logger,
   ) {}
 
   public async execute({
@@ -104,6 +109,9 @@ export class CreateAppointmentService {
       appointment = appointmentProfessional;
     }
     if (emergency) {
+      const alertProfessional = container.resolve(AlertProfessionalService);
+      await alertProfessional.execute();
+
       const appointmentEmergency = await this.appointmentsRepository.create({
         patientId,
         roomId,

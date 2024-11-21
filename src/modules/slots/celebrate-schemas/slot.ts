@@ -15,6 +15,7 @@ export const DeleteSlotSchema = {
 export const CreateSlotSchema = {
   [Segments.BODY]: Joi.object().keys({
     professionalId: Joi.string().uuid().required(),
+    professionalType: Joi.string().required(),
     slots: Joi.array()
       .items(
         Joi.object()

@@ -1,4 +1,4 @@
-import { celebrate } from 'celebrate';
+import { celebrate, Joi, Segments } from 'celebrate';
 import { Router } from 'express';
 import { upload } from '../../../shared/utils';
 import {
@@ -31,6 +31,17 @@ patientsRouter.get(
   ensureAuthentication,
   celebrate(ListPatientsSchema),
   patientsController.index,
+);
+
+patientsRouter.get(
+  '/seller/:sellerId',
+  ensureAuthentication,
+  celebrate({
+    [Segments.PARAMS]: {
+      sellerId: Joi.string().required(),
+    },
+  }),
+  patientsController.findBySellerId,
 );
 
 patientsRouter.post(

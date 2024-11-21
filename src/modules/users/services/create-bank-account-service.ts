@@ -3,6 +3,7 @@ import { CreatePagarmeRecipientService } from '../../integrations/services/pagar
 import { AppError } from '../../../shared/errors/app-error';
 import { IUsersRepository } from '../contracts/repositories/users';
 import { ICreateBankAccount } from '../contracts/dtos/create-bank-account-dto';
+import { CreateConnectAccountService } from '../../integrations/services/stripe/create-connected-account';
 
 @injectable()
 export class CreateBankAccountService {
@@ -20,17 +21,28 @@ export class CreateBankAccountService {
     }
 
     try {
-      const createPagarmeRecipientService = container.resolve(
-        CreatePagarmeRecipientService,
-      );
+      let recipientId: string;
+      if (user.region && user.region !== 'br') {
+        const createConnectedAccountService = container.resolve(
+          CreateConnectAccountService,
+        );
+        recipientId = await createConnectedAccountService.execute({
+          id,
+          email: user.email,
+        });
+      } else {
+        const createPagarmeRecipientService = container.resolve(
+          CreatePagarmeRecipientService,
+        );
 
-      const recipientId = await createPagarmeRecipientService.execute({
-        id,
-        name: user.name,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
-        bankAccount,
-      });
+        recipientId = await createPagarmeRecipientService.execute({
+          id,
+          name: user.name,
+          email: user.email,
+          phoneNumber: user.phoneNumber,
+          bankAccount,
+        });
+      }
 
       await this.usersRepository.update(id, { recipientId });
     } catch (error) {

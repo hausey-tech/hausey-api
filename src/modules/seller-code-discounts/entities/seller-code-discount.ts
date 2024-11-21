@@ -21,4 +21,7 @@ export class SellerCodeDiscount extends BaseEntity {
 
   @Column('int')
   discount: number;
+
+  @Column('varchar', { nullable: true })
+  stripePromoCodeId: string;
 }

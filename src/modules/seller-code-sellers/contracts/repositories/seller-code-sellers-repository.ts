@@ -6,4 +6,6 @@ export interface ISellerCodeSellersRepository {
     sellerCodeSeller: ICreateSellerCodeSellerDTO,
   ): Promise<SellerCodeSeller>;
   save(sellerCodeSeller: SellerCodeSeller): Promise<SellerCodeSeller>;
+  findAll(): Promise<SellerCodeSeller[]>;
+  findBySellerId(sellerId: string): Promise<SellerCodeSeller[] | undefined>;
 }

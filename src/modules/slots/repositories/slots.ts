@@ -1,4 +1,4 @@
-import { Repository, In } from 'typeorm';
+import { Repository, In, Raw } from 'typeorm';
 
 import { ISlotsRepository } from '../contracts/repositories/slots';
 import { ICreateDBSlotDTO } from '../contracts/dtos/create-db-slot';
@@ -25,6 +25,23 @@ export class SlotsRepository implements ISlotsRepository {
 
   public async findByProfessionalIds(ids: string[]): Promise<Slot[]> {
     return this.ormRepository.find({ where: { professionalId: In(ids) } });
+  }
+
+  public async findByTodayDate(): Promise<Slot[]> {
+    const now = new Date(Date.now());
+
+    const targetDate = now.toISOString().split('T')[0];
+    const currentHour = now.toTimeString().split(' ')[0];
+    return this.ormRepository.find({
+      where: [
+        {
+          date: Raw(alias => `DATE(${alias}) = :targetDate`, { targetDate }),
+          startTime: Raw(alias => `${alias} <= :currentHour`, { currentHour }),
+          endTime: Raw(alias => `${alias} >= :currentHour`, { currentHour }),
+        },
+      ],
+      relations: [...this.relations, 'professional'],
+    });
   }
 
   public async findByProfessionalId(id: string): Promise<Slot[]> {

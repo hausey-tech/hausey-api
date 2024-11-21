@@ -61,6 +61,9 @@ export class Appointment extends BaseEntity {
   @Column('boolean', { default: false })
   finished: boolean;
 
+  @Column('varchar', { default: null })
+  status: string;
+
   @OneToOne(() => MedicalRecord)
   @JoinColumn()
   medicalRecord: MedicalRecord | null;
