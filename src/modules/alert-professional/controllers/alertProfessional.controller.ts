@@ -4,10 +4,13 @@ import { AlertProfessionalService } from '../services/alertProfessional.service'
 import { TryCallProfessionalService } from '../services/statusProfessional.service';
 
 export class AlertProfessionalController {
-  private readonly timeToCall: string;
+  private readonly timeToCall: number;
 
   constructor() {
-    this.timeToCall = process.env.TIME_TO_CALL || '40000';
+    const time = process.env.TIME_TO_CALL || '40000';
+    const parsedTime = Number(time);
+
+    this.timeToCall = Number.isNaN(parsedTime) ? 40000 : parsedTime;
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
