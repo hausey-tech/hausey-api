@@ -25,7 +25,7 @@ export class TryCallProfessionalService {
     this.doctorMaster = process.env.DOCTOR_MASTER;
   }
 
-  public async execute(To: string): Promise<any> {
+  public async execute(): Promise<any> {
     const callService = container.resolve(CreateCallService);
     const isAwaiting =
       (await this.appointmentsRepository.findAllAppointmentsStatusIsAwaiting())
@@ -58,7 +58,7 @@ export class TryCallProfessionalService {
           await callService.createCall({ to: doctor.professional.phoneNumber });
           this.logger.info(
             {
-              to: To,
+              to: doctor.professional.phoneNumber,
               count,
             },
             'Ligação realizada para o doutor principal.',
@@ -74,7 +74,7 @@ export class TryCallProfessionalService {
             });
             this.logger.info(
               {
-                to: To,
+                to: secondary.professional.phoneNumber,
                 count,
               },
               'Ligação realizada para o doutor secundário.',
@@ -94,6 +94,10 @@ export class TryCallProfessionalService {
             },
             'Ligando para o Doutor Master',
           );
+        } else {
+          this.logger.info({}, 'Contagem zerada.');
+          await callService.createCall({ to: this.doctorMaster });
+          count = 0;
         }
       } else {
         this.logger.info({}, 'Contagem zerada.');
