@@ -101,6 +101,7 @@ export class TryCallProfessionalService {
         count = 0;
       }
     } catch (error) {
+      count = 0;
       this.logger.info(
         {
           error: error.message,
