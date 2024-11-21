@@ -26,10 +26,7 @@ export class AlertProfessionalController {
     try {
       const { To } = request.body;
       const alertProfessional = container.resolve(TryCallProfessionalService);
-      await new Promise(resolve =>
-        setTimeout(resolve, Number(this.timeToCall)),
-      );
-      console.log(Number(this.timeToCall));
+      await new Promise(resolve => setTimeout(resolve, 40000));
       await alertProfessional.execute(To);
 
       return response.status(200).send({ message: 'Webhook recebido' });
