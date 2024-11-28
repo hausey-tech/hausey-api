@@ -143,27 +143,35 @@ export class CreatePatientCardSubscriptionService {
     const createPagarmeSubscriptionService = container.resolve(
       CreatePagarmeSubscriptionService,
     );
-    await createPagarmeSubscriptionService.execute({
-      planId,
-      paymentMethod,
-      cardToken,
-      customerId: patient.stripeCustomerId,
-      split,
-      discounts,
-      address,
-    });
 
     if (
-      patient.createdAt.getTime() >
-      new Date('2024-11-27 21:55:41.125').getTime()
+      patient.stripeCustomerId === null ||
+      patient.stripeCustomerId === undefined
     ) {
-      await this.patientsRepository.update(patient.id, {
-        planId: plan.id,
+      await createPagarmeSubscriptionService.execute({
+        planId,
+        paymentMethod,
+        cardToken,
+        customerId: patient.stripeCustomerId,
+        split,
+        discounts,
+        address,
+        intervalCount: 6,
       });
     } else {
-      await this.patientsRepository.update(patient.id, {
-        planId: plan.id,
+      await createPagarmeSubscriptionService.execute({
+        planId,
+        paymentMethod,
+        cardToken,
+        customerId: patient.stripeCustomerId,
+        split,
+        discounts,
+        address,
+        intervalCount: 1,
       });
     }
+    await this.patientsRepository.update(patient.id, {
+      planId: plan.id,
+    });
   }
 }
