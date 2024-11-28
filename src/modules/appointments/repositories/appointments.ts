@@ -87,7 +87,14 @@ export class AppointmentsRepository implements IAppointmentsRepository {
   }
 
   public async update(id: string, payload: Appointment): Promise<Appointment> {
-    await this.ormRepository.update(id, payload);
+    if (payload.canceled) {
+      await this.ormRepository.update(id, {
+        ...payload,
+        status: 'canceled',
+      });
+    } else {
+      await this.ormRepository.update(id, payload);
+    }
     return this.findById(id);
   }
 
