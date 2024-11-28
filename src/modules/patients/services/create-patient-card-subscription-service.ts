@@ -153,8 +153,17 @@ export class CreatePatientCardSubscriptionService {
       address,
     });
 
-    await this.patientsRepository.update(patient.id, {
-      planId: plan.id,
-    });
+    if (
+      patient.createdAt.getTime() >
+      new Date('2024-11-27 21:55:41.125').getTime()
+    ) {
+      await this.patientsRepository.update(patient.id, {
+        planId: plan.id,
+      });
+    } else {
+      await this.patientsRepository.update(patient.id, {
+        planId: plan.id,
+      });
+    }
   }
 }
