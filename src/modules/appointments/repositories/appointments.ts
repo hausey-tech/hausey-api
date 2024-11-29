@@ -107,6 +107,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     return this.ormRepository.find({
       where: {
         status: 'awaiting',
+        emergency: true,
       },
     });
   }
@@ -115,6 +116,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     return this.ormRepository.find({
       where: {
         status: 'running',
+        emergency: true,
       },
     });
   }
