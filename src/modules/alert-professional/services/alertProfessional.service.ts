@@ -42,8 +42,9 @@ export class AlertProfessionalService {
           .length === 0;
 
       const hasAppointment =
-        (await this.appointmentsRepository.findAppointmentStatusIsRunning())
-          .length === 0;
+        (
+          await this.appointmentsRepository.findAllAppointmentsStatusIsAwaiting()
+        ).length > 0;
 
       if (hasAppointment && isNotRunning) {
         await callService.createCall({ iAvailability: principalDoctor });
