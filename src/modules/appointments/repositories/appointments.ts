@@ -96,6 +96,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
       await this.ormRepository.update(id, {
         ...payload,
         status: 'canceled',
+        finished: true,
       });
     } else {
       await this.ormRepository.update(id, payload);
