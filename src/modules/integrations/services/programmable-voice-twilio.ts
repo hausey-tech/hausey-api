@@ -51,19 +51,18 @@ export class CreateCallService {
       from: this.twilioNumber,
       method: 'POST',
       statusCallback:
-        'https://hausey-staging-api-1a8e126728a0.herokuapp.com/v1/alert-professional/webhook/call-status',
+        'https://hausey-api-496777560458.herokuapp.com/v1/alert-professional/webhook/call-status',
       statusCallbackMethod: 'POST',
       statusCallbackEvent: ['completed'],
       twiml:
         '<Response><Say voice="alice" language="pt-BR" rate="0.8">Olá. Tem paciente aguardando atendimento!</Say></Response>',
     });
-    console.log(
+    this.logger.info(
+      {
+        to: `${iAvailability?.professional?.phoneNumber ?? to}`,
+      },
       'Ligando para o número',
-      `${iAvailability?.professional?.phoneNumber ?? to}`,
     );
-    this.logger.info({
-      call,
-    });
     return call;
   }
 
