@@ -40,6 +40,11 @@ export class AppointmentsRepository implements IAppointmentsRepository {
   }
 
   public async save(appointment: Appointment): Promise<Appointment> {
+    const updatedAppointment = { ...appointment };
+    if (appointment.canceled) {
+      updatedAppointment.status = 'canceled';
+      return this.ormRepository.save(updatedAppointment);
+    }
     return this.ormRepository.save(appointment);
   }
 
