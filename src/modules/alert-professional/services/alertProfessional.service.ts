@@ -37,15 +37,14 @@ export class AlertProfessionalService {
         (profissional: IAvailability) =>
           profissional.profissionalType === 'principal',
       );
+
       const isNotRunning =
         (await this.appointmentsRepository.findAppointmentStatusIsRunning())
           .length === 0;
 
-      const hasAppointment =
-        (await this.appointmentsRepository.findAppointmentStatusIsRunning())
-          .length === 0;
+      console.log('isNotRunning:', isNotRunning);
 
-      if (hasAppointment && isNotRunning) {
+      if (isNotRunning) {
         await callService.createCall({ iAvailability: principalDoctor });
         this.logger.info(
           {
