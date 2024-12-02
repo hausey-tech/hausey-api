@@ -1,5 +1,6 @@
 import twilio from 'twilio';
 import { Logger } from 'pino';
+import { inject } from 'tsyringe';
 import { Professional } from '../../professionals/entities/professional';
 
 interface CreateCallResponse {
