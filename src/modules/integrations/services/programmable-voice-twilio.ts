@@ -1,4 +1,6 @@
 import twilio from 'twilio';
+import { Logger } from 'pino';
+import { inject, injectable } from 'tsyringe';
 import { Professional } from '../../professionals/entities/professional';
 
 interface CreateCallResponse {
@@ -17,6 +19,7 @@ interface IAvailability {
   };
 }
 
+@injectable()
 export class CreateCallService {
   private readonly accountSid: string;
 
@@ -26,7 +29,10 @@ export class CreateCallService {
 
   private readonly client: any;
 
-  constructor() {
+  constructor(
+    @inject('Logger')
+    private logger: Logger,
+  ) {
     this.accountSid = process.env.TWILIO_ACOUNT_SID_DEV;
     this.authToken = process.env.TWILIO_AUTH_TOKEN;
     this.twilioNumber = process.env.TWILIO_NUMBER_DEV;
@@ -40,10 +46,6 @@ export class CreateCallService {
     iAvailability?: IAvailability;
     to?: string;
   }): Promise<CreateCallResponse> {
-    console.log(
-      'Ligando para o número',
-      `${iAvailability?.professional?.phoneNumber ?? to}`,
-    );
     const call = await this.client.calls.create({
       to: iAvailability?.professional?.phoneNumber ?? to,
       from: this.twilioNumber,
@@ -55,6 +57,12 @@ export class CreateCallService {
       twiml:
         '<Response><Say voice="alice" language="pt-BR" rate="0.8">Olá. Tem paciente aguardando atendimento!</Say></Response>',
     });
+    this.logger.info(
+      {
+        to: `${iAvailability?.professional?.phoneNumber ?? to}`,
+      },
+      'Ligando para o número',
+    );
     return call;
   }
 

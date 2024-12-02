@@ -37,15 +37,14 @@ export class AlertProfessionalService {
         (profissional: IAvailability) =>
           profissional.profissionalType === 'principal',
       );
+
       const isNotRunning =
         (await this.appointmentsRepository.findAppointmentStatusIsRunning())
           .length === 0;
 
-      const hasAppointment =
-        (await this.appointmentsRepository.findAppointmentStatusIsRunning())
-          .length === 0;
+      console.log('isNotRunning:', isNotRunning);
 
-      if (hasAppointment && isNotRunning) {
+      if (isNotRunning) {
         await callService.createCall({ iAvailability: principalDoctor });
         this.logger.info(
           {
@@ -58,10 +57,11 @@ export class AlertProfessionalService {
       this.logger.info({}, 'Há uma procedimento em execução.');
       throw new AppError('Há uma procedimento em execução.');
     } catch (error) {
+      this.logger.info({ error }, 'Erro interno do servidor.');
+      console.log('error: ', error);
       if (error instanceof AppError) {
         return error.message;
       }
-      this.logger.info({ error }, 'Erro interno do servidor.');
       return 'Erro interno do servidor';
     }
   }
