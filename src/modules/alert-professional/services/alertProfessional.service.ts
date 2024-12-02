@@ -57,10 +57,11 @@ export class AlertProfessionalService {
       this.logger.info({}, 'Há uma procedimento em execução.');
       throw new AppError('Há uma procedimento em execução.');
     } catch (error) {
+      this.logger.info({ error }, 'Erro interno do servidor.');
+      console.log('error: ', error);
       if (error instanceof AppError) {
         return error.message;
       }
-      this.logger.info({ error }, 'Erro interno do servidor.');
       return 'Erro interno do servidor';
     }
   }
