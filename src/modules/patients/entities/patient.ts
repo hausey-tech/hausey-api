@@ -84,4 +84,7 @@ export class Patient extends UserEntity {
 
   @Column('boolean', { default: false })
   nipomed: boolean;
+
+  @Column('boolean', { default: false, name: 'first_payment' })
+  firstPayment: boolean;
 }

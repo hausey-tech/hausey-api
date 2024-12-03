@@ -143,16 +143,33 @@ export class CreatePatientCardSubscriptionService {
     const createPagarmeSubscriptionService = container.resolve(
       CreatePagarmeSubscriptionService,
     );
-    await createPagarmeSubscriptionService.execute({
-      planId,
-      paymentMethod,
-      cardToken,
-      customerId: patient.stripeCustomerId,
-      split,
-      discounts,
-      address,
-    });
 
+    if (
+      patient.stripeCustomerId === null ||
+      patient.stripeCustomerId === undefined
+    ) {
+      await createPagarmeSubscriptionService.execute({
+        planId,
+        paymentMethod,
+        cardToken,
+        customerId: patient.stripeCustomerId,
+        split,
+        discounts,
+        address,
+        intervalCount: 6,
+      });
+    } else {
+      await createPagarmeSubscriptionService.execute({
+        planId,
+        paymentMethod,
+        cardToken,
+        customerId: patient.stripeCustomerId,
+        split,
+        discounts,
+        address,
+        intervalCount: 1,
+      });
+    }
     await this.patientsRepository.update(patient.id, {
       planId: plan.id,
     });

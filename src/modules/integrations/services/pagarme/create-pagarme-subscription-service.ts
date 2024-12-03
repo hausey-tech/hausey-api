@@ -7,6 +7,7 @@ interface IProps {
   paymentMethod: string;
   customerId: string;
   cardToken: string;
+  intervalCount: number;
   address: {
     street: string;
     number: string;
@@ -105,6 +106,7 @@ export class CreatePagarmeSubscriptionService {
     address,
     split,
     discounts,
+    intervalCount,
   }: IProps): Promise<string> {
     try {
       const { data }: { data: IResponse } = await pagarmeInstance.post(
@@ -112,6 +114,7 @@ export class CreatePagarmeSubscriptionService {
         {
           plan_id: planId,
           payment_method: paymentMethod,
+          interval_count: intervalCount,
           customer_id: customerId,
           card_token: cardToken,
           card: {
@@ -129,7 +132,7 @@ export class CreatePagarmeSubscriptionService {
               ? {
                   enabled: true,
                   rules: split.map(sp => ({
-                    amount: sp.amount,
+                    amount: intervalCount === 6 ? sp.amount * 6 : sp.amount,
                     recipient_id: sp.recipientId,
                     type: sp.type,
                     options: {
