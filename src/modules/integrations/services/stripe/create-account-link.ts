@@ -1,5 +1,6 @@
-import { inject, injectable } from 'tsyringe';
+import { container, inject, injectable } from 'tsyringe';
 import Stripe from 'stripe';
+import { CreateBankAccountService } from 'modules/users/services/create-bank-account-service';
 import { AppError } from '../../../../shared/errors/app-error';
 import { stripeInstance } from '../../utils/stripe-instance';
 import { IUsersRepository } from '../../../users/contracts/repositories/users';
@@ -19,6 +20,7 @@ export class CreateAccountLinkService {
   public async execute({ userId, type }: IProps): Promise<string> {
     try {
       const user = await this.usersRepository.findById(userId);
+      let newRecipientId = '';
 
       if (!user) {
         throw new AppError(
@@ -26,19 +28,40 @@ export class CreateAccountLinkService {
         );
       }
 
-      if (!user.recipientId || user.region === 'br') {
+      if (user.region === 'br') {
         throw new AppError(
           'Usuário não possui conta conectada na Stripe, verifique e tente novamente!',
         );
       }
 
+      if (!user.recipientId) {
+        const createBankAccountService = container.resolve(
+          CreateBankAccountService,
+        );
+        await createBankAccountService.execute({
+          id: user.id,
+          bankAccount: undefined,
+        });
+        const newUser = await this.usersRepository.findById(userId);
+        newRecipientId = newUser.recipientId;
+      }
+
       const data = await stripeInstance.accountLinks.create({
-        account: user.recipientId,
+        account: newRecipientId || user.recipientId,
         type,
+        return_url: 'https://www.hausey.com.br/',
+        refresh_url: 'https://www.hausey.com.br/',
       });
       return data.url;
     } catch (error) {
-      throw new AppError(`Erro ao criar link para conta conectada: ${error}`);
+      const errorMessage = error?.message || 'Ocorreu um erro desconhecido.';
+      const errorDetails = error?.response?.data || error;
+      throw new AppError(
+        `Erro ao criar link para conta conectada: ${errorMessage}. Detalhes: ${JSON.stringify(
+          errorDetails,
+        )}`,
+      );
+      // throw new AppError(`Erro ao criar link para conta conectada: ${error}`);
     }
   }
 }
