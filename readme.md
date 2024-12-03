@@ -22,6 +22,12 @@ Para rodar as migrations no banco local:
 yarn migration:run
 ```
 
+Para criar a migration:
+
+```bash
+yarn name='nome-da-migration' yarn migration:generate
+```
+
 Por fim, para iniciar o servidor:
 
 ```bash
