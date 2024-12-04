@@ -1,6 +1,6 @@
 import { injectable, inject, container } from 'tsyringe';
-import { GetCustomerInfoPagarmeService } from 'modules/integrations/services/pagarme/customer-info-pagarme-service';
-import { ResponsePagarmeSubscription } from 'modules/integrations/services/dtos/response-pagarme-getSubscriptionByCustomerId.dto';
+import { GetCustomerInfoPagarmeService } from '../../integrations/services/pagarme/customer-info-pagarme-service';
+import { ResponsePagarmeSubscription } from '../../integrations/services/dtos/response-pagarme-getSubscriptionByCustomerId.dto';
 import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 

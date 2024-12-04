@@ -1,5 +1,5 @@
 import { injectable } from 'tsyringe';
-import { AppError } from 'shared/errors/app-error';
+import { AppError } from '../../../../shared/errors/app-error';
 import { pagarmeInstance } from '../../utils/pagarme-instance';
 import { ResponsePagarmeSubscription } from '../dtos/response-pagarme-getSubscriptionByCustomerId.dto';
 
