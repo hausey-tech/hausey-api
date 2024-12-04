@@ -97,6 +97,7 @@ export const UpdatePatientSchema = {
     responsibleTeamId: Joi.string().uuid(),
     language: Joi.string(),
     region: Joi.string(),
+    firstPayment: Joi.boolean(),
   }),
 };
 export const UpdatePatientPlanSchema = {
