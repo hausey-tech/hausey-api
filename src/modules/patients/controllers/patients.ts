@@ -222,11 +222,11 @@ export class PatientsController {
     request: Request,
     response: Response,
   ): Promise<Response> {
-    const { customerId } = request.params;
+    const { patientId } = request.params;
 
     const getCustomerInfos = container.resolve(GetCustomerInfos);
 
-    const patientPlanInfo = getCustomerInfos.execute(customerId);
+    const patientPlanInfo = getCustomerInfos.execute(patientId);
 
     return response.json(patientPlanInfo);
   }

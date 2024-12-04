@@ -120,8 +120,9 @@ patientsRouter.patch(
   patientsController.updatePlan,
 );
 patientsRouter.get(
-  '/:customerId/info',
+  '/:patientId/info',
   ensureAuthentication,
+  celebrate(GetPatientInfosSchema),
   patientsController.getPatientPlanInfo,
 );
 

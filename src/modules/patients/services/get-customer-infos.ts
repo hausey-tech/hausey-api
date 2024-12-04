@@ -12,9 +12,9 @@ export class GetCustomerInfos {
   ) {}
 
   public async execute(
-    customerId: string,
+    patientId: string,
   ): Promise<ResponsePagarmeSubscription> {
-    const patient = await this.patientsRepository.findByCustomerId(customerId);
+    const patient = await this.patientsRepository.findById(patientId);
 
     if (!patient) {
       throw new AppError(
@@ -26,7 +26,9 @@ export class GetCustomerInfos {
       GetCustomerInfoPagarmeService,
     );
 
-    const patientInfo = createPagarmeSubscriptionService.execute(customerId);
+    const patientInfo = createPagarmeSubscriptionService.execute(
+      patient.stripeCustomerId,
+    );
 
     return patientInfo;
   }
