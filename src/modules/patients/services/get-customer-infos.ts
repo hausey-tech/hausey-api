@@ -18,7 +18,7 @@ export class GetCustomerInfos {
 
     if (!patient) {
       throw new AppError(
-        'Paciente não encontrado, verifique e tente novamente!',
+        'Paciente não encontrado, verifique o id informado e tente novamente!',
       );
     }
 
