@@ -22,6 +22,7 @@ import { GetPatientFilesByPatientService } from '../services/get-patient-files-b
 import { DeletePatientFileService } from '../services/delete-patient-file';
 import { DeletePatientGroupTypeService } from '../services/delete-patient-group-type';
 import { GetPatientSellerId } from '../services/get-patient-sellerid';
+import { GetCustomerInfos } from '../services/get-customer-infos';
 
 export class PatientsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -215,6 +216,19 @@ export class PatientsController {
     );
 
     return response.json(patient);
+  }
+
+  public async getPatientPlanInfo(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { customerId } = request.params;
+
+    const getCustomerInfos = container.resolve(GetCustomerInfos);
+
+    const patientPlanInfo = getCustomerInfos.execute(customerId);
+
+    return response.json(patientPlanInfo);
   }
 
   public async updatePlan(
