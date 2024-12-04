@@ -1,6 +1,6 @@
 import { container, inject, injectable } from 'tsyringe';
 import Stripe from 'stripe';
-import { CreateBankAccountService } from 'modules/users/services/create-bank-account-service';
+import { CreateBankAccountService } from '../../../users/services/create-bank-account-service';
 import { AppError } from '../../../../shared/errors/app-error';
 import { stripeInstance } from '../../utils/stripe-instance';
 import { IUsersRepository } from '../../../users/contracts/repositories/users';
