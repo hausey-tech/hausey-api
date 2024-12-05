@@ -62,6 +62,12 @@ export class CreatePatientCardSubscriptionService {
     if (patient.planExpiresAt && isBefore(new Date(), patient.planExpiresAt)) {
       throw new AppError('Paciente já possui assinatura vigente!');
     }
+    this.logger.info(
+      {
+        planId,
+      },
+      'Id do plano',
+    );
     const plan = await this.plansRepository.findyByPriceId(planId);
     this.logger.info(
       {
