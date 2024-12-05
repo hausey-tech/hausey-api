@@ -48,154 +48,146 @@ export class CreatePatientCardSubscriptionService {
     cardToken,
     address,
   }: IProps): Promise<void> {
-    try {
-      const patient = await this.patientsRepository.findById(patientId);
-      if (!patient) {
-        throw new AppError(
-          'Paciente não encontrado, verifique e tente novamente!',
-        );
-      }
-      if (!patient.stripeCustomerId) {
-        throw new AppError(
-          'Paciente não possui conta de pagamento, entre em contato com o suporte!',
-        );
-      }
-      if (
-        patient.planExpiresAt &&
-        isBefore(new Date(), patient.planExpiresAt)
-      ) {
-        throw new AppError('Paciente já possui assinatura vigente!');
-      }
-      const plan = await this.plansRepository.findyByPriceId(planId);
-      if (!plan.stripePriceId) {
-        throw new AppError(
-          'Plano não encontrado, entre em contato com o suporte!',
-        );
-      }
-      const split = [];
-      const discounts = [];
-      if (patient.sellerId) {
-        const sellerCode = await this.sellerCodesRepository.findBySellerId(
-          patient.sellerId,
-        );
-        const sellerCodeDiscount = sellerCode.discounts.find(
-          d => d.planId === plan.id,
-        );
-        if (sellerCodeDiscount) {
-          discounts.push({
-            discountType: 'flat',
-            value: sellerCodeDiscount.discount,
-          });
-        }
-        let sellersPart = 0;
-        sellerCode.sellers.forEach(sellerCodeSeller => {
-          if (!sellerCodeSeller.seller.recipientId) {
-            throw new AppError(
-              'Há um problema com seu cupom, entre em contato com o suporte!',
-            );
-          }
-          sellersPart += sellerCodeSeller.fee;
-          split.push({
-            amount: sellerCodeSeller.fee,
-            recipientId: sellerCodeSeller.seller.recipientId,
-            type: 'percentage',
-            options: {
-              chargeProcessingFee: false,
-              chargeRemainderFee: false,
-              liable: false,
-            },
-          });
-        });
-
-        if (sellerCode.fee && sellerCode.fee > 0) {
-          if (!sellerCode.seller.recipientId) {
-            throw new AppError(
-              'Há um problema com seu código de desconto, entre em contato com o suporte!',
-            );
-          }
-          sellersPart += sellerCode.fee;
-          split.push({
-            amount: sellerCode.fee,
-            recipientId: sellerCode.seller.recipientId,
-            type: 'percentage',
-            options: {
-              chargeProcessingFee: false,
-              chargeRemainderFee: false,
-              liable: false,
-            },
-          });
-        }
-
-        if (sellersPart > 0) {
-          split.push({
-            amount: 100 - sellersPart,
-            recipientId: process.env.PAGARME_RECIPIENT_ID,
-            type: 'percentage',
-            options: {
-              chargeProcessingFee: true,
-              chargeRemainderFee: true,
-              liable: true,
-            },
-          });
-        }
-      }
-
-      const cancelPagarmeCustomerSubscriptionsService = container.resolve(
-        CancelPagarmeCustomerSubscriptionsService,
+    const patient = await this.patientsRepository.findById(patientId);
+    if (!patient) {
+      throw new AppError(
+        'Paciente não encontrado, verifique e tente novamente!',
       );
-
-      await cancelPagarmeCustomerSubscriptionsService.execute({
-        customerId: patient.stripeCustomerId,
-      });
-
-      const createPagarmeSubscriptionService = container.resolve(
-        CreatePagarmeSubscriptionService,
-      );
-
-      if (
-        patient.stripeCustomerId === null ||
-        patient.stripeCustomerId === undefined
-      ) {
-        this.logger.info({
-          message: 'Logger dentro dos 6 meses.',
-        });
-        await createPagarmeSubscriptionService.execute({
-          planId,
-          paymentMethod,
-          cardToken,
-          customerId: patient.stripeCustomerId,
-          split,
-          discounts,
-          address,
-          intervalCount: 6,
-        });
-      } else {
-        this.logger.info({
-          message: 'Logger dentro de 1 mês.',
-        });
-        await createPagarmeSubscriptionService.execute({
-          planId,
-          paymentMethod,
-          cardToken,
-          customerId: patient.stripeCustomerId,
-          split,
-          discounts,
-          address,
-          intervalCount: 1,
-        });
-      }
-      await this.patientsRepository.update(patient.id, {
-        planId: plan.id,
-      });
-    } catch (error) {
-      console.log(error);
-      this.logger.info(
-        {
-          error: error.message,
-        },
-        'Houve um erro ao efetuar o pagamento.',
-      );
-      throw new AppError('Houve um erro ao efetuar o pagamento.', 400);
     }
+    if (!patient.stripeCustomerId) {
+      throw new AppError(
+        'Paciente não possui conta de pagamento, entre em contato com o suporte!',
+      );
+    }
+    if (patient.planExpiresAt && isBefore(new Date(), patient.planExpiresAt)) {
+      throw new AppError('Paciente já possui assinatura vigente!');
+    }
+    const plan = await this.plansRepository.findyByPriceId(planId);
+    this.logger.info(
+      {
+        plan,
+      },
+      'O console do plano',
+    );
+    if (!plan.stripePriceId) {
+      throw new AppError(
+        'Plano não encontrado, entre em contato com o suporte!',
+      );
+    }
+    const split = [];
+    const discounts = [];
+    if (patient.sellerId) {
+      const sellerCode = await this.sellerCodesRepository.findBySellerId(
+        patient.sellerId,
+      );
+      const sellerCodeDiscount = sellerCode.discounts.find(
+        d => d.planId === plan.id,
+      );
+      if (sellerCodeDiscount) {
+        discounts.push({
+          discountType: 'flat',
+          value: sellerCodeDiscount.discount,
+        });
+      }
+      let sellersPart = 0;
+      sellerCode.sellers.forEach(sellerCodeSeller => {
+        if (!sellerCodeSeller.seller.recipientId) {
+          throw new AppError(
+            'Há um problema com seu cupom, entre em contato com o suporte!',
+          );
+        }
+        sellersPart += sellerCodeSeller.fee;
+        split.push({
+          amount: sellerCodeSeller.fee,
+          recipientId: sellerCodeSeller.seller.recipientId,
+          type: 'percentage',
+          options: {
+            chargeProcessingFee: false,
+            chargeRemainderFee: false,
+            liable: false,
+          },
+        });
+      });
+
+      if (sellerCode.fee && sellerCode.fee > 0) {
+        if (!sellerCode.seller.recipientId) {
+          throw new AppError(
+            'Há um problema com seu código de desconto, entre em contato com o suporte!',
+          );
+        }
+        sellersPart += sellerCode.fee;
+        split.push({
+          amount: sellerCode.fee,
+          recipientId: sellerCode.seller.recipientId,
+          type: 'percentage',
+          options: {
+            chargeProcessingFee: false,
+            chargeRemainderFee: false,
+            liable: false,
+          },
+        });
+      }
+
+      if (sellersPart > 0) {
+        split.push({
+          amount: 100 - sellersPart,
+          recipientId: process.env.PAGARME_RECIPIENT_ID,
+          type: 'percentage',
+          options: {
+            chargeProcessingFee: true,
+            chargeRemainderFee: true,
+            liable: true,
+          },
+        });
+      }
+    }
+
+    const cancelPagarmeCustomerSubscriptionsService = container.resolve(
+      CancelPagarmeCustomerSubscriptionsService,
+    );
+
+    await cancelPagarmeCustomerSubscriptionsService.execute({
+      customerId: patient.stripeCustomerId,
+    });
+
+    const createPagarmeSubscriptionService = container.resolve(
+      CreatePagarmeSubscriptionService,
+    );
+
+    if (
+      patient.stripeCustomerId === null ||
+      patient.stripeCustomerId === undefined
+    ) {
+      this.logger.info({
+        message: 'Logger dentro dos 6 meses.',
+      });
+      await createPagarmeSubscriptionService.execute({
+        planId,
+        paymentMethod,
+        cardToken,
+        customerId: patient.stripeCustomerId,
+        split,
+        discounts,
+        address,
+        intervalCount: 6,
+      });
+    } else {
+      this.logger.info({
+        message: 'Logger dentro de 1 mês.',
+      });
+      await createPagarmeSubscriptionService.execute({
+        planId,
+        paymentMethod,
+        cardToken,
+        customerId: patient.stripeCustomerId,
+        split,
+        discounts,
+        address,
+        intervalCount: 1,
+      });
+    }
+    await this.patientsRepository.update(patient.id, {
+      planId: plan.id,
+    });
   }
 }
