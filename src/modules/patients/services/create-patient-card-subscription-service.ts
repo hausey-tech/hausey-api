@@ -148,38 +148,53 @@ export class CreatePatientCardSubscriptionService {
       CreatePagarmeSubscriptionService,
     );
 
-    if (patient.firstPayment) {
-      const result = await createPagarmeSubscriptionService.execute({
-        planId,
-        paymentMethod,
-        cardToken,
-        customerId: patient.stripeCustomerId,
-        split,
-        discounts,
-        address,
-        intervalCount: 6,
-      });
-      await this.patientsRepository.update(patient.id, {
-        planId: plan.id,
-        firstPayment: false,
-        planExpiresAt: result,
-      });
-    } else {
-      const result = await createPagarmeSubscriptionService.execute({
-        planId,
-        paymentMethod,
-        cardToken,
-        customerId: patient.stripeCustomerId,
-        split,
-        discounts,
-        address,
-        intervalCount: 1,
-      });
-      await this.patientsRepository.update(patient.id, {
-        planId: plan.id,
-        firstPayment: false,
-        planExpiresAt: result,
-      });
-    }
+    // if (patient.firstPayment) {
+    //   const result = await createPagarmeSubscriptionService.execute({
+    //     planId,
+    //     paymentMethod,
+    //     cardToken,
+    //     customerId: patient.stripeCustomerId,
+    //     split,
+    //     discounts,
+    //     address,
+    //     intervalCount: 6,
+    //   });
+    //   await this.patientsRepository.update(patient.id, {
+    //     planId: plan.id,
+    //     firstPayment: false,
+    //     planExpiresAt: result,
+    //   });
+    // } else {
+    //   const result = await createPagarmeSubscriptionService.execute({
+    //     planId,
+    //     paymentMethod,
+    //     cardToken,
+    //     customerId: patient.stripeCustomerId,
+    //     split,
+    //     discounts,
+    //     address,
+    //     intervalCount: 1,
+    //   });
+    //   await this.patientsRepository.update(patient.id, {
+    //     planId: plan.id,
+    //     firstPayment: false,
+    //     planExpiresAt: result,
+    //   });
+    // }
+    const result = await createPagarmeSubscriptionService.execute({
+      planId,
+      paymentMethod,
+      cardToken,
+      customerId: patient.stripeCustomerId,
+      split,
+      discounts,
+      address,
+      intervalCount: 1,
+    });
+    await this.patientsRepository.update(patient.id, {
+      planId: plan.id,
+      firstPayment: false,
+      planExpiresAt: result,
+    });
   }
 }
