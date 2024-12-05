@@ -96,6 +96,7 @@ export class CreatePatientService {
       sellerId,
       planId,
       planExpiresAt,
+      firstPayment: true,
     });
     mailer({
       to: 'adm.hausey@gmail.com',
