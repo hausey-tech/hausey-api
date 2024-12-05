@@ -62,19 +62,7 @@ export class CreatePatientCardSubscriptionService {
     if (patient.planExpiresAt && isBefore(new Date(), patient.planExpiresAt)) {
       throw new AppError('Paciente já possui assinatura vigente!');
     }
-    this.logger.info(
-      {
-        planId,
-      },
-      'Id do plano',
-    );
     const plan = await this.plansRepository.findyByPriceId(planId);
-    this.logger.info(
-      {
-        plan,
-      },
-      'O console do plano',
-    );
     if (!plan.stripePriceId) {
       throw new AppError(
         'Plano não encontrado, entre em contato com o suporte!',
@@ -160,14 +148,8 @@ export class CreatePatientCardSubscriptionService {
       CreatePagarmeSubscriptionService,
     );
 
-    if (
-      patient.stripeCustomerId === null ||
-      patient.stripeCustomerId === undefined
-    ) {
-      this.logger.info({
-        message: 'Logger dentro dos 6 meses.',
-      });
-      await createPagarmeSubscriptionService.execute({
+    if (patient.firstPayment) {
+      const result = await createPagarmeSubscriptionService.execute({
         planId,
         paymentMethod,
         cardToken,
@@ -177,11 +159,13 @@ export class CreatePatientCardSubscriptionService {
         address,
         intervalCount: 6,
       });
-    } else {
-      this.logger.info({
-        message: 'Logger dentro de 1 mês.',
+      await this.patientsRepository.update(patient.id, {
+        planId: plan.id,
+        firstPayment: false,
+        planExpiresAt: result,
       });
-      await createPagarmeSubscriptionService.execute({
+    } else {
+      const result = await createPagarmeSubscriptionService.execute({
         planId,
         paymentMethod,
         cardToken,
@@ -191,9 +175,11 @@ export class CreatePatientCardSubscriptionService {
         address,
         intervalCount: 1,
       });
+      await this.patientsRepository.update(patient.id, {
+        planId: plan.id,
+        firstPayment: false,
+        planExpiresAt: result,
+      });
     }
-    await this.patientsRepository.update(patient.id, {
-      planId: plan.id,
-    });
   }
 }
