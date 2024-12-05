@@ -109,6 +109,11 @@ export class CreatePagarmeSubscriptionService {
     intervalCount,
   }: IProps): Promise<string> {
     try {
+      const username = 'sk_test_0a8a4879efa442819e9d03aeaf9a358e';
+      const password = '';
+      const credentials = Buffer.from(`${username}:${password}`).toString(
+        'base64',
+      );
       const { data }: { data: IResponse } = await pagarmeInstance.post(
         '/subscriptions',
         {
@@ -151,6 +156,11 @@ export class CreatePagarmeSubscriptionService {
                   discount_type: discount.discountType,
                 }))
               : undefined,
+        },
+        {
+          headers: {
+            Authorization: `Basic ${credentials}`,
+          },
         },
       );
       if (data.status !== 'active') {
