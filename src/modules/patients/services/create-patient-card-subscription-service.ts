@@ -188,9 +188,10 @@ export class CreatePatientCardSubscriptionService {
         planId: plan.id,
       });
     } catch (error) {
+      console.log(error);
       this.logger.info(
         {
-          error,
+          error: error.message,
         },
         'Houve um erro ao efetuar o pagamento.',
       );
