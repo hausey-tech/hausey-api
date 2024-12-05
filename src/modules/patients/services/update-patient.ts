@@ -22,7 +22,6 @@ interface Props {
   responsibleTeamId?: string;
   language?: string;
   region?: string;
-  firstPayment?: boolean;
 }
 @injectable()
 export class UpdatePatientService {
@@ -42,13 +41,8 @@ export class UpdatePatientService {
     payload: Props,
     disableCustomerCreation?: string,
   ): Promise<Patient> {
-    const {
-      document,
-      sellerCode,
-      responsibleTeamId,
-      firstPayment,
-      ...restOfPayload
-    } = payload;
+    const { document, sellerCode, responsibleTeamId, ...restOfPayload } =
+      payload;
 
     const patientExists = await this.patientsRepository.findById(id);
 
@@ -126,7 +120,6 @@ export class UpdatePatientService {
       sellerId,
       planId,
       planExpiresAt,
-      firstPayment,
     });
 
     const updatedUser = await this.patientsRepository.findById(id);

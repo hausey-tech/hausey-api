@@ -119,12 +119,6 @@ patientsRouter.patch(
   celebrate(UpdatePatientPlanSchema),
   patientsController.updatePlan,
 );
-patientsRouter.get(
-  '/:patientId/info',
-  ensureAuthentication,
-  celebrate(GetPatientInfosSchema),
-  patientsController.getPatientPlanInfo,
-);
 
 patientsRouter.get(
   '/:patientId',
