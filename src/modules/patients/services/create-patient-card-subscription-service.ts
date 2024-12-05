@@ -68,7 +68,7 @@ export class CreatePatientCardSubscriptionService {
       },
       'Id do plano',
     );
-    const plan = await this.plansRepository.findById(planId);
+    const plan = await this.plansRepository.findyByPriceId(planId);
     this.logger.info(
       {
         plan,
