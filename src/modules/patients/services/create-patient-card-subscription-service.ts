@@ -1,5 +1,6 @@
 import { injectable, inject, container } from 'tsyringe';
 import { isBefore } from 'date-fns';
+import { Logger } from 'pino';
 import { CreatePagarmeSubscriptionService } from '../../integrations/services/pagarme/create-pagarme-subscription-service';
 import { ISellerCodesRepository } from '../../seller-codes/contracts/repositories/seller-codes';
 import { AppError } from '../../../shared/errors/app-error';
@@ -35,6 +36,9 @@ export class CreatePatientCardSubscriptionService {
 
     @inject('PlansRepository')
     private plansRepository: IPlansRepository,
+
+    @inject('Logger')
+    private logger: Logger,
   ) {}
 
   public async execute({
@@ -144,11 +148,8 @@ export class CreatePatientCardSubscriptionService {
       CreatePagarmeSubscriptionService,
     );
 
-    if (
-      patient.stripeCustomerId === null ||
-      patient.stripeCustomerId === undefined
-    ) {
-      await createPagarmeSubscriptionService.execute({
+    if (patient.firstPayment) {
+      const result = await createPagarmeSubscriptionService.execute({
         planId,
         paymentMethod,
         cardToken,
@@ -158,8 +159,13 @@ export class CreatePatientCardSubscriptionService {
         address,
         intervalCount: 6,
       });
+      await this.patientsRepository.update(patient.id, {
+        planId: plan.id,
+        firstPayment: false,
+        planExpiresAt: result,
+      });
     } else {
-      await createPagarmeSubscriptionService.execute({
+      const result = await createPagarmeSubscriptionService.execute({
         planId,
         paymentMethod,
         cardToken,
@@ -169,9 +175,11 @@ export class CreatePatientCardSubscriptionService {
         address,
         intervalCount: 1,
       });
+      await this.patientsRepository.update(patient.id, {
+        planId: plan.id,
+        firstPayment: false,
+        planExpiresAt: result,
+      });
     }
-    await this.patientsRepository.update(patient.id, {
-      planId: plan.id,
-    });
   }
 }

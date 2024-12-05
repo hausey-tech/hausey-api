@@ -1,10 +1,16 @@
-import { injectable } from 'tsyringe';
-import { AppError } from 'shared/errors/app-error';
+import { inject, injectable } from 'tsyringe';
+import { Logger } from 'pino';
+import { AppError } from '../../../../shared/errors/app-error';
 import { pagarmeInstance } from '../../utils/pagarme-instance';
 import { ResponsePagarmeSubscription } from '../dtos/response-pagarme-getSubscriptionByCustomerId.dto';
 
 @injectable()
 export class GetCustomerInfoPagarmeService {
+  constructor(
+    @inject('Logger')
+    private logger: Logger,
+  ) {}
+
   public async execute(
     customerId: string,
   ): Promise<ResponsePagarmeSubscription> {
@@ -16,6 +22,13 @@ export class GetCustomerInfoPagarmeService {
             customer_id: customerId,
           },
         },
+      );
+      this.logger.info(
+        {
+          data,
+          customerId,
+        },
+        'Este é o retorno da PAGARME',
       );
       return data;
     } catch (error) {
