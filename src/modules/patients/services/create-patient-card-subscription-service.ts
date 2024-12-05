@@ -195,6 +195,7 @@ export class CreatePatientCardSubscriptionService {
         },
         'Houve um erro ao efetuar o pagamento.',
       );
+      throw new AppError('Houve um erro ao efetuar o pagamento.', 400);
     }
   }
 }
