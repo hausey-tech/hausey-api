@@ -1,0 +1,65 @@
+import { injectable } from 'tsyringe';
+import { ICreatePagarmeCardOrderDTO } from 'modules/integrations/contracts/dtos/create-pagarme-card-order-dto';
+import { AppError } from '../../../../shared/errors/app-error';
+import { pagarmeInstance } from '../../utils/pagarme-instance';
+
+export interface IPix {
+  qrCode: string;
+  expiresAt: string;
+}
+
+@injectable()
+export class CreatePagarmeCardOrderService {
+  public async execute({
+    customerId,
+    plan,
+    price,
+    months,
+    split,
+    creditCard,
+  }: ICreatePagarmeCardOrderDTO): Promise<string> {
+    try {
+      const { data } = await pagarmeInstance.post('/orders', {
+        customer_id: customerId,
+        items: [
+          {
+            amount: price,
+            description: `Plano ${plan.id}`,
+            quantity: months,
+            code: plan.id,
+          },
+        ],
+        payments: [
+          {
+            credit_card: {
+              installments: creditCard.installments,
+              card_token: creditCard.cardToken,
+              statement_descriptor: `${plan.name} - ${plan.description}`,
+            },
+            split:
+              split?.length > 0 &&
+              !(process.env.PAGARME_SECRET_KEY.split('_')[1] === 'test')
+                ? split.map(sp => ({
+                    amount: sp.amount,
+                    recipient_id: sp.recipientId,
+                    type: sp.type,
+                    options: {
+                      charge_processing_fee: sp.options.chargeProcessingFee,
+                      charge_remainder_fee: sp.options.chargeRemainderFee,
+                      liable: sp.options.liable,
+                    },
+                  }))
+                : undefined,
+          },
+        ],
+      });
+      if (data.status !== 'active') {
+        throw new AppError('FAILED');
+      }
+      return data.current_cycle.end_at;
+    } catch (error) {
+      console.error(error.response.data);
+      throw new AppError('Erro ao criar pedido, tente novamente mais tarde!');
+    }
+  }
+}
