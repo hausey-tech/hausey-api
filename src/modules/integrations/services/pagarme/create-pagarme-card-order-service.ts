@@ -38,11 +38,12 @@ export class CreatePagarmeCardOrderService {
         payments: [
           {
             payment_method: 'credit_card',
-            amount: price,
             credit_card: {
               installments: creditCard.installments,
               card_token: creditCard.cardToken,
               statement_descriptor: `Plano Hausey`,
+              recurrence_model: 'instalment',
+              amount: split?.length > 0 && split.map(sp => sp.amount),
             },
             split:
               split?.length > 0 &&
@@ -65,7 +66,7 @@ export class CreatePagarmeCardOrderService {
         this.logger.info(
           {
             status: data.status,
-            data,
+            error: data.gateway_response.errors,
           },
           'Não foi possível realizar a assinatura.',
         );
