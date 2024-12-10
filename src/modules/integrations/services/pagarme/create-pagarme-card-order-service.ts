@@ -38,6 +38,7 @@ export class CreatePagarmeCardOrderService {
         payments: [
           {
             payment_method: 'credit_card',
+            amount: price,
             credit_card: {
               installments: creditCard.installments,
               card_token: creditCard.cardToken,
@@ -64,6 +65,7 @@ export class CreatePagarmeCardOrderService {
         this.logger.info(
           {
             status: data.status,
+            data,
           },
           'Não foi possível realizar a assinatura.',
         );
