@@ -43,6 +43,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     const updatedAppointment = { ...appointment };
     if (appointment.canceled) {
       updatedAppointment.status = 'canceled';
+      updatedAppointment.finished = true;
       return this.ormRepository.save(updatedAppointment);
     }
     return this.ormRepository.save(appointment);
@@ -96,6 +97,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
       await this.ormRepository.update(id, {
         ...payload,
         status: 'canceled',
+        finished: true,
       });
     } else {
       await this.ormRepository.update(id, payload);
