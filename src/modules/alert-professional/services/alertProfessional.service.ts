@@ -42,6 +42,8 @@ export class AlertProfessionalService {
         (await this.appointmentsRepository.findAppointmentStatusIsRunning())
           .length === 0;
 
+      console.log('isNotRunning:', isNotRunning);
+
       if (isNotRunning) {
         await callService.createCall({ iAvailability: principalDoctor });
         this.logger.info(
@@ -54,6 +56,7 @@ export class AlertProfessionalService {
       }
       throw new AppError('Há uma procedimento em execução.');
     } catch (error) {
+      console.log('error: ', error);
       this.logger.info(
         {
           error: error.message,
