@@ -1,7 +1,7 @@
 import { injectable, inject, container } from 'tsyringe';
 import { isBefore } from 'date-fns';
 import { Logger } from 'pino';
-import { CreatePagarmeCardOrderService } from 'modules/integrations/services/pagarme/create-pagarme-card-order-service';
+import { CreatePagarmeCardOrderService } from '../../integrations/services/pagarme/create-pagarme-card-order-service';
 import { CreatePagarmeSubscriptionService } from '../../integrations/services/pagarme/create-pagarme-subscription-service';
 import { ISellerCodesRepository } from '../../seller-codes/contracts/repositories/seller-codes';
 import { AppError } from '../../../shared/errors/app-error';
