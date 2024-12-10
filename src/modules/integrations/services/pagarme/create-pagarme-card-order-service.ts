@@ -41,7 +41,7 @@ export class CreatePagarmeCardOrderService {
             credit_card: {
               installments: creditCard.installments,
               card_token: creditCard.cardToken,
-              statement_descriptor: `${plan.name}`,
+              statement_descriptor: `Plano Hausey`,
             },
             split:
               split?.length > 0 &&
