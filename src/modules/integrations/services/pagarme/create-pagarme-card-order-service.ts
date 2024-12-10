@@ -37,6 +37,7 @@ export class CreatePagarmeCardOrderService {
         ],
         payments: [
           {
+            payment_method: 'credit_card',
             credit_card: {
               installments: creditCard.installments,
               card_token: creditCard.cardToken,
