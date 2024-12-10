@@ -1,5 +1,6 @@
-import { injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
 import { ICreatePagarmeCardOrderDTO } from 'modules/integrations/contracts/dtos/create-pagarme-card-order-dto';
+import { Logger } from 'pino';
 import { AppError } from '../../../../shared/errors/app-error';
 import { pagarmeInstance } from '../../utils/pagarme-instance';
 
@@ -10,6 +11,11 @@ export interface IPix {
 
 @injectable()
 export class CreatePagarmeCardOrderService {
+  constructor(
+    @inject('Logger')
+    private readonly logger: Logger,
+  ) {}
+
   public async execute({
     customerId,
     plan,
@@ -54,11 +60,29 @@ export class CreatePagarmeCardOrderService {
         ],
       });
       if (data.status !== 'active') {
+        this.logger.info(
+          {
+            status: data.status,
+          },
+          'Não foi possível realizar a assinatura.',
+        );
         throw new AppError('FAILED');
       }
+      this.logger.info(
+        {
+          data,
+        },
+        'Assinatura realizada com sucesso.',
+      );
       return data.current_cycle.end_at;
     } catch (error) {
       console.error(error.response.data);
+      this.logger.info(
+        {
+          error,
+        },
+        'Erro ao criar o pedido, tente novamente mais tarde.',
+      );
       throw new AppError('Erro ao criar pedido, tente novamente mais tarde!');
     }
   }
