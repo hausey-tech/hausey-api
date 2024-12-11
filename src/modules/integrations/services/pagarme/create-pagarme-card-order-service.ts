@@ -79,7 +79,7 @@ export class CreatePagarmeCardOrderService {
         },
         'Assinatura realizada com sucesso.',
       );
-      if (data.status !== 'active') {
+      if (data.status !== 'paid') {
         this.logger.info(
           {
             status: data.status,
@@ -89,7 +89,10 @@ export class CreatePagarmeCardOrderService {
         );
         throw new AppError('FAILED');
       }
-      return data.current_cycle.end_at;
+      const currentCycle = new Date(data.createdAt);
+      currentCycle.setMonth(currentCycle.getMonth() + 6);
+      const updatedCurrentCycle = currentCycle.toISOString();
+      return updatedCurrentCycle;
     } catch (error) {
       console.error(error.response.data);
       this.logger.info(

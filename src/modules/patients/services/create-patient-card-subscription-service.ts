@@ -175,6 +175,11 @@ export class CreatePatientCardSubscriptionService {
         },
         'Resultado do result',
       );
+      await this.patientsRepository.update(patient.id, {
+        planId: plan.id,
+        firstPayment: false,
+        planExpiresAt: result,
+      });
     } else {
       const result = await createPagarmeSubscriptionService.execute({
         planId,
