@@ -43,7 +43,7 @@ export class CreatePagarmeCardOrderService {
               installments: creditCard.installments,
               card_token: creditCard.cardToken,
               statement_descriptor: `Plano Hausey`,
-              recurrence_model: 'instalment',
+              recurrence_model: 'installment',
               amount: split?.length > 0 && split.map(sp => sp.amount),
               card: {
                 billing_address: {
