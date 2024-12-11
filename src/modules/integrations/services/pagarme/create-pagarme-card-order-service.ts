@@ -23,6 +23,7 @@ export class CreatePagarmeCardOrderService {
     months,
     split,
     creditCard,
+    address,
   }: ICreatePagarmeCardOrderDTO): Promise<string> {
     try {
       const { data } = await pagarmeInstance.post('/orders', {
@@ -44,6 +45,16 @@ export class CreatePagarmeCardOrderService {
               statement_descriptor: `Plano Hausey`,
               recurrence_model: 'instalment',
               amount: split?.length > 0 && split.map(sp => sp.amount),
+              card: {
+                billing_address: {
+                  line_1: `${address.number}, ${address.street}, ${address.neighborhood}`,
+                  line_2: address.complement,
+                  zip_code: address.zipCode,
+                  city: address.city,
+                  state: address.state,
+                  country: address.country,
+                },
+              },
             },
             split:
               split?.length > 0 &&

@@ -1,7 +1,7 @@
 import { injectable, inject, container } from 'tsyringe';
 import { isBefore } from 'date-fns';
 import { Logger } from 'pino';
-// import { CreatePagarmeCardOrderService } from '../../integrations/services/pagarme/create-pagarme-card-order-service';
+import { CreatePagarmeCardOrderService } from 'modules/integrations/services/pagarme/create-pagarme-card-order-service';
 import { CreatePagarmeSubscriptionService } from '../../integrations/services/pagarme/create-pagarme-subscription-service';
 import { ISellerCodesRepository } from '../../seller-codes/contracts/repositories/seller-codes';
 import { AppError } from '../../../shared/errors/app-error';
@@ -151,47 +151,38 @@ export class CreatePatientCardSubscriptionService {
       CreatePagarmeSubscriptionService,
     );
 
-    // const createPagarmeCardOrderService = container.resolve(
-    //   CreatePagarmeCardOrderService,
-    // );
+    const createPagarmeCardOrderService = container.resolve(
+      CreatePagarmeCardOrderService,
+    );
 
-    // let result: string;
+    let result: string;
 
-    // if (patient.firstPayment) {
-    //   result = await createPagarmeCardOrderService.execute({
-    //     customerId: patient.stripeCustomerId,
-    //     months: 6,
-    //     plan,
-    //     split,
-    //     price,
-    //     creditCard: {
-    //       cardToken,
-    //       installments: 6,
-    //       statement_descriptor: `${plan.name} - ${plan.description}`,
-    //     },
-    //   });
-    // } else {
-    //   result = await createPagarmeSubscriptionService.execute({
-    //     planId,
-    //     paymentMethod,
-    //     cardToken,
-    //     customerId: patient.stripeCustomerId,
-    //     split,
-    //     discounts,
-    //     address,
-    //     intervalCount: 1,
-    //   });
-    // }
-    const result = await createPagarmeSubscriptionService.execute({
-      planId,
-      paymentMethod,
-      cardToken,
-      customerId: patient.stripeCustomerId,
-      split,
-      discounts,
-      address,
-      intervalCount: 1,
-    });
+    if (patient.firstPayment) {
+      result = await createPagarmeCardOrderService.execute({
+        customerId: patient.stripeCustomerId,
+        months: 6,
+        plan,
+        split,
+        price,
+        address,
+        creditCard: {
+          cardToken,
+          installments: 6,
+          statement_descriptor: `${plan.name} - ${plan.description}`,
+        },
+      });
+    } else {
+      result = await createPagarmeSubscriptionService.execute({
+        planId,
+        paymentMethod,
+        cardToken,
+        customerId: patient.stripeCustomerId,
+        split,
+        discounts,
+        address,
+        intervalCount: 1,
+      });
+    }
     await this.patientsRepository.update(patient.id, {
       planId: plan.id,
       firstPayment: false,

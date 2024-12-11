@@ -10,6 +10,16 @@ export interface ICreatePagarmeCardOrderDTO {
     cardToken: string;
     statement_descriptor: string;
   };
+  address: {
+    street: string;
+    number: string;
+    neighborhood: string;
+    complement?: string;
+    zipCode: string;
+    city: string;
+    state: string;
+    country: string;
+  };
   split?: {
     amount: number;
     recipientId: string;
