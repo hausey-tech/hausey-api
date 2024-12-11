@@ -155,10 +155,8 @@ export class CreatePatientCardSubscriptionService {
       CreatePagarmeCardOrderService,
     );
 
-    let result: string;
-
     if (patient.firstPayment) {
-      result = await createPagarmeCardOrderService.execute({
+      const result = await createPagarmeCardOrderService.execute({
         customerId: patient.stripeCustomerId,
         months: 6,
         plan,
@@ -171,8 +169,14 @@ export class CreatePatientCardSubscriptionService {
           statement_descriptor: `${plan.name} - ${plan.description}`,
         },
       });
+      this.logger.info(
+        {
+          data: result,
+        },
+        'Resultado do result',
+      );
     } else {
-      result = await createPagarmeSubscriptionService.execute({
+      const result = await createPagarmeSubscriptionService.execute({
         planId,
         paymentMethod,
         cardToken,
@@ -182,11 +186,11 @@ export class CreatePatientCardSubscriptionService {
         address,
         intervalCount: 1,
       });
+      await this.patientsRepository.update(patient.id, {
+        planId: plan.id,
+        firstPayment: false,
+        planExpiresAt: result,
+      });
     }
-    await this.patientsRepository.update(patient.id, {
-      planId: plan.id,
-      firstPayment: false,
-      planExpiresAt: result,
-    });
   }
 }
