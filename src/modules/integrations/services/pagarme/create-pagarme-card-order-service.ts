@@ -79,6 +79,8 @@ export class CreatePagarmeCardOrderService {
         },
         'Assinatura realizada com sucesso.',
       );
+      console.log('data.status =>', data.status);
+      console.log('data !== paid =>', data.status !== 'paid');
       if (data.status !== 'paid') {
         console.log('Entrei no if');
         this.logger.info(
