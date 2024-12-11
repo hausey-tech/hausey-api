@@ -80,6 +80,7 @@ export class CreatePagarmeCardOrderService {
         'Assinatura realizada com sucesso.',
       );
       if (data.status !== 'paid') {
+        console.log('Entrei no if');
         this.logger.info(
           {
             status: data.status,
@@ -92,6 +93,7 @@ export class CreatePagarmeCardOrderService {
       const currentCycle = new Date(data.createdAt);
       currentCycle.setMonth(currentCycle.getMonth() + 6);
       const updatedCurrentCycle = currentCycle.toISOString();
+      console.log('CURRENTCYCLE', updatedCurrentCycle);
       return updatedCurrentCycle;
     } catch (error) {
       console.error(error.response.data);
