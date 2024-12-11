@@ -73,6 +73,12 @@ export class CreatePagarmeCardOrderService {
           },
         ],
       });
+      this.logger.info(
+        {
+          data,
+        },
+        'Assinatura realizada com sucesso.',
+      );
       if (data.status !== 'active') {
         this.logger.info(
           {
@@ -83,12 +89,6 @@ export class CreatePagarmeCardOrderService {
         );
         throw new AppError('FAILED');
       }
-      this.logger.info(
-        {
-          data,
-        },
-        'Assinatura realizada com sucesso.',
-      );
       return data.current_cycle.end_at;
     } catch (error) {
       console.error(error.response.data);
