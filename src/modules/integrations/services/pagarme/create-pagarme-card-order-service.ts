@@ -79,14 +79,6 @@ export class CreatePagarmeCardOrderService {
         },
         'Assinatura realizada com sucesso.',
       );
-      console.log('data.status =>', data.status);
-      console.log('data !== paid =>', data.status !== 'paid');
-      console.log('data.createdAt', data.createdAt);
-      const dataModify = new Date(data.createdAt);
-      console.log('data mofidy =>', dataModify);
-      dataModify.setMonth(dataModify.getMonth() + 6);
-      const updatedDate = dataModify.toISOString();
-      console.log('updatedDate', updatedDate);
       if (data.status !== 'paid') {
         console.log('Entrei no if');
         this.logger.info(
@@ -98,10 +90,9 @@ export class CreatePagarmeCardOrderService {
         );
         throw new AppError('FAILED');
       }
-      const currentCycle = new Date(data.createdAt);
+      const currentCycle = new Date(data.created_at);
       currentCycle.setMonth(currentCycle.getMonth() + 6);
       const updatedCurrentCycle = currentCycle.toISOString();
-      console.log('CURRENTCYCLE', updatedCurrentCycle);
       return updatedCurrentCycle;
     } catch (error) {
       console.error(error.response.data);
