@@ -1,6 +1,6 @@
 import { inject, injectable } from 'tsyringe';
-import { ICreatePagarmeCardOrderDTO } from 'modules/integrations/contracts/dtos/create-pagarme-card-order-dto';
 import { Logger } from 'pino';
+import { ICreatePagarmeCardOrderDTO } from '../../contracts/dtos/create-pagarme-card-order-dto';
 import { AppError } from '../../../../shared/errors/app-error';
 import { pagarmeInstance } from '../../utils/pagarme-instance';
 
