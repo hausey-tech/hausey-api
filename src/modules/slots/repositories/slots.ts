@@ -29,7 +29,7 @@ export class SlotsRepository implements ISlotsRepository {
 
   public async findByTodayDate(): Promise<Slot[]> {
     const now = new Date(Date.now());
-    now.setHours(now.getHours() - 2);
+    now.setHours(now.getHours() - 3);
 
     const targetDate = now.toISOString().split('T')[0];
     const currentHour = now.toTimeString().split(' ')[0];
