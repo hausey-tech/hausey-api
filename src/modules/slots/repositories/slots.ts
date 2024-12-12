@@ -29,6 +29,7 @@ export class SlotsRepository implements ISlotsRepository {
 
   public async findByTodayDate(): Promise<Slot[]> {
     const patientDateTime = new Date(Date.now());
+    console.log(patientDateTime);
 
     patientDateTime.setHours(patientDateTime.getHours() - 3);
 
