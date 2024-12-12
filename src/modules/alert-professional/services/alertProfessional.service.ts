@@ -38,6 +38,8 @@ export class AlertProfessionalService {
           profissional.profissionalType === 'principal',
       );
 
+      console.log(principalDoctor);
+
       const isNotRunning =
         (await this.appointmentsRepository.findAppointmentStatusIsRunning())
           .length === 0;
