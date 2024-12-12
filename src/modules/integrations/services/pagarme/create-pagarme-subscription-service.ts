@@ -138,7 +138,6 @@ export class CreatePagarmeSubscriptionService {
               ? {
                   enabled: true,
                   rules: split.map(sp => ({
-                    // amount: intervalCount === 6 ? sp.amount * 6 : sp.amount,
                     amount: sp.amount,
                     recipient_id: sp.recipientId,
                     type: sp.type,
