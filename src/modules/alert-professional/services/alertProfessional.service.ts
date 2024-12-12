@@ -13,8 +13,8 @@ interface IAvailability {
   date: Date;
   profissionalType: string;
   slots: {
-    startTime: string;
-    endTime: string;
+    startTime: Date;
+    endTime: Date;
   };
 }
 
@@ -37,8 +37,6 @@ export class AlertProfessionalService {
         (profissional: IAvailability) =>
           profissional.profissionalType === 'principal',
       );
-
-      console.log(principalDoctor);
 
       const isNotRunning =
         (await this.appointmentsRepository.findAppointmentStatusIsRunning())
