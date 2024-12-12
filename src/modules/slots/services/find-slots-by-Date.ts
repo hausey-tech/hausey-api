@@ -39,8 +39,8 @@ export class FindSlotsByDateService {
         professional: slot.professional,
         profissionalType: slot.professionalType,
         slots: {
-          startTime: slot.startTime,
-          endTime: slot.endTime,
+          startTime: '2024-12-12T02:03:42',
+          endTime: '2024-12-12T02:03:42',
         },
       });
     });

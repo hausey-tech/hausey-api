@@ -28,17 +28,21 @@ export class SlotsRepository implements ISlotsRepository {
   }
 
   public async findByTodayDate(): Promise<Slot[]> {
-    const now = new Date(Date.now());
-    now.setHours(now.getHours() - 3);
+    const patientDateTime = new Date(Date.now());
 
-    const targetDate = now.toISOString().split('T')[0];
-    const currentHour = now.toTimeString().split(' ')[0];
+    patientDateTime.setHours(patientDateTime.getHours() - 3);
+
+    const patientISODateTime = patientDateTime.toISOString();
+
     return this.ormRepository.find({
       where: [
         {
-          date: Raw(alias => `DATE(${alias}) = :targetDate`, { targetDate }),
-          startTime: Raw(alias => `${alias} <= :currentHour`, { currentHour }),
-          endTime: Raw(alias => `${alias} >= :currentHour`, { currentHour }),
+          startTime: Raw(alias => `${alias} <= :patientDateTime`, {
+            patientDateTime: patientISODateTime,
+          }),
+          endTime: Raw(alias => `${alias} >= :patientDateTime`, {
+            patientDateTime: patientISODateTime,
+          }),
         },
       ],
       relations: [...this.relations, 'professional'],
