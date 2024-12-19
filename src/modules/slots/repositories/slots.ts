@@ -1,4 +1,4 @@
-import { Repository, In, Raw } from 'typeorm';
+import { Repository, In, Raw, IsNull } from 'typeorm';
 
 import { ISlotsRepository } from '../contracts/repositories/slots';
 import { ICreateDBSlotDTO } from '../contracts/dtos/create-db-slot';
@@ -65,5 +65,28 @@ export class SlotsRepository implements ISlotsRepository {
   public async delete(id: string): Promise<Slot> {
     await this.ormRepository.softDelete(id);
     return this.findById(id);
+  }
+
+  // Implementação do método findValidSlots
+  public async findValidSlots({
+    date,
+    appointmentTime,
+  }: {
+    date: string;
+    appointmentTime: string;
+  }): Promise<Slot[]> {
+    return this.ormRepository.find({
+      where: {
+        date: Raw(alias => `DATE(${alias}) = DATE(:date)`, { date }),
+        startTime: Raw(alias => `TIME(${alias}) <= TIME(:appointmentTime)`, {
+          appointmentTime,
+        }),
+        endTime: Raw(alias => `TIME(${alias}) >= TIME(:appointmentTime)`, {
+          appointmentTime,
+        }),
+        deletedAt: IsNull(), // Supondo que você tenha um campo "deletedAt" para indicar exclusões lógicas
+      },
+      relations: [...this.relations, 'professional'],
+    });
   }
 }

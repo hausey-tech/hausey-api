@@ -1,6 +1,7 @@
 import { injectable, inject, container } from 'tsyringe';
 
 import { Logger } from 'pino';
+import { ISlotsRepository } from 'modules/slots/contracts/repositories/slots';
 import { AlertProfessionalService } from '../../alert-professional/services/alertProfessional.service';
 import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 import { ICreateAppointmentDTO } from '../contracts/dtos/create-appointment';
@@ -24,6 +25,9 @@ export class CreateAppointmentService {
 
     @inject('ProfessionalsRepository')
     private professionalsRepository: IProfessionalsRepository,
+
+    @inject('SlotsRepository')
+    private slotsRepository: ISlotsRepository,
 
     @inject('Logger')
     private logger: Logger,
@@ -119,6 +123,27 @@ export class CreateAppointmentService {
         date,
       });
       appointment = appointmentEmergency;
+
+      // Logica para enviar email para os profissionais conforme cadastrados na escala de slots
+
+      const dateAppoint = String(appointment.date).split('T')[0]; // Formata para 'YYYY-MM-DD'
+      const appointmentTime = appointment.date.toTimeString().split(' ')[0]; // Formata para 'HH:mm:ss'
+
+      // Filtrar os slots válidos com base na hora
+      const slots = await this.slotsRepository.findValidSlots({
+        date: dateAppoint,
+        appointmentTime,
+      });
+
+      const professionalIds = slots.map(slot => slot.professionalId);
+      const professionalSlots = await this.professionalsRepository.findByIds(
+        professionalIds,
+      );
+
+      console.log(professionalIds, professionalSlots);
+
+      // etapa de envio de email. Deletar professionals abaixo apos consluida a logica de filtro.
+
       const professionals = await this.professionalsRepository.findByRoleIds([
         'b3460425-43fd-45ea-aec1-339627ea9825',
         '64db0cda-ee21-4a82-a765-b0500d0bbd52',

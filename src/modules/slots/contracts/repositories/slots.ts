@@ -10,4 +10,11 @@ export interface ISlotsRepository {
   create(payload: ICreateDBSlotDTO): Promise<Slot>;
   save(sloat: Slot): Promise<Slot>;
   delete(id: string): Promise<Slot>;
+  findValidSlots({
+    date,
+    appointmentTime,
+  }: {
+    date: string;
+    appointmentTime: string;
+  }): Promise<Slot[]>;
 }
