@@ -12,8 +12,8 @@ interface IAvailability {
   date: Date;
   profissionalType: string;
   slots: {
-    startTime: string;
-    endTime: string;
+    startTime: Date;
+    endTime: Date;
   };
 }
 
@@ -39,8 +39,8 @@ export class FindSlotsByDateService {
         professional: slot.professional,
         profissionalType: slot.professionalType,
         slots: {
-          startTime: '2024-12-12T02:03:42',
-          endTime: '2024-12-12T02:03:42',
+          startTime: slot.startTime,
+          endTime: slot.endTime,
         },
       });
     });

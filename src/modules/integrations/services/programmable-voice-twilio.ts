@@ -14,8 +14,8 @@ interface IAvailability {
   date: Date;
   profissionalType: string;
   slots: {
-    startTime: string;
-    endTime: string;
+    startTime: Date;
+    endTime: Date;
   };
 }
 
