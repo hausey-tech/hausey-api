@@ -31,6 +31,8 @@ export class AppointmentsController {
     response.setHeader('Connection', 'keep-alive');
 
     clients.push(response);
+    response.write('event: connected\n');
+    response.write(`data: {"message": "SSE connection established"}\n\n`);
 
     request.on('close', () => {
       const index = clients.indexOf(response);
@@ -66,7 +68,10 @@ export class AppointmentsController {
     }
 
     clients.forEach(client =>
-      client.write(`data: ${JSON.stringify(appointment)}\n\n`),
+      client.write(
+        `event: new-appointment\n`,
+        `data: ${JSON.stringify(appointment)}\n\n`,
+      ),
     );
 
     return response.json(appointment);
