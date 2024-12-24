@@ -16,4 +16,5 @@ export interface IUpdatePatientDTO {
   language?: string;
   region?: string;
   nipomed?: boolean;
+  firstPayment?: boolean;
 }
