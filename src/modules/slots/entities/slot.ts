@@ -21,9 +21,9 @@ export class Slot extends BaseEntity {
   @Column('int', { name: 'week_day', nullable: true })
   weekDay: number;
 
-  @Column('time', { name: 'start_time' })
-  startTime: string;
+  @Column('timestamp', { name: 'start_time' })
+  startTime: Date;
 
-  @Column('time', { name: 'end_time' })
-  endTime: string;
+  @Column('timestamp', { name: 'end_time' })
+  endTime: Date;
 }

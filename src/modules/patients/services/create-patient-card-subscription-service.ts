@@ -1,6 +1,7 @@
 import { injectable, inject, container } from 'tsyringe';
 import { isBefore } from 'date-fns';
 import { Logger } from 'pino';
+import { CreatePagarmeCardOrderService } from '../../integrations/services/pagarme/create-pagarme-card-order-service';
 import { CreatePagarmeSubscriptionService } from '../../integrations/services/pagarme/create-pagarme-subscription-service';
 import { ISellerCodesRepository } from '../../seller-codes/contracts/repositories/seller-codes';
 import { AppError } from '../../../shared/errors/app-error';
@@ -70,6 +71,7 @@ export class CreatePatientCardSubscriptionService {
     }
     const split = [];
     const discounts = [];
+    let { price } = plan;
     if (patient.sellerId) {
       const sellerCode = await this.sellerCodesRepository.findBySellerId(
         patient.sellerId,
@@ -78,6 +80,7 @@ export class CreatePatientCardSubscriptionService {
         d => d.planId === plan.id,
       );
       if (sellerCodeDiscount) {
+        price -= sellerCodeDiscount.discount;
         discounts.push({
           discountType: 'flat',
           value: sellerCodeDiscount.discount,
@@ -148,17 +151,30 @@ export class CreatePatientCardSubscriptionService {
       CreatePagarmeSubscriptionService,
     );
 
+    const createPagarmeCardOrderService = container.resolve(
+      CreatePagarmeCardOrderService,
+    );
+
     if (patient.firstPayment) {
-      const result = await createPagarmeSubscriptionService.execute({
-        planId,
-        paymentMethod,
-        cardToken,
+      const result = await createPagarmeCardOrderService.execute({
         customerId: patient.stripeCustomerId,
+        months: 6,
+        plan,
         split,
-        discounts,
+        price,
         address,
-        intervalCount: 6,
+        creditCard: {
+          cardToken,
+          installments: 6,
+          statement_descriptor: `${plan.name} - ${plan.description}`,
+        },
       });
+      this.logger.info(
+        {
+          data: result,
+        },
+        'Resultado do result',
+      );
       await this.patientsRepository.update(patient.id, {
         planId: plan.id,
         firstPayment: false,

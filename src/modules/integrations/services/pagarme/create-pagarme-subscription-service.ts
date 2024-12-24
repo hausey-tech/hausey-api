@@ -1,4 +1,5 @@
-import { injectable } from 'tsyringe';
+import { inject, injectable } from 'tsyringe';
+import { Logger } from 'pino';
 import { AppError } from '../../../../shared/errors/app-error';
 import { pagarmeInstance } from '../../utils/pagarme-instance';
 
@@ -98,6 +99,11 @@ interface IResponse {
 
 @injectable()
 export class CreatePagarmeSubscriptionService {
+  constructor(
+    @inject('Logger')
+    private readonly logger: Logger,
+  ) {}
+
   public async execute({
     planId,
     paymentMethod,
@@ -132,7 +138,7 @@ export class CreatePagarmeSubscriptionService {
               ? {
                   enabled: true,
                   rules: split.map(sp => ({
-                    amount: intervalCount === 6 ? sp.amount * 6 : sp.amount,
+                    amount: sp.amount,
                     recipient_id: sp.recipientId,
                     type: sp.type,
                     options: {
@@ -159,6 +165,23 @@ export class CreatePagarmeSubscriptionService {
       return data.current_cycle.end_at;
     } catch (error) {
       console.error('Assinatura: ', error?.response?.data);
+      this.logger.info(
+        {
+          errorFailed: error?.message,
+          error: error?.response?.data,
+          info: {
+            planId,
+            paymentMethod,
+            customerId,
+            cardToken,
+            address,
+            split,
+            discounts,
+            intervalCount,
+          },
+        },
+        'Ocorreu um erro ao capturar seu pagamento.',
+      );
       throw new AppError(
         error?.message === 'FAILED'
           ? 'Ocorreu um erro ao capturar seu pagamento, tente novamente ou entre em contato com o suporte para obter mais detalhes!'
