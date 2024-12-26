@@ -153,3 +153,26 @@ patientsRouter.post(
   celebrate(CreateSubscriptionSchema),
   patientsController.createSubscription,
 );
+
+patientsRouter.patch(
+  '/:patientId/remove-plan',
+  celebrate({
+    params: Joi.object({
+      patientId: Joi.string().uuid().required(),
+    }),
+  }),
+  patientsController.removePlanId,
+);
+
+patientsRouter.patch(
+  '/:id/sellerId',
+  celebrate({
+    params: Joi.object({
+      id: Joi.string().uuid().required(),
+    }),
+    body: Joi.object({
+      sellerCode: Joi.string().required(),
+    }),
+  }),
+  patientsController.updateSellerId,
+);
