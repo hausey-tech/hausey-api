@@ -144,12 +144,18 @@ export class CreateAppointmentService {
 
       // etapa de envio de email. Deletar professionals abaixo apos consluida a logica de filtro.
 
-      const professionals = await this.professionalsRepository.findByRoleIds([
-        'b3460425-43fd-45ea-aec1-339627ea9825',
-        '64db0cda-ee21-4a82-a765-b0500d0bbd52',
-      ]);
-      if (professionals.length > 0) {
-        professionals.map(professional =>
+      // const professionals = await this.professionalsRepository.findByRoleIds([
+      //   'b3460425-43fd-45ea-aec1-339627ea9825',
+      //   '64db0cda-ee21-4a82-a765-b0500d0bbd52',
+      // ]);
+      if (professionalSlots.length > 0) {
+        this.logger.info(
+          {
+            professionals: professionalSlots,
+          },
+          'Log de professionals',
+        );
+        professionalSlots.map(professional =>
           setTimeout(
             () =>
               sendgrid({
