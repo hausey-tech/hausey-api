@@ -8,6 +8,7 @@ import { CreateErrorService } from '../../../errors/service/create-error-service
 interface Props {
   customerId: string;
   amount: number;
+  chargeId: string;
 }
 
 @injectable()
@@ -20,7 +21,7 @@ export class CreateTransfers {
     private sellerCodesRepository: ISellerCodesRepository,
   ) {}
 
-  public async execute({ customerId, amount }: Props): Promise<void> {
+  public async execute({ customerId, amount, chargeId }: Props): Promise<void> {
     const patient = await this.patientsRepository.findByCustomerId(customerId);
     if (!patient || !patient.sellerId) {
       return;
@@ -44,16 +45,13 @@ export class CreateTransfers {
     try {
       const transfers: Stripe.TransferCreateParams[] = [];
 
-      const date = new Date().toISOString().split('T')[0];
-      const transferGroup = `${date}:${patient.id}`;
-
       const ownerFee = sellerCode.fee / 100;
       if (ownerFee > 0 && ownerFee < 1) {
         transfers.push({
           amount: Math.floor(ownerFee * amount),
           currency: 'usd',
           destination: sellerCode.seller.recipientId,
-          transfer_group: transferGroup,
+          source_transaction: chargeId,
         });
       }
 
@@ -64,7 +62,7 @@ export class CreateTransfers {
             amount: Math.floor(sellerFee * amount),
             currency: 'usd',
             destination: seller.seller.recipientId,
-            transfer_group: transferGroup,
+            source_transaction: chargeId,
           });
         }
       });

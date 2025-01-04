@@ -85,6 +85,6 @@ appointmentsRouter.get(
 
 appointmentsRouter.get(
   '/events',
-  ensureAuthentication,
+  // ensureAuthentication,
   appointmentsController.events,
 );

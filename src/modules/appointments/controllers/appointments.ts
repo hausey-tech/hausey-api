@@ -12,7 +12,7 @@ import { ToggleFinishedService } from '../services/toggle-finished';
 import { Appointment } from '../entities/appointment';
 import { ToggleCanceledService } from '../services/toggle-canceled';
 
-const clients = [];
+const clients = new Map<string, Response>();
 
 export class AppointmentsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -25,20 +25,20 @@ export class AppointmentsController {
     return response.json(appointments);
   }
 
-  public async events(request: Request, response: Response): Promise<any> {
+  public async events(request: Request, response: Response): Promise<void> {
+    const userId = request.query.user as string;
     response.setHeader('Content-Type', 'text/event-stream');
     response.setHeader('Cache-Control', 'no-cache');
     response.setHeader('Connection', 'keep-alive');
+    response.setHeader('Access-Control-Allow-Origin', '*'); // Pode ser necessário se o seu frontend estiver em um domínio diferente
 
-    clients.push(response);
+    clients.set(userId, response);
+
     response.write('event: connected\n');
     response.write(`data: {"message": "SSE connection established"}\n\n`);
 
     request.on('close', () => {
-      const index = clients.indexOf(response);
-      if (index !== -1) {
-        clients.splice(index, 1);
-      }
+      clients.delete(userId);
     });
   }
 
@@ -65,14 +65,14 @@ export class AppointmentsController {
         date,
       });
       appointment = appointmentEmergency;
+      clients.forEach(client => {
+        console.log(client);
+        client.write(
+          `event: new-appointment\n` +
+            `data: ${JSON.stringify(appointment)}\n\n`,
+        );
+      });
     }
-
-    clients.forEach(client =>
-      client.write(
-        `event: new-appointment\n`,
-        `data: ${JSON.stringify(appointment)}\n\n`,
-      ),
-    );
 
     return response.json(appointment);
   }
