@@ -34,6 +34,7 @@ export class SlotsRepository implements ISlotsRepository {
       patientDateTime.setHours(patientDateTime.getHours() - 3);
     }
     patientDateTime = new Date(Date.now());
+    patientDateTime.setHours(patientDateTime.getHours() - 3);
 
     const patientISODateTime = patientDateTime.toISOString();
 
