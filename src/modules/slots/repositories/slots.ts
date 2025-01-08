@@ -27,11 +27,13 @@ export class SlotsRepository implements ISlotsRepository {
     return this.ormRepository.find({ where: { professionalId: In(ids) } });
   }
 
-  public async findByTodayDate(): Promise<Slot[]> {
-    const patientDateTime = new Date(Date.now());
-    console.log(patientDateTime);
-
-    patientDateTime.setHours(patientDateTime.getHours() - 3);
+  public async findByTodayDate(date?: Date): Promise<Slot[]> {
+    let patientDateTime: Date;
+    if (date) {
+      patientDateTime = date;
+      patientDateTime.setHours(patientDateTime.getHours() - 3);
+    }
+    patientDateTime = new Date(Date.now());
 
     const patientISODateTime = patientDateTime.toISOString();
 

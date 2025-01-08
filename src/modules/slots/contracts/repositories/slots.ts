@@ -6,7 +6,7 @@ export interface ISlotsRepository {
   findById(id: string): Promise<Slot>;
   findByProfessionalIds(ids: string[]): Promise<Slot[]>;
   findByProfessionalId(id: string): Promise<Slot[]>;
-  findByTodayDate(): Promise<Slot[]>;
+  findByTodayDate(date?: Date): Promise<Slot[]>;
   create(payload: ICreateDBSlotDTO): Promise<Slot>;
   save(sloat: Slot): Promise<Slot>;
   delete(id: string): Promise<Slot>;

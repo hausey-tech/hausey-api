@@ -126,21 +126,24 @@ export class CreateAppointmentService {
 
       // Logica para enviar email para os profissionais conforme cadastrados na escala de slots
 
-      const dateAppoint = String(appointment.date).split('T')[0]; // Formata para 'YYYY-MM-DD'
-      const appointmentTime = appointment.date.toTimeString().split(' ')[0]; // Formata para 'HH:mm:ss'
+      // const dateAppoint = String(appointment.date).split('T')[0]; // Formata para 'YYYY-MM-DD'
+      // const appointmentTime = appointment.date.toTimeString().split(' ')[0]; // Formata para 'HH:mm:ss'
 
       // Filtrar os slots válidos com base na hora
-      const slots = await this.slotsRepository.findValidSlots({
-        date: dateAppoint,
-        appointmentTime,
-      });
+      // const slots = await this.slotsRepository.findValidSlots({
+      //   date: dateAppoint,
+      //   appointmentTime,
+      // });
+      // const professionalIds = slots.map(slot => slot.professionalId);
+      // const professionalSlots = await this.professionalsRepository.findByIds(
+      //   professionalIds,
+      // );
 
+      const slots = await this.slotsRepository.findByTodayDate(new Date(date));
       const professionalIds = slots.map(slot => slot.professionalId);
       const professionalSlots = await this.professionalsRepository.findByIds(
         professionalIds,
       );
-
-      console.log(professionalIds, professionalSlots);
 
       // etapa de envio de email. Deletar professionals abaixo apos consluida a logica de filtro.
 
