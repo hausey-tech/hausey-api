@@ -18,7 +18,7 @@ export class HandleWebhook {
       process.env.STRIPE_ENDPOINT_SECRET,
     );
 
-    if (event.type === 'invoice.updated') {
+    if (event.type === 'invoice.paid') {
       const invoice = event.data.object as Stripe.Invoice;
 
       if (invoice.paid) {
@@ -37,6 +37,7 @@ export class HandleWebhook {
         createTransfers.execute({
           customerId: customerId as string,
           amount: invoice.amount_paid,
+          chargeId: invoice.charge as string,
         });
       }
     }

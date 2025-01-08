@@ -28,7 +28,7 @@ export const createVideoRoomCode = async () => {
   const secret = process.env.VIDEO_SDK_SECRET_KEY || '';
 
   const token = jwt.sign(payload, secret, options);
-
+  console.log('token', token);
   try {
     const { data } = await videoSdkInstance.post(
       '/rooms',

@@ -82,3 +82,9 @@ appointmentsRouter.get(
   celebrate(ToggleFinishedSchema),
   appointmentsController.toggleCanceled,
 );
+
+appointmentsRouter.get(
+  '/events',
+  ensureAuthentication,
+  appointmentsController.events,
+);
