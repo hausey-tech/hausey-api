@@ -33,9 +33,16 @@ export class AppointmentsRepository implements IAppointmentsRepository {
   }
 
   public async create(payload: ICreateAppointmentDTO): Promise<Appointment> {
-    return this.ormRepository.create({
+    const appointment = this.ormRepository.create({
       ...payload,
       status: 'awaiting',
+    });
+
+    await this.ormRepository.save(appointment);
+
+    return this.ormRepository.findOneOrFail({
+      where: { id: appointment.id },
+      relations: ['patient'],
     });
   }
 
