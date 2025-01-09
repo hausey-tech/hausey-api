@@ -8,7 +8,7 @@ export class PlansController {
   constructor(
     @inject('Logger')
     private logger: Logger,
-  );
+  ) {}
 
   public async index(request: Request, response: Response): Promise<Response> {
     const { regions } = request.query;
