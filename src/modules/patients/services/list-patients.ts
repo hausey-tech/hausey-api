@@ -1,5 +1,6 @@
 import { injectable, inject } from 'tsyringe';
 
+import { AppError } from 'shared/errors/app-error';
 import { ISellerCodeSellersRepository } from '../../seller-code-sellers/contracts/repositories/seller-code-sellers-repository';
 import { ISellerCodesRepository } from '../../seller-codes/contracts/repositories/seller-codes';
 import { IAppointmentsRepository } from '../../appointments/contracts/repositories/appointments';
@@ -7,9 +8,15 @@ import { IPatientsRepository } from '../contracts/repositories/patients';
 import { Patient } from '../entities/patient';
 import { SellerCode } from '../../seller-codes/entities/seller-code';
 
-interface PatientResponse {
+interface PatientsPaginatedResponse {
   patients: Array<Patient>;
-  sellerCodesFiltered: Array<SellerCode>;
+  totalPatients: number;
+  totalPages: number;
+}
+
+interface SellerCodeResponse {
+  sellerCodes: Array<SellerCode>;
+  patients: PatientsPaginatedResponse;
 }
 
 @injectable()
@@ -21,10 +28,10 @@ export class ListPatientsService {
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,
 
-    @inject('SellerCodeSellers')
+    @inject('SellerCodeSellersRepository')
     private sellerCodeSellersRepository: ISellerCodeSellersRepository,
 
-    @inject('SellerCodes')
+    @inject('SellerCodesRepository')
     private sellerCodesRepository: ISellerCodesRepository,
   ) {}
 
@@ -32,10 +39,23 @@ export class ListPatientsService {
     professionalId?: string;
     userId?: string;
     type?: string;
-  }): Promise<PatientResponse> {
-    const { professionalId, userId, type } = query;
-
+    page?: string;
+    limit?: string;
+  }): Promise<SellerCodeResponse | PatientsPaginatedResponse> {
+    const { professionalId, userId, type, page = 1, limit = 10 } = query;
     let sellerCodesFiltered;
+
+    if (Number.isNaN(page) || Number(page) < 1) {
+      throw new AppError('Page must be a valid number');
+    }
+
+    if (Number.isNaN(limit) || Number(limit) < 1) {
+      throw new AppError('Invalid limit value');
+    }
+
+    const skip = (Number(page) - 1) * Number(limit);
+    const take = Number(limit);
+
     if (professionalId) {
       const appointments = await this.appointmentsRepository.findByProfessional(
         professionalId,
@@ -43,42 +63,57 @@ export class ListPatientsService {
 
       const patientIds = appointments.map(appointment => appointment.patientId);
 
-      const patients = await this.patientsRepository.findByIds(patientIds);
+      const [patients, totalPatients] = await this.patientsRepository.findByIds(
+        patientIds,
+        skip,
+        take,
+      );
 
-      if (userId) {
-        const sellerCodeSellers =
-          await this.sellerCodeSellersRepository.findBySellerId(userId);
+      const totalPages = Math.ceil(totalPatients / take);
 
-        const sellerCodes = await Promise.all(
-          sellerCodeSellers.map(async sellerCodeSeller => {
-            return this.sellerCodesRepository.findById(sellerCodeSeller.id);
-          }),
-        );
-
-        sellerCodesFiltered = sellerCodes.filter(
-          sellerCode => sellerCode.type === type,
-        );
-      }
-
-      return { patients, sellerCodesFiltered };
+      return {
+        patients,
+        totalPatients,
+        totalPages,
+      };
     }
 
     if (userId) {
       const sellerCodeSellers =
         await this.sellerCodeSellersRepository.findBySellerId(userId);
 
+      const [patients, totalPatients] =
+        await this.patientsRepository.findBySellerId(userId, skip, take);
+
+      const totalPages = Math.ceil(totalPatients / take);
+
       const sellerCodes = await Promise.all(
         sellerCodeSellers.map(async sellerCodeSeller => {
-          return this.sellerCodesRepository.findById(sellerCodeSeller.id);
+          return this.sellerCodesRepository.findById(
+            sellerCodeSeller.sellerCodeId,
+          );
         }),
       );
       sellerCodesFiltered = sellerCodes.filter(
         sellerCode => sellerCode.type === type,
       );
+      return {
+        sellerCodes: sellerCodesFiltered,
+        patients: { patients, totalPatients, totalPages },
+      };
     }
 
-    const patients = await this.patientsRepository.find();
+    const [patients, totalPatients] = await this.patientsRepository.find(
+      skip,
+      take,
+    );
 
-    return { patients, sellerCodesFiltered };
+    const totalPages = Math.ceil(totalPatients / take);
+
+    return {
+      patients,
+      totalPatients,
+      totalPages,
+    };
   }
 }
