@@ -41,9 +41,29 @@ export class ListPatientsService {
     type?: string;
     page?: string;
     limit?: string;
-  }): Promise<SellerCodeResponse | PatientsPaginatedResponse> {
-    const { professionalId, userId, type, page = 1, limit = 10 } = query;
+    name?: string;
+    cpf?: string;
+  }): Promise<
+    SellerCodeResponse | PatientsPaginatedResponse | Patient | Patient[]
+  > {
+    const {
+      professionalId,
+      userId,
+      type,
+      page = 1,
+      limit = 10,
+      name,
+      cpf,
+    } = query;
     let sellerCodesFiltered;
+
+    if (name) {
+      return this.patientsRepository.findByName(name);
+    }
+
+    if (cpf) {
+      return this.patientsRepository.findByDocument(cpf);
+    }
 
     if (Number.isNaN(page) || Number(page) < 1) {
       throw new AppError('Page must be a valid number');

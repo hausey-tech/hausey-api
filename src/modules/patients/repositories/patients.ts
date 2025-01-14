@@ -26,6 +26,14 @@ export class PatientsRepository implements IPatientsRepository {
     ];
   }
 
+  findByName(name: string): Promise<Patient[] | null> {
+    return this.ormRepository.find({
+      where: {
+        name,
+      },
+    });
+  }
+
   public async findBySellerId(
     sellerId: string,
     skip: number,
