@@ -36,10 +36,13 @@ export class PatientGroupTypesRepository
   }
 
   public async findByGroupTypeIds(ids: string[]): Promise<PatientGroupType[]> {
-    return this.ormRepository.find({
+    const data = await this.ormRepository.find({
       where: { groupTypeId: In(ids) },
       relations: this.relations,
     });
+
+    console.log(data);
+    return data;
   }
 
   public async create(

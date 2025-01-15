@@ -27,6 +27,8 @@ export const CreatePatientSchema = {
 export const GetPatientsByGroupSchema = {
   [Segments.BODY]: Joi.object().keys({
     groupTypes: Joi.array().items(Joi.string().required()).required(),
+  }),
+  [Segments.QUERY]: Joi.object().keys({
     page: Joi.string().optional().default(1),
     limit: Joi.string().optional().default(10),
   }),

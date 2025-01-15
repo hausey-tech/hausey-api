@@ -131,7 +131,7 @@ export class PatientsController {
     request: Request,
     response: Response,
   ): Promise<Response> {
-    const groupTypes = request.body;
+    const { groupTypes } = request.body;
     const { query } = request;
 
     const getPatientByGroupService = container.resolve(

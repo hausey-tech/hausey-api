@@ -39,6 +39,8 @@ patientsRouter.get(
   celebrate({
     [Segments.PARAMS]: {
       sellerId: Joi.string().required(),
+      page: Joi.string().optional().default(1),
+      limit: Joi.string().optional().default(10),
     },
   }),
   patientsController.findBySellerId,
