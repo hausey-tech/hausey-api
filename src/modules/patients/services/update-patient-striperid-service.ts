@@ -1,6 +1,6 @@
 import { injectable, inject } from 'tsyringe';
 import { Logger } from 'pino';
-import { AppError } from 'shared/errors/app-error';
+import { AppError } from '../../../shared/errors/app-error';
 import { IPlansRepository } from '../../plans/contracts/repositories/plans';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { Patient } from '../entities/patient';
