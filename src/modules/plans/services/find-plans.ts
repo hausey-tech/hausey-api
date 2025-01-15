@@ -13,6 +13,7 @@ export class FindPlans {
   ) {}
 
   public async execute({ regions }: IFindPlansDTO): Promise<Plan[]> {
+    console.log(regions);
     const regionsArr = regions?.split(',');
     const plans = await this.plansRepository.find({
       regions: regionsArr?.length > 0 ? { region: In(regionsArr) } : undefined,

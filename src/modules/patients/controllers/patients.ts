@@ -349,4 +349,46 @@ export class PatientsController {
     });
     return response.json({ message: 'Assinatura efetuada com sucesso!' });
   }
+
+  public async removePlanId(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { patientId } = request.params;
+    try {
+      const updatePatientService = container.resolve(UpdatePatientService);
+
+      const updatedPatient = await updatePatientService.removePlanId(patientId);
+      return response.json({
+        message: 'Campo planId removido com sucesso!',
+        planId: updatedPatient.planId,
+      });
+    } catch (error) {
+      console.error(error);
+      return response.status(500).json({
+        message: 'Erro ao remover o planId. Tente novamente mais tarde.',
+      });
+    }
+  }
+
+  public async updateSellerId(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { id } = request.params;
+    const { sellerCode } = request.body;
+    const updatePatientService = container.resolve(UpdatePatientService);
+    try {
+      const updatedPatient = await updatePatientService.updateSellerId(
+        id,
+        sellerCode,
+      );
+      return response.status(200).json({
+        sellerId: updatedPatient.sellerId,
+        message: 'sellerId atualizado com sucesso!',
+      });
+    } catch (error) {
+      return response.status(400).json({ error: error.message });
+    }
+  }
 }

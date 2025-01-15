@@ -37,6 +37,7 @@ export class HandleWebhook {
         createTransfers.execute({
           customerId: customerId as string,
           amount: invoice.amount_paid,
+          chargeId: invoice.charge as string,
         });
       }
     }

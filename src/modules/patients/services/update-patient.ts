@@ -9,6 +9,7 @@ import { UpdateSellerCodeService } from '../../seller-codes/services/update-sell
 import { ITeamsRepository } from '../../teams/contracts/repositories/teams-repository';
 import { NotifySellerService } from '../../users/services/notify-seller';
 import { IPlansRepository } from '../../plans/contracts/repositories/plans';
+import { ISellerCodesRepository } from '../../seller-codes/contracts/repositories/seller-codes';
 
 interface Props {
   name?: string;
@@ -35,6 +36,9 @@ export class UpdatePatientService {
 
     @inject('PlansRepository')
     private plansRepository: IPlansRepository,
+
+    @inject('SellerCodesRepository')
+    private sellerCodesRepository: ISellerCodesRepository,
   ) {}
 
   public async execute(
@@ -144,5 +148,53 @@ export class UpdatePatientService {
     }
 
     return updatedUser;
+  }
+
+  public async removePlanId(id: string): Promise<Patient> {
+    const patientExists = await this.patientsRepository.findById(id);
+    if (!patientExists) {
+      throw new AppError(
+        'Paciente não encontrado, verifique o id e tente novamente!',
+      );
+    }
+    if (patientExists.planId) {
+      await this.patientsRepository.update(id, {
+        planId: null,
+      });
+    }
+    const updatedPatient = await this.patientsRepository.findById(id);
+    if (!updatedPatient) {
+      throw new AppError('Erro ao atualizar o paciente, tente novamente.');
+    }
+    return updatedPatient;
+  }
+
+  public async updateSellerId(id: string, code: string): Promise<Patient> {
+    const patientExists = await this.patientsRepository.findById(id);
+    if (!patientExists) {
+      throw new AppError(
+        'Paciente não encontrado, verifique o id e tente novamente!',
+      );
+    }
+
+    const sellerCodeRecord = await this.sellerCodesRepository.findByCode(code);
+    if (!sellerCodeRecord) {
+      throw new AppError('Código de vendedor não encontrado!');
+    }
+    const newSellerId = sellerCodeRecord.sellerId;
+
+    if (patientExists.sellerId === newSellerId) {
+      throw new AppError('O sellerId já é o mesmo do paciente.');
+    }
+
+    await this.patientsRepository.update(id, {
+      sellerId: newSellerId,
+    });
+
+    const updatedPatient = await this.patientsRepository.findById(id);
+    if (!updatedPatient) {
+      throw new AppError('Erro ao atualizar o sellerId, tente novamente.');
+    }
+    return updatedPatient;
   }
 }

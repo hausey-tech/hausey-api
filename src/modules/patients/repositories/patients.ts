@@ -26,9 +26,23 @@ export class PatientsRepository implements IPatientsRepository {
     ];
   }
 
-  public async findBySellerId(sellerId: string): Promise<Patient[]> {
+  findByName(name: string): Promise<Patient[] | null> {
     return this.ormRepository.find({
+      where: {
+        name,
+      },
+    });
+  }
+
+  public async findBySellerId(
+    sellerId: string,
+    skip: number,
+    limit: number,
+  ): Promise<[Patient[], number]> {
+    const [patients, total] = await this.ormRepository.findAndCount({
       where: { sellerId },
+      skip,
+      take: limit,
       select: [
         'createdAt',
         'email',
@@ -41,10 +55,17 @@ export class PatientsRepository implements IPatientsRepository {
         'region',
       ],
     });
+
+    return [patients, total];
   }
 
-  public async find(): Promise<Patient[]> {
-    return this.ormRepository.find({ relations: this.relations });
+  public async find(skip: number, limit: number): Promise<[Patient[], number]> {
+    const [patients, total] = await this.ormRepository.findAndCount({
+      relations: this.relations,
+      skip,
+      take: limit,
+    });
+    return [patients, total];
   }
 
   public async findById(id: string): Promise<Patient | null> {
@@ -54,11 +75,19 @@ export class PatientsRepository implements IPatientsRepository {
     });
   }
 
-  public async findByIds(ids: string[]): Promise<Patient[]> {
-    return this.ormRepository.find({
+  public async findByIds(
+    ids: string[],
+    skip: number,
+    limit: number,
+  ): Promise<[Patient[], number]> {
+    const [patients, total] = await this.ormRepository.findAndCount({
       where: { id: In(ids) },
+      skip,
+      take: limit,
       relations: this.relations,
     });
+
+    return [patients, total];
   }
 
   public async findByEmail(email: string): Promise<Patient | null> {
