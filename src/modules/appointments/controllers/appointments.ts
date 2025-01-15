@@ -44,12 +44,14 @@ export class AppointmentsController {
 
   public async create(request: Request, response: Response): Promise<Response> {
     const { professionalId, date, patientId, emergency } = request.body;
+    console.log('emergency no  controller', emergency);
 
     const createAppointmentService = container.resolve(
       CreateAppointmentService,
     );
     let appointment: Appointment;
-    if (professionalId) {
+    if (professionalId && !emergency) {
+      console.log('entrei no professional', emergency);
       const appointmentProfessional = await createAppointmentService.execute({
         patientId,
         professionalId,
@@ -65,14 +67,14 @@ export class AppointmentsController {
         date,
       });
       appointment = appointmentEmergency;
-      clients.forEach(client => {
-        console.log(client);
-        client.write(
-          `event: new-appointment\n` +
-            `data: ${JSON.stringify(appointment)}\n\n`,
-        );
-      });
     }
+
+    console.log('console de clients', clients);
+
+    clients.forEach(client => {
+      client.write(`event: new-appointment\n`);
+      client.write(`data: ${JSON.stringify(appointment)}\n\n`);
+    });
 
     return response.json(appointment);
   }

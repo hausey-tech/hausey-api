@@ -6,6 +6,7 @@ import { CreatePlanService } from '../services/create-plan-service';
 export class PlansController {
   public async index(request: Request, response: Response): Promise<Response> {
     const { regions } = request.query;
+    console.log('Region informada pelo usuário', regions);
     const findPlansService = container.resolve(FindPlans);
     const plans = await findPlansService.execute({
       regions: regions as string,
