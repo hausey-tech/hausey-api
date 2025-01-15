@@ -34,6 +34,19 @@ export class PatientsRepository implements IPatientsRepository {
     });
   }
 
+  public async findAll(): Promise<Patient[]> {
+    return this.ormRepository.find({
+      relations: this.relations,
+    });
+  }
+
+  findAllByIds(ids: string[]): Promise<Patient[]> {
+    return this.ormRepository.find({
+      where: { id: In(ids) },
+      relations: this.relations,
+    });
+  }
+
   public async findBySellerId(
     sellerId: string,
     skip: number,

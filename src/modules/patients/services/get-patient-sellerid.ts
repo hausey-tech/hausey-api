@@ -1,6 +1,13 @@
 import { injectable, inject } from 'tsyringe';
+import { AppError } from '../../../shared/errors/app-error';
 import { Patient } from '../entities/patient';
 import { IPatientsRepository } from '../contracts/repositories/patients';
+
+interface PatientsPaginatedResponse {
+  patients: Array<Patient>;
+  totalPatients: number;
+  totalPages: number;
+}
 
 @injectable()
 export class GetPatientSellerId {
@@ -9,7 +16,31 @@ export class GetPatientSellerId {
     private patientsRepository: IPatientsRepository,
   ) {}
 
-  public async findBySellerId(sellerId: string): Promise<Patient[]> {
-    return this.patientsRepository.findBySellerId(sellerId);
+  public async findBySellerId(
+    sellerId: string,
+    page?: string,
+    limit?: string,
+  ): Promise<PatientsPaginatedResponse | Patient | Patient[]> {
+    if (Number.isNaN(page) || Number(page) < 1) {
+      throw new AppError('Page must be a valid number');
+    }
+
+    if (Number.isNaN(limit) || Number(limit) < 1) {
+      throw new AppError('Invalid limit value');
+    }
+
+    const skip = (Number(page) - 1) * Number(limit);
+    const take = Number(limit);
+
+    const [patients, totalPatients] =
+      await this.patientsRepository.findBySellerId(sellerId, skip, take);
+
+    const totalPages = Math.ceil(totalPatients / take);
+
+    return {
+      patients,
+      totalPatients,
+      totalPages,
+    };
   }
 }

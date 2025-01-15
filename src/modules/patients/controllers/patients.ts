@@ -36,13 +36,16 @@ export class PatientsController {
   }
 
   public async findBySellerId(req: Request, res: Response): Promise<Response> {
-    const { sellerId } = req.params;
+    const { sellerId, page, limit } = req.params;
 
     try {
-      // Usando tsyringe para injeção de dependência
       const getPatientSellerId = container.resolve(GetPatientSellerId);
 
-      const patientsSeller = await getPatientSellerId.findBySellerId(sellerId);
+      const patientsSeller = await getPatientSellerId.findBySellerId(
+        sellerId,
+        page,
+        limit,
+      );
       return res.json(patientsSeller);
     } catch (error) {
       console.error(error);
@@ -128,13 +131,17 @@ export class PatientsController {
     request: Request,
     response: Response,
   ): Promise<Response> {
-    const payload = request.body;
+    const groupTypes = request.body;
+    const { query } = request;
 
     const getPatientByGroupService = container.resolve(
       GetPatientsByGroupService,
     );
 
-    const patients = await getPatientByGroupService.execute(payload);
+    const patients = await getPatientByGroupService.execute({
+      groupTypes,
+      query,
+    });
 
     return response.json(patients);
   }
