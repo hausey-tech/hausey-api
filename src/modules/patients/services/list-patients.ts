@@ -1,6 +1,6 @@
 import { injectable, inject } from 'tsyringe';
 
-import { AppError } from 'shared/errors/app-error';
+import { AppError } from '../../../shared/errors/app-error';
 import { ISellerCodeSellersRepository } from '../../seller-code-sellers/contracts/repositories/seller-code-sellers-repository';
 import { ISellerCodesRepository } from '../../seller-codes/contracts/repositories/seller-codes';
 import { IAppointmentsRepository } from '../../appointments/contracts/repositories/appointments';
