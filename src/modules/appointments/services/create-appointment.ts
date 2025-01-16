@@ -104,7 +104,6 @@ export class CreateAppointmentService {
     //   customerId,
     // });
     let appointment: Appointment;
-    console.log('emergency', emergency);
     if (professionalId && emergency === false) {
       const appointmentProfessional = await this.appointmentsRepository.create({
         patientId,
