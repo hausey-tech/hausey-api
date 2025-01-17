@@ -160,27 +160,63 @@ export class CreateAppointmentService {
           },
           'Log de professionals',
         );
-        professionalSlots.map(professional =>
-          setTimeout(
-            () =>
-              sendgrid({
-                to: professional.email,
-                subject: `📢Nova Solicitação de Plantão!`,
-                text: 'veja as informações do plantão',
-                body: `
-            <h2>Olá, um paciente solicitou um atendimento de plantão no app!</h2>
-            <h4>Veja as informações:</h4>
-            <p>Nome: <b>${patient.name}</b></p>
-            <p>Email: <b>${patient.email}</b></p>
-            <p>Telefone: <b>${patient.phoneNumber}</b></p>
-            <hr/>
-            <p>Clique no link abaixo para agendar no portal:</p>
-            <a href=${'https://hausey.com.br/doctor/dashboard'} target="_blank">Acessar atendimento<a/>
-          `,
-              }),
-            2000,
-          ),
-        );
+
+        professionalSlots.forEach((professionalSlot, index) => {
+          setTimeout(() => {
+            sendgrid({
+              to: professionalSlot.email,
+              subject: `📢Nova Solicitação de Plantão!`,
+              text: 'veja as informações do plantão',
+              body: `
+                <h2>Olá, um paciente solicitou um atendimento de plantão no app!</h2>
+                <h4>Veja as informações:</h4>
+                <p>Nome: <b>${patient.name}</b></p>
+                <p>Email: <b>${patient.email}</b></p>
+                <p>Telefone: <b>${patient.phoneNumber}</b></p>
+                <hr/>
+                <p>Clique no link abaixo para agendar no portal:</p>
+                <a href="https://hausey.com.br/doctor/dashboard" target="_blank">Acessar atendimento</a>
+              `,
+            });
+          }, index * 2000);
+          sendgrid({
+            to: 'hauseydevs@gmail.com',
+            subject: `📢Nova Solicitação de Plantão!`,
+            text: 'veja as informações do plantão',
+            body: `
+                <h2>Olá, um paciente solicitou um atendimento de plantão no app!</h2>
+                <h4>Veja as informações:</h4>
+                <p>Nome: <b>${patient.name}</b></p>
+                <p>Email: <b>${patient.email}</b></p>
+                <p>Telefone: <b>${patient.phoneNumber}</b></p>
+                <p>Telefone Médico: <br>${professionalSlot.phoneNumber}</b></p>
+                <hr/>
+                <p>Clique no link abaixo para agendar no portal:</p>
+                <a href="https://hausey.com.br/doctor/dashboard" target="_blank">Acessar atendimento</a>
+              `,
+          });
+        });
+        // professionalSlots.map(professional =>
+        //   setTimeout(
+        //     () =>
+        //       sendgrid({
+        //         to: professional.email,
+        //         subject: `📢Nova Solicitação de Plantão!`,
+        //         text: 'veja as informações do plantão',
+        //         body: `
+        //     <h2>Olá, um paciente solicitou um atendimento de plantão no app!</h2>
+        //     <h4>Veja as informações:</h4>
+        //     <p>Nome: <b>${patient.name}</b></p>
+        //     <p>Email: <b>${patient.email}</b></p>
+        //     <p>Telefone: <b>${patient.phoneNumber}</b></p>
+        //     <hr/>
+        //     <p>Clique no link abaixo para agendar no portal:</p>
+        //     <a href=${'https://hausey.com.br/doctor/dashboard'} target="_blank">Acessar atendimento<a/>
+        //   `,
+        //       }),
+        //     2000,
+        //   ),
+        // );
       }
     }
 
