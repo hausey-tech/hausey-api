@@ -1,6 +1,5 @@
 import { injectable, inject, container } from 'tsyringe';
 
-import { Logger } from 'pino';
 import { ISlotsRepository } from '../../slots/contracts/repositories/slots';
 import { AlertProfessionalService } from '../../alert-professional/services/alertProfessional.service';
 import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
@@ -28,9 +27,6 @@ export class CreateAppointmentService {
 
     @inject('SlotsRepository')
     private slotsRepository: ISlotsRepository,
-
-    @inject('Logger')
-    private logger: Logger,
   ) {}
 
   public async execute({
@@ -153,12 +149,6 @@ export class CreateAppointmentService {
       //   '64db0cda-ee21-4a82-a765-b0500d0bbd52',
       // ]);
       if (professionalSlots.length > 0) {
-        this.logger.info(
-          {
-            professionals: professionalSlots,
-          },
-          'Log de professionals',
-        );
         professionalSlots.map(professional =>
           setTimeout(
             () =>

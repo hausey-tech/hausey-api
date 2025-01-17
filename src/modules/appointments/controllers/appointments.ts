@@ -44,7 +44,6 @@ export class AppointmentsController {
 
   public async create(request: Request, response: Response): Promise<Response> {
     const { professionalId, date, patientId, emergency } = request.body;
-    console.log('emergency no  controller', emergency);
 
     const createAppointmentService = container.resolve(
       CreateAppointmentService,
@@ -68,8 +67,6 @@ export class AppointmentsController {
       });
       appointment = appointmentEmergency;
     }
-
-    console.log('console de clients', clients);
 
     clients.forEach(client => {
       client.write(`event: new-appointment\n`);
