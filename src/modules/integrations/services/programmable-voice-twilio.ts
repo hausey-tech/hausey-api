@@ -33,7 +33,7 @@ export class CreateCallService {
     @inject('Logger')
     private logger: Logger,
   ) {
-    this.accountSid = process.env.TWILIO_ACOUNT_SID_DEV;
+    this.accountSid = process.env.TWILIO_ACCOUNT_SID_CALL;
     this.authToken = process.env.TWILIO_AUTH_TOKEN;
     this.twilioNumber = process.env.TWILIO_NUMBER_DEV;
     this.client = twilio(this.accountSid, this.authToken);
