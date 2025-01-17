@@ -40,7 +40,6 @@ export class CreateAppointmentService {
     emergency,
   }: Omit<ICreateAppointmentDTO, 'roomId'>): Promise<Appointment> {
     const patient = await this.patientsRepository.findById(patientId);
-    console.log('emergency no começo', emergency);
 
     if (!patient) {
       throw new AppError(
@@ -104,8 +103,7 @@ export class CreateAppointmentService {
     //   customerId,
     // });
     let appointment: Appointment;
-    console.log('emergency', emergency);
-    if (professionalId && emergency === false) {
+    if (professionalId && !emergency) {
       const appointmentProfessional = await this.appointmentsRepository.create({
         patientId,
         professionalId,

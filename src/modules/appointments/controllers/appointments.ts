@@ -12,7 +12,7 @@ import { ToggleFinishedService } from '../services/toggle-finished';
 import { Appointment } from '../entities/appointment';
 import { ToggleCanceledService } from '../services/toggle-canceled';
 
-const clients = [];
+const clients = new Map<string, Response>();
 
 export class AppointmentsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -25,33 +25,31 @@ export class AppointmentsController {
     return response.json(appointments);
   }
 
-  public async events(request: Request, response: Response): Promise<any> {
+  public async events(request: Request, response: Response): Promise<void> {
+    const userId = request.query.user as string;
     response.setHeader('Content-Type', 'text/event-stream');
     response.setHeader('Cache-Control', 'no-cache');
     response.setHeader('Connection', 'keep-alive');
+    response.setHeader('Access-Control-Allow-Origin', '*'); // Pode ser necessário se o seu frontend estiver em um domínio diferente
 
-    clients.push(response);
+    clients.set(userId, response);
+
     response.write('event: connected\n');
     response.write(`data: {"message": "SSE connection established"}\n\n`);
 
     request.on('close', () => {
-      const index = clients.indexOf(response);
-      if (index !== -1) {
-        clients.splice(index, 1);
-      }
+      clients.delete(userId);
     });
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
     const { professionalId, date, patientId, emergency } = request.body;
-    console.log('emergency no  controller', emergency);
 
     const createAppointmentService = container.resolve(
       CreateAppointmentService,
     );
     let appointment: Appointment;
     if (professionalId && !emergency) {
-      console.log('entrei no professional', emergency);
       const appointmentProfessional = await createAppointmentService.execute({
         patientId,
         professionalId,
@@ -68,8 +66,6 @@ export class AppointmentsController {
       });
       appointment = appointmentEmergency;
     }
-
-    console.log('console de clients', clients);
 
     clients.forEach(client => {
       client.write(`event: new-appointment\n`);
@@ -91,6 +87,13 @@ export class AppointmentsController {
       appointmentId,
       payload,
     });
+
+    if (payload.canceled) {
+      clients.forEach(client => {
+        client.write(`event: updated-appointment\n`);
+        client.write(`data: ${JSON.stringify(appointment)}\n\n`);
+      });
+    }
 
     return response.json(appointment);
   }
