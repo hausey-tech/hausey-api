@@ -164,26 +164,30 @@ export class CreateAppointmentService {
           subject: `📢Nova Solicitação de Plantão!`,
           text: 'veja as informações do plantão',
           body: `
-              <h2>Olá, um paciente solicitou um atendimento de plantão no app!</h2>
-              <h4>Veja as informações:</h4>
-              <p>Nome: <b>${patient.name}</b></p>
-              <p>Email: <b>${patient.email}</b></p>
-              <p>Telefone: <b>${patient.phoneNumber}</b></p>
-              <p>
+            <h2>Olá, um paciente solicitou um atendimento de plantão no app!</h2>
+            <h4>Veja as informações:</h4>
+            <p>Nome: <b>${patient.name}</b></p>
+            <p>Email: <b>${patient.email}</b></p>
+            <p>Telefone: <b>${patient.phoneNumber}</b></p>
+            <p>
               Médicos do plantão:
-              <b>
-              ${professionalSlots.map(professional => {
-                return {
-                  nome: professional.name,
-                  telefone: professional.phoneNumber,
-                };
-              })}
-              </b>
-              </p>
-              <hr/>
-              <p>Clique no link abaixo para agendar no portal:</p>
-              <a href="https://hausey.com.br/doctor/dashboard" target="_blank">Acessar atendimento</a>
-            `,
+              <ul>
+                ${professionalSlots
+                  .map(
+                    professional => `
+                      <li>
+                        Nome: <b>${professional.name}</b><br>
+                        Telefone: <b>${professional.phoneNumber}</b>
+                      </li>
+                    `,
+                  )
+                  .join('')}
+              </ul>
+            </p>
+            <hr/>
+            <p>Clique no link abaixo para agendar no portal:</p>
+            <a href="https://hausey.com.br/doctor/dashboard" target="_blank">Acessar atendimento</a>
+          `,
         });
 
         professionalSlots.forEach((professionalSlot, index) => {
