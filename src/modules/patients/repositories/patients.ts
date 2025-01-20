@@ -66,6 +66,7 @@ export class PatientsRepository implements IPatientsRepository {
         'document',
         'planId',
         'region',
+        'planExpiresAt',
       ],
     });
 
