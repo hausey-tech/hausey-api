@@ -109,13 +109,20 @@ export class ListPatientsService {
 
       const sellerCodes = await Promise.all(
         sellerCodeSellers.map(async sellerCodeSeller => {
-          return this.sellerCodesRepository.findById(
+          const sellerCode = await this.sellerCodesRepository.findById(
             sellerCodeSeller.sellerCodeId,
           );
+          const sellerInfo = {
+            phone: sellerCodeSeller.seller.phoneNumber,
+            email: sellerCodeSeller.seller.email,
+            name: sellerCodeSeller.seller.name,
+            sellerCode,
+          };
+          return sellerInfo;
         }),
       );
       sellerCodesFiltered = sellerCodes.filter(
-        sellerCode => sellerCode.type === type,
+        sellerCode => sellerCode.sellerCode.type === type,
       );
       return {
         sellerCodes: sellerCodesFiltered,
