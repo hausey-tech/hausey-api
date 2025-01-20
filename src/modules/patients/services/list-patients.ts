@@ -113,7 +113,7 @@ export class ListPatientsService {
             sellerCodeSeller.sellerCodeId,
           );
           const sellerInfo = {
-            phone: sellerCodeSeller.seller.phoneNumber,
+            phoneNumber: sellerCodeSeller.seller.phoneNumber,
             email: sellerCodeSeller.seller.email,
             name: sellerCodeSeller.seller.name,
             sellerCode,
@@ -121,6 +121,7 @@ export class ListPatientsService {
           return sellerInfo;
         }),
       );
+      // console.log(sellerCodeSellers);
       sellerCodesFiltered = sellerCodes.filter(
         sellerCode => sellerCode.sellerCode.type === type,
       );
