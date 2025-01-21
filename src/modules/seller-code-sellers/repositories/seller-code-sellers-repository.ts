@@ -94,7 +94,7 @@ export class SellerCodeSellersRepository
           ...seller,
           sellerCode,
           numberPatients,
-          sellerUser,
+          seller: sellerUser,
         };
       }),
     );

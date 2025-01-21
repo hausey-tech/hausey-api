@@ -62,4 +62,13 @@ export class SellerCodesRepository implements ISellerCodesRepository {
     await this.ormRepository.update(id, payload);
     return this.findById(id);
   }
+
+  public async findByIdAndType(id: string, type: string): Promise<SellerCode> {
+    return this.ormRepository.findOne({
+      where: {
+        id,
+        type,
+      },
+    });
+  }
 }

@@ -1,11 +1,11 @@
 import { injectable, inject, container } from 'tsyringe';
+import { GetAllPatientsByGroupService } from '../../patients/services/get-all-patients-by-group';
 import { SendFirebaseMessagingService } from '../../integrations/services/send-firebase-messaging';
 
 import { type ICreateMessageDTO } from '../contracts/dtos/create-message-dto';
 import { type IMessagesRepository } from '../contracts/repositories/messages-repository';
 import { IPatientsRepository } from '../../patients/contracts/repositories/patients';
 import { type Patient } from '../../patients/entities/patient';
-import { GetPatientsByGroupService } from '../../patients/services/get-patients-by-group';
 import { IGroupTypesRepository } from '../../group-type/contracts/repositories/group-types';
 
 @injectable()
@@ -31,16 +31,16 @@ export class CreateMessageService {
     if (typeof title === 'string' && typeof body === 'string') {
       let users: Patient[] = [];
       if (to === 'todos') {
-        users = await this.patientsRepository.find();
+        users = await this.patientsRepository.findAll();
       } else {
         const groupTypes: string[] = [];
         const groupId = await this.groupTypesRepository.findByName(to);
 
-        const getPatientsByGroupService = container.resolve(
-          GetPatientsByGroupService,
+        const getAllPatientsByGroupService = container.resolve(
+          GetAllPatientsByGroupService,
         );
         groupTypes.push(groupId.id);
-        users = await getPatientsByGroupService.execute({
+        users = await getAllPatientsByGroupService.execute({
           groupTypes,
         });
       }

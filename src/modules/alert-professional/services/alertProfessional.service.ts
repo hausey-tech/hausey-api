@@ -54,15 +54,15 @@ export class AlertProfessionalService {
         );
         return 'Ligação efetuada com sucesso';
       }
-      throw new AppError('Há uma procedimento em execução.');
+      throw new AppError('Há um procedimento em execução.!');
     } catch (error) {
-      console.log('error: ', error);
       this.logger.info(
         {
           error: error.message,
         },
-        'Há uma procedimento em execução.',
+        'Há um procedimento em execução.',
       );
+      console.log('error: =>', error);
       if (error instanceof AppError) {
         return error.message;
       }

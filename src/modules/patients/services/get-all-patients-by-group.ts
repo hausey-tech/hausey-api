@@ -1,6 +1,5 @@
 import { injectable, inject } from 'tsyringe';
 
-import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { IPatientGroupsRepository } from '../contracts/repositories/patient-groups';
 import { IPatientGroupTypesRepository } from '../contracts/repositories/patient-group-types';
@@ -8,20 +7,10 @@ import { Patient } from '../entities/patient';
 
 interface Props {
   groupTypes: string[];
-  query: {
-    page?: string;
-    limit?: string;
-  };
-}
-
-interface PatientsPaginatedResponse {
-  patients: Array<Patient>;
-  totalPatients: number;
-  totalPages: number;
 }
 
 @injectable()
-export class GetPatientsByGroupService {
+export class GetAllPatientsByGroupService {
   constructor(
     @inject('PatientsRepository')
     private patientsRepository: IPatientsRepository,
@@ -33,25 +22,9 @@ export class GetPatientsByGroupService {
     private patientGroupTypesRepository: IPatientGroupTypesRepository,
   ) {}
 
-  public async execute({
-    groupTypes,
-    query,
-  }: Props): Promise<PatientsPaginatedResponse | Patient | Patient[]> {
+  public async execute({ groupTypes }: Props): Promise<Patient[]> {
     const patientGroupsTypes =
       await this.patientGroupTypesRepository.findByGroupTypeIds(groupTypes);
-
-    const { page = 1, limit = 10 } = query;
-
-    if (Number.isNaN(page) || Number(page) < 1) {
-      throw new AppError('Page must be a valid number');
-    }
-
-    if (Number.isNaN(limit) || Number(limit) < 1) {
-      throw new AppError('Invalid limit value');
-    }
-
-    const skip = (Number(page) - 1) * Number(limit);
-    const take = Number(limit);
 
     if (patientGroupsTypes.length > 0) {
       const patientGroupsIds = patientGroupsTypes.map(
@@ -64,19 +37,9 @@ export class GetPatientsByGroupService {
 
       const patientIds = groups.map(group => group.patientId);
 
-      const [patients, totalPatients] = await this.patientsRepository.findByIds(
-        patientIds,
-        skip,
-        take,
-      );
+      const patients = await this.patientsRepository.findAllByIds(patientIds);
 
-      const totalPages = Math.ceil(totalPatients / take);
-
-      return {
-        patients,
-        totalPatients,
-        totalPages,
-      };
+      return patients;
     }
     return [];
   }

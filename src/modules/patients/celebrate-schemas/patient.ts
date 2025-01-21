@@ -3,6 +3,12 @@ import { Joi, Segments } from 'celebrate';
 export const ListPatientsSchema = {
   [Segments.QUERY]: Joi.object().keys({
     professionalId: Joi.string().uuid(),
+    userId: Joi.string().uuid().optional(),
+    name: Joi.string().optional(),
+    cpf: Joi.string().optional(),
+    type: Joi.string().optional(),
+    page: Joi.string().optional().default(1),
+    limit: Joi.string().optional().default(10),
   }),
 };
 
@@ -25,6 +31,10 @@ export const CreatePatientSchema = {
 export const GetPatientsByGroupSchema = {
   [Segments.BODY]: Joi.object().keys({
     groupTypes: Joi.array().items(Joi.string().required()).required(),
+  }),
+  [Segments.QUERY]: Joi.object().keys({
+    page: Joi.string().optional().default(1),
+    limit: Joi.string().optional().default(10),
   }),
 };
 export const GetGroupByPatientSchema = {
