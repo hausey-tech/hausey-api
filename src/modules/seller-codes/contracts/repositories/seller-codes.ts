@@ -12,4 +12,5 @@ export interface ISellerCodesRepository {
   create(sellerCode: ICreateSellerCodeDTO): Promise<SellerCode>;
   save(sellerCode: SellerCode): Promise<SellerCode>;
   update(id: string, payload: IUpdateSellerCodeDto): Promise<SellerCode>;
+  findByIdAndType(id: string, type: string): Promise<SellerCode | null>;
 }

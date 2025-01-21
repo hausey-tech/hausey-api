@@ -57,6 +57,7 @@ export class PatientsRepository implements IPatientsRepository {
       skip,
       take: limit,
       select: [
+        'id',
         'createdAt',
         'email',
         'name',
@@ -71,6 +72,30 @@ export class PatientsRepository implements IPatientsRepository {
     });
 
     return [patients, total];
+  }
+
+  public async findAllBySellerId(sellerId: string): Promise<Patient[]> {
+    console.log('id', sellerId);
+    const patients = await this.ormRepository.find({
+      where: {
+        sellerId,
+      },
+      select: [
+        'id',
+        'createdAt',
+        'sellerId',
+        'email',
+        'name',
+        'nipomed',
+        'phoneNumber',
+        'birthdate',
+        'document',
+        'planId',
+        'region',
+        'planExpiresAt',
+      ],
+    });
+    return patients;
   }
 
   public async find(skip: number, limit: number): Promise<[Patient[], number]> {

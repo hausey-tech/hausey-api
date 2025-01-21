@@ -1,5 +1,6 @@
 import { injectable, inject } from 'tsyringe';
 
+import { Logger } from 'pino';
 import { AppError } from '../../../shared/errors/app-error';
 import { ISellerCodeSellersRepository } from '../../seller-code-sellers/contracts/repositories/seller-code-sellers-repository';
 import { ISellerCodesRepository } from '../../seller-codes/contracts/repositories/seller-codes';
@@ -14,8 +15,16 @@ interface PatientsPaginatedResponse {
   totalPages: number;
 }
 
+interface SellerCodeDetails {
+  phoneNumber: string;
+  email: string;
+  name: string;
+  users: Patient[];
+  sellerCode: SellerCode;
+}
+
 interface SellerCodeResponse {
-  sellerCodes: Array<SellerCode>;
+  sellerCodes: SellerCodeDetails[];
   patients: PatientsPaginatedResponse;
 }
 
@@ -33,6 +42,9 @@ export class ListPatientsService {
 
     @inject('SellerCodesRepository')
     private sellerCodesRepository: ISellerCodesRepository,
+
+    @inject('Logger')
+    private logger: Logger,
   ) {}
 
   public async execute(query: {
@@ -55,7 +67,6 @@ export class ListPatientsService {
       name,
       cpf,
     } = query;
-    let sellerCodesFiltered;
 
     if (name) {
       return this.patientsRepository.findByName(name);
@@ -109,24 +120,44 @@ export class ListPatientsService {
 
       const sellerCodes = await Promise.all(
         sellerCodeSellers.map(async sellerCodeSeller => {
-          const sellerCode = await this.sellerCodesRepository.findById(
-            sellerCodeSeller.sellerCodeId,
-          );
-          const sellerInfo = {
-            phoneNumber: sellerCodeSeller.seller.phoneNumber,
-            email: sellerCodeSeller.seller.email,
-            name: sellerCodeSeller.seller.name,
-            sellerCode,
-          };
-          return sellerInfo;
+          try {
+            const sellerCode = await this.sellerCodesRepository.findByIdAndType(
+              sellerCodeSeller.sellerCodeId,
+              type,
+            );
+
+            if (!sellerCode) {
+              return null;
+            }
+
+            const allPatients = await this.patientsRepository.findAllBySellerId(
+              sellerCode.sellerId,
+            );
+
+            const sellerInfo = {
+              phoneNumber: sellerCodeSeller.seller.phoneNumber,
+              email: sellerCodeSeller.seller.email,
+              name: sellerCodeSeller.seller.name,
+              users: allPatients,
+              sellerCode,
+            };
+            return sellerInfo;
+          } catch (error) {
+            this.logger.info(
+              {
+                error,
+              },
+              `Error processing sellerCodeSeller ${sellerCodeSeller.sellerCodeId}:`,
+            );
+            return null;
+          }
         }),
       );
-      // console.log(sellerCodeSellers);
-      sellerCodesFiltered = sellerCodes.filter(
-        sellerCode => sellerCode.sellerCode.type === type,
-      );
+
+      const validSellerCodes = sellerCodes.filter(Boolean);
+
       return {
-        sellerCodes: sellerCodesFiltered,
+        sellerCodes: validSellerCodes,
         patients: { patients, totalPatients, totalPages },
       };
     }

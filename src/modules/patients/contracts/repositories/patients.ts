@@ -27,4 +27,5 @@ export interface IPatientsRepository {
     skip: number,
     limit: number,
   ): Promise<[Patient[], number]>;
+  findAllBySellerId(sellerId: string): Promise<Patient[] | null>;
 }
