@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
+import { CreatePagarmeCustomerService } from '../../integrations/services/pagarme/create-pagarme-customer-service';
 import { CreatePatientService } from '../services/create-patient';
 import { UpdatePatientService } from '../services/update-patient';
 import { CreateSessionService } from '../../sessions/services/create-session';
@@ -23,6 +24,7 @@ import { DeletePatientFileService } from '../services/delete-patient-file';
 import { DeletePatientGroupTypeService } from '../services/delete-patient-group-type';
 import { GetPatientSellerId } from '../services/get-patient-sellerid';
 import { GetCustomerInfos } from '../services/get-customer-infos';
+import { UpdatePatientStriperIdService } from '../services/update-patient-striperid-service';
 
 export class PatientsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -55,7 +57,7 @@ export class PatientsController {
 
     const createPatientService = container.resolve(CreatePatientService);
 
-    await createPatientService.execute(payload);
+    const patient = await createPatientService.execute(payload);
 
     const createSessionService = container.resolve(CreateSessionService);
 
@@ -66,6 +68,41 @@ export class PatientsController {
       password,
       role: 'patient',
     });
+
+    if (payload.indicatedUserInformations) {
+      const pagarmeService = container.resolve(CreatePagarmeCustomerService);
+
+      const pagarmePayload = {
+        id: patient.id,
+        email: patient.email,
+        name: patient.name,
+        document: patient.document,
+        phoneNumber: patient.phoneNumber,
+      };
+
+      const pagarmeId = await pagarmeService.execute(pagarmePayload);
+
+      const updatePatientStriperId = container.resolve(
+        UpdatePatientStriperIdService,
+      );
+
+      await updatePatientStriperId.execute({
+        id: patient.id,
+        customerId: pagarmeId,
+      });
+
+      const updatePatientPlanPartnerService = container.resolve(
+        UpdatePatientPlanPartnerService,
+      );
+
+      await updatePatientPlanPartnerService.execute({
+        patientId: patient.id,
+        priceId: payload.indicatedUserInformations.priceId,
+        periodEnd: payload.indicatedUserInformations.periodEnd,
+      });
+
+      return response.json(session);
+    }
 
     return response.json(session);
   }

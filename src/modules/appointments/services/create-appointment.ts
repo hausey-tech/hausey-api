@@ -40,7 +40,6 @@ export class CreateAppointmentService {
     emergency,
   }: Omit<ICreateAppointmentDTO, 'roomId'>): Promise<Appointment> {
     const patient = await this.patientsRepository.findById(patientId);
-    console.log('emergency no começo', emergency);
 
     if (!patient) {
       throw new AppError(
@@ -104,8 +103,7 @@ export class CreateAppointmentService {
     //   customerId,
     // });
     let appointment: Appointment;
-    console.log('emergency', emergency);
-    if (professionalId && emergency === false) {
+    if (professionalId && !emergency) {
       const appointmentProfessional = await this.appointmentsRepository.create({
         patientId,
         professionalId,
@@ -161,6 +159,37 @@ export class CreateAppointmentService {
           'Log de professionals',
         );
 
+        sendgrid({
+          to: 'hauseydevs@gmail.com',
+          subject: `📢Nova Solicitação de Plantão!`,
+          text: 'veja as informações do plantão',
+          body: `
+            <h2>Olá, um paciente solicitou um atendimento de plantão no app!</h2>
+            <h4>Veja as informações:</h4>
+            <p>Nome: <b>${patient.name}</b></p>
+            <p>Email: <b>${patient.email}</b></p>
+            <p>Telefone: <b>${patient.phoneNumber}</b></p>
+            <p>
+              Médicos do plantão:
+              <ul>
+                ${professionalSlots
+                  .map(
+                    professional => `
+                      <li>
+                        Nome: <b>${professional.name}</b><br>
+                        Telefone: <b>${professional.phoneNumber}</b>
+                      </li>
+                    `,
+                  )
+                  .join('')}
+              </ul>
+            </p>
+            <hr/>
+            <p>Clique no link abaixo para agendar no portal:</p>
+            <a href="https://hausey.com.br/doctor/dashboard" target="_blank">Acessar atendimento</a>
+          `,
+        });
+
         professionalSlots.forEach((professionalSlot, index) => {
           setTimeout(() => {
             sendgrid({
@@ -179,22 +208,6 @@ export class CreateAppointmentService {
               `,
             });
           }, index * 2000);
-          sendgrid({
-            to: 'hauseydevs@gmail.com',
-            subject: `📢Nova Solicitação de Plantão!`,
-            text: 'veja as informações do plantão',
-            body: `
-                <h2>Olá, um paciente solicitou um atendimento de plantão no app!</h2>
-                <h4>Veja as informações:</h4>
-                <p>Nome: <b>${patient.name}</b></p>
-                <p>Email: <b>${patient.email}</b></p>
-                <p>Telefone: <b>${patient.phoneNumber}</b></p>
-                <p>Telefone Médico: <br>${professionalSlot.phoneNumber}</b></p>
-                <hr/>
-                <p>Clique no link abaixo para agendar no portal:</p>
-                <a href="https://hausey.com.br/doctor/dashboard" target="_blank">Acessar atendimento</a>
-              `,
-          });
         });
         // professionalSlots.map(professional =>
         //   setTimeout(
