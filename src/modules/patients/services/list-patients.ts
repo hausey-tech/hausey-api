@@ -138,6 +138,7 @@ export class ListPatientsService {
               phoneNumber: sellerCodeSeller.seller.phoneNumber,
               email: sellerCodeSeller.seller.email,
               name: sellerCodeSeller.seller.name,
+              createdAt: sellerCodeSeller.seller.createdAt,
               users: allPatients,
               sellerCode,
             };

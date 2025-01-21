@@ -75,7 +75,6 @@ export class PatientsRepository implements IPatientsRepository {
   }
 
   public async findAllBySellerId(sellerId: string): Promise<Patient[]> {
-    console.log('id', sellerId);
     const patients = await this.ormRepository.find({
       where: {
         sellerId,
