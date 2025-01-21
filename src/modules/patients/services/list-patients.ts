@@ -19,7 +19,7 @@ interface SellerCodeDetails {
   phoneNumber: string;
   email: string;
   name: string;
-  users: Patient[];
+  patients: PatientsPaginatedResponse;
   sellerCode: SellerCode;
 }
 
@@ -139,16 +139,18 @@ export class ListPatientsService {
 
             const totalPagesAllPatients = Math.ceil(totalPatients / take);
 
+            const paginatedPatients: PatientsPaginatedResponse = {
+              patients: allPatients,
+              totalPatients: totalPagePatients,
+              totalPages: totalPagesAllPatients,
+            };
+
             const sellerInfo = {
               phoneNumber: sellerCodeSeller.seller.phoneNumber,
               email: sellerCodeSeller.seller.email,
               name: sellerCodeSeller.seller.name,
               createdAt: sellerCodeSeller.seller.createdAt,
-              patients: {
-                patients: allPatients,
-                totalPatients: totalPagePatients,
-                totalPages: totalPagesAllPatients,
-              },
+              patients: paginatedPatients,
               sellerCode,
             };
             return sellerInfo;
@@ -167,8 +169,12 @@ export class ListPatientsService {
       const validSellerCodes = sellerCodes.filter(Boolean);
 
       return {
+        patients: {
+          patients,
+          totalPages,
+          totalPatients,
+        },
         sellerCodes: validSellerCodes,
-        patients: { patients, totalPatients, totalPages },
       };
     }
 
