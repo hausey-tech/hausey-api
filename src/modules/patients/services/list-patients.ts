@@ -130,16 +130,25 @@ export class ListPatientsService {
               return null;
             }
 
-            const allPatients = await this.patientsRepository.findAllBySellerId(
-              sellerCode.sellerId,
-            );
+            const [allPatients, totalPagePatients] =
+              await this.patientsRepository.findBySellerId(
+                sellerCode.sellerId,
+                skip,
+                take,
+              );
+
+            const totalPagesAllPatients = Math.ceil(totalPatients / take);
 
             const sellerInfo = {
               phoneNumber: sellerCodeSeller.seller.phoneNumber,
               email: sellerCodeSeller.seller.email,
               name: sellerCodeSeller.seller.name,
               createdAt: sellerCodeSeller.seller.createdAt,
-              users: allPatients,
+              patients: {
+                patients: allPatients,
+                totalPatients: totalPagePatients,
+                totalPages: totalPagesAllPatients,
+              },
               sellerCode,
             };
             return sellerInfo;
