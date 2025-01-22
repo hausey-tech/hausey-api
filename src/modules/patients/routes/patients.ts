@@ -19,6 +19,7 @@ import {
   GetPatientFilesSchema,
   DeletePatientFileSchema,
   DeletePatientGroupTypeSchema,
+  FilterPatientsSchema,
 } from '../celebrate-schemas/patient';
 import { ensureAuthentication } from '../../../shared/middlewares/ensure-authentication';
 import { PatientsController } from '../controllers/patients';
@@ -31,6 +32,13 @@ patientsRouter.get(
   ensureAuthentication,
   celebrate(ListPatientsSchema),
   patientsController.index,
+);
+
+patientsRouter.get(
+  '/filters-admin',
+  ensureAuthentication,
+  celebrate(FilterPatientsSchema),
+  patientsController.filterAdmin,
 );
 
 patientsRouter.get(

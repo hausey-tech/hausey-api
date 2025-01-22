@@ -25,12 +25,26 @@ import { DeletePatientGroupTypeService } from '../services/delete-patient-group-
 import { GetPatientSellerId } from '../services/get-patient-sellerid';
 import { GetCustomerInfos } from '../services/get-customer-infos';
 import { UpdatePatientStriperIdService } from '../services/update-patient-striperid-service';
+import { FilterAdminService } from '../services/filter-admin';
 
 export class PatientsController {
   public async index(request: Request, response: Response): Promise<Response> {
     const { query } = request;
 
     const listPatientsService = container.resolve(ListPatientsService);
+
+    const patients = await listPatientsService.execute(query);
+
+    return response.json(patients);
+  }
+
+  public async filterAdmin(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { query } = request;
+
+    const listPatientsService = container.resolve(FilterAdminService);
 
     const patients = await listPatientsService.execute(query);
 

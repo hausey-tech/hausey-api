@@ -12,6 +12,15 @@ export const ListPatientsSchema = {
   }),
 };
 
+export const FilterPatientsSchema = {
+  [Segments.QUERY]: Joi.object().keys({
+    userId: Joi.string().uuid().optional(),
+    type: Joi.string().optional(),
+    page: Joi.string().optional().default(1),
+    limit: Joi.string().optional().default(10),
+  }),
+};
+
 export const CreatePatientSchema = {
   [Segments.BODY]: Joi.object().keys({
     name: Joi.string().required(),

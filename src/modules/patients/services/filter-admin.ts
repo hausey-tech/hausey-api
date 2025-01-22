@@ -8,6 +8,7 @@ import { IAppointmentsRepository } from '../../appointments/contracts/repositori
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { Patient } from '../entities/patient';
 import { SellerCode } from '../../seller-codes/entities/seller-code';
+import { IUsersRepository } from '../../users/contracts/repositories/users';
 
 interface PatientsPaginatedResponse {
   patients: Array<Patient>;
@@ -29,7 +30,7 @@ interface SellerCodeResponse {
 }
 
 @injectable()
-export class ListPatientsService {
+export class FilterAdminService {
   constructor(
     @inject('PatientsRepository')
     private patientsRepository: IPatientsRepository,
@@ -43,38 +44,22 @@ export class ListPatientsService {
     @inject('SellerCodesRepository')
     private sellerCodesRepository: ISellerCodesRepository,
 
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
+
     @inject('Logger')
     private logger: Logger,
   ) {}
 
   public async execute(query: {
-    professionalId?: string;
     userId?: string;
     type?: string;
     page?: string;
     limit?: string;
-    name?: string;
-    cpf?: string;
   }): Promise<
     SellerCodeResponse | PatientsPaginatedResponse | Patient | Patient[]
   > {
-    const {
-      professionalId,
-      userId,
-      type,
-      page = 1,
-      limit = 10,
-      name,
-      cpf,
-    } = query;
-
-    if (name) {
-      return this.patientsRepository.findByName(name);
-    }
-
-    if (cpf) {
-      return this.patientsRepository.findByDocument(cpf);
-    }
+    const { userId, type, page = 1, limit = 10 } = query;
 
     if (Number.isNaN(page) || Number(page) < 1) {
       throw new AppError('Page must be a valid number');
@@ -87,31 +72,14 @@ export class ListPatientsService {
     const skip = (Number(page) - 1) * Number(limit);
     const take = Number(limit);
 
-    if (professionalId) {
-      const appointments = await this.appointmentsRepository.findByProfessional(
-        professionalId,
-      );
-
-      const patientIds = appointments.map(appointment => appointment.patientId);
-
-      const [patients, totalPatients] = await this.patientsRepository.findByIds(
-        patientIds,
-        skip,
-        take,
-      );
-
-      const totalPages = Math.ceil(totalPatients / take);
-
-      return {
-        patients,
-        totalPatients,
-        totalPages,
-      };
-    }
-
     if (userId) {
       const sellerCodeSellers =
-        await this.sellerCodeSellersRepository.findBySellerId(userId);
+        await this.sellerCodeSellersRepository.findAll();
+
+      const validSellerCodeSellers = sellerCodeSellers.filter(
+        sellerCodeSeller =>
+          sellerCodeSeller.sellerCodeId && sellerCodeSeller.sellerId,
+      );
 
       const [patients, totalPatients] =
         await this.patientsRepository.findBySellerId(userId, skip, take);
@@ -119,14 +87,26 @@ export class ListPatientsService {
       const totalPages = Math.ceil(totalPatients / take);
 
       const sellerCodes = await Promise.all(
-        sellerCodeSellers.map(async sellerCodeSeller => {
+        validSellerCodeSellers.map(async sellerCodeSeller => {
           try {
-            const sellerCode = await this.sellerCodesRepository.findByIdAndType(
-              sellerCodeSeller.sellerCodeId,
-              type,
-            );
+            const sellerCode =
+              type !== undefined
+                ? await this.sellerCodesRepository.findByIdAndType(
+                    sellerCodeSeller.sellerCodeId,
+                    type,
+                  )
+                : await this.sellerCodesRepository.findById(
+                    sellerCodeSeller.sellerCodeId,
+                  );
 
             if (!sellerCode) {
+              return null;
+            }
+
+            if (!sellerCodeSeller.sellerId) {
+              this.logger.warn(
+                `Seller not found for SellerCodeSeller ID: ${sellerCodeSeller.sellerId}`,
+              );
               return null;
             }
 
