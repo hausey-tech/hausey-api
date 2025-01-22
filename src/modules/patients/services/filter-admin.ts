@@ -73,6 +73,11 @@ export class FilterAdminService {
     const take = Number(limit);
 
     if (userId) {
+      const user = await this.usersRepository.findById(userId);
+
+      if (user.role.name !== 'Administrador') {
+        throw new AppError('Você não tem permissão suficiente', 401);
+      }
       const sellerCodeSellers =
         await this.sellerCodeSellersRepository.findAll();
 
