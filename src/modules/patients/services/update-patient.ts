@@ -1,6 +1,7 @@
 import { injectable, inject, container } from 'tsyringe';
 
 import { addYears } from 'date-fns';
+import { Logger } from 'pino';
 import { CreatePagarmeCustomerService } from '../../integrations/services/pagarme/create-pagarme-customer-service';
 import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
@@ -39,6 +40,9 @@ export class UpdatePatientService {
 
     @inject('SellerCodesRepository')
     private sellerCodesRepository: ISellerCodesRepository,
+
+    @inject('Logger')
+    private logger: Logger,
   ) {}
 
   public async execute(
@@ -184,6 +188,13 @@ export class UpdatePatientService {
     const newSellerId = sellerCodeRecord.sellerId;
 
     if (patientExists.sellerId === newSellerId) {
+      this.logger.info(
+        {
+          oldSellerId: patientExists.sellerId,
+          newSellerId,
+        },
+        'O sellerId já é o mesmo do paciente.',
+      );
       throw new AppError('O sellerId já é o mesmo do paciente.');
     }
 
