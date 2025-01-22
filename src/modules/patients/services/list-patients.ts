@@ -8,6 +8,7 @@ import { IAppointmentsRepository } from '../../appointments/contracts/repositori
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { Patient } from '../entities/patient';
 import { SellerCode } from '../../seller-codes/entities/seller-code';
+import { IUsersRepository } from '../../users/contracts/repositories/users';
 
 interface PatientsPaginatedResponse {
   patients: Array<Patient>;
@@ -42,6 +43,9 @@ export class ListPatientsService {
 
     @inject('SellerCodesRepository')
     private sellerCodesRepository: ISellerCodesRepository,
+
+    @inject('UsersRepository')
+    private usersRepository: IUsersRepository,
 
     @inject('Logger')
     private logger: Logger,
@@ -110,8 +114,20 @@ export class ListPatientsService {
     }
 
     if (userId) {
-      const sellerCodeSellers =
+      let sellerCodeSellers =
         await this.sellerCodeSellersRepository.findBySellerId(userId);
+
+      let validSellerCodeSellers;
+
+      const user = await this.usersRepository.findById(userId);
+
+      if (user.role.name === 'Administrador') {
+        sellerCodeSellers = await this.sellerCodeSellersRepository.findAll();
+        validSellerCodeSellers = sellerCodeSellers.filter(
+          sellerCodeSeller =>
+            sellerCodeSeller.sellerCodeId && sellerCodeSeller.sellerId,
+        );
+      }
 
       const [patients, totalPatients] =
         await this.patientsRepository.findBySellerId(userId, skip, take);
@@ -119,14 +135,26 @@ export class ListPatientsService {
       const totalPages = Math.ceil(totalPatients / take);
 
       const sellerCodes = await Promise.all(
-        sellerCodeSellers.map(async sellerCodeSeller => {
+        validSellerCodeSellers.map(async sellerCodeSeller => {
           try {
-            const sellerCode = await this.sellerCodesRepository.findByIdAndType(
-              sellerCodeSeller.sellerCodeId,
-              type,
-            );
+            const sellerCode =
+              type !== ''
+                ? await this.sellerCodesRepository.findByIdAndType(
+                    sellerCodeSeller.sellerCodeId,
+                    type,
+                  )
+                : await this.sellerCodesRepository.findById(
+                    sellerCodeSeller.sellerCodeId,
+                  );
 
             if (!sellerCode) {
+              return null;
+            }
+
+            if (!sellerCodeSeller.sellerId) {
+              this.logger.warn(
+                `Seller not found for SellerCodeSeller ID: ${sellerCodeSeller.sellerId}`,
+              );
               return null;
             }
 
@@ -145,22 +173,27 @@ export class ListPatientsService {
               totalPages: totalPagesAllPatients,
             };
 
+            console.log(sellerCodeSeller);
+
             const sellerInfo = {
-              phoneNumber: sellerCodeSeller.seller.phoneNumber,
-              email: sellerCodeSeller.seller.email,
-              name: sellerCodeSeller.seller.name,
-              createdAt: sellerCodeSeller.seller.createdAt,
+              phoneNumber: sellerCodeSeller.seller?.phoneNumber,
+              email: sellerCodeSeller.seller?.email,
+              name: sellerCodeSeller.seller?.name,
+              createdAt: sellerCodeSeller.seller?.createdAt,
               patients: paginatedPatients,
               sellerCode,
             };
+
             return sellerInfo;
           } catch (error) {
-            this.logger.info(
+            this.logger.error(
               {
-                error,
+                error: error.message,
+                stack: error.stack,
               },
               `Error processing sellerCodeSeller ${sellerCodeSeller.sellerCodeId}:`,
             );
+
             return null;
           }
         }),

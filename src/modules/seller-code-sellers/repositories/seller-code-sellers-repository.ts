@@ -39,7 +39,9 @@ export class SellerCodeSellersRepository
   }
 
   public async findAll(): Promise<SellerCodeSeller[]> {
-    return this.ormRepository.find();
+    return this.ormRepository.find({
+      relations: ['sellerCode'],
+    });
   }
 
   // Adicionando o método para buscar registros com base no id
