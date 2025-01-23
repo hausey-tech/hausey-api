@@ -29,18 +29,8 @@ export class GetPatientSellerId {
       throw new AppError('Invalid limit value');
     }
 
-    const skip = (Number(page) - 1) * Number(limit);
-    const take = Number(limit);
+    const patients = await this.patientsRepository.findBySellerId(sellerId);
 
-    const [patients, totalPatients] =
-      await this.patientsRepository.findBySellerId(sellerId, skip, take);
-
-    const totalPages = Math.ceil(totalPatients / take);
-
-    return {
-      patients,
-      totalPatients,
-      totalPages,
-    };
+    return patients;
   }
 }

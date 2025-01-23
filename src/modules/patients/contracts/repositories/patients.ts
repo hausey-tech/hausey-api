@@ -27,11 +27,7 @@ export interface IPatientsRepository {
   save(patient: Patient): Promise<Patient>;
   update(id: string, payload: IUpdatePatientDTO): Promise<Patient>;
   findByName(name: string): Promise<Patient[] | null>;
-  findBySellerId(
-    sellerId: string,
-    skip: number,
-    limit: number,
-  ): Promise<Patient[]>;
+  findBySellerId(sellerId: string): Promise<Patient[]>;
   findBySellerIdPaginated(
     sellerId: string,
     skip: number,
