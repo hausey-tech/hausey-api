@@ -5,6 +5,10 @@ import { IUpdatePatientDTO } from '../dtos/update-patient';
 export interface IPatientsRepository {
   find(): Promise<Patient[]>;
   findPaginated(skip: number, limit: number): Promise<[Patient[], number]>;
+  findBySellerIdIsNull(
+    skip: number,
+    limit: number,
+  ): Promise<[Patient[], number]>;
   findAll(): Promise<Patient[]>;
   findById(id: string): Promise<Patient | null>;
   findByIds(

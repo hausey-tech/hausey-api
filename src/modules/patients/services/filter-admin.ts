@@ -4,7 +4,6 @@ import { Logger } from 'pino';
 import { AppError } from '../../../shared/errors/app-error';
 import { ISellerCodeSellersRepository } from '../../seller-code-sellers/contracts/repositories/seller-code-sellers-repository';
 import { ISellerCodesRepository } from '../../seller-codes/contracts/repositories/seller-codes';
-import { IAppointmentsRepository } from '../../appointments/contracts/repositories/appointments';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { Patient } from '../entities/patient';
 import { SellerCode } from '../../seller-codes/entities/seller-code';
@@ -25,8 +24,9 @@ interface SellerCodeDetails {
 }
 
 interface SellerCodeResponse {
-  sellerCodes: SellerCodeDetails[];
   patients: PatientsPaginatedResponse;
+  sellerCodes: SellerCode[];
+  sellerCodeSellers: SellerCodeDetails[];
 }
 
 @injectable()
@@ -34,9 +34,6 @@ export class FilterAdminService {
   constructor(
     @inject('PatientsRepository')
     private patientsRepository: IPatientsRepository,
-
-    @inject('AppointmentsRepository')
-    private appointmentsRepository: IAppointmentsRepository,
 
     @inject('SellerCodeSellersRepository')
     private sellerCodeSellersRepository: ISellerCodeSellersRepository,
@@ -57,7 +54,7 @@ export class FilterAdminService {
     page?: string;
     limit?: string;
   }): Promise<
-    SellerCodeResponse | PatientsPaginatedResponse | Patient | Patient[]
+    SellerCodeResponse | PatientsPaginatedResponse | Patient | Patient[] | any
   > {
     const { userId, type, page = 1, limit = 10 } = query;
 
@@ -86,10 +83,13 @@ export class FilterAdminService {
           sellerCodeSeller.sellerCodeId && sellerCodeSeller.sellerId,
       );
 
-      const [patients, totalPatients] =
-        await this.patientsRepository.findBySellerId(userId, skip, take);
+      const allPatients = await this.patientsRepository.findAll();
 
-      const totalPages = Math.ceil(totalPatients / take);
+      const patientsWhereSellerIdIsNull: Patient[] = allPatients.filter(
+        patient => !patient.sellerId,
+      );
+
+      const totalPages = Math.ceil(patientsWhereSellerIdIsNull.length / take);
 
       const sellerCodes = await Promise.all(
         validSellerCodeSellers.map(async sellerCodeSeller => {
@@ -105,6 +105,9 @@ export class FilterAdminService {
                   );
 
             if (!sellerCode) {
+              this.logger.warn(
+                `Seller not found for sellerCode ID: ${sellerCodeSeller.sellerCodeId}`,
+              );
               return null;
             }
 
@@ -115,8 +118,8 @@ export class FilterAdminService {
               return null;
             }
 
-            const [allPatients, totalPagePatients] =
-              await this.patientsRepository.findBySellerId(
+            const [patients, totalPatients] =
+              await this.patientsRepository.findBySellerIdPaginated(
                 sellerCode.sellerId,
                 skip,
                 take,
@@ -125,16 +128,20 @@ export class FilterAdminService {
             const totalPagesAllPatients = Math.ceil(totalPatients / take);
 
             const paginatedPatients: PatientsPaginatedResponse = {
-              patients: allPatients,
-              totalPatients: totalPagePatients,
+              patients,
+              totalPatients,
               totalPages: totalPagesAllPatients,
             };
 
+            const userInfo = await this.usersRepository.findById(
+              sellerCode.sellerId,
+            );
+
             const sellerInfo = {
-              phoneNumber: sellerCodeSeller.seller?.phoneNumber,
-              email: sellerCodeSeller.seller?.email,
-              name: sellerCodeSeller.seller?.name,
-              createdAt: sellerCodeSeller.seller?.createdAt,
+              phoneNumber: userInfo.phoneNumber,
+              email: userInfo.email,
+              name: userInfo.name,
+              createdAt: userInfo.createdAt,
               patients: paginatedPatients,
               sellerCode,
             };
@@ -154,22 +161,63 @@ export class FilterAdminService {
         }),
       );
 
+      const allSellerCodes = await this.sellerCodesRepository.findAll();
+
+      const allSellerCodesNotInSellerCodesSellers = allSellerCodes.filter(
+        sellerCode =>
+          !validSellerCodeSellers.some(
+            sellerCodeSeller => sellerCodeSeller.sellerCodeId === sellerCode.id,
+          ),
+      );
+
+      const MapperAllSellerCodesNotInSellerCodesSellers = await Promise.all(
+        allSellerCodesNotInSellerCodesSellers.map(async sellerCodesMapper => {
+          const userMapper = await this.usersRepository.findById(
+            sellerCodesMapper.sellerId,
+          );
+
+          return {
+            id: sellerCodesMapper.id,
+            createdAt: sellerCodesMapper.createdAt,
+            name: userMapper?.name || null,
+            phoneNumber: userMapper?.phoneNumber || null,
+            email: userMapper?.email || null,
+            updatedAt: sellerCodesMapper.updatedAt,
+            deletedAt: sellerCodesMapper.deletedAt,
+            code: sellerCodesMapper.code,
+            sellerId: sellerCodesMapper.sellerId,
+            uses: sellerCodesMapper.uses,
+            active: sellerCodesMapper.active,
+            fee: sellerCodesMapper.fee,
+            maxUse: sellerCodesMapper.maxUse,
+            free: sellerCodesMapper.free,
+            type: sellerCodesMapper.type,
+          };
+        }),
+      );
+
       const validSellerCodes = sellerCodes.filter(Boolean);
+
+      const endIndex = skip + take;
+
+      const patientsPaginated = patientsWhereSellerIdIsNull.slice(
+        skip,
+        endIndex,
+      );
 
       return {
         patients: {
-          patients,
+          patients: patientsPaginated,
           totalPages,
-          totalPatients,
+          totalPatients: patientsWhereSellerIdIsNull.length,
         },
-        sellerCodes: validSellerCodes,
+        sellerCodeSellers: validSellerCodes,
+        sellerCodes: MapperAllSellerCodesNotInSellerCodesSellers,
       };
     }
 
-    const [patients, totalPatients] = await this.patientsRepository.find(
-      skip,
-      take,
-    );
+    const [patients, totalPatients] =
+      await this.patientsRepository.findPaginated(skip, take);
 
     const totalPages = Math.ceil(totalPatients / take);
 

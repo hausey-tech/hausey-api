@@ -116,6 +116,21 @@ export class PatientsRepository implements IPatientsRepository {
     return patients;
   }
 
+  public async findBySellerIdIsNull(
+    skip: number,
+    limit: number,
+  ): Promise<[Patient[], number]> {
+    const [patients, total] = await this.ormRepository.findAndCount({
+      where: {
+        seller: null,
+      },
+      skip,
+      take: limit,
+    });
+
+    return [patients, total];
+  }
+
   public async find(): Promise<Patient[]> {
     return this.ormRepository.find({
       relations: this.relations,
