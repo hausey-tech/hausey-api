@@ -94,19 +94,9 @@ export class ListPatientsService {
 
       const patientIds = appointments.map(appointment => appointment.patientId);
 
-      const [patients, totalPatients] = await this.patientsRepository.findByIds(
-        patientIds,
-        skip,
-        take,
-      );
+      const patients = await this.patientsRepository.findAllByIds(patientIds);
 
-      const totalPages = Math.ceil(totalPatients / take);
-
-      return {
-        patients,
-        totalPatients,
-        totalPages,
-      };
+      return patients;
     }
 
     if (userId) {
