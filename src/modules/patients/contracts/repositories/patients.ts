@@ -3,7 +3,8 @@ import { ICreatePatientDTO } from '../dtos/create-patient';
 import { IUpdatePatientDTO } from '../dtos/update-patient';
 
 export interface IPatientsRepository {
-  find(skip: number, limit: number): Promise<[Patient[], number]>;
+  find(): Promise<Patient[]>;
+  findPaginated(skip: number, limit: number): Promise<[Patient[], number]>;
   findAll(): Promise<Patient[]>;
   findById(id: string): Promise<Patient | null>;
   findByIds(
@@ -23,6 +24,11 @@ export interface IPatientsRepository {
   update(id: string, payload: IUpdatePatientDTO): Promise<Patient>;
   findByName(name: string): Promise<Patient[] | null>;
   findBySellerId(
+    sellerId: string,
+    skip: number,
+    limit: number,
+  ): Promise<Patient[]>;
+  findBySellerIdPaginated(
     sellerId: string,
     skip: number,
     limit: number,

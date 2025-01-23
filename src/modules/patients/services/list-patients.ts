@@ -114,7 +114,11 @@ export class ListPatientsService {
         await this.sellerCodeSellersRepository.findBySellerId(userId);
 
       const [patients, totalPatients] =
-        await this.patientsRepository.findBySellerId(userId, skip, take);
+        await this.patientsRepository.findBySellerIdPaginated(
+          userId,
+          skip,
+          take,
+        );
 
       const totalPages = Math.ceil(totalPatients / take);
 
@@ -131,7 +135,7 @@ export class ListPatientsService {
             }
 
             const [allPatients, totalPagePatients] =
-              await this.patientsRepository.findBySellerId(
+              await this.patientsRepository.findBySellerIdPaginated(
                 sellerCode.sellerId,
                 skip,
                 take,
@@ -181,17 +185,8 @@ export class ListPatientsService {
       };
     }
 
-    const [patients, totalPatients] = await this.patientsRepository.find(
-      skip,
-      take,
-    );
+    const patients = await this.patientsRepository.find();
 
-    const totalPages = Math.ceil(totalPatients / take);
-
-    return {
-      patients,
-      totalPatients,
-      totalPages,
-    };
+    return patients;
   }
 }

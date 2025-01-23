@@ -47,7 +47,26 @@ export class PatientsRepository implements IPatientsRepository {
     });
   }
 
-  public async findBySellerId(
+  public async findBySellerId(sellerId: string): Promise<Patient[]> {
+    return this.ormRepository.find({
+      where: { sellerId },
+      select: [
+        'id',
+        'createdAt',
+        'email',
+        'name',
+        'nipomed',
+        'phoneNumber',
+        'birthdate',
+        'document',
+        'planId',
+        'region',
+        'planExpiresAt',
+      ],
+    });
+  }
+
+  public async findBySellerIdPaginated(
     sellerId: string,
     skip: number,
     limit: number,
@@ -97,7 +116,16 @@ export class PatientsRepository implements IPatientsRepository {
     return patients;
   }
 
-  public async find(skip: number, limit: number): Promise<[Patient[], number]> {
+  public async find(): Promise<Patient[]> {
+    return this.ormRepository.find({
+      relations: this.relations,
+    });
+  }
+
+  public async findPaginated(
+    skip: number,
+    limit: number,
+  ): Promise<[Patient[], number]> {
     const [patients, total] = await this.ormRepository.findAndCount({
       relations: this.relations,
       skip,
