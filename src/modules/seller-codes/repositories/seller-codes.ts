@@ -15,6 +15,14 @@ export class SellerCodesRepository implements ISellerCodesRepository {
     this.relations = ['seller', 'discounts.plan', 'sellers.seller'];
   }
 
+  findByType(type: string): Promise<SellerCode[] | null> {
+    return this.ormRepository.find({
+      where: {
+        type,
+      },
+    });
+  }
+
   async findAllPaginated(
     skip: number,
     limit: number,

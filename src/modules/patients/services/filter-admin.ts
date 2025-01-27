@@ -41,7 +41,7 @@ export class FilterAdminService {
     limit?: string;
   }): Promise<IResponse | any> {
     try {
-      const { userId, page = 1, limit = 10 } = query;
+      const { userId, page = 1, limit = 10, type } = query;
 
       if (Number.isNaN(page) || Number(page) < 1) {
         throw new AppError('Page must be a valid number');
@@ -51,8 +51,8 @@ export class FilterAdminService {
         throw new AppError('Invalid limit value');
       }
 
-      const skip = (Number(page) - 1) * Number(limit);
-      const take = Number(limit);
+      // const skip = (Number(page) - 1) * Number(limit);
+      // const take = Number(limit);
 
       if (userId) {
         const user = await this.usersRepository.findById(userId);
@@ -65,10 +65,13 @@ export class FilterAdminService {
           throw new AppError('Você não tem permissão suficiente', 401);
         }
 
-        const [sellerCodes, total] =
-          await this.sellerCodesRepository.findAllPaginated(skip, take);
+        let sellerCodes;
 
-        const totalPages = Math.ceil(total / take);
+        if (type) {
+          sellerCodes = await this.sellerCodesRepository.findByType(type);
+        } else {
+          sellerCodes = await this.sellerCodesRepository.findAll();
+        }
 
         const sellerCodeMapper = await Promise.all(
           sellerCodes.map(async sellerCode => {
@@ -106,11 +109,7 @@ export class FilterAdminService {
           }),
         );
 
-        return {
-          sellerCodeMapper,
-          totalSellerCode: total,
-          totalPages,
-        };
+        return sellerCodeMapper;
       }
 
       throw new AppError('UserId inválido.');
