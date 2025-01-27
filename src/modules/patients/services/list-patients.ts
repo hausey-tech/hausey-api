@@ -24,7 +24,7 @@ interface SellerCodeDetails {
 }
 
 interface SellerCodeResponse {
-  sellerCodes: SellerCodeDetails[];
+  sellerCodesSellers: SellerCodeDetails[];
   patients: PatientsPaginatedResponse;
 }
 
@@ -56,7 +56,7 @@ export class ListPatientsService {
     name?: string;
     cpf?: string;
   }): Promise<
-    SellerCodeResponse | PatientsPaginatedResponse | Patient | Patient[]
+    SellerCodeResponse | PatientsPaginatedResponse | Patient | Patient[] | any
   > {
     const {
       professionalId,
@@ -124,27 +124,16 @@ export class ListPatientsService {
               return null;
             }
 
-            const [allPatients, totalPagePatients] =
-              await this.patientsRepository.findBySellerIdPaginated(
-                sellerCode.sellerId,
-                skip,
-                take,
-              );
-
-            const totalPagesAllPatients = Math.ceil(totalPatients / take);
-
-            const paginatedPatients: PatientsPaginatedResponse = {
-              patients: allPatients,
-              totalPatients: totalPagePatients,
-              totalPages: totalPagesAllPatients,
-            };
+            const allPatients = await this.patientsRepository.findBySellerId(
+              sellerCode.sellerId,
+            );
 
             const sellerInfo = {
               phoneNumber: sellerCodeSeller.seller?.phoneNumber,
               email: sellerCodeSeller.seller?.email,
               name: sellerCodeSeller.seller?.name,
               createdAt: sellerCodeSeller.seller?.createdAt,
-              patients: paginatedPatients,
+              patients: allPatients,
               sellerCode,
             };
 
@@ -171,7 +160,7 @@ export class ListPatientsService {
           totalPages,
           totalPatients,
         },
-        sellerCodes: validSellerCodes,
+        sellerCodesSellers: validSellerCodes,
       };
     }
 
