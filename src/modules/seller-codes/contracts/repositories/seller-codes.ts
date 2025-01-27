@@ -13,4 +13,5 @@ export interface ISellerCodesRepository {
   save(sellerCode: SellerCode): Promise<SellerCode>;
   update(id: string, payload: IUpdateSellerCodeDto): Promise<SellerCode>;
   findByIdAndType(id: string, type: string): Promise<SellerCode | null>;
+  findAllPaginated(skip: number, take: number): Promise<[SellerCode[], number]>;
 }

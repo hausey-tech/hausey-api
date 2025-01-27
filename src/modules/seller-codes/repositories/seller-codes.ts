@@ -15,6 +15,18 @@ export class SellerCodesRepository implements ISellerCodesRepository {
     this.relations = ['seller', 'discounts.plan', 'sellers.seller'];
   }
 
+  async findAllPaginated(
+    skip: number,
+    limit: number,
+  ): Promise<[SellerCode[], number]> {
+    const [sellerCode, total] = await this.ormRepository.findAndCount({
+      take: skip,
+      skip: limit,
+    });
+
+    return [sellerCode, total];
+  }
+
   public async find(
     where: FindOptionsWhere<SellerCode>,
   ): Promise<SellerCode[]> {

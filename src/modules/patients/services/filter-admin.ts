@@ -8,24 +8,14 @@ import { Patient } from '../entities/patient';
 import { SellerCode } from '../../seller-codes/entities/seller-code';
 import { IUsersRepository } from '../../users/contracts/repositories/users';
 
-interface PatientsPaginatedResponse {
-  patients: Array<Patient>;
-  totalPatients: number;
-  totalPages: number;
-}
-
-interface SellerCodeDetails {
-  phoneNumber: string;
-  email: string;
-  name: string;
-  patients: PatientsPaginatedResponse;
-  sellerCode: SellerCode;
-}
-
-interface SellerCodeResponse {
-  patients: PatientsPaginatedResponse;
-  sellerCodes: SellerCode[];
-  sellerCodeSellers: SellerCodeDetails[];
+interface IResponse {
+  sellerCodeMapper: {
+    name: string;
+    phoneNumber: string;
+    email: string;
+    sellerCode: SellerCode;
+  };
+  patients: Patient[];
 }
 
 @injectable()
@@ -49,9 +39,7 @@ export class FilterAdminService {
     type?: string;
     page?: string;
     limit?: string;
-  }): Promise<
-    SellerCodeResponse | PatientsPaginatedResponse | Patient | Patient[] | any
-  > {
+  }): Promise<IResponse | any> {
     try {
       const { userId, page = 1, limit = 10 } = query;
 
@@ -63,8 +51,8 @@ export class FilterAdminService {
         throw new AppError('Invalid limit value');
       }
 
-      // const skip = (Number(page) - 1) * Number(limit);
-      // const take = Number(limit);
+      const skip = (Number(page) - 1) * Number(limit);
+      const take = Number(limit);
 
       if (userId) {
         const user = await this.usersRepository.findById(userId);
@@ -77,7 +65,10 @@ export class FilterAdminService {
           throw new AppError('Você não tem permissão suficiente', 401);
         }
 
-        const sellerCodes = await this.sellerCodesRepository.findAll();
+        const [sellerCodes, total] =
+          await this.sellerCodesRepository.findAllPaginated(skip, take);
+
+        const totalPages = Math.ceil(total / take);
 
         const sellerCodeMapper = await Promise.all(
           sellerCodes.map(async sellerCode => {
@@ -91,7 +82,6 @@ export class FilterAdminService {
 
             if (!userBySellerId) {
               return {
-                patients,
                 sellerCode: {
                   id: null,
                   name: null,
@@ -99,6 +89,7 @@ export class FilterAdminService {
                   email: null,
                   ...sellerCode,
                 },
+                patients,
               };
             }
 
@@ -115,7 +106,11 @@ export class FilterAdminService {
           }),
         );
 
-        return sellerCodeMapper;
+        return {
+          sellerCodeMapper,
+          totalSellerCode: total,
+          totalPages,
+        };
       }
 
       throw new AppError('UserId inválido.');
