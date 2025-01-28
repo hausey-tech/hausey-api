@@ -31,6 +31,7 @@ export const CreatePatientSchema = {
     sex: Joi.string().equal('M', 'F'),
     birthdate: Joi.string(),
     sellerCode: Joi.string(),
+    region: Joi.string(),
     indicatedUserInformations: Joi.object({
       periodEnd: Joi.date().iso().required(),
       priceId: Joi.string().required(),

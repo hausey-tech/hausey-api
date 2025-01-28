@@ -2,6 +2,7 @@ import { injectable, inject, container } from 'tsyringe';
 
 import { addYears } from 'date-fns';
 import { Logger } from 'pino';
+import { Plan } from 'modules/plans/entities/plan';
 import { CreatePagarmeCustomerService } from '../../integrations/services/pagarme/create-pagarme-customer-service';
 import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
@@ -74,6 +75,7 @@ export class UpdatePatientService {
     let sellerId: string;
     let planId: string;
     let planExpiresAt: string;
+    let plan: Plan;
     if (sellerCode) {
       const updateSellerCodeService = container.resolve(
         UpdateSellerCodeService,
@@ -84,9 +86,15 @@ export class UpdatePatientService {
       sellerId = updatedSellerCode.sellerId;
       if (updatedSellerCode.free) {
         const isTest = process.env.PAGARME_SECRET_KEY.split('_')[1] === 'test';
-        const plan = await this.plansRepository.findByName(
-          isTest ? 'Cuidando de você Teste' : 'Cuidando de você',
-        );
+        if (patientExists.region === 'us') {
+          plan = await this.plansRepository.findById(
+            '3e819e51-91b8-48fa-9ebd-7d559456b85c',
+          );
+        } else {
+          plan = await this.plansRepository.findByName(
+            isTest ? 'Cuidando de você Teste' : 'Cuidando de você',
+          );
+        }
         if (plan) {
           planId = plan.id;
         }

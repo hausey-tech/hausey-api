@@ -12,7 +12,7 @@ Node.js RESTful API
 - O checkout chama o endpoint que cria pedido, passando o customerId
 - Através dele, o usuário é encontrado no banco e é verificado se possui vínculo com vendedores
 - Se possuir, a regra de split é feita e enviada no endpoint que envia os dados de pagamento
-- Após isso, a api recebe que o pagamento foi realizado pelo webhook e atualiza o "expiresAt" no banco
+- Após isso, a api recebe que o pagamento foi realizado pelo webhook e atualiza o "expiresAt" no banco.
 
 ### Quando usuário escolhe a região US ou EU no app:
 - É criado o usuário na Stripe e seu id é salvo no banco

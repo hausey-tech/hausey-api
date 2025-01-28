@@ -114,7 +114,6 @@ export class CreatePatientPixSubscriptionService {
     const createPagarmePixOrderService = container.resolve(
       CreatePagarmePixOrderService,
     );
-
     const pix = await createPagarmePixOrderService.execute({
       customerId: patient.stripeCustomerId,
       plan,

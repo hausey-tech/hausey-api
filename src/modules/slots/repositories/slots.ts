@@ -36,6 +36,7 @@ export class SlotsRepository implements ISlotsRepository {
     }
     patientDateTime = new Date(Date.now());
     patientDateTime.setHours(patientDateTime.getHours() - 3);
+    console.log('Trated date', patientDateTime);
 
     console.log('new Date', patientDateTime);
 
@@ -90,7 +91,7 @@ export class SlotsRepository implements ISlotsRepository {
         endTime: Raw(alias => `TIME(${alias}) >= TIME(:appointmentTime)`, {
           appointmentTime,
         }),
-        deletedAt: IsNull(), // Supondo que você tenha um campo "deletedAt" para indicar exclusões lógicas
+        deletedAt: IsNull(),
       },
       relations: [...this.relations, 'professional'],
     });
