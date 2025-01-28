@@ -388,6 +388,8 @@ export class PatientsController {
       const createPatientPixSubscriptionService = container.resolve(
         CreatePatientPixSubscriptionService,
       );
+      console.log('Entrei no if');
+      console.log(patientId, planId, months);
       const pix = await createPatientPixSubscriptionService.execute({
         patientId,
         planId,
