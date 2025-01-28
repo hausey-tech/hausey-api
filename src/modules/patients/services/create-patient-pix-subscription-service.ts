@@ -114,6 +114,7 @@ export class CreatePatientPixSubscriptionService {
     const createPagarmePixOrderService = container.resolve(
       CreatePagarmePixOrderService,
     );
+    console.log('Antes de executar o pix');
     const pix = await createPagarmePixOrderService.execute({
       customerId: patient.stripeCustomerId,
       plan,
