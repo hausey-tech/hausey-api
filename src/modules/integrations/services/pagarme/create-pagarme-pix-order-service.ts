@@ -62,7 +62,7 @@ export class CreatePagarmePixOrderService {
         expiresAt: data.charges[0].last_transaction?.expires_at,
       };
     } catch (error) {
-      console.error(error.response.data);
+      console.error('error stripe: ', error.response.data);
       throw new AppError('Erro ao criar pedido, tente novamente mais tarde!');
     }
   }
