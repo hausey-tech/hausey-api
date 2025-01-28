@@ -367,6 +367,7 @@ export class PatientsController {
       const createPatientPixSubscriptionService = container.resolve(
         CreatePatientPixSubscriptionService,
       );
+
       const pix = await createPatientPixSubscriptionService.execute({
         patientId,
         planId,
