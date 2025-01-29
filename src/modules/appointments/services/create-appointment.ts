@@ -38,73 +38,83 @@ export class CreateAppointmentService {
     date,
     emergency,
   }: Omit<ICreateAppointmentDTO, 'roomId'>): Promise<Appointment> {
-    const patient = await this.patientsRepository.findById(patientId);
+    try {
+      const patient = await this.patientsRepository.findById(patientId);
 
-    if (!patient) {
-      throw new AppError(
-        'Paciente não encontrado, verifique e tente novamente!',
-      );
-    }
-    if (professionalId) {
-      const professional = await this.professionalsRepository.findById(
-        professionalId,
-      );
-
-      if (!professional) {
+      if (!patient) {
         throw new AppError(
-          'Profissional não encontrado, verifique e tente novamente!',
+          'Paciente não encontrado, verifique e tente novamente!',
         );
       }
-    }
-    let roomId = '';
-
-    const room = await createVideoRoomCode();
-
-    if (room) {
-      roomId = room.roomId;
-    }
-
-    let appointment: Appointment;
-    if (professionalId && emergency === false) {
-      const appointmentProfessional = await this.appointmentsRepository.create({
-        patientId,
-        professionalId,
-        roomId,
-        date,
-      });
-      appointment = appointmentProfessional;
-    }
-    if (emergency) {
-      const alertProfessional = container.resolve(AlertProfessionalService);
-      await alertProfessional.execute();
-
-      const appointmentEmergency = await this.appointmentsRepository.create({
-        patientId,
-        roomId,
-        emergency,
-        date,
-      });
-      appointment = appointmentEmergency;
-
-      const slots = await this.slotsRepository.findByTodayDate(new Date(date));
-      const professionalIds = slots.map(slot => slot.professionalId);
-      const professionalSlots = await this.professionalsRepository.findByIds(
-        professionalIds,
-      );
-
-      if (professionalSlots.length > 0) {
-        this.logger.info(
-          {
-            professionals: professionalSlots,
-          },
-          'Log de professionals',
+      if (professionalId) {
+        const professional = await this.professionalsRepository.findById(
+          professionalId,
         );
 
-        sendgrid({
-          to: 'hauseydevs@gmail.com',
-          subject: `📢Nova Solicitação de Plantão!`,
-          text: 'veja as informações do plantão',
-          body: `
+        if (!professional) {
+          throw new AppError(
+            'Profissional não encontrado, verifique e tente novamente!',
+          );
+        }
+      }
+      let roomId = '';
+
+      const room = await createVideoRoomCode();
+
+      if (room) {
+        roomId = room.roomId;
+      }
+
+      let appointment: Appointment;
+      if (professionalId && emergency === false) {
+        const appointmentProfessional =
+          await this.appointmentsRepository.create({
+            patientId,
+            professionalId,
+            roomId,
+            date,
+          });
+        appointment = appointmentProfessional;
+      }
+      this.logger.info(
+        {
+          appointment,
+        },
+        'Appoinment Criado',
+      );
+      if (emergency) {
+        const alertProfessional = container.resolve(AlertProfessionalService);
+        await alertProfessional.execute();
+
+        const appointmentEmergency = await this.appointmentsRepository.create({
+          patientId,
+          roomId,
+          emergency,
+          date,
+        });
+        appointment = appointmentEmergency;
+
+        const slots = await this.slotsRepository.findByTodayDate(
+          new Date(date),
+        );
+        const professionalIds = slots.map(slot => slot.professionalId);
+        const professionalSlots = await this.professionalsRepository.findByIds(
+          professionalIds,
+        );
+
+        if (professionalSlots.length > 0) {
+          this.logger.info(
+            {
+              professionals: professionalSlots,
+            },
+            'Log de professionals',
+          );
+
+          sendgrid({
+            to: 'hauseydevs@gmail.com',
+            subject: `📢Nova Solicitação de Plantão!`,
+            text: 'veja as informações do plantão',
+            body: `
             <h2>Olá, um paciente solicitou um atendimento de plantão no app!</h2>
             <h4>Veja as informações:</h4>
             <p>Nome: <b>${patient.name}</b></p>
@@ -129,15 +139,15 @@ export class CreateAppointmentService {
             <p>Clique no link abaixo para agendar no portal:</p>
             <a href="https://hausey.com.br/doctor/dashboard" target="_blank">Acessar atendimento</a>
           `,
-        });
+          });
 
-        professionalSlots.forEach((professionalSlot, index) => {
-          setTimeout(() => {
-            sendgrid({
-              to: professionalSlot.email,
-              subject: `📢Nova Solicitação de Plantão!`,
-              text: 'veja as informações do plantão',
-              body: `
+          professionalSlots.forEach((professionalSlot, index) => {
+            setTimeout(() => {
+              sendgrid({
+                to: professionalSlot.email,
+                subject: `📢Nova Solicitação de Plantão!`,
+                text: 'veja as informações do plantão',
+                body: `
                 <h2>Olá, um paciente solicitou um atendimento de plantão no app!</h2>
                 <h4>Veja as informações:</h4>
                 <p>Nome: <b>${patient.name}</b></p>
@@ -147,16 +157,35 @@ export class CreateAppointmentService {
                 <p>Clique no link abaixo para agendar no portal:</p>
                 <a href="https://hausey.com.br/doctor/dashboard" target="_blank">Acessar atendimento</a>
               `,
-            });
-          }, index * 2000);
-        });
+              });
+            }, index * 2000);
+          });
+        }
       }
+
+      appointment.paid = true;
+
+      const newAppointment = await this.appointmentsRepository.save(
+        appointment,
+      );
+
+      this.logger.info(
+        {
+          old: appointment,
+          new: newAppointment,
+        },
+        'Appointment Save',
+      );
+
+      return appointment;
+    } catch (error) {
+      this.logger.info(
+        {
+          error,
+        },
+        'Houve um erro na criação do appointments',
+      );
+      throw new AppError(error);
     }
-
-    appointment.paid = true;
-
-    await this.appointmentsRepository.save(appointment);
-
-    return appointment;
   }
 }
