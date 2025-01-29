@@ -54,6 +54,7 @@ export class AppointmentsController {
         patientId,
         professionalId,
         date,
+        emergency,
       });
       appointment = appointmentProfessional;
     }
