@@ -34,12 +34,15 @@ export class FilterAdminService {
     private logger: Logger,
   ) {}
 
-  public async execute(query: {
-    userId?: string;
-    type?: string;
-    page?: string;
-    limit?: string;
-  }): Promise<IResponse | any> {
+  public async execute(
+    query: {
+      userId?: string;
+      type?: string;
+      page?: string;
+      limit?: string;
+    },
+    userAuthenticated: string,
+  ): Promise<IResponse | any> {
     try {
       const { userId, page = 1, limit = 10, type } = query;
 
@@ -55,7 +58,7 @@ export class FilterAdminService {
       // const take = Number(limit);
 
       if (userId) {
-        const user = await this.usersRepository.findById(userId);
+        const user = await this.usersRepository.findById(userAuthenticated);
 
         if (!user) {
           throw new AppError('Usuário não encontrado.', 404);
@@ -87,6 +90,7 @@ export class FilterAdminService {
               return {
                 sellerCode: {
                   id: null,
+                  region: null,
                   name: null,
                   phoneNumber: null,
                   email: null,
@@ -102,6 +106,7 @@ export class FilterAdminService {
                 name: userBySellerId?.name || null,
                 phoneNumber: userBySellerId?.phoneNumber || null,
                 email: userBySellerId?.email || null,
+                region: userBySellerId?.region || null,
                 ...sellerCode,
               },
               patients,

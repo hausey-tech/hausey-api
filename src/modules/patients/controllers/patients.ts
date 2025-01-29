@@ -43,10 +43,14 @@ export class PatientsController {
     response: Response,
   ): Promise<Response> {
     const { query } = request;
+    const userAuthenticated = request.user.id;
 
     const listPatientsService = container.resolve(FilterAdminService);
 
-    const patients = await listPatientsService.execute(query);
+    const patients = await listPatientsService.execute(
+      query,
+      userAuthenticated,
+    );
 
     return response.json(patients);
   }
