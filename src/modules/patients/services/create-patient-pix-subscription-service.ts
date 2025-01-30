@@ -12,6 +12,7 @@ interface IProps {
   patientId: string;
   planId: string;
   months: number;
+  handleAmount: number;
 }
 
 @injectable()
@@ -27,7 +28,12 @@ export class CreatePatientPixSubscriptionService {
     private plansRepository: IPlansRepository,
   ) {}
 
-  public async execute({ patientId, planId, months }: IProps): Promise<IPix> {
+  public async execute({
+    patientId,
+    planId,
+    months,
+    handleAmount,
+  }: IProps): Promise<IPix> {
     const patient = await this.patientsRepository.findById(patientId);
     if (!patient) {
       throw new AppError(
@@ -67,7 +73,7 @@ export class CreatePatientPixSubscriptionService {
         }
         sellersPart += sellerCodeSeller.fee;
         split.push({
-          amount: sellerCodeSeller.fee,
+          amount: handleAmount ?? sellerCodeSeller.fee,
           recipientId: sellerCodeSeller.seller.recipientId,
           type: 'percentage',
           options: {
@@ -86,7 +92,7 @@ export class CreatePatientPixSubscriptionService {
         }
         sellersPart += sellerCode.fee;
         split.push({
-          amount: sellerCode.fee,
+          amount: handleAmount ?? sellerCode.fee,
           recipientId: sellerCode.seller.recipientId,
           type: 'percentage',
           options: {
@@ -99,7 +105,7 @@ export class CreatePatientPixSubscriptionService {
 
       if (sellersPart > 0) {
         split.push({
-          amount: 100 - sellersPart,
+          amount: handleAmount ?? 100 - sellersPart,
           recipientId: process.env.PAGARME_RECIPIENT_ID,
           type: 'percentage',
           options: {
@@ -120,6 +126,7 @@ export class CreatePatientPixSubscriptionService {
       price,
       months,
       split,
+      handleAmount,
     });
 
     return pix;

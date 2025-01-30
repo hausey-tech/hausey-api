@@ -386,18 +386,26 @@ export class PatientsController {
     request: Request,
     response: Response,
   ): Promise<Response> {
-    const { patientId, planId, paymentMethod, months, cardToken, address } =
-      request.body;
+    const {
+      patientId,
+      planId,
+      paymentMethod,
+      months,
+      cardToken,
+      address,
+      amount,
+    } = request.body;
     if (paymentMethod === 'pix') {
       const createPatientPixSubscriptionService = container.resolve(
         CreatePatientPixSubscriptionService,
       );
-      console.log('Entrei no if');
+      const handleAmount = amount;
       console.log(patientId, planId, months);
       const pix = await createPatientPixSubscriptionService.execute({
         patientId,
         planId,
         months,
+        handleAmount,
       });
       return response.json(pix);
     }

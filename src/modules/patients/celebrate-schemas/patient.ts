@@ -163,6 +163,7 @@ export const CreateSubscriptionSchema = {
   [Segments.BODY]: Joi.object().keys({
     patientId: Joi.string().uuid().required(),
     planId: Joi.string().required(),
+    amount: Joi.number().optional(),
     paymentMethod: Joi.string()
       .valid('credit_card', 'debit_card', 'pix')
       .required(),

@@ -5,6 +5,7 @@ export interface ICreatePagarmePixOrderDTO {
   plan: Plan;
   price: number;
   months: number;
+  handleAmount?: number;
   split?: {
     amount: number;
     recipientId: string;
