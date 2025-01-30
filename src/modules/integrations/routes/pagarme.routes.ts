@@ -29,4 +29,8 @@ pagarmeRouter.post(
   pagarmeController.createCustomer,
 );
 
-pagarmeRouter.get('/events', ensureAuthentication, pagarmeController.events);
+pagarmeRouter.get(
+  '/pagarme/events',
+  ensureAuthentication,
+  pagarmeController.events,
+);
