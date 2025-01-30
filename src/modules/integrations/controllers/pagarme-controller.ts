@@ -5,6 +5,8 @@ import { ListPagarmeCustomerChargesService } from '../services/pagarme/list-paga
 import { CreatePagarmeBoletoOrderService } from '../services/pagarme/create-pagarme-boleto-order-service';
 import { CreatePagarmeCustomerService } from '../services/pagarme/create-pagarme-customer-service';
 
+const clients = new Map<string, Response>();
+
 export class PagarmeController {
   public async webhook(
     request: Request,
@@ -13,7 +15,27 @@ export class PagarmeController {
     const { body } = request;
     const pagarmeWebhookService = container.resolve(PagarmeWebhookService);
     await pagarmeWebhookService.execute(body);
+    clients.forEach(client => {
+      client.write(`event: status-payment\n`);
+      client.write(`data: ${JSON.stringify(body.data.charges.status)}\n\n`);
+    });
     return response.json({ message: 'Webhook recebido com sucesso!' });
+  }
+
+  public async events(request: Request, response: Response): Promise<void> {
+    const userId = request.query.user as string;
+    response.setHeader('Content-Type', 'text/event-stream');
+    response.setHeader('Cache-Control', 'no-cache');
+    response.setHeader('Connection', 'Keep-alive');
+    response.setHeader('Access-Control-Allow-Origin', '*');
+
+    clients.set(userId, response);
+    response.write('event: connected\n');
+    response.write(`data: {"message": "SSE connection established"}\n\n`);
+
+    request.on('close', () => {
+      clients.delete(userId);
+    });
   }
 
   public async listCharges(

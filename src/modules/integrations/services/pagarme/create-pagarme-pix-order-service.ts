@@ -58,7 +58,7 @@ export class CreatePagarmePixOrderService {
         ],
       });
       return {
-        qrCode: data.charges[0].last_transaction?.qr_code_url,
+        qrCode: data.charges[0].last_transaction?.qr_code,
         expiresAt: data.charges[0].last_transaction?.expires_at,
       };
     } catch (error) {
