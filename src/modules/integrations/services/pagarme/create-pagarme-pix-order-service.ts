@@ -51,7 +51,7 @@ export class CreatePagarmePixOrderService {
                 : undefined,
             payment_method: 'pix',
             pix: {
-              expires_in: '300',
+              expires_in: '600',
               additional_information: [
                 {
                   name: `Plano`,
