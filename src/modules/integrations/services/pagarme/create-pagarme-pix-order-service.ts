@@ -19,6 +19,8 @@ export class CreatePagarmePixOrderService {
     handleAmount,
   }: ICreatePagarmePixOrderDTO): Promise<IPix> {
     try {
+      console.log('NO ORDER =>', handleAmount);
+      console.log('amount:', { amount: handleAmount });
       const { data } = await pagarmeInstance.post('/orders', {
         customer_id: customerId,
         items: [
@@ -35,7 +37,7 @@ export class CreatePagarmePixOrderService {
               split?.length > 0 &&
               !(process.env.PAGARME_SECRET_KEY.split('_')[1] === 'test')
                 ? split.map(sp => ({
-                    amount: handleAmount ?? sp.amount,
+                    amount: sp.amount,
                     recipient_id: sp.recipientId,
                     type: sp.type,
                     options: {
