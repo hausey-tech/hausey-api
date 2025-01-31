@@ -18,7 +18,7 @@ export class PagarmeController {
     console.log('clients webhook =>', clients);
     clients.forEach(client => {
       client.write(`event: status-payment\n`);
-      client.write(`data: ${JSON.stringify(body.data.charges.status)}\n\n`);
+      client.write(`data: ${JSON.stringify(body.data)}\n\n`);
       console.log('evento enviado!');
     });
     return response.json({ message: 'Webhook recebido com sucesso!' });
