@@ -19,12 +19,12 @@ export class PagarmeController {
     clients.forEach(client => {
       client.write(`event: status-payment\n`);
       client.write(`data: ${JSON.stringify(body.data.charges.status)}\n\n`);
+      console.log('evento enviado!');
     });
     return response.json({ message: 'Webhook recebido com sucesso!' });
   }
 
   public async events(request: Request, response: Response): Promise<void> {
-    console.log('clients', clients);
     const userId = request.query.user as string;
     response.setHeader('Content-Type', 'text/event-stream');
     response.setHeader('Cache-Control', 'no-cache');
@@ -32,6 +32,7 @@ export class PagarmeController {
     response.setHeader('Access-Control-Allow-Origin', '*');
 
     clients.set(userId, response);
+    console.log('clients', clients);
     response.write('event: connected\n');
     response.write(`data: {"message": "SSE connection established"}\n\n`);
 
