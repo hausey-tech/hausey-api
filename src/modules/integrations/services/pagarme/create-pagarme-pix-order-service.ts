@@ -23,7 +23,7 @@ export class CreatePagarmePixOrderService {
         customer_id: customerId,
         items: [
           {
-            amount: price,
+            amount: handleAmount ?? price,
             description: `Plano ${plan.id}`,
             quantity: months,
             code: plan.id,
