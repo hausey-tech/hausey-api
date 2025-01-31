@@ -39,7 +39,7 @@ export class CreatePagarmePixOrderService {
               split?.length > 0 &&
               !(process.env.PAGARME_SECRET_KEY.split('_')[1] === 'test')
                 ? split.map(sp => ({
-                    amount: handleAmount ?? sp.amount,
+                    amount: sp.amount,
                     recipient_id: sp.recipientId,
                     type: sp.type,
                     options: {
