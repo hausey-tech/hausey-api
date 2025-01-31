@@ -23,6 +23,7 @@ export class PagarmeController {
   }
 
   public async events(request: Request, response: Response): Promise<void> {
+    console.log(clients);
     const userId = request.query.user as string;
     response.setHeader('Content-Type', 'text/event-stream');
     response.setHeader('Cache-Control', 'no-cache');
