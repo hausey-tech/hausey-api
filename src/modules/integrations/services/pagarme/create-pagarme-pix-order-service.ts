@@ -21,6 +21,7 @@ export class CreatePagarmePixOrderService {
     try {
       console.log('NO ORDER =>', handleAmount);
       console.log('amount:', { amount: handleAmount });
+      console.log('Console de split', split);
       split.map(sp => console.log('sp.amount', sp.amount));
       const { data } = await pagarmeInstance.post('/orders', {
         customer_id: customerId,

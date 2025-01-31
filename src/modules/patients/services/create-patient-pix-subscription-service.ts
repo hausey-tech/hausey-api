@@ -129,8 +129,6 @@ export class CreatePatientPixSubscriptionService {
       handleAmount,
     });
 
-    console.log('NO SERVIÇO', handleAmount);
-
     return pix;
   }
 }

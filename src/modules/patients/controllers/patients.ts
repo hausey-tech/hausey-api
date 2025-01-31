@@ -399,8 +399,10 @@ export class PatientsController {
       const createPatientPixSubscriptionService = container.resolve(
         CreatePatientPixSubscriptionService,
       );
-      const handleAmount = amount;
-      console.log(patientId, planId, months);
+      let handleAmount: number;
+      if (amount) {
+        handleAmount = amount * 100;
+      }
       const pix = await createPatientPixSubscriptionService.execute({
         patientId,
         planId,
