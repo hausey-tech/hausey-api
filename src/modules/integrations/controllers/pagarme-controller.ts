@@ -33,8 +33,16 @@ export class PagarmeController {
     response.write('event: connected\n');
     response.write(`data: {"message": "SSE connection established"}\n\n`);
 
+    const interval = setInterval(() => {
+      response.write(
+        `data: {"message": "Atualização SSE", "timestamp": "${new Date().toISOString()}"}\n\n`,
+      );
+    }, 40000);
+
     request.on('close', () => {
+      console.log('🔴 Cliente desconectado. Finalizando SSE.');
       clients.delete(userId);
+      clearInterval(interval);
     });
   }
 
