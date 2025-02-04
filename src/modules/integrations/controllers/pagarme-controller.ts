@@ -15,7 +15,6 @@ export class PagarmeController {
     const { body } = request;
     const pagarmeWebhookService = container.resolve(PagarmeWebhookService);
     await pagarmeWebhookService.execute(body);
-    console.log('clients webhook =>', clients);
     clients.forEach(client => {
       client.write(`event: status-payment\n`);
       client.write(`data: ${JSON.stringify(body.data)}\n\n`);
@@ -32,7 +31,6 @@ export class PagarmeController {
     response.setHeader('Access-Control-Allow-Origin', '*');
 
     clients.set(userId, response);
-    console.log('clients', clients);
     response.write('event: connected\n');
     response.write(`data: {"message": "SSE connection established"}\n\n`);
 
@@ -43,7 +41,6 @@ export class PagarmeController {
     }, 40000);
 
     request.on('close', () => {
-      console.log('🔴 Cliente desconectado. Finalizando SSE.');
       clients.delete(userId);
       clearInterval(interval);
     });

@@ -1,4 +1,5 @@
 import { injectable, inject, container } from 'tsyringe';
+import { Logger } from 'pino';
 import { ISellerCodesRepository } from '../../seller-codes/contracts/repositories/seller-codes';
 import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
@@ -26,6 +27,9 @@ export class CreatePatientPixSubscriptionService {
 
     @inject('PlansRepository')
     private plansRepository: IPlansRepository,
+
+    @inject('Logger')
+    private logger: Logger,
   ) {}
 
   public async execute({
@@ -119,6 +123,18 @@ export class CreatePatientPixSubscriptionService {
 
     const createPagarmePixOrderService = container.resolve(
       CreatePagarmePixOrderService,
+    );
+
+    this.logger.info(
+      {
+        customerId: patient.stripeCustomerId,
+        plan,
+        price,
+        months,
+        split,
+        handleAmount,
+      },
+      'Dados enviados para pagarme',
     );
     const pix = await createPagarmePixOrderService.execute({
       customerId: patient.stripeCustomerId,
