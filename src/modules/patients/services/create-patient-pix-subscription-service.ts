@@ -77,7 +77,7 @@ export class CreatePatientPixSubscriptionService {
         }
         sellersPart += sellerCodeSeller.fee;
         split.push({
-          amount: handleAmount ?? sellerCodeSeller.fee,
+          amount: sellerCodeSeller.fee,
           recipientId: sellerCodeSeller.seller.recipientId,
           type: 'percentage',
           options: {
@@ -96,7 +96,7 @@ export class CreatePatientPixSubscriptionService {
         }
         sellersPart += sellerCode.fee;
         split.push({
-          amount: handleAmount ?? sellerCode.fee,
+          amount: sellerCode.fee,
           recipientId: sellerCode.seller.recipientId,
           type: 'percentage',
           options: {
@@ -109,7 +109,7 @@ export class CreatePatientPixSubscriptionService {
 
       if (sellersPart > 0) {
         split.push({
-          amount: handleAmount ?? 100 - sellersPart,
+          amount: 100 - sellersPart,
           recipientId: process.env.PAGARME_RECIPIENT_ID,
           type: 'percentage',
           options: {
