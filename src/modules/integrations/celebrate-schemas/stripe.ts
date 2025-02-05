@@ -10,6 +10,7 @@ export const CreateSubscriptionSchema = {
   [Segments.BODY]: Joi.object().keys({
     patientId: Joi.string().uuid().required(),
     priceId: Joi.string().required(),
+    country: Joi.string().required().default(''),
     card: Joi.alternatives(
       Joi.string(),
       Joi.object().keys({

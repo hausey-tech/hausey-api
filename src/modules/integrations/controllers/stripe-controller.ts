@@ -39,7 +39,7 @@ export class StripeController {
       patientId,
       priceId,
       card,
-      country,
+      country: country === '' ? 'br' : 'pt',
     });
     return response.json(subscription);
   }
