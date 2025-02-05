@@ -1,5 +1,6 @@
 import { injectable, inject, container } from 'tsyringe';
 
+import { Logger } from 'pino';
 import { AppError } from '../../../shared/errors/app-error';
 import { IUsersRepository } from '../contracts/repositories/users';
 import { IHashProvider } from '../../../shared/providers/HashProvider/entities/hash-provider';
@@ -50,80 +51,96 @@ export class CreateUserService {
 
     @inject('SellerCodesRepository')
     private sellerCodesRepository: ISellerCodesRepository,
+
+    @inject('Logger')
+    private logger: Logger,
   ) {}
 
   public async execute(payload: CreateUser): Promise<User> {
-    const { email, password, roleType, sellerCode, region } = payload;
+    try {
+      const { email, password, roleType, sellerCode, region } = payload;
 
-    const userExists = await this.usersRepository.findByEmail(email);
+      const userExists = await this.usersRepository.findByEmail(email);
 
-    if (userExists) {
-      throw new AppError('Já existe um usuário com este email, faça o login!');
-    }
+      if (userExists) {
+        throw new AppError(
+          'Já existe um usuário com este email, faça o login!',
+        );
+      }
 
-    let hashedPassword: string;
+      let hashedPassword: string;
 
-    if (password) {
-      hashedPassword = await this.hashProvider.generateHash(password);
-    }
+      if (password) {
+        hashedPassword = await this.hashProvider.generateHash(password);
+      }
 
-    const patientDeleted = await this.usersRepository.findByEmailWithDeleted(
-      email,
-    );
-    const role = await this.rolesRepository.findByType(roleType);
+      const patientDeleted = await this.usersRepository.findByEmailWithDeleted(
+        email,
+      );
+      const role = await this.rolesRepository.findByType(roleType);
 
-    if (!role) {
-      throw new AppError('RoleType Inválido, verifique e tente novamente!');
-    }
+      if (!role) {
+        throw new AppError('RoleType Inválido, verifique e tente novamente!');
+      }
 
-    if (patientDeleted) {
-      return this.usersRepository.restore(patientDeleted.id, {
+      if (patientDeleted) {
+        return this.usersRepository.restore(patientDeleted.id, {
+          ...payload,
+          roleId: role[0].id,
+          password: hashedPassword,
+        });
+      }
+
+      const user = await this.usersRepository.create({
         ...payload,
         roleId: role[0].id,
         password: hashedPassword,
       });
-    }
 
-    const user = await this.usersRepository.create({
-      ...payload,
-      roleId: role[0].id,
-      password: hashedPassword,
-    });
+      const savedUser = await this.usersRepository.save(user);
 
-    const savedUser = await this.usersRepository.save(user);
+      if (roleType === 'comercial') {
+        let isUnique = false;
+        let code;
+        /* eslint-disable no-await-in-loop */
+        while (!isUnique) {
+          code = generateRandomCode(savedUser.name);
+          const codeExists = await this.sellerCodesRepository.findByCode(code);
 
-    if (roleType === 'comercial') {
-      let isUnique = false;
-      let code;
-      /* eslint-disable no-await-in-loop */
-      while (!isUnique) {
-        code = generateRandomCode(savedUser.name);
-        const codeExists = await this.sellerCodesRepository.findByCode(code);
-
-        if (!codeExists) {
-          isUnique = true;
-          const { fee, free, maxUse, discounts, sellers, type } = sellerCode;
-          const createSellerCode = container.resolve(CreateSellerCode);
-          await createSellerCode.execute({
-            sellerId: savedUser.id,
-            code,
-            fee,
-            free,
-            maxUse,
-            type,
-            discounts,
-            sellers,
-            region,
-          });
-          mailer({
-            to: savedUser.email,
-            subject: `💙Boas Vindas à Hausey!`,
-            body: WelcomeRepresentantHtmlText(savedUser.email, password),
-          });
+          if (!codeExists) {
+            isUnique = true;
+            const { fee, free, maxUse, discounts, sellers, type } = sellerCode;
+            const createSellerCode = container.resolve(CreateSellerCode);
+            await createSellerCode.execute({
+              sellerId: savedUser.id,
+              code,
+              fee,
+              free,
+              maxUse,
+              type,
+              discounts,
+              sellers,
+              region,
+            });
+            mailer({
+              to: savedUser.email,
+              subject: `💙Boas Vindas à Hausey!`,
+              body: WelcomeRepresentantHtmlText(savedUser.email, password),
+            });
+          }
         }
       }
-    }
 
-    return savedUser;
+      return savedUser;
+    } catch (error) {
+      this.logger.info(
+        {
+          error,
+        },
+        'Houve um erro ao criar operação',
+      );
+
+      throw new AppError('Houve um erro ao criar usuário');
+    }
   }
 }
