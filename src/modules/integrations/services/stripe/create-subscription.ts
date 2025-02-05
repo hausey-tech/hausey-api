@@ -3,7 +3,7 @@ import { container, inject, injectable } from 'tsyringe';
 import { AppError } from '../../../../shared/errors/app-error';
 import { IPlansRepository } from '../../../plans/contracts/repositories/plans';
 import { IPatientsRepository } from '../../../patients/contracts/repositories/patients';
-import { stripeInstance } from '../../utils/stripe-instance';
+import { stripeInstance, stripePTInstance } from '../../utils/stripe-instance';
 import { CreateCustomer } from './create-customer';
 import { CreatePaymentMethod } from './create-payment-method';
 import { Patient } from '../../../patients/entities/patient';
@@ -19,6 +19,7 @@ interface Props {
   patientId: string;
   priceId: string;
   card: Card | string;
+  country: string;
 }
 
 @injectable()
@@ -31,7 +32,12 @@ export class CreateSubscription {
     private plansRepository: IPlansRepository,
   ) {}
 
-  public async execute({ patientId, priceId, card }: Props): Promise<Patient> {
+  public async execute({
+    patientId,
+    priceId,
+    card,
+    country,
+  }: Props): Promise<Patient> {
     const patient = await this.patientsRepository.findById(patientId);
 
     if (!patient) {
@@ -55,6 +61,7 @@ export class CreateSubscription {
         const customer = await createCustomer.execute({
           email: patient.email,
           name: patient.name,
+          country,
         });
         customerId = customer.id;
       }
@@ -66,14 +73,23 @@ export class CreateSubscription {
         const paymentMethod = await createPaymentMethod.execute({
           customerId,
           card,
+          country,
         });
 
         cardId = paymentMethod.id;
       } else {
         cardId = card;
       }
-
-      subscription = await stripeInstance.subscriptions.create({
+      if (country !== 'pt') {
+        subscription = await stripeInstance.subscriptions.create({
+          customer: customerId,
+          items: [{ price: priceId }],
+          collection_method: 'charge_automatically',
+          payment_behavior: 'error_if_incomplete',
+          default_payment_method: cardId,
+        });
+      }
+      subscription = await stripePTInstance.subscriptions.create({
         customer: customerId,
         items: [{ price: priceId }],
         collection_method: 'charge_automatically',

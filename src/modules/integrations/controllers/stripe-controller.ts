@@ -31,7 +31,7 @@ export class StripeController {
     request: Request,
     response: Response,
   ): Promise<Response> {
-    const { patientId, priceId, card } = request.body;
+    const { patientId, priceId, card, country } = request.body;
 
     const createSubscription = container.resolve(CreateSubscription);
 
@@ -39,6 +39,7 @@ export class StripeController {
       patientId,
       priceId,
       card,
+      country,
     });
     return response.json(subscription);
   }
