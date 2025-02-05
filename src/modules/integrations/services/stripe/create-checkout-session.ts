@@ -26,6 +26,7 @@ export class CreateCheckoutSession {
     private sellerCodesRepository: ISellerCodesRepository,
   ) {}
 
+  // TODO - Adicionar o country na tabela de paciente e alterar o valor neste método.
   public async execute({
     patientId,
     priceId,
@@ -67,6 +68,7 @@ export class CreateCheckoutSession {
         const customer = await createCustomer.execute({
           email: patient.email,
           name: patient.name,
+          country: 'br',
         });
         customerId = customer.id;
       }
