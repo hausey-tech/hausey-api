@@ -92,6 +92,8 @@ export class CreateSellerCode {
       );
     }
 
+    console.log('SELLERS =>', sellers);
+
     if (sellers?.length > 0) {
       const createSellerCodeSellerService = container.resolve(
         CreateSellerCodeSellerService,
