@@ -6,8 +6,14 @@ import { SellerCode } from '../entities/seller-code';
 import { ICreateSellerCodeDTO } from '../contracts/dtos/create-seller-code-dto';
 import { ISellerCodeDiscountsRepository } from '../../seller-code-discounts/contracts/repositories/seller-code-discounts-repository';
 import { CreateSellerCodeSellerService } from '../../seller-code-sellers/services/create-seller-code-seller-service';
-import { stripeInstance } from '../../integrations/utils/stripe-instance';
-import { formatCentsToDollar } from '../utils/format-cents-to-dollar';
+import {
+  stripeInstance,
+  stripePTInstance,
+} from '../../integrations/utils/stripe-instance';
+import {
+  formatCentsToDollar,
+  formatCentsToEuro,
+} from '../utils/format-cents-to-dollar';
 
 @injectable()
 export class CreateSellerCode {
@@ -48,8 +54,13 @@ export class CreateSellerCode {
 
     if (discounts?.length > 0) {
       let stripeCoupons: Stripe.ApiList<Stripe.Coupon>;
-      if (region !== 'br') {
+      let stripeCouponsPt: Stripe.ApiList<Stripe.Coupon>;
+      if (region !== 'br' && region !== 'pt') {
         stripeCoupons = await stripeInstance.coupons.list({
+          limit: 100,
+        });
+      } else if (region === 'pt') {
+        stripeCouponsPt = await stripePTInstance.coupons.list({
           limit: 100,
         });
       }
@@ -57,7 +68,7 @@ export class CreateSellerCode {
         discounts?.map(async discount => {
           let promoCodeId: string;
 
-          if (region !== 'br') {
+          if (region !== 'br' && region !== 'pt') {
             let stripeCoupon = stripeCoupons.data.find(
               coupon => coupon.name === formatCentsToDollar(discount.discount),
             );
@@ -72,6 +83,27 @@ export class CreateSellerCode {
             }
 
             const promoCode = await stripeInstance.promotionCodes.create({
+              coupon: stripeCoupon.id,
+              code,
+              max_redemptions: maxUse,
+            });
+
+            promoCodeId = promoCode.id;
+          } else if (region !== 'br' && region === 'pt') {
+            let stripeCoupon = stripeCouponsPt.data.find(
+              coupon => coupon.name === formatCentsToEuro(discount.discount),
+            );
+
+            if (!stripeCoupon) {
+              stripeCoupon = await stripePTInstance.coupons.create({
+                amount_off: discount.discount,
+                name: formatCentsToDollar(discount.discount),
+                currency: 'EUR',
+                duration: 'forever',
+              });
+            }
+
+            const promoCode = await stripePTInstance.promotionCodes.create({
               coupon: stripeCoupon.id,
               code,
               max_redemptions: maxUse,

@@ -7,6 +7,7 @@ import { HandleWebhook } from '../services/stripe/handle-webhook';
 import { ListCards } from '../services/stripe/list-cards';
 import { CreateBillingPortalSession } from '../services/stripe/create-billing-portal-session';
 import { CreateAccountLinkService } from '../services/stripe/create-account-link';
+import { HandlePtWebhook } from '../services/stripe/handle-pt-webhook';
 
 export class StripeController {
   public async listCards(
@@ -67,6 +68,24 @@ export class StripeController {
     const { body } = request;
 
     const handleWebhook = container.resolve(HandleWebhook);
+
+    try {
+      await handleWebhook.execute({ sig, body });
+    } catch (err) {
+      throw new AppError(`Webhook Error: ${err.message}`);
+    }
+
+    return response.json();
+  }
+
+  public async ptWebhook(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const sig = request.headers['stripe-signature'];
+    const { body } = request;
+
+    const handleWebhook = container.resolve(HandlePtWebhook);
 
     try {
       await handleWebhook.execute({ sig, body });

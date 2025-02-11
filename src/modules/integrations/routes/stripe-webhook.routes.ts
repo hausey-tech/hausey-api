@@ -9,3 +9,9 @@ stripeWebhookRoutes.post(
   express.raw({ type: 'application/json' }),
   stripeController.webhook,
 );
+
+stripeWebhookRoutes.post(
+  '/pt',
+  express.raw({ type: 'application/json' }),
+  stripeController.ptWebhook,
+);
