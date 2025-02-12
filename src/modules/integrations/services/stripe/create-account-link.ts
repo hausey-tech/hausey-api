@@ -2,7 +2,7 @@ import { container, inject, injectable } from 'tsyringe';
 import Stripe from 'stripe';
 import { CreateBankAccountService } from '../../../users/services/create-bank-account-service';
 import { AppError } from '../../../../shared/errors/app-error';
-import { stripeInstance } from '../../utils/stripe-instance';
+import { stripeInstance, stripePTInstance } from '../../utils/stripe-instance';
 import { IUsersRepository } from '../../../users/contracts/repositories/users';
 
 interface IProps {
@@ -46,7 +46,16 @@ export class CreateAccountLinkService {
         newRecipientId = newUser.recipientId;
       }
 
-      const data = await stripeInstance.accountLinks.create({
+      if (user.region !== 'pt') {
+        const data = await stripeInstance.accountLinks.create({
+          account: newRecipientId || user.recipientId,
+          type,
+          return_url: 'https://www.hausey.com.br/',
+          refresh_url: 'https://www.hausey.com.br/',
+        });
+        return data.url;
+      }
+      const data = await stripePTInstance.accountLinks.create({
         account: newRecipientId || user.recipientId,
         type,
         return_url: 'https://www.hausey.com.br/',
