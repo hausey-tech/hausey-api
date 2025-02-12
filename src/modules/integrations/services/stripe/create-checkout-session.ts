@@ -4,7 +4,7 @@ import { AppError } from '../../../../shared/errors/app-error';
 import { IPlansRepository } from '../../../plans/contracts/repositories/plans';
 import { IPatientsRepository } from '../../../patients/contracts/repositories/patients';
 import { ISellerCodesRepository } from '../../../seller-codes/contracts/repositories/seller-codes';
-import { stripeInstance } from '../../utils/stripe-instance';
+import { stripeInstance, stripePTInstance } from '../../utils/stripe-instance';
 import { CreateCustomer } from './create-customer';
 
 interface Props {
@@ -68,9 +68,23 @@ export class CreateCheckoutSession {
         const customer = await createCustomer.execute({
           email: patient.email,
           name: patient.name,
-          country: 'br',
+          country: patient.region,
         });
         customerId = customer.id;
+      }
+
+      if (patient.region === 'pt') {
+        sessionParams = {
+          customer: customerId,
+          success_url: 'https://hausey.com.br/app',
+          line_items: [{ price: priceId, quantity: 1 }],
+          mode: 'subscription',
+          cancel_url: 'https://hausey.com.br/app',
+          discounts: [{ promotion_code: promoCodeId }],
+        };
+        session = await stripePTInstance.checkout.sessions.create(
+          sessionParams,
+        );
       }
       sessionParams = {
         customer: customerId,
