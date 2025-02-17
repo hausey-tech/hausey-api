@@ -15,6 +15,9 @@ export class FindPlans {
   public async execute({ regions }: IFindPlansDTO): Promise<Plan[]> {
     console.log(regions);
     const regionsArr = regions?.split(',');
+    console.log('regionsArr', regionsArr);
+    console.log('regionsArr', regionsArr?.length > 0);
+    console.log('regions in', { region: In(regionsArr) });
     const plans = await this.plansRepository.find({
       regions: regionsArr?.length > 0 ? { region: In(regionsArr) } : undefined,
     });
