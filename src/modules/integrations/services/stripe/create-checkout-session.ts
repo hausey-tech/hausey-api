@@ -101,22 +101,23 @@ export class CreateCheckoutSession {
         session = await stripePTInstance.checkout.sessions.create(
           sessionParams,
         );
+      } else {
+        sessionParams = {
+          customer: customerId,
+          success_url: 'https://hausey.com.br/app',
+          line_items: [{ price: priceId, quantity: 1 }],
+          mode: 'subscription',
+          cancel_url: 'https://hausey.com.br/app',
+          discounts: [{ promotion_code: promoCodeId }],
+        };
+        this.logger.info(
+          {
+            message: sessionParams,
+          },
+          'Dados enviado para a criação do checkout',
+        );
+        session = await stripeInstance.checkout.sessions.create(sessionParams);
       }
-      sessionParams = {
-        customer: customerId,
-        success_url: 'https://hausey.com.br/app',
-        line_items: [{ price: priceId, quantity: 1 }],
-        mode: 'subscription',
-        cancel_url: 'https://hausey.com.br/app',
-        discounts: [{ promotion_code: promoCodeId }],
-      };
-      this.logger.info(
-        {
-          message: sessionParams,
-        },
-        'Dados enviado para a criação do checkout',
-      );
-      session = await stripeInstance.checkout.sessions.create(sessionParams);
     } catch (err) {
       this.logger.info(
         {
