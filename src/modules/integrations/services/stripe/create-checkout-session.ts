@@ -110,6 +110,12 @@ export class CreateCheckoutSession {
         cancel_url: 'https://hausey.com.br/app',
         discounts: [{ promotion_code: promoCodeId }],
       };
+      this.logger.info(
+        {
+          message: sessionParams,
+        },
+        'Dados enviado para a criação do checkout',
+      );
       session = await stripeInstance.checkout.sessions.create(sessionParams);
     } catch (err) {
       this.logger.info(
