@@ -1,5 +1,6 @@
 import Stripe from 'stripe';
 import { container, inject, injectable } from 'tsyringe';
+import { Logger } from 'pino';
 import { AppError } from '../../../../shared/errors/app-error';
 import { IPlansRepository } from '../../../plans/contracts/repositories/plans';
 import { IPatientsRepository } from '../../../patients/contracts/repositories/patients';
@@ -24,6 +25,9 @@ export class CreateCheckoutSession {
 
     @inject('SellerCodesRepository')
     private sellerCodesRepository: ISellerCodesRepository,
+
+    @inject('Logger')
+    private logger: Logger,
   ) {}
 
   // TODO - Adicionar o country na tabela de paciente e alterar o valor neste método.
@@ -34,6 +38,12 @@ export class CreateCheckoutSession {
     const patient = await this.patientsRepository.findById(patientId);
 
     if (!patient) {
+      this.logger.info(
+        {
+          error: 'Paciente não encontrado, verifique e tente novamente',
+        },
+        'Erro dentro do if patient',
+      );
       throw new AppError(
         'Paciente não encontrado, verifique e tente novamente!',
       );
@@ -42,6 +52,12 @@ export class CreateCheckoutSession {
     const plan = await this.plansRepository.findyByPriceId(priceId);
 
     if (!plan) {
+      this.logger.info(
+        {
+          error: 'Plano não encontrado, verifique e tente novamente!',
+        },
+        'Erro dentro da condicional plan.',
+      );
       throw new AppError('Plano não encontrado, verifique e tente novamente!');
     }
 
@@ -96,6 +112,12 @@ export class CreateCheckoutSession {
       };
       session = await stripeInstance.checkout.sessions.create(sessionParams);
     } catch (err) {
+      this.logger.info(
+        {
+          error: err,
+        },
+        'Catch create checkout session',
+      );
       throw new AppError(err.raw.message, err.statusCode);
     }
     patient.planId = plan.id;
