@@ -1,8 +1,8 @@
 import { injectable, inject } from 'tsyringe';
 import fs from 'fs';
 import csv from 'csv-parser';
-import { AppError } from 'shared/errors/app-error';
 import { Logger } from 'pino';
+import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { ICreatePatientDTO } from '../contracts/dtos/create-patient';
 
