@@ -18,8 +18,17 @@ export class UploadPatientCsv {
 
   public async execute(file: any): Promise<string> {
     console.log('entrei no execute e vou exibir o file:', file);
+
+    // Verifica se o arquivo temporário existe
+    if (!file.path || !fs.existsSync(file.path)) {
+      console.error('Arquivo temporário não encontrado:', file.path);
+      throw new AppError('Arquivo temporário não encontrado.', 400);
+    }
+
     return new Promise((resolve, reject) => {
       const results: any[] = [];
+
+      console.log('Iniciando leitura do arquivo CSV...'); // Log antes de ler o arquivo
 
       fs.createReadStream(file.path)
         .pipe(
@@ -33,6 +42,7 @@ export class UploadPatientCsv {
           results.push(data);
         })
         .on('end', async () => {
+          console.log('Leitura do arquivo CSV concluída.'); // Log após ler o arquivo
           try {
             console.log('Processando linhas do CSV...'); // Log início do processamento
             await Promise.all(
