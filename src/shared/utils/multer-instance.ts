@@ -9,7 +9,11 @@ const fileFilter = (
   callback: FileFilterCallback,
 ) => {
   const { mimetype } = file;
-  if (mimetype.split('/')[0] === 'image' || mimetype === 'application/pdf') {
+  if (
+    mimetype.split('/')[0] === 'image' ||
+    mimetype === 'application/pdf' ||
+    mimetype === 'text/csv'
+  ) {
     callback(null, true);
   } else {
     callback(new multer.MulterError('LIMIT_UNEXPECTED_FILE'));
