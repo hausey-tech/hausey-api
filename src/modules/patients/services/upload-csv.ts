@@ -3,6 +3,7 @@ import fs from 'fs';
 import csv from 'csv-parser';
 import { AppError } from 'shared/errors/app-error';
 import { Logger } from 'pino';
+import { IHashProvider } from 'shared/providers/HashProvider/entities/hash-provider';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { ICreatePatientDTO } from '../contracts/dtos/create-patient';
 
@@ -14,6 +15,9 @@ export class UploadPatientCsv {
 
     @inject('Logger')
     private logger: Logger,
+
+    @inject('HashProvider')
+    private hashProvider: IHashProvider,
   ) {}
 
   public async execute(file: any): Promise<string> {
@@ -52,10 +56,14 @@ export class UploadPatientCsv {
               throw new AppError('Linha inválida no CSV', row);
             }
 
+            const hashedPassword = await this.hashProvider.generateHash(
+              password,
+            );
+
             const patientDto: ICreatePatientDTO = {
               name,
               email,
-              password,
+              password: hashedPassword,
               phoneNumber,
               document,
               birthdate,
