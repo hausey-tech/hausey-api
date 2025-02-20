@@ -143,7 +143,7 @@ export class PatientsController {
     }
 
     const uploadPatients = container.resolve(UploadPatientCsv);
-    const message = uploadPatients.execute(file);
+    const message = await uploadPatients.execute(file);
     return response.status(201).json({ message });
   }
 
