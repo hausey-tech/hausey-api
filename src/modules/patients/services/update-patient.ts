@@ -2,7 +2,7 @@ import { injectable, inject, container } from 'tsyringe';
 
 import { addYears } from 'date-fns';
 import { Logger } from 'pino';
-import { Plan } from 'modules/plans/entities/plan';
+import { Plan } from '../../plans/entities/plan';
 import { CreatePagarmeCustomerService } from '../../integrations/services/pagarme/create-pagarme-customer-service';
 import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
