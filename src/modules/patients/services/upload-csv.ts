@@ -1,5 +1,5 @@
 import { injectable, inject } from 'tsyringe';
-import fs from 'fs';
+import { Readable } from 'stream';
 import csv from 'csv-parser';
 import { Logger } from 'pino';
 import { AppError } from '../../../shared/errors/app-error';
@@ -19,10 +19,10 @@ export class UploadPatientCsv {
   public async execute(file: any): Promise<string> {
     console.log('entrei no execute e vou exibir o file:', file);
 
-    // Verifica se o arquivo temporário existe
-    if (!file.path || !fs.existsSync(file.path)) {
-      console.error('Arquivo temporário não encontrado:', file.path);
-      throw new AppError('Arquivo temporário não encontrado.', 400);
+    // Verifica se o buffer do arquivo existe
+    if (!file.buffer) {
+      console.error('Buffer do arquivo não encontrado.');
+      throw new AppError('Buffer do arquivo não encontrado.', 400);
     }
 
     return new Promise((resolve, reject) => {
@@ -30,7 +30,10 @@ export class UploadPatientCsv {
 
       console.log('Iniciando leitura do arquivo CSV...'); // Log antes de ler o arquivo
 
-      fs.createReadStream(file.path)
+      // Cria um stream a partir do buffer
+      const stream = Readable.from(file.buffer);
+
+      stream
         .pipe(
           csv({
             mapHeaders: ({ header }) => header.trim(),
