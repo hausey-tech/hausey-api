@@ -64,7 +64,7 @@ patientsRouter.post(
 patientsRouter.post(
   '/upload-csv',
   ensureAuthentication,
-  upload.single('file'),
+  // upload.single('file'),
   patientsController.uploadCsv,
 );
 

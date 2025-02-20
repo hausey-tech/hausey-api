@@ -134,6 +134,7 @@ export class PatientsController {
     request: Request,
     response: Response,
   ): Promise<Response> {
+    console.log('Olá, chamei a rota');
     const { file } = request;
 
     if (!file) {
