@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
+import fs from 'fs';
 
 import { CreatePagarmeCustomerService } from '../../integrations/services/pagarme/create-pagarme-customer-service';
 import { CreatePatientService } from '../services/create-patient';
@@ -138,13 +139,23 @@ export class PatientsController {
     if (!file) {
       return response.status(400).json({
         message:
-          'Nenhum arquivo CSV foi encontrado. Faça o upload do arquiv ou coloque o nome do parametro como file.',
+          'Nenhum arquivo CSV foi encontrado. Faça o upload do arquivo ou coloque o nome do parâmetro como "file".',
       });
     }
 
     const uploadPatients = container.resolve(UploadPatientCsv);
-    const message = await uploadPatients.execute(file);
-    return response.status(201).json({ message });
+
+    try {
+      const message = await uploadPatients.execute(file);
+      return response.status(201).json({ message });
+    } catch (error) {
+      console.error('Erro ao processar CSV:', error);
+      return response.status(500).json({ message: 'Erro ao processar CSV.' });
+    } finally {
+      if (file.path) {
+        fs.unlinkSync(file.path);
+      }
+    }
   }
 
   public async getPatientFiles(
