@@ -1,6 +1,7 @@
 import { celebrate, Joi, Segments } from 'celebrate';
 import { Router } from 'express';
 import { upload } from '../../../shared/utils';
+import { uploadCsv } from '../../../shared/utils/multer-csv';
 import {
   ListPatientsSchema,
   CreatePatientSchema,
@@ -64,7 +65,7 @@ patientsRouter.post(
 patientsRouter.post(
   '/upload-csv',
   ensureAuthentication,
-  upload.single('file'),
+  uploadCsv.single('file'),
   patientsController.uploadCsv,
 );
 
