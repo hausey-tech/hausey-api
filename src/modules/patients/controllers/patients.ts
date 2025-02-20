@@ -26,6 +26,7 @@ import { GetPatientSellerId } from '../services/get-patient-sellerid';
 import { GetCustomerInfos } from '../services/get-customer-infos';
 import { UpdatePatientStriperIdService } from '../services/update-patient-striperid-service';
 import { FilterAdminService } from '../services/filter-admin';
+import { UploadPatientCsv } from '../services/upload-csv';
 
 export class PatientsController {
   public async index(request: Request, response: Response): Promise<Response> {
@@ -126,6 +127,24 @@ export class PatientsController {
     }
 
     return response.json(session);
+  }
+
+  public async uploadCsv(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { file } = request;
+
+    if (!file) {
+      return response.status(400).json({
+        message:
+          'Nenhum arquivo CSV foi encontrado. Faça o upload do arquiv ou coloque o nome do parametro como file.',
+      });
+    }
+
+    const uploadPatients = container.resolve(UploadPatientCsv);
+    const message = uploadPatients.execute(file);
+    return response.status(201).json({ message });
   }
 
   public async getPatientFiles(

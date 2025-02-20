@@ -57,8 +57,16 @@ patientsRouter.get(
 patientsRouter.post(
   '/',
   celebrate(CreatePatientSchema),
+  ensureAuthentication,
   patientsController.create,
 );
+
+patientsRouter.post(
+  '/upload-csv',
+  ensureAuthentication,
+  patientsController.uploadCsv,
+);
+
 patientsRouter.post(
   '/get-patients-by-group',
   celebrate(GetPatientsByGroupSchema),
