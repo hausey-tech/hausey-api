@@ -17,6 +17,7 @@ export class UploadPatientCsv {
   ) {}
 
   public async execute(file: any): Promise<string> {
+    console.log('entrei no execute e vou exibir o file:', file);
     return new Promise((resolve, reject) => {
       const results: any[] = [];
 
