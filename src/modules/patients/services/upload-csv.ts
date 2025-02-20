@@ -78,7 +78,7 @@ export class UploadPatientCsv {
 
           await Promise.all(createPatientPromises);
 
-          return 'Pacientes criados com sucesso.';
+          return 'Paciente(s) criados com sucesso.';
         } catch (error) {
           this.logger.info(
             {
