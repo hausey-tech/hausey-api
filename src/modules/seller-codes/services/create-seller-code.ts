@@ -1,7 +1,7 @@
 import { injectable, inject, container } from 'tsyringe';
 import Stripe from 'stripe';
 import { Logger } from 'pino';
-import { generateRandomCode } from 'modules/users/utils/create-random-code';
+import { generateRandomCode } from '../../users/utils/create-random-code';
 import { AppError } from '../../../shared/errors/app-error';
 import { ISellerCodesRepository } from '../contracts/repositories/seller-codes';
 import { SellerCode } from '../entities/seller-code';
