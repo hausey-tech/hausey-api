@@ -1,5 +1,6 @@
 import { injectable, inject, container } from 'tsyringe';
 import Stripe from 'stripe';
+import { Logger } from 'pino';
 import { AppError } from '../../../shared/errors/app-error';
 import { ISellerCodesRepository } from '../contracts/repositories/seller-codes';
 import { SellerCode } from '../entities/seller-code';
@@ -22,6 +23,8 @@ export class CreateSellerCode {
     private sellerCodesRepository: ISellerCodesRepository,
     @inject('SellerCodeDiscountsRepository')
     private sellerCodeDiscountsRepository: ISellerCodeDiscountsRepository,
+    @inject('Logger')
+    private logger: Logger,
   ) {}
 
   public async execute({
@@ -67,6 +70,7 @@ export class CreateSellerCode {
       await Promise.all(
         discounts?.map(async discount => {
           let promoCodeId: string;
+          console.log('Discount', discount);
 
           if (region !== 'br' && region !== 'pt') {
             let stripeCoupon = stripeCoupons.data.find(
@@ -93,21 +97,28 @@ export class CreateSellerCode {
             let stripeCoupon = stripeCouponsPt.data.find(
               coupon => coupon.name === formatCentsToEuro(discount.discount),
             );
+            console.log('stripeCoupon', stripeCoupon);
 
             if (!stripeCoupon) {
+              console.log('antes de criar o cupom');
               stripeCoupon = await stripePTInstance.coupons.create({
                 amount_off: discount.discount,
-                name: formatCentsToDollar(discount.discount),
+                name: formatCentsToEuro(discount.discount),
                 currency: 'EUR',
                 duration: 'forever',
               });
+              console.log('Criei o cupom!');
             }
+
+            console.log('stripeCoupon', stripeCoupon);
 
             const promoCode = await stripePTInstance.promotionCodes.create({
               coupon: stripeCoupon.id,
               code,
               max_redemptions: maxUse,
             });
+
+            console.log('criei o promoCode', promoCode);
 
             promoCodeId = promoCode.id;
           }
@@ -123,8 +134,6 @@ export class CreateSellerCode {
         }),
       );
     }
-
-    console.log('SELLERS =>', sellers);
 
     if (sellers?.length > 0) {
       const createSellerCodeSellerService = container.resolve(
