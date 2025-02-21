@@ -1,6 +1,7 @@
 import { injectable, inject, container } from 'tsyringe';
 import Stripe from 'stripe';
 import { Logger } from 'pino';
+import { generateRandomCode } from 'modules/users/utils/create-random-code';
 import { AppError } from '../../../shared/errors/app-error';
 import { ISellerCodesRepository } from '../contracts/repositories/seller-codes';
 import { SellerCode } from '../entities/seller-code';
@@ -37,6 +38,7 @@ export class CreateSellerCode {
     discounts,
     sellers,
     region,
+    name,
   }: ICreateSellerCodeDTO): Promise<SellerCode> {
     const codeExists = await this.sellerCodesRepository.findByCode(code);
 
@@ -67,10 +69,10 @@ export class CreateSellerCode {
           limit: 100,
         });
       }
+      let count = 0;
       await Promise.all(
         discounts?.map(async discount => {
           let promoCodeId: string;
-          console.log('Discount', discount);
 
           if (region !== 'br' && region !== 'pt') {
             let stripeCoupon = stripeCoupons.data.find(
@@ -97,28 +99,23 @@ export class CreateSellerCode {
             let stripeCoupon = stripeCouponsPt.data.find(
               coupon => coupon.name === formatCentsToEuro(discount.discount),
             );
-            console.log('stripeCoupon', stripeCoupon);
 
             if (!stripeCoupon) {
-              console.log('antes de criar o cupom');
               stripeCoupon = await stripePTInstance.coupons.create({
                 amount_off: discount.discount,
                 name: formatCentsToEuro(discount.discount),
                 currency: 'EUR',
                 duration: 'forever',
               });
-              console.log('Criei o cupom!');
             }
-
-            console.log('stripeCoupon', stripeCoupon);
 
             const promoCode = await stripePTInstance.promotionCodes.create({
               coupon: stripeCoupon.id,
-              code,
+              code: count === 0 ? code : generateRandomCode(name),
               max_redemptions: maxUse,
             });
 
-            console.log('criei o promoCode', promoCode);
+            count += 1;
 
             promoCodeId = promoCode.id;
           }

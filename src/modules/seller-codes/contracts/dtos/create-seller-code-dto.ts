@@ -14,4 +14,5 @@ export interface ICreateSellerCodeDTO {
     fee: number;
   }[];
   region?: string;
+  name?: string;
 }

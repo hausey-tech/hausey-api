@@ -121,6 +121,7 @@ export class CreateUserService {
               discounts,
               sellers,
               region,
+              name: savedUser.name,
             });
             mailer({
               to: savedUser.email,
