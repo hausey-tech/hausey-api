@@ -69,9 +69,9 @@ export class CreateSellerCode {
           limit: 100,
         });
       }
-      let count = 0;
+
       await Promise.all(
-        discounts?.map(async discount => {
+        discounts?.map(async (discount, index) => {
           let promoCodeId: string;
 
           if (region !== 'br' && region !== 'pt') {
@@ -112,12 +112,10 @@ export class CreateSellerCode {
             console.log('antes de criar o promotion code', code);
             const promoCode = await stripePTInstance.promotionCodes.create({
               coupon: stripeCoupon.id,
-              code: count === 0 ? code : generateRandomCode(name),
+              code: index === 0 ? code : generateRandomCode(name),
               max_redemptions: maxUse,
             });
             console.log('Depois de criar o promotion code');
-
-            count += 1;
 
             promoCodeId = promoCode.id;
           }
