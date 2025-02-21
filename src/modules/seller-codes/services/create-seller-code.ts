@@ -109,11 +109,13 @@ export class CreateSellerCode {
               });
             }
 
+            console.log('antes de criar o promotion code', code);
             const promoCode = await stripePTInstance.promotionCodes.create({
               coupon: stripeCoupon.id,
               code: count === 0 ? code : generateRandomCode(name),
               max_redemptions: maxUse,
             });
+            console.log('Depois de criar o promotion code');
 
             count += 1;
 
