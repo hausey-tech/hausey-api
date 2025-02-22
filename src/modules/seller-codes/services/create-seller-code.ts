@@ -70,67 +70,70 @@ export class CreateSellerCode {
         });
       }
 
-      await Promise.all(
-        discounts?.map(async (discount, index) => {
-          let promoCodeId: string;
+      // Processa os discounts em série (um por vez)
+      for (let index = 0; index < discounts.length; index += 1) {
+        const discount = discounts[index];
+        let promoCodeId: string;
 
-          if (region !== 'br' && region !== 'pt') {
-            let stripeCoupon = stripeCoupons.data.find(
-              coupon => coupon.name === formatCentsToDollar(discount.discount),
-            );
+        if (region !== 'br' && region !== 'pt') {
+          let stripeCoupon = stripeCoupons.data.find(
+            coupon => coupon.name === formatCentsToDollar(discount.discount),
+          );
 
-            if (!stripeCoupon) {
-              stripeCoupon = await stripeInstance.coupons.create({
-                amount_off: discount.discount,
-                name: formatCentsToDollar(discount.discount),
-                currency: 'USD',
-                duration: 'forever',
-              });
-            }
-
-            const promoCode = await stripeInstance.promotionCodes.create({
-              coupon: stripeCoupon.id,
-              code,
-              max_redemptions: maxUse,
+          /* eslint-disable no-await-in-loop */
+          if (!stripeCoupon) {
+            stripeCoupon = await stripeInstance.coupons.create({
+              amount_off: discount.discount,
+              name: formatCentsToDollar(discount.discount),
+              currency: 'USD',
+              duration: 'forever',
             });
-
-            promoCodeId = promoCode.id;
-          } else if (region !== 'br' && region === 'pt') {
-            let stripeCoupon = stripeCouponsPt.data.find(
-              coupon => coupon.name === formatCentsToEuro(discount.discount),
-            );
-
-            if (!stripeCoupon) {
-              stripeCoupon = await stripePTInstance.coupons.create({
-                amount_off: discount.discount,
-                name: formatCentsToEuro(discount.discount),
-                currency: 'EUR',
-                duration: 'forever',
-              });
-            }
-
-            console.log(index);
-            console.log('antes de criar o promotion code', code);
-            const promoCode = await stripePTInstance.promotionCodes.create({
-              coupon: stripeCoupon.id,
-              code: index === 0 ? code : generateRandomCode(name),
-              max_redemptions: maxUse,
-            });
-            console.log('Depois de criar o promotion code');
-
-            promoCodeId = promoCode.id;
           }
 
-          const sellerCodeDiscount =
-            await this.sellerCodeDiscountsRepository.create({
-              sellerCodeId: sellerCode.id,
-              planId: discount.planId,
-              discount: discount.discount,
-              stripePromoCodeId: promoCodeId,
+          /* eslint-disable no-await-in-loop */
+          const promoCode = await stripeInstance.promotionCodes.create({
+            coupon: stripeCoupon.id,
+            code, // Usa o código original para todas as iterações (região não PT)
+            max_redemptions: maxUse,
+          });
+
+          promoCodeId = promoCode.id;
+        } else if (region !== 'br' && region === 'pt') {
+          let stripeCoupon = stripeCouponsPt.data.find(
+            coupon => coupon.name === formatCentsToEuro(discount.discount),
+          );
+
+          /* eslint-disable no-await-in-loop */
+          if (!stripeCoupon) {
+            stripeCoupon = await stripePTInstance.coupons.create({
+              amount_off: discount.discount,
+              name: formatCentsToEuro(discount.discount),
+              currency: 'EUR',
+              duration: 'forever',
             });
-          await this.sellerCodeDiscountsRepository.save(sellerCodeDiscount);
-        }),
-      );
+          }
+
+          console.log('antes de criar o promotion code', code);
+          console.log(index);
+          const promoCode = await stripePTInstance.promotionCodes.create({
+            coupon: stripeCoupon.id,
+            code: index === 0 ? code : generateRandomCode(name), // Usa o código original apenas na primeira iteração
+            max_redemptions: maxUse,
+          });
+          console.log('Depois de criar o promotion code');
+
+          promoCodeId = promoCode.id;
+        }
+
+        const sellerCodeDiscount =
+          await this.sellerCodeDiscountsRepository.create({
+            sellerCodeId: sellerCode.id,
+            planId: discount.planId,
+            discount: discount.discount,
+            stripePromoCodeId: promoCodeId,
+          });
+        await this.sellerCodeDiscountsRepository.save(sellerCodeDiscount);
+      }
     }
 
     if (sellers?.length > 0) {
