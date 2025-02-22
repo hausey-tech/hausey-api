@@ -109,6 +109,7 @@ export class CreateSellerCode {
               });
             }
 
+            console.log(index);
             console.log('antes de criar o promotion code', code);
             const promoCode = await stripePTInstance.promotionCodes.create({
               coupon: stripeCoupon.id,
