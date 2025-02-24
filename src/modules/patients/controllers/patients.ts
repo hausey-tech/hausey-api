@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
+import { AppError } from '../../../shared/errors/app-error';
 import { CreatePagarmeCustomerService } from '../../integrations/services/pagarme/create-pagarme-customer-service';
 import { CreatePatientService } from '../services/create-patient';
 import { UpdatePatientService } from '../services/update-patient';
@@ -75,58 +76,63 @@ export class PatientsController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const payload = request.body;
+    try {
+      const payload = request.body;
 
-    const createPatientService = container.resolve(CreatePatientService);
+      const createPatientService = container.resolve(CreatePatientService);
 
-    const patient = await createPatientService.execute(payload);
+      const patient = await createPatientService.execute(payload);
 
-    const createSessionService = container.resolve(CreateSessionService);
+      const createSessionService = container.resolve(CreateSessionService);
 
-    const { email, password } = payload;
+      const { email, password } = payload;
 
-    const session = await createSessionService.execute({
-      email,
-      password,
-      role: 'patient',
-    });
-
-    if (payload.indicatedUserInformations) {
-      const pagarmeService = container.resolve(CreatePagarmeCustomerService);
-
-      const pagarmePayload = {
-        id: patient.id,
-        email: patient.email,
-        name: patient.name,
-        document: patient.document,
-        phoneNumber: patient.phoneNumber,
-      };
-
-      const pagarmeId = await pagarmeService.execute(pagarmePayload);
-
-      const updatePatientStriperId = container.resolve(
-        UpdatePatientStriperIdService,
-      );
-
-      await updatePatientStriperId.execute({
-        id: patient.id,
-        customerId: pagarmeId,
+      const session = await createSessionService.execute({
+        email,
+        password,
+        role: 'patient',
       });
 
-      const updatePatientPlanPartnerService = container.resolve(
-        UpdatePatientPlanPartnerService,
-      );
+      if (payload.indicatedUserInformations) {
+        const pagarmeService = container.resolve(CreatePagarmeCustomerService);
 
-      await updatePatientPlanPartnerService.execute({
-        patientId: patient.id,
-        priceId: payload.indicatedUserInformations.priceId,
-        periodEnd: payload.indicatedUserInformations.periodEnd,
-      });
+        const pagarmePayload = {
+          id: patient.id,
+          email: patient.email,
+          name: patient.name,
+          document: patient.document,
+          phoneNumber: patient.phoneNumber,
+        };
+
+        const pagarmeId = await pagarmeService.execute(pagarmePayload);
+
+        const updatePatientStriperId = container.resolve(
+          UpdatePatientStriperIdService,
+        );
+
+        await updatePatientStriperId.execute({
+          id: patient.id,
+          customerId: pagarmeId,
+        });
+
+        const updatePatientPlanPartnerService = container.resolve(
+          UpdatePatientPlanPartnerService,
+        );
+
+        await updatePatientPlanPartnerService.execute({
+          patientId: patient.id,
+          priceId: payload.indicatedUserInformations.priceId,
+          periodEnd: payload.indicatedUserInformations.periodEnd,
+        });
+
+        return response.json(session);
+      }
 
       return response.json(session);
+    } catch (error) {
+      console.log('error login', error);
+      throw new AppError('Houve um erro');
     }
-
-    return response.json(session);
   }
 
   public async uploadCsv(

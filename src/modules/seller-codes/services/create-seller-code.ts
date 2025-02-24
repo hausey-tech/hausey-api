@@ -69,8 +69,6 @@ export class CreateSellerCode {
           limit: 100,
         });
       }
-
-      // Processa os discounts em série (um por vez)
       for (let index = 0; index < discounts.length; index += 1) {
         const discount = discounts[index];
         let promoCodeId: string;
@@ -93,7 +91,7 @@ export class CreateSellerCode {
           /* eslint-disable no-await-in-loop */
           const promoCode = await stripeInstance.promotionCodes.create({
             coupon: stripeCoupon.id,
-            code, // Usa o código original para todas as iterações (região não PT)
+            code,
             max_redemptions: maxUse,
           });
 
@@ -103,7 +101,6 @@ export class CreateSellerCode {
             coupon => coupon.name === formatCentsToEuro(discount.discount),
           );
 
-          /* eslint-disable no-await-in-loop */
           if (!stripeCoupon) {
             stripeCoupon = await stripePTInstance.coupons.create({
               amount_off: discount.discount,
@@ -113,11 +110,23 @@ export class CreateSellerCode {
             });
           }
 
+          let newCode = generateRandomCode(name);
+          let codeAlreadyExists = await this.sellerCodesRepository.findByCode(
+            newCode,
+          );
+
+          while (codeAlreadyExists) {
+            newCode = generateRandomCode(name);
+            codeAlreadyExists = await this.sellerCodesRepository.findByCode(
+              newCode,
+            );
+          }
+
           console.log('antes de criar o promotion code', code);
           console.log(index);
           const promoCode = await stripePTInstance.promotionCodes.create({
             coupon: stripeCoupon.id,
-            code: index === 0 ? code : generateRandomCode(name), // Usa o código original apenas na primeira iteração
+            code: index === 0 ? code : newCode,
             max_redemptions: maxUse,
           });
           console.log('Depois de criar o promotion code');
