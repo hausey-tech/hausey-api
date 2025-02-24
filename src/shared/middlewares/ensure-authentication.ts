@@ -43,6 +43,9 @@ export const ensureAuthentication = (
 
       return next();
     } catch {
+      console.log(
+        'Erro ao autenticar, erro 401. O Autentication token tá inválido.',
+      );
       throw new AppError(
         'Failed to authenticate token. Please login again.',
         401,
@@ -54,6 +57,7 @@ export const ensureAuthentication = (
     const { apiKey: expectedApiKey } = authConfig;
 
     if (apiKey !== expectedApiKey) {
+      console.log('API KEY INVÁLIDO, 401');
       throw new AppError('Invalid API key.', 401);
     }
 

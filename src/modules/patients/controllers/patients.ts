@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import { AppError } from '../../../shared/errors/app-error';
 import { CreatePagarmeCustomerService } from '../../integrations/services/pagarme/create-pagarme-customer-service';
 import { CreatePatientService } from '../services/create-patient';
 import { UpdatePatientService } from '../services/update-patient';
@@ -76,63 +75,62 @@ export class PatientsController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    try {
-      const payload = request.body;
+    const payload = request.body;
 
-      const createPatientService = container.resolve(CreatePatientService);
+    const createPatientService = container.resolve(CreatePatientService);
 
-      const patient = await createPatientService.execute(payload);
+    console.log('Antes de bater no execute create patient');
+    const patient = await createPatientService.execute(payload);
 
-      const createSessionService = container.resolve(CreateSessionService);
+    const createSessionService = container.resolve(CreateSessionService);
 
-      const { email, password } = payload;
+    console.log('Após bater no execute create patient');
+    const { email, password } = payload;
 
-      const session = await createSessionService.execute({
-        email,
-        password,
-        role: 'patient',
+    console.log('Antes de bater no execute create session');
+    const session = await createSessionService.execute({
+      email,
+      password,
+      role: 'patient',
+    });
+
+    if (payload.indicatedUserInformations) {
+      const pagarmeService = container.resolve(CreatePagarmeCustomerService);
+
+      const pagarmePayload = {
+        id: patient.id,
+        email: patient.email,
+        name: patient.name,
+        document: patient.document,
+        phoneNumber: patient.phoneNumber,
+      };
+
+      const pagarmeId = await pagarmeService.execute(pagarmePayload);
+
+      const updatePatientStriperId = container.resolve(
+        UpdatePatientStriperIdService,
+      );
+
+      await updatePatientStriperId.execute({
+        id: patient.id,
+        customerId: pagarmeId,
       });
 
-      if (payload.indicatedUserInformations) {
-        const pagarmeService = container.resolve(CreatePagarmeCustomerService);
+      const updatePatientPlanPartnerService = container.resolve(
+        UpdatePatientPlanPartnerService,
+      );
 
-        const pagarmePayload = {
-          id: patient.id,
-          email: patient.email,
-          name: patient.name,
-          document: patient.document,
-          phoneNumber: patient.phoneNumber,
-        };
-
-        const pagarmeId = await pagarmeService.execute(pagarmePayload);
-
-        const updatePatientStriperId = container.resolve(
-          UpdatePatientStriperIdService,
-        );
-
-        await updatePatientStriperId.execute({
-          id: patient.id,
-          customerId: pagarmeId,
-        });
-
-        const updatePatientPlanPartnerService = container.resolve(
-          UpdatePatientPlanPartnerService,
-        );
-
-        await updatePatientPlanPartnerService.execute({
-          patientId: patient.id,
-          priceId: payload.indicatedUserInformations.priceId,
-          periodEnd: payload.indicatedUserInformations.periodEnd,
-        });
-
-        return response.json(session);
-      }
+      await updatePatientPlanPartnerService.execute({
+        patientId: patient.id,
+        priceId: payload.indicatedUserInformations.priceId,
+        periodEnd: payload.indicatedUserInformations.periodEnd,
+      });
 
       return response.json(session);
-    } catch (error) {
-      console.log('error login', error);
-      throw new AppError('Houve um erro');
     }
+    console.log('Após de bater no execute create session');
+
+    return response.json(session);
   }
 
   public async uploadCsv(
