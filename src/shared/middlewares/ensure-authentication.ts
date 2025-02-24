@@ -67,5 +67,6 @@ export const ensureAuthentication = (
     return next();
   }
 
+  console.log('Falha de autenticação, não foi fornecido nenhum token, 401');
   throw new AppError('Falha de autenticação, nenhum token fornecido', 401);
 };
