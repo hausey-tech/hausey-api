@@ -55,10 +55,11 @@ patientsRouter.get(
   patientsController.findBySellerId,
 );
 
+// Não se faz necessário autenticação ao criar usuário
 patientsRouter.post(
   '/',
   celebrate(CreatePatientSchema),
-  ensureAuthentication,
+  // ensureAuthentication,
   patientsController.create,
 );
 
