@@ -110,16 +110,20 @@ export class CreateSellerCode {
             });
           }
 
+          let isUnique = false;
           let newCode = generateRandomCode(name);
           let codeAlreadyExists = await this.sellerCodesRepository.findByCode(
             newCode,
           );
 
-          while (codeAlreadyExists) {
+          while (!isUnique) {
             newCode = generateRandomCode(name);
             codeAlreadyExists = await this.sellerCodesRepository.findByCode(
               newCode,
             );
+            if (!codeAlreadyExists) {
+              isUnique = true;
+            }
           }
 
           console.log('antes de criar o promotion code', code);
