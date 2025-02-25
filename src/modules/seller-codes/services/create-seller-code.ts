@@ -116,9 +116,10 @@ export class CreateSellerCode {
             newCode,
           );
 
-          while (!isUnique) {
+          while (!isUnique && index > 0) {
             console.log('comecei no while');
-            newCode = generateRandomCode(name);
+            const newName = `${name}pt`;
+            newCode = generateRandomCode(newName);
             console.log('newCode', newCode);
             codeAlreadyExists = await this.sellerCodesRepository.findByCode(
               newCode,
