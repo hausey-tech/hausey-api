@@ -117,17 +117,24 @@ export class CreateSellerCode {
           );
 
           while (!isUnique) {
+            console.log('comecei no while');
             newCode = generateRandomCode(name);
+            console.log('newCode', newCode);
             codeAlreadyExists = await this.sellerCodesRepository.findByCode(
               newCode,
             );
+            console.log('codeAlreadyExists', codeAlreadyExists);
             if (!codeAlreadyExists) {
+              console.log('Entrei no if, é único');
               isUnique = true;
+              console.log(newCode);
             }
           }
 
           console.log('antes de criar o promotion code', code);
-          console.log(index);
+          console.log('index', index);
+          console.log('index === 0', index === 0, 'code', code);
+          console.log('index === 1', index === 1, 'newCode', newCode);
           const promoCode = await stripePTInstance.promotionCodes.create({
             coupon: stripeCoupon.id,
             code: index === 0 ? code : newCode,
