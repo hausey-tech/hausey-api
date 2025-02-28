@@ -435,7 +435,7 @@ export class PatientsController {
         patientId,
         planId,
         months,
-        handleAmount,
+        amount,
       });
       return response.json(pix);
     }
