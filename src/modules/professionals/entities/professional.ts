@@ -37,6 +37,9 @@ export class Professional extends UserEntity {
   @Column('varchar', { nullable: true })
   resetPasswordToken: string | null;
 
+  @Column('varchar', { default: 'America/Sao_Paulo' })
+  professionalTimezone: string | null;
+
   @Column('timestamp', { nullable: true })
   resetPasswordTokenExpiresIn: Date | null;
 }

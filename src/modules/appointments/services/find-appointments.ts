@@ -1,6 +1,7 @@
 import { FindOptionsWhere, IsNull, Not } from 'typeorm';
 import { injectable, inject } from 'tsyringe';
 
+import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 import { Appointment } from '../entities/appointment';
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
 
@@ -9,6 +10,9 @@ export class FindAppointmentsService {
   constructor(
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,
+
+    @inject('ProfessionalsRepository')
+    private professionalsRepository: IProfessionalsRepository,
   ) {}
 
   public async execute(query: any): Promise<Appointment[]> {
@@ -36,6 +40,10 @@ export class FindAppointmentsService {
     if (typeof finished === 'boolean') {
       where.finished = finished;
     }
+
+    const professional = this.professionalsRepository.findById(professionalId);
+
+    console.log(professional);
 
     const appointments = await this.appointmentsRepository.find(where);
 
