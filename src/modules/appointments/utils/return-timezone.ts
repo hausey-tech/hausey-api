@@ -36,6 +36,19 @@ export function verifyTimeZone(country: string, state: string, city: string) {
       .format('YYYY-MM-DD HH:mm:ss');
     return rioBrancoTime;
   }
+  if (
+    country === 'Brasil' &&
+    (state.toLocaleLowerCase() !== 'am' ||
+      state.toLocaleLowerCase() !== 'ms' ||
+      state.toLocaleLowerCase() !== 'mt' ||
+      state.toLocaleLowerCase() !== 'ro' ||
+      state.toLocaleLowerCase() !== 'ac')
+  ) {
+    const brasilTime = moment()
+      .tz('America/Sao_Paulo')
+      .format('YYYY-MM-DD HH:mm:ss');
+    return brasilTime;
+  }
   if (country === 'Estados Unidos' && state.toLocaleLowerCase() === 'ny') {
     const newYorkTime = moment()
       .tz('America/New_York')
