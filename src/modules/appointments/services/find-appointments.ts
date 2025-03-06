@@ -6,6 +6,7 @@ import { IProfessionalsRepository } from '../../professionals/contracts/reposito
 import { Appointment } from '../entities/appointment';
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
 import { verifyTimeZone } from '../utils/return-timezone';
+import { AppError } from '../../../shared/errors/app-error';
 
 @injectable()
 export class FindAppointmentsService {
@@ -58,6 +59,13 @@ export class FindAppointmentsService {
       const address = await this.addressesRepository.findByPatientId(
         appointment.patientId,
       );
+
+      if (!address?.country || !address?.state || !address?.city) {
+        console.log(
+          `Country ${address?.country} - State ${address?.state} - City ${address?.city}`,
+        );
+        throw new AppError('Country e/ou state e ou city inválidos');
+      }
       const timeZoneValidate = verifyTimeZone(
         address.country,
         address.state,
