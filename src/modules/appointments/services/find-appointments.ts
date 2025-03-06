@@ -54,23 +54,33 @@ export class FindAppointmentsService {
 
     const appointments = await this.appointmentsRepository.find(where);
 
-    const patients = appointments.map(async appointment => {
-      const address = await this.addressesRepository.findByPatientId(
-        appointment.patientId,
-      );
-      const timeZoneValidate = verifyTimeZone(
-        address?.country,
-        address?.state,
-        address?.city,
-      );
+    try {
+      const patientsWithTimeZones = await Promise.all(
+        appointments.map(async appointment => {
+          const address = await this.addressesRepository.findByPatientId(
+            appointment.patientId,
+          );
+          const timeZoneValidate = verifyTimeZone(
+            address?.country,
+            address?.state,
+            address?.city,
+          );
 
-      if (!timeZoneValidate) {
-        return `Fuso não identificado, registrar no banco. País ${address.country} - Estado ${address.state} - Cidade ${address.city}`;
-      }
-      return timeZoneValidate;
-    });
-
-    console.log(patients);
+          if (!timeZoneValidate) {
+            console.log(
+              `Fuso não identificado, registrar no banco. País ${address.country} - Estado ${address.state} - Cidade ${address.city}`,
+            );
+          }
+          return {
+            ...appointment,
+            timeZone: timeZoneValidate,
+          };
+        }),
+      );
+      console.log(patientsWithTimeZones);
+    } catch (error) {
+      console.log(error);
+    }
 
     return appointments;
   }
