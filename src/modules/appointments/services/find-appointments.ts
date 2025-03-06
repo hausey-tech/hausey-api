@@ -150,8 +150,7 @@ export class FindAppointmentsService {
           };
         }
 
-        const convertedDate = moment
-          .utc(appointment.date)
+        const convertedDate = moment(appointment.date)
           .tz(professionalTimeZone)
           .format('YYYY-MM-DD HH:mm:ss');
 
