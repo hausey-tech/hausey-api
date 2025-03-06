@@ -20,17 +20,15 @@ export class FindAppointmentsService {
     private addressesRepository: IAddressesRepository,
   ) {}
 
-  public async execute(query: any): Promise<Appointment[]> {
+  public async execute(
+    query: any,
+  ): Promise<(Appointment & { timeZone?: string | null })[]> {
     const { patientId, professionalId, finished, appointmentId } = query;
 
     const where: FindOptionsWhere<Appointment> = {};
 
-    if (patientId) {
-      where.patientId = patientId;
-    }
-    if (appointmentId) {
-      where.id = appointmentId;
-    }
+    if (patientId) where.patientId = patientId;
+    if (appointmentId) where.id = appointmentId;
 
     if (professionalId) {
       if (professionalId === 'null') {
@@ -46,51 +44,35 @@ export class FindAppointmentsService {
       where.finished = finished;
     }
 
-    const professional = await this.professionalsRepository.findById(
-      professionalId,
-    );
-
-    console.log(professional);
+    await this.professionalsRepository.findById(professionalId); // Removi o console.log aqui, mantenha se quiser
 
     const appointments = await this.appointmentsRepository.find(where);
 
-    try {
-      const patientsWithTimeZones = await Promise.all(
-        appointments.map(async appointment => {
-          const address = await this.addressesRepository.findByPatientId(
-            appointment.patientId,
-          );
-          if (!address?.country || !address?.state || address?.city) {
-            console.log(
-              `Há algo undefined. País ${address.country} - Estado ${address.state} - Cidade ${address.city}`,
-            );
-            return {
-              ...appointment,
-              timeZone: null,
-            };
-          }
-          const timeZoneValidate = verifyTimeZone(
-            address?.country,
-            address?.state,
-            address?.city,
-          );
+    const patientsWithTimeZones = await Promise.all(
+      appointments.map(async appointment => {
+        const address = await this.addressesRepository.findByPatientId(
+          appointment.patientId,
+        );
 
-          if (!timeZoneValidate) {
-            console.log(
-              `Fuso não identificado, registrar no banco. País ${address.country} - Estado ${address.state} - Cidade ${address.city}`,
-            );
-          }
-          return {
-            ...appointment,
-            timeZone: timeZoneValidate,
-          };
-        }),
-      );
-      console.log(patientsWithTimeZones);
-    } catch (error) {
-      console.log(error);
-    }
+        const timeZoneValidate = verifyTimeZone(
+          address?.country,
+          address?.state,
+          address?.city,
+        );
 
-    return appointments;
+        if (!timeZoneValidate) {
+          console.log(
+            `Fuso não identificado ou dados incompletos. País ${address?.country} - Estado ${address?.state} - Cidade ${address?.city}`,
+          );
+        }
+
+        return {
+          ...appointment,
+          timeZone: timeZoneValidate,
+        };
+      }),
+    );
+
+    return patientsWithTimeZones;
   }
 }

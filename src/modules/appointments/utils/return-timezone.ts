@@ -1,5 +1,4 @@
 import moment from 'moment-timezone';
-import { AppError } from '../../../shared/errors/app-error';
 
 type TimeZoneMap = {
   [country: string]: {
@@ -11,13 +10,15 @@ type TimeZoneMap = {
 const DEFAULT_TIMEZONE = 'America/New_York';
 
 export function verifyTimeZone(
-  country: string,
-  state: string,
-  city: string,
-): string {
+  country?: string,
+  state?: string,
+  city?: string,
+): string | null {
   if (!country || !state || !city) {
-    console.log(`Country ${country} - State ${state} - City ${city}`);
-    throw new AppError('Country, state e/ou city inválidos');
+    console.log(
+      `Dados incompletos para fuso horário: País ${country} - Estado ${state} - Cidade ${city}`,
+    );
+    return null; // Apenas retorna null sem lançar erro
   }
 
   const lowerCountry = country.toLowerCase();
@@ -59,7 +60,7 @@ export function verifyTimeZone(
 
   if (lowerCountry === 'estados unidos' && lowerState === 'tx') {
     const texasTimeZones = timeZoneMap[lowerCountry][lowerState];
-    if (typeof texasTimeZones === 'object' && texasTimeZones !== null) {
+    if (typeof texasTimeZones === 'object') {
       timeZone = texasTimeZones[lowerCity] || texasTimeZones.default;
     } else {
       timeZone = 'America/Chicago';
