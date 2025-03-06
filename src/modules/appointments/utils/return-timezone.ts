@@ -25,7 +25,7 @@ export function verifyTimeZone(
 
   const timeZoneMap: TimeZoneMap = {
     portugal: {
-      açores: 'Atlantic/Azores',
+      aco: 'Atlantic/Azores',
       default: 'Europe/Lisbon',
     },
     brasil: {
