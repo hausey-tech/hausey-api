@@ -1,6 +1,11 @@
 import moment from 'moment-timezone';
+import { AppError } from '../../../shared/errors/app-error';
 
 export function verifyTimeZone(country: string, state: string, city: string) {
+  if (!country || !state || !city) {
+    console.log(`Country ${country} - State ${state} - City ${city}`);
+    throw new AppError('Country e/ou state e ou city inválidos');
+  }
   if (country === 'Portugal' && state === 'Açores') {
     const azoresTime = moment()
       .tz('Atlantic/Azores')
