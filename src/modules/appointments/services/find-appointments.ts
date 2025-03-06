@@ -60,6 +60,15 @@ export class FindAppointmentsService {
           const address = await this.addressesRepository.findByPatientId(
             appointment.patientId,
           );
+          if (!address?.country || !address?.state || address?.city) {
+            console.log(
+              `Há algo undefined. País ${address.country} - Estado ${address.state} - Cidade ${address.city}`,
+            );
+            return {
+              ...appointment,
+              timeZone: null,
+            };
+          }
           const timeZoneValidate = verifyTimeZone(
             address?.country,
             address?.state,
