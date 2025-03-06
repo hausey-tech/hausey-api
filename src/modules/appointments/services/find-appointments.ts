@@ -138,7 +138,7 @@ export class FindAppointmentsService {
           appointment.professionalId,
         );
 
-        const professionalTimeZone = professional?.professional_timezone;
+        const professionalTimeZone = professional?.professionalTimezone;
 
         if (!professionalTimeZone) {
           console.log(
