@@ -1,4 +1,4 @@
-import moment from 'moment-timezone';
+const DEFAULT_TIMEZONE = 'America/Sao_Paulo';
 
 type TimeZoneMap = {
   [country: string]: {
@@ -6,8 +6,6 @@ type TimeZoneMap = {
     default: string;
   };
 };
-
-const DEFAULT_TIMEZONE = 'America/New_York';
 
 export function verifyTimeZone(
   country?: string,
@@ -18,7 +16,7 @@ export function verifyTimeZone(
     console.log(
       `Dados incompletos para fuso horário: País ${country} - Estado ${state} - Cidade ${city}`,
     );
-    return null; // Apenas retorna null sem lançar erro
+    return null;
   }
 
   const lowerCountry = country.toLowerCase();
@@ -56,28 +54,22 @@ export function verifyTimeZone(
     },
   };
 
-  let timeZone: string;
-
   if (lowerCountry === 'estados unidos' && lowerState === 'tx') {
     const texasTimeZones = timeZoneMap[lowerCountry][lowerState];
     if (typeof texasTimeZones === 'object') {
-      timeZone = texasTimeZones[lowerCity] || texasTimeZones.default;
-    } else {
-      timeZone = 'America/Chicago';
+      return texasTimeZones[lowerCity] || texasTimeZones.default;
     }
-  } else {
-    const countryTimeZones = timeZoneMap[lowerCountry];
-    if (countryTimeZones) {
-      const stateTimeZone = countryTimeZones[lowerState];
-      if (typeof stateTimeZone === 'string') {
-        timeZone = stateTimeZone;
-      } else {
-        timeZone = countryTimeZones.default;
-      }
-    } else {
-      timeZone = DEFAULT_TIMEZONE;
-    }
+    return 'America/Chicago';
   }
 
-  return moment().tz(timeZone).format('YYYY-MM-DD HH:mm:ss');
+  const countryTimeZones = timeZoneMap[lowerCountry];
+  if (countryTimeZones) {
+    const stateTimeZone = countryTimeZones[lowerState];
+    if (typeof stateTimeZone === 'string') {
+      return stateTimeZone;
+    }
+    return countryTimeZones.default;
+  }
+
+  return DEFAULT_TIMEZONE;
 }

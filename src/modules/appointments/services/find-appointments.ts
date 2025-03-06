@@ -1,6 +1,7 @@
 import { FindOptionsWhere, IsNull, Not } from 'typeorm';
 import { injectable, inject } from 'tsyringe';
 
+import moment from 'moment-timezone';
 import { IAddressesRepository } from '../../addresses/contracts/repositories/IAddressesRepository';
 import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 import { Appointment } from '../entities/appointment';
@@ -52,23 +53,26 @@ export class FindAppointmentsService {
           appointment.patientId,
         );
 
-        console.log(address);
-
-        const timeZoneValidate = verifyTimeZone(
+        const timeZone = verifyTimeZone(
           address?.country,
           address?.state,
           address?.city,
         );
 
-        if (!timeZoneValidate) {
+        if (!timeZone) {
           console.log(
             `Fuso não identificado ou dados incompletos. País ${address?.country} - Estado ${address?.state} - Cidade ${address?.city}`,
           );
         }
 
+        const hrPatient = timeZone
+          ? moment(appointment.date).tz(timeZone).format('YYYY-MM-DD HH:mm:ss')
+          : appointment.date;
+
         return {
           ...appointment,
-          timeZone: timeZoneValidate,
+          timeZone,
+          hrPatient,
         };
       }),
     );
