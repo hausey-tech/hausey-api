@@ -1,9 +1,11 @@
 import { FindOptionsWhere, IsNull, Not } from 'typeorm';
 import { injectable, inject } from 'tsyringe';
 
+import { IAddressesRepository } from '../../addresses/contracts/repositories/IAddressesRepository';
 import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 import { Appointment } from '../entities/appointment';
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
+import { verifyTimeZone } from '../utils/return-timezone';
 
 @injectable()
 export class FindAppointmentsService {
@@ -13,6 +15,9 @@ export class FindAppointmentsService {
 
     @inject('ProfessionalsRepository')
     private professionalsRepository: IProfessionalsRepository,
+
+    @inject('AddressesRepository')
+    private addressesRepository: IAddressesRepository,
   ) {}
 
   public async execute(query: any): Promise<Appointment[]> {
@@ -41,11 +46,31 @@ export class FindAppointmentsService {
       where.finished = finished;
     }
 
-    const professional = this.professionalsRepository.findById(professionalId);
+    const professional = await this.professionalsRepository.findById(
+      professionalId,
+    );
 
     console.log(professional);
 
     const appointments = await this.appointmentsRepository.find(where);
+
+    const patients = appointments.map(async appointment => {
+      const address = await this.addressesRepository.findByPatientId(
+        appointment.patientId,
+      );
+      const timeZoneValidate = verifyTimeZone(
+        address.country,
+        address.state,
+        address.city,
+      );
+
+      if (!timeZoneValidate) {
+        return `Fuso não identificado, registrar no banco. País ${address.country} - Estado ${address.state} - Cidade ${address.city}`;
+      }
+      return timeZoneValidate;
+    });
+
+    console.log(patients);
 
     return appointments;
   }
