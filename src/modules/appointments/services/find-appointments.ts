@@ -151,7 +151,7 @@ export class FindAppointmentsService {
         }
 
         const convertedDate = moment
-          .utc(appointment.date) // Garantindo que a data original está em UTC
+          .utc(appointment.date)
           .tz(professionalTimeZone)
           .format('YYYY-MM-DD HH:mm:ss');
 
