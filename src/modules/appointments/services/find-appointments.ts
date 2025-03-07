@@ -49,6 +49,8 @@ export class FindAppointmentsService {
 
     const appointments = await this.appointmentsRepository.find(where);
 
+    const doctor = await this.professionalsRepository.findById(professionalId);
+
     const patientsWithTimeZones = await Promise.all(
       appointments.map(async appointment => {
         const address = await this.addressesRepository.findByPatientId(
@@ -71,10 +73,15 @@ export class FindAppointmentsService {
           ? moment(appointment.date).tz(timeZone).format('YYYY-MM-DD HH:mm:ss')
           : moment(appointment.date).format('YYYY-MM-DD HH:mm:ss');
 
+        const hrDoctor = moment(appointment.date)
+          .tz(doctor.professionalTimezone)
+          .format('YYYY-MM-DD HH:mm:ss');
+
         return {
           ...appointment,
           timeZone,
           hrPatient,
+          hrDoctor,
         };
       }),
     );
