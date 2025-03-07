@@ -44,6 +44,7 @@ export class AppointmentsController {
 
   public async create(request: Request, response: Response): Promise<Response> {
     const { professionalId, date, patientId, emergency } = request.body;
+    console.log('DATE', date);
 
     const createAppointmentService = container.resolve(
       CreateAppointmentService,
