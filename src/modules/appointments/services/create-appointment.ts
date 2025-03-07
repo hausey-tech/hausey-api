@@ -1,6 +1,8 @@
 import { injectable, inject, container } from 'tsyringe';
 
 import { Logger } from 'pino';
+import moment from 'moment-timezone';
+import { Professional } from 'modules/professionals/entities/professional';
 import { ISlotsRepository } from '../../slots/contracts/repositories/slots';
 import { AlertProfessionalService } from '../../alert-professional/services/alertProfessional.service';
 import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
@@ -40,6 +42,7 @@ export class CreateAppointmentService {
   }: Omit<ICreateAppointmentDTO, 'roomId'>): Promise<Appointment> {
     try {
       const patient = await this.patientsRepository.findById(patientId);
+      let professional: Professional | null;
 
       if (!patient) {
         throw new AppError(
@@ -47,7 +50,7 @@ export class CreateAppointmentService {
         );
       }
       if (professionalId) {
-        const professional = await this.professionalsRepository.findById(
+        professional = await this.professionalsRepository.findById(
           professionalId,
         );
 
@@ -67,12 +70,18 @@ export class CreateAppointmentService {
 
       let appointment: Appointment;
       if (professionalId && emergency === false) {
+        console.log('DATE ANTES', date);
+        const convertDate = moment
+          .tz(date, 'YYYY-MM-DD HH:mm:ss', professional.professionalTimezone)
+          .utc()
+          .toISOString();
+        console.log('DATE DEPOIS', convertDate);
         const appointmentProfessional =
           await this.appointmentsRepository.create({
             patientId,
             professionalId,
             roomId,
-            date,
+            date: convertDate,
           });
         appointment = appointmentProfessional;
       }
@@ -125,10 +134,10 @@ export class CreateAppointmentService {
               <ul>
                 ${professionalSlots
                   .map(
-                    professional => `
+                    professionals => `
                       <li>
-                        Nome: <b>${professional.name}</b><br>
-                        Telefone: <b>${professional.phoneNumber}</b>
+                        Nome: <b>${professionals.name}</b><br>
+                        Telefone: <b>${professionals.phoneNumber}</b>
                       </li>
                     `,
                   )
