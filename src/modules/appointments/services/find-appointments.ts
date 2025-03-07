@@ -3,7 +3,6 @@ import { injectable, inject } from 'tsyringe';
 
 import moment from 'moment-timezone';
 import { IAddressesRepository } from '../../addresses/contracts/repositories/IAddressesRepository';
-import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 import { Appointment } from '../entities/appointment';
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
 import { verifyTimeZone } from '../utils/return-timezone';
@@ -13,9 +12,6 @@ export class FindAppointmentsService {
   constructor(
     @inject('AppointmentsRepository')
     private appointmentsRepository: IAppointmentsRepository,
-
-    @inject('ProfessionalsRepository')
-    private professionalsRepository: IProfessionalsRepository,
 
     @inject('AddressesRepository')
     private addressesRepository: IAddressesRepository,
@@ -49,8 +45,6 @@ export class FindAppointmentsService {
 
     const appointments = await this.appointmentsRepository.find(where);
 
-    const doctor = await this.professionalsRepository.findById(professionalId);
-
     const patientsWithTimeZones = await Promise.all(
       appointments.map(async appointment => {
         const address = await this.addressesRepository.findByPatientId(
@@ -74,9 +68,8 @@ export class FindAppointmentsService {
           : moment(appointment.date).format('YYYY-MM-DD HH:mm:ss');
 
         const hrDoctor = moment(appointment.date)
-          .tz(doctor.professionalTimezone)
+          .tz(appointment.professional.professionalTimezone)
           .format('YYYY-MM-DD HH:mm:ss');
-
         return {
           ...appointment,
           timeZonePatient: timeZone,

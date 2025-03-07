@@ -17,4 +17,5 @@ export interface IProfessionalsRepository {
   save(professional: Professional): Promise<Professional>;
   update(id: string, payload: IUpdateProfessionalDTO): Promise<Professional>;
   delete(id: string): Promise<Professional>;
+  findAll(): Promise<Professional[]>;
 }

@@ -16,6 +16,10 @@ export class ProfessionalsRepository implements IProfessionalsRepository {
     this.relations = ['specialties.specialty', 'role'];
   }
 
+  findAll(): Promise<Professional[]> {
+    return this.ormRepository.find();
+  }
+
   public async find(
     where: FindOptionsWhere<Professional>,
   ): Promise<Professional[]> {
