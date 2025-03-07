@@ -23,7 +23,9 @@ export class FindAppointmentsService {
 
   public async execute(
     query: any,
-  ): Promise<(Appointment & { timeZone?: string | null })[]> {
+  ): Promise<
+    (Appointment & { timeZone?: string | null; hrPatient?: string })[]
+  > {
     const { patientId, professionalId, finished, appointmentId } = query;
 
     const where: FindOptionsWhere<Appointment> = {};
@@ -66,13 +68,19 @@ export class FindAppointmentsService {
         }
 
         const hrPatient = timeZone
-          ? moment(appointment.date).tz(timeZone).format('YYYY-MM-DD HH:mm:ss')
-          : appointment.date;
+          ? moment
+              .utc(appointment.date)
+              .tz(timeZone)
+              .format('YYYY-MM-DD HH:mm:ss')
+          : moment
+              .utc(appointment.date)
+              .tz('UTC')
+              .format('YYYY-MM-DD HH:mm:ss');
 
         return {
           ...appointment,
           timeZone,
-          hrPatient,
+          hrPatient, // Aqui temos a data convertida para o fuso do paciente (ou UTC se não encontrado)
         };
       }),
     );
