@@ -6,7 +6,7 @@ import { IAddressesRepository } from '../../addresses/contracts/repositories/IAd
 import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 import { Appointment } from '../entities/appointment';
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
-import { verifyTimeZone } from '../utils/return-timezone';
+import { verifyTimeZone, DEFAULT_TIMEZONE } from '../utils/return-timezone';
 
 @injectable()
 export class FindAppointmentsService {
@@ -68,19 +68,15 @@ export class FindAppointmentsService {
         }
 
         const hrPatient = timeZone
-          ? moment
-              .utc(appointment.date)
-              .tz(timeZone)
-              .format('YYYY-MM-DD HH:mm:ss')
+          ? moment.tz(appointment.date, timeZone).format('YYYY-MM-DD HH:mm:ss')
           : moment
-              .utc(appointment.date)
-              .tz('UTC')
+              .tz(appointment.date, DEFAULT_TIMEZONE)
               .format('YYYY-MM-DD HH:mm:ss');
 
         return {
           ...appointment,
           timeZone,
-          hrPatient, // Aqui temos a data convertida para o fuso do paciente (ou UTC se não encontrado)
+          hrPatient,
         };
       }),
     );

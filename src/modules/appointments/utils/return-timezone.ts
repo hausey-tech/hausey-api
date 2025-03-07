@@ -1,4 +1,4 @@
-const DEFAULT_TIMEZONE = 'America/Sao_Paulo';
+export const DEFAULT_TIMEZONE = 'America/Sao_Paulo';
 
 type TimeZoneMap = {
   [country: string]: {
