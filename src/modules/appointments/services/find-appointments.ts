@@ -79,7 +79,7 @@ export class FindAppointmentsService {
 
         return {
           ...appointment,
-          timeZone,
+          timeZonePatient: timeZone,
           hrPatient,
           hrDoctor,
         };
