@@ -6,7 +6,7 @@ import { IAddressesRepository } from '../../addresses/contracts/repositories/IAd
 import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 import { Appointment } from '../entities/appointment';
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
-import { verifyTimeZone, DEFAULT_TIMEZONE } from '../utils/return-timezone';
+import { verifyTimeZone } from '../utils/return-timezone';
 
 @injectable()
 export class FindAppointmentsService {
@@ -68,10 +68,8 @@ export class FindAppointmentsService {
         }
 
         const hrPatient = timeZone
-          ? moment.tz(appointment.date, timeZone).format('YYYY-MM-DD HH:mm:ss')
-          : moment
-              .tz(appointment.date, DEFAULT_TIMEZONE)
-              .format('YYYY-MM-DD HH:mm:ss');
+          ? moment(appointment.date).tz(timeZone).format('YYYY-MM-DD HH:mm:ss')
+          : moment(appointment.date).format('YYYY-MM-DD HH:mm:ss');
 
         return {
           ...appointment,
