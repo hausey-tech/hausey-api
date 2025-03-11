@@ -91,7 +91,7 @@ export class UploadPatientCsv {
                   planId: 'efe8d3ec-f3a2-432b-8a10-d7ef75e5adc2',
                 };
 
-                console.log('Criando paciente:', patientDto); // Log antes de criar o paciente
+                console.log('Criando paciente:', patientDto);
                 const patient = await this.patientsRepository.create(
                   patientDto,
                 );
