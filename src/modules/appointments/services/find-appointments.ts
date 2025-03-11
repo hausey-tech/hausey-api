@@ -82,7 +82,7 @@ export class FindAppointmentsService {
           timeZonePatient: timeZone,
           hrPatient,
           hrDoctor,
-          siglaDoctor: countryDoctor,
+          flagDoctor: countryDoctor,
         };
       }),
     );
