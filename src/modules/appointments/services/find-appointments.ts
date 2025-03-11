@@ -2,6 +2,7 @@ import { FindOptionsWhere, IsNull, Not } from 'typeorm';
 import { injectable, inject } from 'tsyringe';
 
 import moment from 'moment-timezone';
+import { AppError } from '../../../shared/errors/app-error';
 import { IAddressesRepository } from '../../addresses/contracts/repositories/IAddressesRepository';
 import { Appointment } from '../entities/appointment';
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
@@ -46,47 +47,60 @@ export class FindAppointmentsService {
       where.finished = finished;
     }
 
-    const appointments = await this.appointmentsRepository.find(where);
+    try {
+      const appointments = await this.appointmentsRepository.find(where);
 
-    const patientsWithTimeZones = await Promise.all(
-      appointments.map(async appointment => {
-        const address = await this.addressesRepository.findByPatientId(
-          appointment.patientId,
-        );
-
-        const timeZone = verifyTimeZone(
-          address?.country,
-          address?.state,
-          address?.city,
-        );
-
-        const countryDoctor = getCountryFromTimezone(
-          appointment.professional.professionalTimezone,
-        );
-
-        if (!timeZone) {
-          console.log(
-            `Fuso não identificado ou dados incompletos. País ${address?.country} - Estado ${address?.state} - Cidade ${address?.city}`,
+      const patientsWithTimeZones = await Promise.all(
+        appointments.map(async appointment => {
+          const address = await this.addressesRepository.findByPatientId(
+            appointment.patientId,
           );
-        }
 
-        const hrPatient = timeZone
-          ? moment(appointment.date).tz(timeZone).format('YYYY-MM-DD HH:mm:ss')
-          : moment(appointment.date).format('YYYY-MM-DD HH:mm:ss');
+          // Se não houver endereço, `timeZone` será null
+          const timeZone = address
+            ? verifyTimeZone(address.country, address.state, address.city)
+            : null;
 
-        const hrDoctor = moment(appointment.date)
-          .tz(appointment.professional.professionalTimezone)
-          .format('YYYY-MM-DD HH:mm:ss');
-        return {
-          ...appointment,
-          timeZonePatient: timeZone,
-          hrPatient,
-          hrDoctor,
-          flagDoctor: countryDoctor,
-        };
-      }),
-    );
+          const countryDoctor = getCountryFromTimezone(
+            appointment.professional?.professionalTimezone,
+          );
 
-    return patientsWithTimeZones;
+          if (!timeZone) {
+            console.log(
+              `Fuso não identificado ou dados incompletos. País ${
+                address?.country || 'N/A'
+              } - Estado ${address?.state || 'N/A'} - Cidade ${
+                address?.city || 'N/A'
+              }`,
+            );
+          }
+
+          const hrPatient = timeZone
+            ? moment(appointment.date)
+                .tz(timeZone)
+                .format('YYYY-MM-DD HH:mm:ss')
+            : moment(appointment.date).format('YYYY-MM-DD HH:mm:ss');
+
+          const hrDoctor = appointment.professional?.professionalTimezone
+            ? moment(appointment.date)
+                .tz(appointment.professional.professionalTimezone)
+                .format('YYYY-MM-DD HH:mm:ss')
+            : moment(appointment.date).format('YYYY-MM-DD HH:mm:ss');
+
+          return {
+            ...appointment,
+            timeZonePatient: timeZone, // Se não houver timezone, retorna null
+            hrPatient,
+            hrDoctor,
+            flagDoctor: countryDoctor,
+          };
+        }),
+      );
+
+      return patientsWithTimeZones;
+    } catch (error) {
+      console.log('Erro no findAppointments', error);
+      throw new AppError(error);
+    }
   }
 }
