@@ -73,3 +73,24 @@ export function verifyTimeZone(
 
   return DEFAULT_TIMEZONE;
 }
+
+const timezoneToCountry: Record<string, string> = {
+  'Atlantic/Azores': 'Portugal',
+  'Europe/Lisbon': 'Portugal',
+  'America/Manaus': 'Brasil',
+  'America/Rio_Branco': 'Brasil',
+  'America/Campo_Grande': 'Brasil',
+  'America/Cuiaba': 'Brasil',
+  'America/Porto_Velho': 'Brasil',
+  'America/Sao_Paulo': 'Brasil',
+  'America/New_York': 'Estados Unidos',
+  'America/Chicago': 'Estados Unidos',
+  'America/Denver': 'Estados Unidos',
+  'America/Los_Angeles': 'Estados Unidos',
+  'America/Anchorage': 'Estados Unidos',
+  'Pacific/Honolulu': 'Estados Unidos',
+};
+
+export function getCountryFromTimezone(timezone: string): string {
+  return timezoneToCountry[timezone] || 'País desconhecido';
+}

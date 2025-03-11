@@ -70,12 +70,10 @@ export class CreateAppointmentService {
 
       let appointment: Appointment;
       if (professionalId && emergency === false) {
-        console.log('DATE ANTES', date);
         const convertDate = moment
           .tz(date, 'YYYY-MM-DD HH:mm:ss', professional.professionalTimezone)
           .utc()
           .toISOString();
-        console.log('DATE DEPOIS', convertDate);
         const appointmentProfessional =
           await this.appointmentsRepository.create({
             patientId,

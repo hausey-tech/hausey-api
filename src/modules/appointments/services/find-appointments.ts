@@ -5,7 +5,10 @@ import moment from 'moment-timezone';
 import { IAddressesRepository } from '../../addresses/contracts/repositories/IAddressesRepository';
 import { Appointment } from '../entities/appointment';
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
-import { verifyTimeZone } from '../utils/return-timezone';
+import {
+  getCountryFromTimezone,
+  verifyTimeZone,
+} from '../utils/return-timezone';
 
 @injectable()
 export class FindAppointmentsService {
@@ -57,6 +60,10 @@ export class FindAppointmentsService {
           address?.city,
         );
 
+        const countryDoctor = getCountryFromTimezone(
+          appointment.professional.professionalTimezone,
+        );
+
         if (!timeZone) {
           console.log(
             `Fuso não identificado ou dados incompletos. País ${address?.country} - Estado ${address?.state} - Cidade ${address?.city}`,
@@ -75,6 +82,7 @@ export class FindAppointmentsService {
           timeZonePatient: timeZone,
           hrPatient,
           hrDoctor,
+          siglaDoctor: countryDoctor,
         };
       }),
     );
