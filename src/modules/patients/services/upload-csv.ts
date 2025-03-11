@@ -5,6 +5,7 @@ import { Logger } from 'pino';
 import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { ICreatePatientDTO } from '../contracts/dtos/create-patient';
+import { IHashProvider } from '../../../shared/providers/HashProvider/entities/hash-provider';
 
 @injectable()
 export class UploadPatientCsv {
@@ -14,6 +15,9 @@ export class UploadPatientCsv {
 
     @inject('Logger')
     private logger: Logger,
+
+    @inject('HashProvider')
+    private hashProvider: IHashProvider,
   ) {}
 
   public async execute(file: any): Promise<string> {
@@ -78,10 +82,18 @@ export class UploadPatientCsv {
                   return;
                 }
 
+                let hashedPassword: string;
+
+                if (password) {
+                  hashedPassword = await this.hashProvider.generateHash(
+                    password,
+                  );
+                }
+
                 const patientDto: ICreatePatientDTO = {
                   name,
                   email,
-                  password,
+                  password: hashedPassword,
                   phoneNumber,
                   document,
                   birthdate,
@@ -91,17 +103,13 @@ export class UploadPatientCsv {
                   planId: 'efe8d3ec-f3a2-432b-8a10-d7ef75e5adc2',
                 };
 
-                console.log('Criando paciente:', patientDto);
-                const patient = await this.patientsRepository.create(
-                  patientDto,
-                );
-                console.log('PACIENTE CRIADO', patient);
+                await this.patientsRepository.create(patientDto);
               }),
             );
 
             resolve('CSV processado com sucesso.');
           } catch (error) {
-            console.error('Erro ao processar CSV:', error); // Log detalhado do erro
+            console.error('Erro ao processar CSV:', error);
             this.logger.error(
               {
                 message: error.message,
