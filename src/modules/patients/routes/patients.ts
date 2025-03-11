@@ -197,3 +197,5 @@ patientsRouter.patch(
   }),
   patientsController.updateSellerId,
 );
+
+patientsRouter.get('/events', ensureAuthentication, patientsController.events);

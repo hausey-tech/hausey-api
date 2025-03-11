@@ -28,6 +28,8 @@ import { UpdatePatientStriperIdService } from '../services/update-patient-stripe
 import { FilterAdminService } from '../services/filter-admin';
 import { UploadPatientCsv } from '../services/upload-csv';
 
+const clients = new Map<string, Response>();
+
 export class PatientsController {
   public async index(request: Request, response: Response): Promise<Response> {
     const { query } = request;
@@ -471,6 +473,23 @@ export class PatientsController {
         message: 'Erro ao remover o planId. Tente novamente mais tarde.',
       });
     }
+  }
+
+  public async events(request: Request, response: Response): Promise<void> {
+    const patientId = request.query.user as string;
+    response.setHeader('Content-Type', 'text/event-stream');
+    response.setHeader('Cache-Control', 'no-cache');
+    response.setHeader('Connection', 'keep-alive');
+    response.setHeader('Access-Control-Allow-Origin', '*');
+
+    clients.set(patientId, response);
+
+    response.write('event: connected\n');
+    response.write(`data: {"message": "SSE connection established"}\n\n`);
+
+    request.on('close', () => {
+      clients.delete(patientId);
+    });
   }
 
   public async updateSellerId(

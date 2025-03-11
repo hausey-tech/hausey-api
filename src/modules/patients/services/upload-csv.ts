@@ -92,8 +92,10 @@ export class UploadPatientCsv {
                 };
 
                 console.log('Criando paciente:', patientDto); // Log antes de criar o paciente
-                await this.patientsRepository.create(patientDto);
-                console.log('Paciente criado com sucesso.'); // Log após criar o paciente
+                const patient = await this.patientsRepository.create(
+                  patientDto,
+                );
+                console.log('PACIENTE CRIADO', patient);
               }),
             );
 
