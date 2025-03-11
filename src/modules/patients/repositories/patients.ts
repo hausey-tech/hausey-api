@@ -218,7 +218,9 @@ export class PatientsRepository implements IPatientsRepository {
 
   public async create(payload: ICreatePatientDTO): Promise<Patient> {
     console.log('CRIANDO PACIENTE', payload);
-    return this.ormRepository.create(payload);
+    const patient = this.ormRepository.create(payload);
+    this.ormRepository.save(patient);
+    return patient;
   }
 
   public async save(patient: Patient): Promise<Patient> {
