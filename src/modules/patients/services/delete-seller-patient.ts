@@ -23,32 +23,15 @@ export class DeleteSellerByPatientService {
         throw new AppError('Paciente com este id não encontrado');
       }
 
-      console.log('planExpiresAt:', patient.planExpiresAt);
       const patientToUpdate: IUpdatePatientDTO = {
-        birthdate: patient.birthdate ?? null,
-        document: patient.document ?? null,
-        fcmToken: patient.fcmToken ?? null,
-        firstPayment: patient.firstPayment ?? null,
-        language: patient.language ?? null,
-        name: patient.name ?? null,
-        password: patient.password ?? null,
-        nipomed: patient.nipomed ?? null,
-        phoneNumber: patient.phoneNumber ?? null,
+        ...patient,
         planExpiresAt: patient.birthdate
           ? new Date(patient.birthdate)
               .toISOString()
               .replace('T', ' ')
               .split('.')[0]
           : null,
-        planId: patient.planId ?? null,
-        resetPasswordToken: patient.resetPasswordToken ?? null,
-        region: patient.region ?? null,
-        resetPasswordTokenExpiresIn:
-          patient.resetPasswordTokenExpiresIn ?? null,
-        sellerId: patient.sellerId ?? null,
-        sex: patient.sex ?? null,
-        responsibleTeamId: patient.responsibleTeamId ?? null,
-        stripeCustomerId: patient.stripeCustomerId ?? null,
+        planId: null,
       };
 
       await this.patientsRepository.update(patient.id, patientToUpdate);
