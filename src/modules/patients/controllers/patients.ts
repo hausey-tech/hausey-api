@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
-import { AppError } from 'shared/errors/app-error';
+import { AppError } from '../../../shared/errors/app-error';
 import { CreatePagarmeCustomerService } from '../../integrations/services/pagarme/create-pagarme-customer-service';
 import { CreatePatientService } from '../services/create-patient';
 import { UpdatePatientService } from '../services/update-patient';
