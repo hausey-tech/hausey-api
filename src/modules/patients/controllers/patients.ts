@@ -28,6 +28,7 @@ import { GetCustomerInfos } from '../services/get-customer-infos';
 import { UpdatePatientStriperIdService } from '../services/update-patient-striperid-service';
 import { FilterAdminService } from '../services/filter-admin';
 import { UploadPatientCsv } from '../services/upload-csv';
+import { DeleteSellerByPatientService } from '../services/delete-seller-patient';
 
 const clients = new Map<string, Response>();
 
@@ -134,6 +135,25 @@ export class PatientsController {
     console.log('Após de bater no execute create session');
 
     return response.json(session);
+  }
+
+  public async deleteSeller(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { patientsId } = request.params;
+
+    if (!patientsId) {
+      throw new AppError('patientsId não informados.');
+    }
+
+    const deleteSellerByPatient = container.resolve(
+      DeleteSellerByPatientService,
+    );
+
+    await deleteSellerByPatient.execute(patientsId);
+
+    return response.status(200).json('Cupom removido com sucesso');
   }
 
   public async uploadCsv(

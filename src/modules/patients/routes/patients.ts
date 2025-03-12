@@ -70,6 +70,12 @@ patientsRouter.post(
   patientsController.uploadCsv,
 );
 
+patientsRouter.delete(
+  '/:patientsId/:sellerId',
+  ensureAuthentication,
+  patientsController.deleteSeller,
+);
+
 patientsRouter.post(
   '/get-patients-by-group',
   celebrate(GetPatientsByGroupSchema),
