@@ -428,11 +428,9 @@ export class PatientsController {
       );
       let handleAmount: number;
       if (amount) {
-        console.log('Amount recebido pelo front', amount);
         handleAmount = amount * 100;
         handleAmount.toFixed(2);
       }
-      console.log('handleAmountTratado', handleAmount);
       const pix = await createPatientPixSubscriptionService.execute({
         patientId,
         planId,

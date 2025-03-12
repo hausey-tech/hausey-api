@@ -19,16 +19,19 @@ export class CreatePagarmePixOrderService {
     handleAmount,
   }: ICreatePagarmePixOrderDTO): Promise<IPix> {
     try {
-      if (!Number.isInteger(handleAmount)) {
-        Math.round(handleAmount * 100);
-      }
+      let handleAmountTrated: number;
       console.log('Handle Amount', handleAmount);
       console.log('price', price);
+      if (!Number.isInteger(handleAmount)) {
+        handleAmountTrated = Math.round(handleAmount * 100);
+      }
+      console.log(handleAmountTrated);
+      console.log('EXIBINDO!', handleAmount ?? price);
       const { data } = await pagarmeInstance.post('/orders', {
         customer_id: customerId,
         items: [
           {
-            amount: handleAmount ?? price,
+            amount: handleAmountTrated ?? price,
             description: `Plano ${plan.id}`,
             quantity: months,
             code: plan.id,
