@@ -23,25 +23,32 @@ export class DeleteSellerByPatientService {
         throw new AppError('Paciente com este id não encontrado');
       }
 
+      console.log('planExpiresAt:', patient.planExpiresAt);
       const patientToUpdate: IUpdatePatientDTO = {
-        birthdate: patient.birthdate,
-        document: patient.document,
-        fcmToken: patient.fcmToken,
-        firstPayment: patient.firstPayment,
-        language: patient.language,
-        name: patient.name,
-        password: patient.password,
-        nipomed: patient.nipomed,
-        phoneNumber: patient.phoneNumber,
-        planExpiresAt: patient.planExpiresAt.toString(),
-        planId: patient.planId,
-        resetPasswordToken: patient.resetPasswordToken,
-        region: patient.region,
-        resetPasswordTokenExpiresIn: patient.resetPasswordTokenExpiresIn,
-        sellerId: patient.sellerId,
-        sex: patient.sex,
-        responsibleTeamId: patient.responsibleTeamId,
-        stripeCustomerId: patient.stripeCustomerId,
+        birthdate: patient.birthdate ?? null,
+        document: patient.document ?? null,
+        fcmToken: patient.fcmToken ?? null,
+        firstPayment: patient.firstPayment ?? null,
+        language: patient.language ?? null,
+        name: patient.name ?? null,
+        password: patient.password ?? null,
+        nipomed: patient.nipomed ?? null,
+        phoneNumber: patient.phoneNumber ?? null,
+        planExpiresAt: patient.birthdate
+          ? new Date(patient.birthdate)
+              .toISOString()
+              .replace('T', ' ')
+              .split('.')[0]
+          : null,
+        planId: patient.planId ?? null,
+        resetPasswordToken: patient.resetPasswordToken ?? null,
+        region: patient.region ?? null,
+        resetPasswordTokenExpiresIn:
+          patient.resetPasswordTokenExpiresIn ?? null,
+        sellerId: patient.sellerId ?? null,
+        sex: patient.sex ?? null,
+        responsibleTeamId: patient.responsibleTeamId ?? null,
+        stripeCustomerId: patient.stripeCustomerId ?? null,
       };
 
       await this.patientsRepository.update(patient.id, patientToUpdate);
