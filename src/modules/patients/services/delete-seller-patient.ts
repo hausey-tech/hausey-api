@@ -34,8 +34,13 @@ export class DeleteSellerByPatientService {
         planId: null,
       };
 
-      await this.patientsRepository.update(patient.id, patientToUpdate);
+      const patientUpdated = await this.patientsRepository.update(
+        patient.id,
+        patientToUpdate,
+      );
+      console.log('updated', patientUpdated);
     } catch (error) {
+      console.log('error', error);
       this.logger.info(
         {
           error,
