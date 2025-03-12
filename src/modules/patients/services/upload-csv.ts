@@ -2,6 +2,8 @@ import { injectable, inject } from 'tsyringe';
 import { Readable } from 'stream';
 import csv from 'csv-parser';
 import { Logger } from 'pino';
+import { IAddressesRepository } from 'modules/addresses/contracts/repositories/IAddressesRepository';
+import { ICreateAddressDTO } from 'modules/addresses/contracts/dtos/ICreateAddressDTO';
 import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { ICreatePatientDTO } from '../contracts/dtos/create-patient';
@@ -18,6 +20,9 @@ export class UploadPatientCsv {
 
     @inject('HashProvider')
     private hashProvider: IHashProvider,
+
+    @inject('AddressesRepository')
+    private addressesRepository: IAddressesRepository,
   ) {}
 
   public async execute(file: any): Promise<string> {
@@ -62,6 +67,12 @@ export class UploadPatientCsv {
                   document,
                   birthdate,
                   sex,
+                  addressLine1,
+                  addressLine2,
+                  city,
+                  state,
+                  zipOrPostcode,
+                  country,
                 } = row;
 
                 if (
@@ -103,7 +114,21 @@ export class UploadPatientCsv {
                   planId: 'efe8d3ec-f3a2-432b-8a10-d7ef75e5adc2',
                 };
 
-                await this.patientsRepository.create(patientDto);
+                const patient = await this.patientsRepository.create(
+                  patientDto,
+                );
+
+                const addressDto: ICreateAddressDTO = {
+                  patientId: patient.id,
+                  addressLine1,
+                  addressLine2,
+                  city,
+                  state,
+                  zipOrPostcode,
+                  country,
+                };
+
+                await this.addressesRepository.create(addressDto);
               }),
             );
 
