@@ -133,7 +133,10 @@ export class UploadPatientCsv {
                   country,
                 };
 
-                await this.addressesRepository.create(addressDto);
+                const address = await this.addressesRepository.create(
+                  addressDto,
+                );
+                await this.addressesRepository.save(address);
               }),
             );
 
