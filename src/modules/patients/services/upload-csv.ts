@@ -25,7 +25,7 @@ export class UploadPatientCsv {
     private addressesRepository: IAddressesRepository,
   ) {}
 
-  public async execute(file: any): Promise<string> {
+  public async execute(file: any, sellerId: string): Promise<string> {
     console.log('entrei no execute e vou exibir o file:', file);
 
     // Verifica se o buffer do arquivo existe
@@ -114,7 +114,7 @@ export class UploadPatientCsv {
                   document,
                   birthdate,
                   sex,
-                  sellerId: 'e00f4434-bc81-4569-ad30-8187668d43b6',
+                  sellerId,
                   firstPayment: true,
                   planId: 'efe8d3ec-f3a2-432b-8a10-d7ef75e5adc2',
                 };

@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { container } from 'tsyringe';
 
+import { AppError } from 'shared/errors/app-error';
 import { CreatePagarmeCustomerService } from '../../integrations/services/pagarme/create-pagarme-customer-service';
 import { CreatePatientService } from '../services/create-patient';
 import { UpdatePatientService } from '../services/update-patient';
@@ -141,6 +142,11 @@ export class PatientsController {
   ): Promise<Response> {
     console.log('Olá, chamei a rota');
     const { file } = request;
+    const { sellerId } = request.params;
+
+    if (!sellerId) {
+      throw new AppError('SellerId informado inválido');
+    }
 
     if (!file) {
       return response.status(400).json({
@@ -151,7 +157,7 @@ export class PatientsController {
 
     const uploadPatients = container.resolve(UploadPatientCsv);
 
-    const message = await uploadPatients.execute(file);
+    const message = await uploadPatients.execute(file, sellerId);
     return response.status(201).json({ message });
   }
 
