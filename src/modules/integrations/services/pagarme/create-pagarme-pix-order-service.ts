@@ -19,6 +19,9 @@ export class CreatePagarmePixOrderService {
     handleAmount,
   }: ICreatePagarmePixOrderDTO): Promise<IPix> {
     try {
+      if (!Number.isInteger(handleAmount)) {
+        Math.round(handleAmount * 100);
+      }
       split.map(sp => console.log('sp.amount', sp.amount));
       const { data } = await pagarmeInstance.post('/orders', {
         customer_id: customerId,
