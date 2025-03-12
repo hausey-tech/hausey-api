@@ -46,7 +46,13 @@ export class DeleteSellerByPatientService {
 
       await this.patientsRepository.update(patient.id, patientToUpdate);
     } catch (error) {
-      throw new AppError('Erro ao deletar cupom de usuário');
+      this.logger.info(
+        {
+          error,
+        },
+        'Houve um erro ao deletar cupom',
+      );
+      throw new AppError('Erro ao deletar cupom do usuário');
     }
   }
 }
