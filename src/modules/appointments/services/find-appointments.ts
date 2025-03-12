@@ -69,7 +69,9 @@ export class FindAppointmentsService {
             ? moment(appointment.date)
                 .tz(timeZone)
                 .format('YYYY-MM-DD HH:mm:ss')
-            : moment(appointment.date).format('YYYY-MM-DD HH:mm:ss');
+            : moment(appointment.date)
+                .tz('America/Sao_Paulo')
+                .format('YYYY-MM-DD HH:mm:ss');
 
           const hrDoctor = appointment.professional?.professionalTimezone
             ? moment(appointment.date)
