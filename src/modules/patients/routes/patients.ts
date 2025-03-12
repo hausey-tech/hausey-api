@@ -71,7 +71,7 @@ patientsRouter.post(
 );
 
 patientsRouter.delete(
-  '/:patientsId/:sellerId',
+  '/:patientsId/remove-seller',
   ensureAuthentication,
   patientsController.deleteSeller,
 );

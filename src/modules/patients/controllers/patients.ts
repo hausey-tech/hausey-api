@@ -144,7 +144,7 @@ export class PatientsController {
     const { patientsId } = request.params;
 
     if (!patientsId) {
-      throw new AppError('patientsId não informados.');
+      throw new AppError('patientsId não informado.');
     }
 
     const deleteSellerByPatient = container.resolve(

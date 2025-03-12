@@ -19,6 +19,10 @@ export class DeleteSellerByPatientService {
     try {
       const patient = await this.patientsRepository.findById(patientId);
 
+      if (!patient) {
+        throw new AppError('Paciente com este id não encontrado');
+      }
+
       const patientToUpdate: IUpdatePatientDTO = {
         birthdate: patient.birthdate,
         document: patient.document,
