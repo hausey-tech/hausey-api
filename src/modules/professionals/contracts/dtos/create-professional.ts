@@ -10,4 +10,5 @@ export interface ICreateProfessionalDTO {
   registration: string;
   registrationUf: string;
   roleId: string;
+  professionalTimezone: string;
 }

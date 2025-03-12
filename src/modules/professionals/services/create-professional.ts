@@ -46,6 +46,7 @@ export class CreateUserAndProfessionalService {
     registration,
     roleId,
     registrationUf,
+    professionalTimezone,
   }: ICreateProfessionalDTO): Promise<Professional> {
     const professionalExists = await this.professionalsRepository.findByEmail(
       email,
@@ -120,6 +121,7 @@ export class CreateUserAndProfessionalService {
       roleId,
       registrationUf,
       registration,
+      professionalTimezone,
     });
 
     const savedProfessional = await this.professionalsRepository.save(

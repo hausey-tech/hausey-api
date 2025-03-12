@@ -11,6 +11,7 @@ export const CreateProfessionalSchema = {
     phoneNumber: Joi.string().required(),
     sex: Joi.string().equal('M', 'F').required(),
     roleId: Joi.string().required(),
+    professionalTimezone: Joi.string().required().default('America/Sao_Paulo'),
     birthdate: Joi.string()
       .required()
       // eslint-disable-next-line no-useless-escape
