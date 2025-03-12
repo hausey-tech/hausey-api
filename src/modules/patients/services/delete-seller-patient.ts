@@ -24,7 +24,15 @@ export class DeleteSellerByPatientService {
       }
 
       const patientToUpdate: IUpdatePatientDTO = {
-        ...patient,
+        birthdate: patient.birthdate ?? null,
+        document: patient.document ?? null,
+        fcmToken: patient.fcmToken ?? null,
+        firstPayment: patient.firstPayment ?? null,
+        language: patient.language ?? null,
+        name: patient.name ?? null,
+        password: patient.password ?? null,
+        nipomed: patient.nipomed ?? null,
+        phoneNumber: patient.phoneNumber ?? null,
         planExpiresAt: patient.planExpiresAt
           ? new Date(patient.planExpiresAt)
               .toISOString()
@@ -32,15 +40,18 @@ export class DeleteSellerByPatientService {
               .split('.')[0]
           : null,
         planId: null,
+        resetPasswordToken: patient.resetPasswordToken ?? null,
+        region: patient.region ?? null,
+        resetPasswordTokenExpiresIn:
+          patient.resetPasswordTokenExpiresIn ?? null,
+        sellerId: patient.sellerId ?? null,
+        sex: patient.sex ?? null,
+        responsibleTeamId: patient.responsibleTeamId ?? null,
+        stripeCustomerId: patient.stripeCustomerId ?? null,
       };
 
-      const patientUpdated = await this.patientsRepository.update(
-        patient.id,
-        patientToUpdate,
-      );
-      console.log('updated', patientUpdated);
+      await this.patientsRepository.update(patient.id, patientToUpdate);
     } catch (error) {
-      console.log('error', error);
       this.logger.info(
         {
           error,
