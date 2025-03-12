@@ -22,7 +22,8 @@ export class CreatePagarmePixOrderService {
       if (!Number.isInteger(handleAmount)) {
         Math.round(handleAmount * 100);
       }
-      split.map(sp => console.log('sp.amount', sp.amount));
+      console.log('Handle Amount', handleAmount);
+      console.log('price', price);
       const { data } = await pagarmeInstance.post('/orders', {
         customer_id: customerId,
         items: [
