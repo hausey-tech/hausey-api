@@ -82,7 +82,12 @@ export class UploadPatientCsv {
                   !phoneNumber ||
                   !document ||
                   !birthdate ||
-                  !sex
+                  !sex ||
+                  !addressLine1 ||
+                  !addressLine2 ||
+                  !city ||
+                  !state ||
+                  !zipOrPostcode
                 ) {
                   this.logger.info(
                     {
