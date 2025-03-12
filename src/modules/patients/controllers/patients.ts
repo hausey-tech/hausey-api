@@ -142,7 +142,7 @@ export class PatientsController {
   ): Promise<Response> {
     console.log('Olá, chamei a rota');
     const { file } = request;
-    const { sellerId } = request.params;
+    const { sellerId } = request.query;
 
     if (!sellerId) {
       throw new AppError('SellerId informado inválido');
