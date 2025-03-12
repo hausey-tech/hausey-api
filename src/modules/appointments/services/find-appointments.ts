@@ -65,16 +65,6 @@ export class FindAppointmentsService {
             appointment.professional?.professionalTimezone,
           );
 
-          if (!timeZone) {
-            console.log(
-              `Fuso não identificado ou dados incompletos. País ${
-                address?.country || 'N/A'
-              } - Estado ${address?.state || 'N/A'} - Cidade ${
-                address?.city || 'N/A'
-              }`,
-            );
-          }
-
           const hrPatient = timeZone
             ? moment(appointment.date)
                 .tz(timeZone)
@@ -85,7 +75,9 @@ export class FindAppointmentsService {
             ? moment(appointment.date)
                 .tz(appointment.professional.professionalTimezone)
                 .format('YYYY-MM-DD HH:mm:ss')
-            : moment(appointment.date).format('YYYY-MM-DD HH:mm:ss');
+            : moment(appointment.date)
+                .tz('America/Sao_Paulo')
+                .format('YYYY-MM-DD HH:mm:ss');
 
           return {
             ...appointment,
