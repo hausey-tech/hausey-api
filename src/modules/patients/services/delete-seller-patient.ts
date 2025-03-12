@@ -25,8 +25,8 @@ export class DeleteSellerByPatientService {
 
       const patientToUpdate: IUpdatePatientDTO = {
         ...patient,
-        planExpiresAt: patient.birthdate
-          ? new Date(patient.birthdate)
+        planExpiresAt: patient.planExpiresAt
+          ? new Date(patient.planExpiresAt)
               .toISOString()
               .replace('T', ' ')
               .split('.')[0]
