@@ -39,12 +39,12 @@ export class DeleteSellerByPatientService {
               .replace('T', ' ')
               .split('.')[0]
           : null,
-        planId: null,
+        planId: patient.planId,
         resetPasswordToken: patient.resetPasswordToken ?? null,
         region: patient.region ?? null,
         resetPasswordTokenExpiresIn:
           patient.resetPasswordTokenExpiresIn ?? null,
-        sellerId: patient.sellerId ?? null,
+        sellerId: null,
         sex: patient.sex ?? null,
         responsibleTeamId: patient.responsibleTeamId ?? null,
         stripeCustomerId: patient.stripeCustomerId ?? null,
