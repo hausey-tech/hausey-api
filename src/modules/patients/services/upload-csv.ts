@@ -123,6 +123,9 @@ export class UploadPatientCsv {
                   patientDto,
                 );
 
+                console.log('Paciente criado:', patient);
+
+                console.log('Criando endereço...');
                 const addressDto: ICreateAddressDTO = {
                   patientId: patient.id,
                   addressLine1,
@@ -132,11 +135,10 @@ export class UploadPatientCsv {
                   zipOrPostcode,
                   country,
                 };
-
                 const address = await this.addressesRepository.create(
                   addressDto,
                 );
-                await this.addressesRepository.save(address);
+                console.log('Endereço criado:', address);
               }),
             );
 
