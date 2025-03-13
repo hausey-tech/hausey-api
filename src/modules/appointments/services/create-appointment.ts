@@ -43,6 +43,8 @@ export class CreateAppointmentService {
     try {
       const patient = await this.patientsRepository.findById(patientId);
       let professional: Professional | null;
+      console.log('professionalId', professionalId);
+      console.log('date', date);
       const appointmentByProfessionalIdAndDate =
         await this.appointmentsRepository.findAppointmentByProfessionalIdAndDate(
           professionalId,
