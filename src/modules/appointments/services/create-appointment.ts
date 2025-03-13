@@ -45,10 +45,11 @@ export class CreateAppointmentService {
       let professional: Professional | null;
       console.log('professionalId', professionalId);
       console.log('date', date);
+      const normalizedDate = moment(date).utc().format('YYYY-MM-DD HH:mm:ss');
       const appointmentByProfessionalIdAndDate =
         await this.appointmentsRepository.findAppointmentByProfessionalIdAndDate(
           professionalId,
-          date,
+          normalizedDate,
         );
 
       if (appointmentByProfessionalIdAndDate.length > 0) {

@@ -20,6 +20,6 @@ export interface IAppointmentsRepository {
   findAppointmentStatusIsRunning(): Promise<Appointment[]>;
   findAppointmentByProfessionalIdAndDate(
     professionalId: string,
-    date: any,
+    date: string,
   ): Promise<Appointment[]>;
 }
