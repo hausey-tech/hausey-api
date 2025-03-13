@@ -21,11 +21,16 @@ export class FindAppointmentsService {
     private addressesRepository: IAddressesRepository,
   ) {}
 
-  public async execute(
-    query: any,
-  ): Promise<
-    (Appointment & { timeZone?: string | null; hrPatient?: string })[]
-  > {
+  public async execute(query: any): Promise<{
+    patientsWithTimeZones: (Appointment & {
+      timeZonePatient?: string | null;
+      hrPatient: string;
+      hrDoctor: string;
+      flagDoctor?: string;
+    })[];
+    total: number;
+    totalPages: number;
+  }> {
     const {
       patientId,
       professionalId,
@@ -92,17 +97,19 @@ export class FindAppointmentsService {
 
           return {
             ...appointment,
-            timeZonePatient: timeZone, // Se não houver timezone, retorna null
+            timeZonePatient: timeZone,
             hrPatient,
             hrDoctor,
             flagDoctor: countryDoctor,
-            total,
-            totalPages,
           };
         }),
       );
 
-      return patientsWithTimeZones;
+      return {
+        patientsWithTimeZones,
+        total,
+        totalPages,
+      };
     } catch (error) {
       console.log('Erro no findAppointments', error);
       throw new AppError(error);
