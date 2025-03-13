@@ -9,6 +9,8 @@ export const FindAppointmentsSchema = {
     ),
     finished: Joi.boolean(),
     appointmentId: Joi.string().uuid(),
+    page: Joi.number().default(1),
+    perPage: Joi.number().default(10),
   }),
 };
 
