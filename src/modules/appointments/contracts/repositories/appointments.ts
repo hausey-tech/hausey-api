@@ -12,7 +12,11 @@ export interface IAppointmentsRepository {
     specialtyId: string,
     dates: Date[],
   ): Promise<Appointment[]>;
-  find(where: FindOptionsWhere<Appointment>): Promise<Appointment[]>;
+  find(
+    where: FindOptionsWhere<Appointment>,
+    page: number,
+    perPage: number,
+  ): Promise<{ data: Appointment[]; total: number; totalPages: number }>;
   findByProfessional(professionalId: string): Promise<Appointment[]>;
   findByPatient(patientId: string): Promise<Appointment[]>;
   update(id: string, payload: Appointment): Promise<Appointment>;

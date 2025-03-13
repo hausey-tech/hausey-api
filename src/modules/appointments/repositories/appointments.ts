@@ -87,12 +87,19 @@ export class AppointmentsRepository implements IAppointmentsRepository {
 
   public async find(
     where: FindOptionsWhere<Appointment>,
-  ): Promise<Appointment[]> {
-    return this.ormRepository.find({
+    page: number,
+    perPage: number,
+  ): Promise<{ data: Appointment[]; total: number; totalPages: number }> {
+    const [data, total] = await this.ormRepository.findAndCount({
       where,
       order: { date: 'asc' },
       relations: this.relations,
+      skip: (page - 1) * perPage,
+      take: perPage,
     });
+
+    const totalPages = Math.ceil(total / perPage);
+    return { data, total, totalPages };
   }
 
   public async findByProfessional(

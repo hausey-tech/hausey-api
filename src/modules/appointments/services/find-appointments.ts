@@ -26,7 +26,14 @@ export class FindAppointmentsService {
   ): Promise<
     (Appointment & { timeZone?: string | null; hrPatient?: string })[]
   > {
-    const { patientId, professionalId, finished, appointmentId } = query;
+    const {
+      patientId,
+      professionalId,
+      finished,
+      appointmentId,
+      page,
+      perPage,
+    } = query;
 
     const where: FindOptionsWhere<Appointment> = {};
 
@@ -48,15 +55,17 @@ export class FindAppointmentsService {
     }
 
     try {
-      const appointments = await this.appointmentsRepository.find(where);
+      const hasPage = page ? Number(page) : 1;
+      const hasPerPage = perPage ? Number(perPage) : 10;
+      const { data, total, totalPages } =
+        await this.appointmentsRepository.find(where, hasPage, hasPerPage);
 
       const patientsWithTimeZones = await Promise.all(
-        appointments.map(async appointment => {
+        data.map(async appointment => {
           const address = await this.addressesRepository.findByPatientId(
             appointment.patientId,
           );
 
-          // Se não houver endereço, `timeZone` será null
           const timeZone = address
             ? verifyTimeZone(address.country, address.state, address.city)
             : null;
@@ -87,6 +96,8 @@ export class FindAppointmentsService {
             hrPatient,
             hrDoctor,
             flagDoctor: countryDoctor,
+            total,
+            totalPages,
           };
         }),
       );
