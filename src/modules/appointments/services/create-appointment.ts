@@ -43,24 +43,6 @@ export class CreateAppointmentService {
     try {
       const patient = await this.patientsRepository.findById(patientId);
       let professional: Professional | null;
-      console.log('professionalId', professionalId);
-      console.log('date', date);
-      const tratedDate = moment
-        .tz(date, 'YYYY-MM-DD HH:mm:ss', professional.professionalTimezone)
-        .utc()
-        .toISOString();
-      const appointmentByProfessionalIdAndDate =
-        await this.appointmentsRepository.findAppointmentByProfessionalIdAndDate(
-          professionalId,
-          tratedDate,
-        );
-
-      if (appointmentByProfessionalIdAndDate.length > 0) {
-        throw new AppError(
-          'Já existe uma consulta agendada neste dia e horário para este profissional.',
-          400,
-        );
-      }
 
       if (!patient) {
         throw new AppError(
@@ -79,6 +61,25 @@ export class CreateAppointmentService {
         }
       }
       let roomId = '';
+
+      if (professional) {
+        const tratedDate = moment
+          .tz(date, 'YYYY-MM-DD HH:mm:ss', professional.professionalTimezone)
+          .utc()
+          .toISOString();
+        const appointmentByProfessionalIdAndDate =
+          await this.appointmentsRepository.findAppointmentByProfessionalIdAndDate(
+            professionalId,
+            tratedDate,
+          );
+
+        if (appointmentByProfessionalIdAndDate.length > 0) {
+          throw new AppError(
+            'Já existe uma consulta agendada neste dia e horário para este profissional.',
+            400,
+          );
+        }
+      }
 
       const room = await createVideoRoomCode();
 
