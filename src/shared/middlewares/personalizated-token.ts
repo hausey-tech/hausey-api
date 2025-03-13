@@ -8,6 +8,7 @@ export const personalizatedAuthentication = (
 ): Response | void => {
   const authHeader = request.headers.authorization;
   const token = process.env.BMX_TOKEN;
+  console.log('authHeader', authHeader);
 
   if (!authHeader) {
     throw new AppError('Por favor, nos informe um token');
