@@ -1,5 +1,6 @@
 import { celebrate, Joi, Segments } from 'celebrate';
 import { Router } from 'express';
+import { personalizatedAuthentication } from '../../../shared/middlewares/personalizated-token';
 import { upload } from '../../../shared/utils';
 
 import {
@@ -65,7 +66,7 @@ patientsRouter.post(
 
 patientsRouter.post(
   '/upload-csv',
-  ensureAuthentication,
+  personalizatedAuthentication,
   upload.single('file'),
   patientsController.uploadCsv,
 );
