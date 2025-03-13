@@ -204,6 +204,7 @@ export class CreateAppointmentService {
 
       return appointment;
     } catch (error) {
+      console.log('error', error);
       this.logger.info(
         {
           error,
