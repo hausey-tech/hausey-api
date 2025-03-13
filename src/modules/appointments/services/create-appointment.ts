@@ -49,7 +49,7 @@ export class CreateAppointmentService {
           date,
         );
 
-      if (appointmentByProfessionalIdAndDate) {
+      if (appointmentByProfessionalIdAndDate.length > 0) {
         throw new AppError(
           'Já existe uma consulta agendada neste dia e horário para este profissional.',
           400,
