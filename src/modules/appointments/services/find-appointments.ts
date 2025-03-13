@@ -22,7 +22,7 @@ export class FindAppointmentsService {
   ) {}
 
   public async execute(query: any): Promise<{
-    patientsWithTimeZones: (Appointment & {
+    data: (Appointment & {
       timeZonePatient?: string | null;
       hrPatient: string;
       hrDoctor: string;
@@ -106,7 +106,7 @@ export class FindAppointmentsService {
       );
 
       return {
-        patientsWithTimeZones,
+        data: patientsWithTimeZones,
         total,
         totalPages,
       };
