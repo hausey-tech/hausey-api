@@ -24,6 +24,20 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     ];
   }
 
+  async findAppointmentByProfessionalIdAndDate(
+    professionalId: string,
+    date: any,
+  ): Promise<Appointment[]> {
+    const appointment = await this.ormRepository.find({
+      where: {
+        professionalId,
+        date,
+      },
+    });
+
+    return appointment;
+  }
+
   public async findById(id: string): Promise<Appointment | null> {
     return this.ormRepository.findOne({ where: { id } });
   }

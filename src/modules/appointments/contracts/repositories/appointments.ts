@@ -18,4 +18,8 @@ export interface IAppointmentsRepository {
   update(id: string, payload: Appointment): Promise<Appointment>;
   findAllAppointmentsStatusIsAwaiting(): Promise<Appointment[]>;
   findAppointmentStatusIsRunning(): Promise<Appointment[]>;
+  findAppointmentByProfessionalIdAndDate(
+    professionalId: string,
+    date: any,
+  ): Promise<Appointment[]>;
 }

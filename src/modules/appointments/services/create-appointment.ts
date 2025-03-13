@@ -43,6 +43,18 @@ export class CreateAppointmentService {
     try {
       const patient = await this.patientsRepository.findById(patientId);
       let professional: Professional | null;
+      const appointmentByProfessionalIdAndDate =
+        await this.appointmentsRepository.findAppointmentByProfessionalIdAndDate(
+          professionalId,
+          date,
+        );
+
+      if (appointmentByProfessionalIdAndDate) {
+        throw new AppError(
+          'Já existe uma consulta agendada neste dia e horário para este profissional.',
+          400,
+        );
+      }
 
       if (!patient) {
         throw new AppError(
