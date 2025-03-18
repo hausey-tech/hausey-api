@@ -10,4 +10,6 @@ export interface ICreatePatientDTO {
   sellerId: string;
   planExpiresAt?: Date;
   firstPayment?: boolean;
+  language?: string;
+  region?: string;
 }

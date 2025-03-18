@@ -73,6 +73,8 @@ export class UploadPatientCsv {
                   state,
                   zipOrPostcode,
                   country,
+                  region,
+                  language,
                 } = row;
 
                 if (
@@ -87,7 +89,9 @@ export class UploadPatientCsv {
                   !addressLine2 ||
                   !city ||
                   !state ||
-                  !zipOrPostcode
+                  !zipOrPostcode ||
+                  !region ||
+                  !language
                 ) {
                   this.logger.info(
                     {
@@ -116,6 +120,8 @@ export class UploadPatientCsv {
                   sex,
                   sellerId,
                   firstPayment: true,
+                  region,
+                  language,
                   planId: 'efe8d3ec-f3a2-432b-8a10-d7ef75e5adc2',
                 };
 
