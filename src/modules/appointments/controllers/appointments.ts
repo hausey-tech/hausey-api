@@ -71,6 +71,11 @@ export class AppointmentsController {
     clients.forEach(client => {
       client.write(`event: new-appointment\n`);
       client.write(`data: ${JSON.stringify(appointment)}\n\n`);
+      console.log('client', client);
+      console.log(
+        'evento disparado',
+        `data: ${JSON.stringify(appointment)}\n\n`,
+      );
     });
 
     return response.json(appointment);
