@@ -40,12 +40,15 @@ export class FindAppointmentsService {
       perPage,
       status,
       emergency,
+      date,
     } = query;
 
     const where: FindOptionsWhere<Appointment> = {};
 
     if (patientId) where.patientId = patientId;
     if (appointmentId) where.id = appointmentId;
+
+    if (date) where.date = date;
 
     if (status) {
       where.status = status;

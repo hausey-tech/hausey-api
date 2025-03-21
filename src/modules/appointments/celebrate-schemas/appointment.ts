@@ -13,6 +13,8 @@ export const FindAppointmentsSchema = {
     perPage: Joi.number().default(10),
     status: Joi.string(),
     emergency: Joi.string(),
+    country: Joi.string(),
+    date: Joi.string(),
   }),
 };
 
