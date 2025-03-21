@@ -25,7 +25,7 @@ export class AppointmentsController {
     return response.json(appointments);
   }
 
-  public async events(request: Request, response: Response): Promise<Response> {
+  public async events(request: Request, response: Response): Promise<void> {
     const userId = request.query.userId as string;
     response.setHeader('Content-Type', 'text/event-stream');
     response.setHeader('Cache-Control', 'no-cache');
@@ -33,11 +33,13 @@ export class AppointmentsController {
     response.setHeader('Access-Control-Allow-Origin', '*'); // Pode ser necessário se o seu frontend estiver em um domínio diferente
 
     if (clients.has(userId)) {
-      return response.status(400).json({ message: 'User already connected' });
+      response.status(400).json({ message: 'User already connected' });
+      return;
     }
 
     if (!userId) {
-      return response.status(400).end();
+      response.status(400).end();
+      return;
     }
 
     clients.set(userId, response);
@@ -48,8 +50,6 @@ export class AppointmentsController {
     request.on('close', () => {
       clients.delete(userId);
     });
-
-    return response.status(200).json({ message: 'SSE connection established' });
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
