@@ -94,7 +94,11 @@ export class AppointmentsController {
       payload,
     });
 
-    if (payload.canceled) {
+    if (
+      payload.canceled ||
+      payload.status === 'running' ||
+      payload.status === 'finished'
+    ) {
       clients.forEach(client => {
         client.write(`event: updated-appointment\n`);
         client.write(`data: ${JSON.stringify(appointment)}\n\n`);
