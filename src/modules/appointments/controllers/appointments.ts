@@ -25,12 +25,16 @@ export class AppointmentsController {
     return response.json(appointments);
   }
 
-  public async events(request: Request, response: Response): Promise<void> {
-    const userId = request.query.user as string;
+  public async events(request: Request, response: Response): Promise<Response> {
+    const userId = request.query.userId as string;
     response.setHeader('Content-Type', 'text/event-stream');
     response.setHeader('Cache-Control', 'no-cache');
     response.setHeader('Connection', 'keep-alive');
     response.setHeader('Access-Control-Allow-Origin', '*'); // Pode ser necessário se o seu frontend estiver em um domínio diferente
+
+    if (clients.has(userId)) {
+      return response.status(400).json({ message: 'User already connected' });
+    }
 
     clients.set(userId, response);
 
@@ -40,6 +44,8 @@ export class AppointmentsController {
     request.on('close', () => {
       clients.delete(userId);
     });
+
+    return response.status(200).json({ message: 'SSE connection established' });
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
@@ -68,14 +74,14 @@ export class AppointmentsController {
       appointment = appointmentEmergency;
     }
 
-    clients.forEach(client => {
-      client.write(`event: new-appointment\n`);
-      client.write(`data: ${JSON.stringify(appointment)}\n\n`);
-      console.log('client', client);
-      console.log(
-        'evento disparado',
-        `data: ${JSON.stringify(appointment)}\n\n`,
-      );
+    clients.forEach((client, userId) => {
+      try {
+        client.write(`event: new-appointment\n`);
+        client.write(`data: ${JSON.stringify(appointment)}\n\n`);
+      } catch (error) {
+        // Se ocorrer erro ao escrever, significa que a conexão foi fechada
+        clients.delete(userId); // Remove o cliente do Map
+      }
     });
 
     return response.json(appointment);
@@ -94,16 +100,10 @@ export class AppointmentsController {
       payload,
     });
 
-    if (
-      payload.canceled ||
-      payload.status === 'running' ||
-      payload.status === 'finished'
-    ) {
-      clients.forEach(client => {
-        client.write(`event: updated-appointment\n`);
-        client.write(`data: ${JSON.stringify(appointment)}\n\n`);
-      });
-    }
+    clients.forEach(client => {
+      client.write(`event: updated-appointment\n`);
+      client.write(`data: ${JSON.stringify(appointment)}\n\n`);
+    });
 
     return response.json(appointment);
   }
