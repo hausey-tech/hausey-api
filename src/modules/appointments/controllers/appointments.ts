@@ -36,6 +36,10 @@ export class AppointmentsController {
       return response.status(400).json({ message: 'User already connected' });
     }
 
+    if (!userId) {
+      return response.status(400).end();
+    }
+
     clients.set(userId, response);
 
     response.write('event: connected\n');
