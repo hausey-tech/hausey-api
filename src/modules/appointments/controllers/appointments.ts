@@ -32,11 +32,6 @@ export class AppointmentsController {
     response.setHeader('Connection', 'keep-alive');
     response.setHeader('Access-Control-Allow-Origin', '*'); // Pode ser necessário se o seu frontend estiver em um domínio diferente
 
-    if (clients.has(userId)) {
-      response.status(400).json({ message: 'User already connected' });
-      return;
-    }
-
     if (!userId) {
       response.status(400).end();
       return;
