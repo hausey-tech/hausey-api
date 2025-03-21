@@ -1,10 +1,10 @@
-import { injectable, inject } from 'tsyringe';
+import { injectable, inject, container } from 'tsyringe';
 
 import { Logger } from 'pino';
 import moment from 'moment-timezone';
-import { Professional } from 'modules/professionals/entities/professional';
+import { AlertProfessionalService } from '../../alert-professional/services/alertProfessional.service';
+import { Professional } from '../../professionals/entities/professional';
 import { ISlotsRepository } from '../../slots/contracts/repositories/slots';
-// import { AlertProfessionalService } from '../../alert-professional/services/alertProfessional.service';
 import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
 import { ICreateAppointmentDTO } from '../contracts/dtos/create-appointment';
 import { AppError } from '../../../shared/errors/app-error';
@@ -13,7 +13,7 @@ import { IPatientsRepository } from '../../patients/contracts/repositories/patie
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
 
 import { createVideoRoomCode } from '../utils/create-video-room-code';
-// import { sendgrid } from '../../../shared/utils/sendgrid';
+import { sendgrid } from '../../../shared/utils/sendgrid';
 
 @injectable()
 export class CreateAppointmentService {
@@ -109,8 +109,8 @@ export class CreateAppointmentService {
         'Appoinment Criado',
       );
       if (emergency) {
-        // const alertProfessional = container.resolve(AlertProfessionalService);
-        // await alertProfessional.execute();
+        const alertProfessional = container.resolve(AlertProfessionalService);
+        await alertProfessional.execute();
 
         const appointmentEmergency = await this.appointmentsRepository.create({
           patientId,
@@ -136,56 +136,56 @@ export class CreateAppointmentService {
             'Log de professionals',
           );
 
-          // sendgrid({
-          //   to: 'hauseydevs@gmail.com',
-          //   subject: `📢Nova Solicitação de Plantão!`,
-          //   text: 'veja as informações do plantão',
-          //   body: `
-          //   <h2>Olá, um paciente solicitou um atendimento de plantão no app!</h2>
-          //   <h4>Veja as informações:</h4>
-          //   <p>Nome: <b>${patient.name}</b></p>
-          //   <p>Email: <b>${patient.email}</b></p>
-          //   <p>Telefone: <b>${patient.phoneNumber}</b></p>
-          //   <p>
-          //     Médicos do plantão:
-          //     <ul>
-          //       ${professionalSlots
-          //         .map(
-          //           professionals => `
-          //             <li>
-          //               Nome: <b>${professionals.name}</b><br>
-          //               Telefone: <b>${professionals.phoneNumber}</b>
-          //             </li>
-          //           `,
-          //         )
-          //         .join('')}
-          //     </ul>
-          //   </p>
-          //   <hr/>
-          //   <p>Clique no link abaixo para agendar no portal:</p>
-          //   <a href="https://hausey.com.br/doctor/dashboard" target="_blank">Acessar atendimento</a>
-          // `,
-          // });
+          sendgrid({
+            to: 'hauseydevs@gmail.com',
+            subject: `📢Nova Solicitação de Plantão!`,
+            text: 'veja as informações do plantão',
+            body: `
+            <h2>Olá, um paciente solicitou um atendimento de plantão no app!</h2>
+            <h4>Veja as informações:</h4>
+            <p>Nome: <b>${patient.name}</b></p>
+            <p>Email: <b>${patient.email}</b></p>
+            <p>Telefone: <b>${patient.phoneNumber}</b></p>
+            <p>
+              Médicos do plantão:
+              <ul>
+                ${professionalSlots
+                  .map(
+                    professionals => `
+                      <li>
+                        Nome: <b>${professionals.name}</b><br>
+                        Telefone: <b>${professionals.phoneNumber}</b>
+                      </li>
+                    `,
+                  )
+                  .join('')}
+              </ul>
+            </p>
+            <hr/>
+            <p>Clique no link abaixo para agendar no portal:</p>
+            <a href="https://hausey.com.br/doctor/dashboard" target="_blank">Acessar atendimento</a>
+          `,
+          });
 
-          // professionalSlots.forEach((professionalSlot, index) => {
-          //   setTimeout(() => {
-          //     sendgrid({
-          //       to: professionalSlot.email,
-          //       subject: `📢Nova Solicitação de Plantão!`,
-          //       text: 'veja as informações do plantão',
-          //       body: `
-          //       <h2>Olá, um paciente solicitou um atendimento de plantão no app!</h2>
-          //       <h4>Veja as informações:</h4>
-          //       <p>Nome: <b>${patient.name}</b></p>
-          //       <p>Email: <b>${patient.email}</b></p>
-          //       <p>Telefone: <b>${patient.phoneNumber}</b></p>
-          //       <hr/>
-          //       <p>Clique no link abaixo para agendar no portal:</p>
-          //       <a href="https://hausey.com.br/doctor/dashboard" target="_blank">Acessar atendimento</a>
-          //     `,
-          //     });
-          //   }, index * 2000);
-          // });
+          professionalSlots.forEach((professionalSlot, index) => {
+            setTimeout(() => {
+              sendgrid({
+                to: professionalSlot.email,
+                subject: `📢Nova Solicitação de Plantão!`,
+                text: 'veja as informações do plantão',
+                body: `
+                <h2>Olá, um paciente solicitou um atendimento de plantão no app!</h2>
+                <h4>Veja as informações:</h4>
+                <p>Nome: <b>${patient.name}</b></p>
+                <p>Email: <b>${patient.email}</b></p>
+                <p>Telefone: <b>${patient.phoneNumber}</b></p>
+                <hr/>
+                <p>Clique no link abaixo para agendar no portal:</p>
+                <a href="https://hausey.com.br/doctor/dashboard" target="_blank">Acessar atendimento</a>
+              `,
+              });
+            }, index * 2000);
+          });
         }
       }
 
