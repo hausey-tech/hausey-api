@@ -38,12 +38,21 @@ export class FindAppointmentsService {
       appointmentId,
       page,
       perPage,
+      status,
+      emergency,
     } = query;
 
     const where: FindOptionsWhere<Appointment> = {};
 
     if (patientId) where.patientId = patientId;
     if (appointmentId) where.id = appointmentId;
+
+    if (status) {
+      where.status = status;
+    }
+    if (emergency) {
+      where.emergency = emergency;
+    }
 
     if (professionalId) {
       if (professionalId === 'null') {

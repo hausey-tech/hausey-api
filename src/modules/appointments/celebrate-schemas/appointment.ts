@@ -11,6 +11,8 @@ export const FindAppointmentsSchema = {
     appointmentId: Joi.string().uuid(),
     page: Joi.number().default(1),
     perPage: Joi.number().default(10),
+    status: Joi.string(),
+    emergency: Joi.string(),
   }),
 };
 
