@@ -73,7 +73,8 @@ export class ListPatientsService {
     }
 
     if (cpf) {
-      return this.patientsRepository.findByDocument(cpf);
+      const cpfLimpo = cpf.replace(/\D/g, '');
+      return this.patientsRepository.findByDocument(cpfLimpo);
     }
 
     if (Number.isNaN(page) || Number(page) < 1) {

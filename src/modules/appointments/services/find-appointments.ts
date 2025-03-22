@@ -41,6 +41,7 @@ export class FindAppointmentsService {
       status,
       emergency,
       date,
+      country,
     } = query;
 
     const where: FindOptionsWhere<Appointment> = {};
@@ -116,6 +117,17 @@ export class FindAppointmentsService {
           };
         }),
       );
+
+      if (country) {
+        const patientsWithCountry = patientsWithTimeZones.filter(
+          patient => patient.patient.address.country === country,
+        );
+        return {
+          data: patientsWithCountry,
+          total,
+          totalPages,
+        };
+      }
 
       return {
         data: patientsWithTimeZones,
