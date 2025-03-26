@@ -49,8 +49,6 @@ export class FindAppointmentsService {
     if (patientId) where.patientId = patientId;
     if (appointmentId) where.id = appointmentId;
 
-    if (date) where.date = date;
-
     if (status) {
       where.status = status;
     }
@@ -118,12 +116,59 @@ export class FindAppointmentsService {
         }),
       );
 
-      if (country) {
-        const patientsWithCountry = patientsWithTimeZones.filter(
+      let patientsWithCountryOrDate;
+      const startOfMonth = moment(date, 'MM/YYYY').startOf('month');
+      const endOfMonth = moment(date, 'MM/YYYY').endOf('month');
+
+      if (country && date) {
+        const filterdByCountry = patientsWithTimeZones.filter(
+          patient => patient.patient.address.country === country,
+        );
+        patientsWithCountryOrDate = filterdByCountry.filter(appointment => {
+          const appointmentDate = moment(
+            appointment.date,
+            'YYYY-MM-DD HH:mm:ss',
+          );
+          return appointmentDate.isBetween(
+            startOfMonth,
+            endOfMonth,
+            null,
+            '[]',
+          );
+        });
+        return {
+          data: patientsWithCountryOrDate,
+          total,
+          totalPages,
+        };
+      }
+      if (!country && date) {
+        patientsWithCountryOrDate = patientsWithTimeZones.filter(
+          appointment => {
+            const appointmentDate = moment(
+              appointment.date,
+              'YYYY-MM-DD HH:mm:ss',
+            );
+            return appointmentDate.isBetween(
+              startOfMonth,
+              endOfMonth,
+              null,
+              '[]',
+            );
+          },
+        );
+        return {
+          data: patientsWithCountryOrDate,
+          total,
+          totalPages,
+        };
+      }
+      if (country && !date) {
+        patientsWithCountryOrDate = patientsWithTimeZones.filter(
           patient => patient.patient.address.country === country,
         );
         return {
-          data: patientsWithCountry,
+          data: patientsWithCountryOrDate,
           total,
           totalPages,
         };

@@ -78,8 +78,7 @@ export class AppointmentsController {
         client.write(`event: new-appointment\n`);
         client.write(`data: ${JSON.stringify(appointment)}\n\n`);
       } catch (error) {
-        // Se ocorrer erro ao escrever, significa que a conexão foi fechada
-        clients.delete(userId); // Remove o cliente do Map
+        clients.delete(userId);
       }
     });
 
