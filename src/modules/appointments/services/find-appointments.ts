@@ -117,18 +117,30 @@ export class FindAppointmentsService {
       );
 
       let patientsWithCountryOrDate;
-      const startOfMonth = moment(date, 'MM/YYYY').startOf('month');
-      const endOfMonth = moment(date, 'MM/YYYY').endOf('month');
 
       if (country && date) {
+        // Analisa a data em UTC e obtém o intervalo do mês
+        const startOfMonth = moment.utc(date, 'MM/YYYY').startOf('month');
+        const endOfMonth = moment.utc(date, 'MM/YYYY').endOf('month');
+
         const filterdByCountry = patientsWithTimeZones.filter(
           patient => patient.patient.address.country === country,
         );
+
         patientsWithCountryOrDate = filterdByCountry.filter(appointment => {
-          const appointmentDate = moment(
+          // Analisa a data do agendamento EM UTC e com milissegundos
+          const appointmentDate = moment.utc(
             appointment.date,
-            'YYYY-MM-DD HH:mm:ss',
+            'YYYY-MM-DD HH:mm:ss.SSS', // Formato com milissegundos
           );
+
+          // Verificação opcional para debug
+          if (!appointmentDate.isValid()) {
+            console.error('Data inválida:', appointment.date);
+            return false;
+          }
+
+          // Comparação em UTC
           return appointmentDate.isBetween(
             startOfMonth,
             endOfMonth,
@@ -136,6 +148,7 @@ export class FindAppointmentsService {
             '[]',
           );
         });
+
         return {
           data: patientsWithCountryOrDate,
           total,
@@ -143,16 +156,20 @@ export class FindAppointmentsService {
         };
       }
       if (!country && date) {
-        console.log('entrei, não tem country');
-        console.log('startOfMonth', startOfMonth);
-        console.log('endOfMonth', endOfMonth);
+        const startOfMonth = moment.utc(date, 'MM/YYYY').startOf('month');
+        const endOfMonth = moment.utc(date, 'MM/YYYY').endOf('month');
+
         patientsWithCountryOrDate = patientsWithTimeZones.filter(
           appointment => {
-            const appointmentDate = moment(
+            // Analisa a data do agendamento EM UTC e com milissegundos
+            const appointmentDate = moment.utc(
               appointment.date,
-              'YYYY-MM-DD HH:mm:ss',
+              'YYYY-MM-DD HH:mm:ss.SSS', // Formato com milissegundos
             );
-            console.log('appointment', appointment);
+            if (!appointmentDate.isValid()) {
+              console.error('Data inválida:', appointment.date);
+              return false;
+            }
             return appointmentDate.isBetween(
               startOfMonth,
               endOfMonth,
