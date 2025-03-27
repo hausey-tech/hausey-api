@@ -143,12 +143,16 @@ export class FindAppointmentsService {
         };
       }
       if (!country && date) {
+        console.log('entrei, não tem country');
+        console.log('startOfMonth', startOfMonth);
+        console.log('endOfMonth', endOfMonth);
         patientsWithCountryOrDate = patientsWithTimeZones.filter(
           appointment => {
             const appointmentDate = moment(
               appointment.date,
               'YYYY-MM-DD HH:mm:ss',
             );
+            console.log('appointment', appointment);
             return appointmentDate.isBetween(
               startOfMonth,
               endOfMonth,
@@ -157,6 +161,7 @@ export class FindAppointmentsService {
             );
           },
         );
+        console.log('patientsWithCountryOrDate', patientsWithCountryOrDate);
         return {
           data: patientsWithCountryOrDate,
           total,
