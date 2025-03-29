@@ -134,7 +134,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
           address: Not(IsNull()), // Filtra apenas pacientes com address não nulo
         },
       },
-      relations: ['patient', 'patient.address'], // Carrega as relações necessárias
+      relations: ['patient'], // Carrega as relações necessárias
       order: { date: 'ASC' },
     });
 
