@@ -136,7 +136,8 @@ export class FindAppointmentsService {
       let patientsWithCountryOrDate;
 
       if (country) {
-        console.log(patientsWithCountryOrDate[0].patient);
+        console.log(patientsWithTimeZones[0].patient);
+        console.log('patientWith0', patientsWithTimeZones[0]);
         patientsWithCountryOrDate = patientsWithTimeZones.filter(
           patient => patient.patient?.address?.country === country,
         );
