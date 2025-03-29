@@ -26,4 +26,12 @@ export interface IAppointmentsRepository {
     professionalId: string,
     date: string,
   ): Promise<Appointment[]>;
+  findByDate(
+    date: Date,
+    professionalId: string,
+    status: string,
+    country: string,
+    page: number,
+    perPage: number,
+  ): Promise<{ data: Appointment[]; total: number; totalPages: number }>;
 }

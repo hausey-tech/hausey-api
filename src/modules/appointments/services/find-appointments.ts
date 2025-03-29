@@ -73,8 +73,25 @@ export class FindAppointmentsService {
     try {
       const hasPage = page ? Number(page) : 1;
       const hasPerPage = perPage ? Number(perPage) : 10;
-      const { data, total, totalPages } =
-        await this.appointmentsRepository.find(where, hasPage, hasPerPage);
+      let allAppointments;
+
+      if (date) {
+        allAppointments = await this.appointmentsRepository.findByDate(
+          date,
+          professionalId,
+          status,
+          country,
+          hasPage,
+          hasPerPage,
+        );
+      } else {
+        allAppointments = await this.appointmentsRepository.find(
+          where,
+          hasPage,
+          hasPerPage,
+        );
+      }
+      const { data, total, totalPages } = allAppointments;
 
       const patientsWithTimeZones = await Promise.all(
         data.map(async appointment => {

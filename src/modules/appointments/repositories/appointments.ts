@@ -1,5 +1,6 @@
 import { Between, Repository, FindOptionsWhere } from 'typeorm';
 
+import moment from 'moment-timezone';
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
 import { PostgresDataSource } from '../../../shared/typeorm';
 import { Appointment } from '../entities/appointment';
@@ -110,6 +111,36 @@ export class AppointmentsRepository implements IAppointmentsRepository {
       order: { date: 'asc' },
       relations: this.relations,
     });
+  }
+
+  public async findByDate(
+    date: Date,
+    professionalId: string,
+    status: string,
+    country: string,
+    page: number,
+    perPage: number,
+  ): Promise<{ data: Appointment[]; total: number; totalPages: number }> {
+    const startOfMonth = moment.utc(date, 'MM/YYYY').startOf('month').toDate();
+    const endOfMonth = moment.utc(date, 'MM/YYYY').endOf('month').toDate();
+
+    const [data, total] = await this.ormRepository.findAndCount({
+      where: {
+        date: Between(startOfMonth, endOfMonth),
+        status,
+        professionalId,
+        patient: {
+          address: {
+            country,
+          },
+        },
+      },
+      order: { date: 'ASC' },
+      take: perPage,
+      skip: (page - 1) * perPage,
+    });
+    const totalPages = Math.ceil(total / perPage);
+    return { data, total, totalPages };
   }
 
   public async findByPatient(patientId: string): Promise<Appointment[]> {
