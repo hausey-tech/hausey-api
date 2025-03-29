@@ -1,4 +1,4 @@
-import { Between, Repository, FindOptionsWhere, Not, IsNull } from 'typeorm';
+import { Between, Repository, FindOptionsWhere } from 'typeorm';
 
 import moment from 'moment-timezone';
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
@@ -124,32 +124,25 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     const startOfMonth = moment.utc(date, 'MM/YYYY').startOf('month').toDate();
     const endOfMonth = moment.utc(date, 'MM/YYYY').endOf('month').toDate();
 
-    // Busca todos os agendamentos (sem paginação inicial para filtrar corretamente)
     const [allAppointments] = await this.ormRepository.findAndCount({
       where: {
         date: Between(startOfMonth, endOfMonth),
         status,
         professionalId,
-        patient: {
-          address: Not(IsNull()), // Filtra apenas pacientes com address não nulo
-        },
       },
       order: { date: 'ASC' },
     });
 
-    // Filtra resultados válidos (patient e address não nulos)
     const validAppointments = allAppointments.filter(
       appointment => appointment.patient && appointment.patient.address,
     );
 
-    // Aplica filtro por país, se fornecido
     const filteredData = country
       ? validAppointments.filter(
           appointment => appointment.patient.address.country === country,
         )
       : validAppointments;
 
-    // Aplica paginação manualmente
     const paginatedData = filteredData.slice(
       (page - 1) * perPage,
       page * perPage,
