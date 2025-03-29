@@ -124,7 +124,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     const startOfMonth = moment.utc(date, 'MM/YYYY').startOf('month').toDate();
     const endOfMonth = moment.utc(date, 'MM/YYYY').endOf('month').toDate();
 
-    const [data, total] = await this.ormRepository.findAndCount({
+    const [data] = await this.ormRepository.findAndCount({
       where: {
         date: Between(startOfMonth, endOfMonth),
         status,
@@ -133,20 +133,29 @@ export class AppointmentsRepository implements IAppointmentsRepository {
           address: Not(IsNull()),
         },
       },
+      relations: ['patient', 'patient.address'],
       order: { date: 'ASC' },
       take: perPage,
       skip: (page - 1) * perPage,
     });
+
     let filteredData;
     if (country) {
       filteredData = data.filter(
-        appointment => appointment.patient?.address?.country === country,
+        appointment =>
+          appointment.patient !== null &&
+          appointment.patient.address !== null &&
+          appointment.patient.address.country === country,
       );
     } else {
       filteredData = data;
     }
-    const totalPages = Math.ceil(total / perPage);
-    return { data: filteredData, total, totalPages };
+
+    return {
+      data: filteredData,
+      total: filteredData.length,
+      totalPages: Math.ceil(filteredData.length / perPage),
+    };
   }
 
   public async findByPatient(patientId: string): Promise<Appointment[]> {
