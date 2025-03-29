@@ -1,4 +1,4 @@
-import { Between, Repository, FindOptionsWhere } from 'typeorm';
+import { Between, Repository, FindOptionsWhere, Not, IsNull } from 'typeorm';
 
 import moment from 'moment-timezone';
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
@@ -130,17 +130,23 @@ export class AppointmentsRepository implements IAppointmentsRepository {
         status,
         professionalId,
         patient: {
-          address: {
-            country,
-          },
+          address: Not(IsNull()),
         },
       },
       order: { date: 'ASC' },
       take: perPage,
       skip: (page - 1) * perPage,
     });
+    let filteredData;
+    if (country) {
+      filteredData = data.filter(
+        appointment => appointment.patient?.address?.country === country,
+      );
+    } else {
+      filteredData = data;
+    }
     const totalPages = Math.ceil(total / perPage);
-    return { data, total, totalPages };
+    return { data: filteredData, total, totalPages };
   }
 
   public async findByPatient(patientId: string): Promise<Appointment[]> {
