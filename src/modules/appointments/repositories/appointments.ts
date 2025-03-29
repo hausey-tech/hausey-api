@@ -124,38 +124,20 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     const startOfMonth = moment.utc(date, 'MM/YYYY').startOf('month').toDate();
     const endOfMonth = moment.utc(date, 'MM/YYYY').endOf('month').toDate();
 
-    const [allAppointments] = await this.ormRepository.findAndCount({
+    const [data, total] = await this.ormRepository.findAndCount({
       where: {
         date: Between(startOfMonth, endOfMonth),
         status,
         professionalId,
       },
+      skip: (page - 1) * perPage,
+      take: perPage,
+      relations: this.relations,
       order: { date: 'ASC' },
     });
 
-    const validAppointments = allAppointments.filter(
-      appointment => appointment.patient && appointment.patient.address,
-    );
-
-    const filteredData = country
-      ? validAppointments.filter(
-          appointment => appointment.patient.address.country === country,
-        )
-      : validAppointments;
-
-    const paginatedData = filteredData.slice(
-      (page - 1) * perPage,
-      page * perPage,
-    );
-
-    const totalFiltered = filteredData.length;
-    const totalPages = Math.ceil(totalFiltered / perPage);
-
-    return {
-      data: paginatedData,
-      total: totalFiltered,
-      totalPages,
-    };
+    const totalPages = Math.ceil(total / perPage);
+    return { data, total, totalPages };
   }
 
   public async findByPatient(patientId: string): Promise<Appointment[]> {
