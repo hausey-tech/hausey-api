@@ -79,6 +79,7 @@ export class FindAppointmentsService {
         allAppointments = await this.appointmentsRepository.findByDate(
           date,
           professionalId,
+          patientId,
           status,
           country,
           hasPage,

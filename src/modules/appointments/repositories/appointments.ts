@@ -116,6 +116,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
   public async findByDate(
     date: Date | null,
     professionalId: string,
+    patientId: string,
     status: string,
     country: string | null,
     page: number,
@@ -132,6 +133,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     const whereCondition: any = {
       status,
       professionalId,
+      patientId,
     };
 
     if (startOfMonth && endOfMonth) {

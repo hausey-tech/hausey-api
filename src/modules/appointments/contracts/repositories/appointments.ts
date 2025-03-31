@@ -29,6 +29,7 @@ export interface IAppointmentsRepository {
   findByDate(
     date: Date,
     professionalId: string,
+    patientId: string,
     status: string,
     country: string,
     page: number,
