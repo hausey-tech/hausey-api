@@ -75,7 +75,7 @@ export class FindAppointmentsService {
       const hasPerPage = perPage ? Number(perPage) : 10;
       let allAppointments;
 
-      if (date && country) {
+      if (date) {
         allAppointments = await this.appointmentsRepository.findByDate(
           date,
           professionalId,
