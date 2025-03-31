@@ -134,7 +134,7 @@ export class FindAppointmentsService {
       );
 
       return {
-        data,
+        data: allAppointments,
         total,
         totalPages,
       };
