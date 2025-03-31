@@ -140,7 +140,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
       whereCondition.date = Between(startOfMonth, endOfMonth);
     }
 
-    const [data] = await this.ormRepository.findAndCount({
+    const [data, total] = await this.ormRepository.findAndCount({
       where: {
         status,
         professionalId,
@@ -158,8 +158,8 @@ export class AppointmentsRepository implements IAppointmentsRepository {
       order: { date: 'ASC' },
     });
 
-    const totalPages = Math.ceil(data.length / perPage);
-    return { data, total: data.length, totalPages };
+    const totalPages = Math.ceil(total / perPage);
+    return { data, total, totalPages };
   }
 
   public async findByPatient(patientId: string): Promise<Appointment[]> {
