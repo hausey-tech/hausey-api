@@ -139,6 +139,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     }
 
     if (country) {
+      console.log('passei country', country);
       whereCondition.country = country;
     }
 
@@ -150,15 +151,8 @@ export class AppointmentsRepository implements IAppointmentsRepository {
       order: { date: 'ASC' },
     });
 
-    let filteredData = data;
-    if (country) {
-      filteredData = filteredData.filter(
-        appointment => appointment.patient.address.country === country,
-      );
-    }
-
-    const totalPages = Math.ceil(filteredData.length / perPage);
-    return { data: filteredData, total: filteredData.length, totalPages };
+    const totalPages = Math.ceil(data.length / perPage);
+    return { data, total: data.length, totalPages };
   }
 
   public async findByPatient(patientId: string): Promise<Appointment[]> {
