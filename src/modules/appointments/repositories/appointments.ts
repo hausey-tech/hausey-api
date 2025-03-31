@@ -138,6 +138,10 @@ export class AppointmentsRepository implements IAppointmentsRepository {
       whereCondition.date = Between(startOfMonth, endOfMonth);
     }
 
+    if (country) {
+      whereCondition.country = country;
+    }
+
     const [data] = await this.ormRepository.findAndCount({
       where: whereCondition,
       skip: (page - 1) * perPage,
