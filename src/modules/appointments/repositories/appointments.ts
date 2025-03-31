@@ -114,30 +114,47 @@ export class AppointmentsRepository implements IAppointmentsRepository {
   }
 
   public async findByDate(
-    date: Date,
+    date: Date | null,
     professionalId: string,
     status: string,
-    country: string,
+    country: string | null,
     page: number,
     perPage: number,
   ): Promise<{ data: Appointment[]; total: number; totalPages: number }> {
-    const startOfMonth = moment.utc(date, 'MM/YYYY').startOf('month').toDate();
-    const endOfMonth = moment.utc(date, 'MM/YYYY').endOf('month').toDate();
+    let startOfMonth: Date | undefined;
+    let endOfMonth: Date | undefined;
 
-    const [data, total] = await this.ormRepository.findAndCount({
-      where: {
-        date: Between(startOfMonth, endOfMonth),
-        status,
-        professionalId,
-      },
+    if (date) {
+      startOfMonth = moment.utc(date, 'MM/YYYY').startOf('month').toDate();
+      endOfMonth = moment.utc(date, 'MM/YYYY').endOf('month').toDate();
+    }
+
+    const whereCondition: any = {
+      status,
+      professionalId,
+    };
+
+    if (startOfMonth && endOfMonth) {
+      whereCondition.date = Between(startOfMonth, endOfMonth);
+    }
+
+    const [data] = await this.ormRepository.findAndCount({
+      where: whereCondition,
       skip: (page - 1) * perPage,
       take: perPage,
       relations: this.relations,
       order: { date: 'ASC' },
     });
 
-    const totalPages = Math.ceil(total / perPage);
-    return { data, total, totalPages };
+    let filteredData = data;
+    if (country) {
+      filteredData = filteredData.filter(
+        appointment => appointment.patient.address.country === country,
+      );
+    }
+
+    const totalPages = Math.ceil(filteredData.length / perPage);
+    return { data: filteredData, total: filteredData.length, totalPages };
   }
 
   public async findByPatient(patientId: string): Promise<Appointment[]> {

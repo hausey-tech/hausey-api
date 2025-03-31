@@ -75,7 +75,7 @@ export class FindAppointmentsService {
       const hasPerPage = perPage ? Number(perPage) : 10;
       let allAppointments;
 
-      if (date) {
+      if (date && country) {
         allAppointments = await this.appointmentsRepository.findByDate(
           date,
           professionalId,
@@ -93,7 +93,7 @@ export class FindAppointmentsService {
       }
       const { data, total, totalPages } = allAppointments;
 
-      const patientsWithTimeZones = await Promise.all(
+      allAppointments = await Promise.all(
         data.map(async appointment => {
           const address = await this.addressesRepository.findByPatientId(
             appointment.patientId,
@@ -133,23 +133,8 @@ export class FindAppointmentsService {
         }),
       );
 
-      let patientsWithCountryOrDate;
-
-      if (country) {
-        console.log(patientsWithTimeZones[0].patient);
-        console.log('patientWith0', patientsWithTimeZones[0]);
-        patientsWithCountryOrDate = patientsWithTimeZones.filter(
-          patient => patient.patient?.address?.country === country,
-        );
-        return {
-          data: patientsWithCountryOrDate,
-          total,
-          totalPages,
-        };
-      }
-
       return {
-        data: patientsWithTimeZones,
+        data,
         total,
         totalPages,
       };
