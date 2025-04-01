@@ -45,7 +45,8 @@ export const UpdateAppointmentSchema = {
     professionalId: Joi.string().uuid(),
     patientId: Joi.string().uuid(),
     emergency: Joi.boolean(),
-    status: Joi.string(),
+    status: Joi.string().optional(),
+    canceled: Joi.boolean().optional(),
   }),
 };
 
