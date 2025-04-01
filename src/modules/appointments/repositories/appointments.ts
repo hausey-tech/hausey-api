@@ -33,6 +33,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
       where: {
         professionalId,
         date,
+        canceled: false,
       },
     });
 
