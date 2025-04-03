@@ -73,7 +73,11 @@ export class CreateAppointmentService {
             tratedDate,
           );
 
-        if (appointmentByProfessionalIdAndDate.length > 0) {
+        const verifyIsAwaiting = appointmentByProfessionalIdAndDate.find(
+          appointment => appointment.status === 'awaiting',
+        );
+
+        if (appointmentByProfessionalIdAndDate.length > 0 && verifyIsAwaiting) {
           throw new AppError(
             'Já existe uma consulta agendada neste dia e horário para este profissional.',
             400,
