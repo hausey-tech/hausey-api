@@ -43,10 +43,17 @@ export class CreateAppointmentService {
     try {
       const patient = await this.patientsRepository.findById(patientId);
       let professional: Professional | null;
+      const hasAppointmentIsRunningByPatientId =
+        await this.appointmentsRepository.findByPatientAndIsRunning(patientId);
 
       if (!patient) {
         throw new AppError(
           'Paciente não encontrado, verifique e tente novamente!',
+        );
+      }
+      if (hasAppointmentIsRunningByPatientId) {
+        throw new AppError(
+          'Já existe um atendimento para este paciente em andamento. Finalize-o e tente novamente.',
         );
       }
       if (professionalId) {

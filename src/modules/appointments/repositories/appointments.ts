@@ -40,6 +40,17 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     return appointment;
   }
 
+  public async findByPatientAndIsRunning(
+    patientId: string,
+  ): Promise<Appointment | null> {
+    return this.ormRepository.findOne({
+      where: {
+        patientId,
+        status: 'running',
+      },
+    });
+  }
+
   public async findById(id: string): Promise<Appointment | null> {
     return this.ormRepository.findOne({ where: { id } });
   }
