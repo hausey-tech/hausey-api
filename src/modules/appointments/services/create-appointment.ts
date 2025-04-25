@@ -52,18 +52,6 @@ export class CreateAppointmentService {
         );
       }
 
-      const hasAppointmentByPatientId =
-        await this.appointmentsRepository.findByPatientIdAndDate(
-          patientId,
-          date,
-        );
-
-      if (hasAppointmentByPatientId) {
-        throw new AppError(
-          'Já existe um atendimento para este paciente na hora e data referida.',
-        );
-      }
-
       if (hasAppointmentIsRunningByPatientId) {
         throw new AppError(
           'Já existe um atendimento para este paciente em andamento. Finalize-o e tente novamente.',
@@ -117,6 +105,18 @@ export class CreateAppointmentService {
           .tz(date, 'YYYY-MM-DD HH:mm:ss', professional.professionalTimezone)
           .utc()
           .toISOString();
+        const hasAppointmentByPatientId =
+          await this.appointmentsRepository.findByPatientIdAndDate(
+            patientId,
+            convertDate,
+          );
+
+        if (hasAppointmentByPatientId) {
+          throw new AppError(
+            'Já existe um atendimento para este paciente na hora e data referida.',
+          );
+        }
+
         const appointmentProfessional =
           await this.appointmentsRepository.create({
             patientId,
