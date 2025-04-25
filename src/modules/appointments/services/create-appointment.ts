@@ -52,15 +52,10 @@ export class CreateAppointmentService {
         );
       }
 
-      const datePatientId = moment
-        .tz(date, 'YYYY-MM-DD HH:mm:ss')
-        .utc()
-        .toISOString();
-
       const hasAppointmentByPatientId =
         await this.appointmentsRepository.findByPatientIdAndDate(
           patientId,
-          datePatientId,
+          date,
         );
 
       if (hasAppointmentByPatientId) {
