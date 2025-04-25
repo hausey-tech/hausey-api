@@ -51,6 +51,24 @@ export class CreateAppointmentService {
           'Paciente não encontrado, verifique e tente novamente!',
         );
       }
+
+      const datePatientId = moment
+        .tz(date, 'YYYY-MM-DD HH:mm:ss')
+        .utc()
+        .toISOString();
+
+      const hasAppointmentByPatientId =
+        await this.appointmentsRepository.findByPatientIdAndDate(
+          patientId,
+          datePatientId,
+        );
+
+      if (hasAppointmentByPatientId) {
+        throw new AppError(
+          'Já existe um atendimento para este paciente na hora e data referida.',
+        );
+      }
+
       if (hasAppointmentIsRunningByPatientId) {
         throw new AppError(
           'Já existe um atendimento para este paciente em andamento. Finalize-o e tente novamente.',

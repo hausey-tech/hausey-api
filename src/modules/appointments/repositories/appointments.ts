@@ -55,6 +55,18 @@ export class AppointmentsRepository implements IAppointmentsRepository {
     return this.ormRepository.findOne({ where: { id } });
   }
 
+  public async findByPatientIdAndDate(
+    patientId: string,
+    date: any,
+  ): Promise<Appointment> {
+    return this.ormRepository.findOne({
+      where: {
+        patientId,
+        date,
+      },
+    });
+  }
+
   public async softDelete(id: string): Promise<void> {
     await this.ormRepository.softDelete(id);
   }

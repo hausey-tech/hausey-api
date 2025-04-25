@@ -23,6 +23,7 @@ export interface IAppointmentsRepository {
   update(id: string, payload: Appointment): Promise<Appointment>;
   findAllAppointmentsStatusIsAwaiting(): Promise<Appointment[]>;
   findAppointmentStatusIsRunning(): Promise<Appointment[]>;
+  findByPatientIdAndDate(patientId: string, date: string): Promise<Appointment>;
   findAppointmentByProfessionalIdAndDate(
     professionalId: string,
     date: string,
