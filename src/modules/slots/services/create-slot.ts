@@ -35,6 +35,7 @@ export class CreateSlotService {
       };
 
       const professionalSlots = await this.slotsRepository.findByDateBetween(
+        payload.professionalType,
         new Date(slots[0].date),
         toDates,
       );

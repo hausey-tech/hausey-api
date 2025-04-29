@@ -58,11 +58,13 @@ export class SlotsRepository implements ISlotsRepository {
   }
 
   public async findByDateBetween(
+    professionalType: string,
     date: Date,
     times: { startTime: Date; endTime: Date },
   ): Promise<Slot[]> {
     return this.ormRepository.find({
       where: {
+        professionalType,
         date,
         startTime: Raw(alias => `${alias} <= :startTime`, {
           startTime: times.startTime,
