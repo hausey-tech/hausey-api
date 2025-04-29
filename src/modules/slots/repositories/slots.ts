@@ -62,18 +62,15 @@ export class SlotsRepository implements ISlotsRepository {
     date: Date,
     times: { startTime: Date; endTime: Date },
   ): Promise<Slot[]> {
-    const startTime = times.startTime.toTimeString().split(' ')[0];
-    const endTime = times.endTime.toTimeString().split(' ')[0];
-
     return this.ormRepository.find({
       where: {
         professionalId: id,
         date,
         startTime: Raw(alias => `${alias} <= :startTime`, {
-          startTime,
+          startTime: times.startTime,
         }),
         endTime: Raw(alias => `${alias} >= :endTime`, {
-          endTime,
+          endTime: times.endTime,
         }),
       },
       relations: [...this.relations, 'professional'],
