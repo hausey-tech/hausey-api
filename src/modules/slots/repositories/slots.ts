@@ -69,10 +69,10 @@ export class SlotsRepository implements ISlotsRepository {
       where: {
         professionalId: id,
         date,
-        startTime: Raw(alias => `TIME(${alias}) <= :startTime`, {
+        startTime: Raw(alias => `${alias} <= :startTime`, {
           startTime,
         }),
-        endTime: Raw(alias => `TIME(${alias}) >= :endTime`, {
+        endTime: Raw(alias => `${alias} >= :endTime`, {
           endTime,
         }),
       },
