@@ -9,7 +9,7 @@ export interface ISlotsRepository {
   findByProfessionalIdAndDate(
     id: string,
     date: Date,
-    times: { startTime: string; endTime: string },
+    times: { startTime: Date; endTime: Date },
   ): Promise<Slot[]>;
   findByTodayDate(date?: Date): Promise<Slot[]>;
   create(payload: ICreateDBSlotDTO): Promise<Slot>;
