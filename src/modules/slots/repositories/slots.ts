@@ -57,6 +57,26 @@ export class SlotsRepository implements ISlotsRepository {
     });
   }
 
+  public async findByProfessionalIdAndDate(
+    id: string,
+    date: Date,
+    times: { startTime: string; endTime: string },
+  ): Promise<Slot[]> {
+    return this.ormRepository.find({
+      where: {
+        professionalId: id,
+        date,
+        startTime: Raw(alias => `TIME(${alias}) <= TIME(:startTime)`, {
+          startTime: times.startTime,
+        }),
+        endTime: Raw(alias => `TIME(${alias}) >= TIME(:endTime)`, {
+          endTime: times.endTime,
+        }),
+      },
+      relations: [...this.relations, 'professional'],
+    });
+  }
+
   public async findByProfessionalId(id: string): Promise<Slot[]> {
     return this.ormRepository.find({ where: { professionalId: id } });
   }

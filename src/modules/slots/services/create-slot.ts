@@ -28,6 +28,19 @@ export class CreateSlotService {
       );
     }
 
+    const professionalSlots =
+      await this.slotsRepository.findByProfessionalIdAndDate(
+        professionalId,
+        new Date(slots[0].date),
+        slots[0].times[0],
+      );
+
+    if (professionalSlots.length > 0) {
+      throw new AppError(
+        'Já existe um profissional de plantão neste dia e horário!',
+      );
+    }
+
     await Promise.all(
       slots.map(async slot => {
         const { date } = slot;
