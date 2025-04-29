@@ -16,52 +16,57 @@ export class CreateSlotService {
   ) {}
 
   public async execute(payload: ICreateSlotDTO): Promise<void> {
-    const { professionalId, professionalType, slots } = payload;
+    try {
+      const { professionalId, professionalType, slots } = payload;
 
-    const professional = await this.professionalsRepository.findById(
-      professionalId,
-    );
-
-    if (!professional) {
-      throw new AppError(
-        'Profissional não encontrado, verifique e tente novamente!',
-      );
-    }
-
-    const toDates = {
-      startTime: new Date(slots[0].times[0].startTime),
-      endTime: new Date(slots[0].times[0].endTime),
-    };
-
-    const professionalSlots =
-      await this.slotsRepository.findByProfessionalIdAndDate(
+      const professional = await this.professionalsRepository.findById(
         professionalId,
-        new Date(slots[0].date),
-        toDates,
       );
 
-    if (professionalSlots.length > 0) {
-      throw new AppError(
-        'Já existe um profissional de plantão neste dia e horário!',
+      if (!professional) {
+        throw new AppError(
+          'Profissional não encontrado, verifique e tente novamente!',
+        );
+      }
+
+      const toDates = {
+        startTime: new Date(slots[0].times[0].startTime),
+        endTime: new Date(slots[0].times[0].endTime),
+      };
+
+      const professionalSlots =
+        await this.slotsRepository.findByProfessionalIdAndDate(
+          professionalId,
+          new Date(slots[0].date),
+          toDates,
+        );
+
+      if (professionalSlots.length > 0) {
+        throw new AppError(
+          'Já existe um profissional de plantão neste dia e horário!',
+        );
+      }
+
+      await Promise.all(
+        slots.map(async slot => {
+          const { date } = slot;
+          slot.times.map(async time => {
+            const { startTime, endTime } = time;
+            await this.slotsRepository.save(
+              await this.slotsRepository.create({
+                professionalId,
+                professionalType,
+                date,
+                startTime,
+                endTime,
+              }),
+            );
+          });
+        }),
       );
+    } catch (error) {
+      console.log(error);
+      throw new AppError(error);
     }
-
-    await Promise.all(
-      slots.map(async slot => {
-        const { date } = slot;
-        slot.times.map(async time => {
-          const { startTime, endTime } = time;
-          await this.slotsRepository.save(
-            await this.slotsRepository.create({
-              professionalId,
-              professionalType,
-              date,
-              startTime,
-              endTime,
-            }),
-          );
-        });
-      }),
-    );
   }
 }
