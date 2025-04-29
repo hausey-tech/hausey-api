@@ -34,12 +34,10 @@ export class CreateSlotService {
         endTime: new Date(slots[0].times[0].endTime),
       };
 
-      const professionalSlots =
-        await this.slotsRepository.findByProfessionalIdAndDate(
-          professionalId,
-          new Date(slots[0].date),
-          toDates,
-        );
+      const professionalSlots = await this.slotsRepository.findByDateBetween(
+        new Date(slots[0].date),
+        toDates,
+      );
 
       if (professionalSlots.length > 0) {
         throw new AppError(

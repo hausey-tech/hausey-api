@@ -6,8 +6,7 @@ export interface ISlotsRepository {
   findById(id: string): Promise<Slot>;
   findByProfessionalIds(ids: string[]): Promise<Slot[]>;
   findByProfessionalId(id: string): Promise<Slot[]>;
-  findByProfessionalIdAndDate(
-    id: string,
+  findByDateBetween(
     date: Date,
     times: { startTime: Date; endTime: Date },
   ): Promise<Slot[]>;
