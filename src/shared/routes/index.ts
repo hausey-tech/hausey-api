@@ -52,6 +52,7 @@ import { pagarmeRouter } from '../../modules/integrations/routes/pagarme.routes'
 import { teamsRouter } from '../../modules/teams/routes/teams.routes';
 import { teamResumeRouter } from '../../modules/team-resumes/routes/team-resumes';
 import { sellersRouter } from '../../modules/seller-code-sellers/routes/sellers.routes';
+import { whatsappRouter } from '../../modules/whatsapp/routes-whatsapp';
 
 export const routes = Router();
 
@@ -69,6 +70,7 @@ routes.use(
   surveyMonkeyRouter,
   pagarmeRouter,
 );
+routes.use('/whatsapp', whatsappRouter);
 routes.use('/sessions', sessionsRouter);
 routes.use('/messaging', messagingRoutes);
 routes.use('/messages', messagesRouter);
