@@ -22,15 +22,15 @@ export class WhatsappService {
     3 - Suporte Técnico (TI) 🖥️`;
 
     if (incomingMessage.trim() === '1') {
-      responseMessage = `Você escolheu: *Atendimento Comercial* 💼
+      responseMessage = `*Atendimento Comercial* 💼
       Estamos aqui para esclarecer dúvidas sobre planos, valores ou contratação.
       Fale agora com nosso time: https://wa.me/+5511946618532`;
     } else if (incomingMessage.trim() === '2') {
-      responseMessage = `Você escolheu: *Suporte Profissional da Saúde* 🩺
+      responseMessage = `*Suporte Profissional da Saúde* 🩺
       Nossa equipe está pronta para te apoiar com orientações médicas.
       Clique aqui para atendimento: https://wa.me/+554398033112`;
     } else if (incomingMessage.trim() === '3') {
-      responseMessage = `Você escolheu: *Suporte Técnico (TI)* 🖥️
+      responseMessage = `*Suporte Técnico (TI)* 🖥️
       Está com dificuldades na plataforma? Nosso time técnico pode te ajudar.
       Fale com o suporte: https://wa.me/+5585986354014`;
     } else {
