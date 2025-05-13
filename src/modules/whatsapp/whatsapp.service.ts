@@ -11,12 +11,38 @@ export class WhatsappService {
     const incomingMessage = body.Body?.toLowerCase();
     const toNumber = body.From; // Ex: whatsapp:+55...
 
-    let responseMessage = `Olá, bom dia!\n1 - Deseja ajuda\n2 - Deseja fazer uma doação`;
+    let responseMessage = `Olá! 👋 Seja bem-vindo à *Hausey Life*, sua parceira em saúde e bem-estar. 💙
 
-    if (incomingMessage.includes('1')) {
-      responseMessage = `Você escolheu: Ajuda.\nClique aqui para falar com o suporte: https://wa.me/SEU_NUMERO_SUPORTE`;
-    } else if (incomingMessage.includes('2')) {
-      responseMessage = `Você escolheu: Doação.\nClique aqui para doar: https://wa.me/SEU_NUMERO_DOACAO`;
+    Como podemos te ajudar hoje?
+
+    Digite apenas o número correspondente à opção desejada:
+
+    1 - Atendimento Comercial 💼
+    2 - Suporte Profissional da Saúde 🩺
+    3 - Suporte Técnico (TI) 🖥️`;
+
+    if (incomingMessage.trim() === '1') {
+      responseMessage = `Você escolheu: *Atendimento Comercial* 💼
+      Estamos aqui para esclarecer dúvidas sobre planos, valores ou contratação.
+      Fale agora com nosso time: https://wa.me/SEU_NUMERO_COMERCIAL`;
+    } else if (incomingMessage.trim() === '2') {
+      responseMessage = `Você escolheu: *Suporte Profissional da Saúde* 🩺
+      Nossa equipe está pronta para te apoiar com orientações médicas.
+      Clique aqui para atendimento: https://wa.me/SEU_NUMERO_SAUDE`;
+    } else if (incomingMessage.trim() === '3') {
+      responseMessage = `Você escolheu: *Suporte Técnico (TI)* 🖥️
+      Está com dificuldades na plataforma? Nosso time técnico pode te ajudar.
+      Fale com o suporte: https://wa.me/SEU_NUMERO_TI`;
+    } else {
+      responseMessage = `Olá! 👋 Seja bem-vindo à *Hausey Life*, sua parceira em saúde e bem-estar. 💙
+
+      Como podemos te ajudar hoje?
+
+      Digite apenas o número correspondente à opção desejada:
+
+      1 - Atendimento Comercial 💼
+      2 - Suporte Profissional da Saúde 🩺
+      3 - Suporte Técnico (TI) 🖥️`;
     }
 
     await this.sendMessage(toNumber, responseMessage);
