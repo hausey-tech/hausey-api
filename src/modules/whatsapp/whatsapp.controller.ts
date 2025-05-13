@@ -8,12 +8,8 @@ export class WhatsappController {
     request: Request,
     response: Response,
   ): Promise<Response> {
-    console.log('Entrou no controller');
-
     const whatsappService = container.resolve(WhatsappService);
     const { body } = request;
-
-    console.log('Body recebido:', body);
 
     await whatsappService.processIncomingMessage(body);
 

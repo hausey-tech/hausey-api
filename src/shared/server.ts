@@ -1,8 +1,11 @@
 import 'reflect-metadata';
+import { whatsappRouter } from 'modules/whatsapp/routes-whatsapp';
 import 'express-async-errors';
 import './container';
 
 import express from 'express';
+import { ensureAuthentication } from './middlewares/ensure-authentication';
+import { routes } from './routes';
 
 import { PostgresDataSource } from './typeorm';
 import {
@@ -21,10 +24,14 @@ const start = async () => {
   try {
     await PostgresDataSource.initialize();
 
+    app.use('/v1/whatsapp', whatsappRouter);
+
     setupSwagger(app);
     setupMiddlewares(app);
     setupRoutes(app);
     setupErrorHandler(app);
+
+    app.use('/v1', ensureAuthentication, routes);
 
     app.listen(process.env.PORT || 5000, () =>
       console.log(`🚀 Server started on port ${process.env.PORT}!`),

@@ -8,7 +8,6 @@ const twilioNumber = 'whatsapp:+14155238886'; // Número do sandbox do Twilio
 @injectable()
 export class WhatsappService {
   public async processIncomingMessage(body: any): Promise<void> {
-    console.log('BODY RECEBIDO:', body); // 👈 aqui!
     const incomingMessage = body.Body?.toLowerCase();
     const toNumber = body.From; // Ex: whatsapp:+55...
 
