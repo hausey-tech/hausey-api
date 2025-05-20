@@ -1,9 +1,8 @@
+import express from 'express';
 import 'reflect-metadata';
-import { whatsappRouter } from 'modules/whatsapp/routes-whatsapp';
+import { whatsappRouter } from '../modules/whatsapp/routes-whatsapp';
 import 'express-async-errors';
 import './container';
-
-import express from 'express';
 import { ensureAuthentication } from './middlewares/ensure-authentication';
 import { routes } from './routes';
 
