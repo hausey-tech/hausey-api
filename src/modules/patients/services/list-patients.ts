@@ -52,7 +52,7 @@ export class ListPatientsService {
     userId?: string;
     type?: string;
     page?: string;
-    limit?: string;
+    perPage?: string;
     name?: string;
     cpf?: string;
   }): Promise<
@@ -63,7 +63,7 @@ export class ListPatientsService {
       userId,
       type,
       page = 1,
-      limit = 10,
+      perPage = 10,
       name,
       cpf,
     } = query;
@@ -81,12 +81,12 @@ export class ListPatientsService {
       throw new AppError('Page must be a valid number');
     }
 
-    if (Number.isNaN(limit) || Number(limit) < 1) {
+    if (Number.isNaN(perPage) || Number(perPage) < 1) {
       throw new AppError('Invalid limit value');
     }
 
-    const skip = (Number(page) - 1) * Number(limit);
-    const take = Number(limit);
+    const skip = (Number(page) - 1) * Number(perPage);
+    const take = Number(perPage);
 
     if (professionalId) {
       const appointments = await this.appointmentsRepository.findByProfessional(
@@ -165,7 +165,16 @@ export class ListPatientsService {
       };
     }
 
-    const patients = await this.patientsRepository.find();
+    const [patients, totalPatients] =
+      await this.patientsRepository.findPaginated(skip, take);
+
+    const totalPages = Math.ceil(totalPatients / take);
+
+    return {
+      patients,
+      totalPages,
+      totalPatients,
+    };
 
     return patients;
   }

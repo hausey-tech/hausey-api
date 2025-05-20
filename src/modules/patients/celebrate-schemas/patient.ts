@@ -8,7 +8,7 @@ export const ListPatientsSchema = {
     cpf: Joi.string().optional(),
     type: Joi.string().optional(),
     page: Joi.string().optional().default(1),
-    limit: Joi.string().optional().default(10),
+    perPage: Joi.string().optional().default(10),
   }),
 };
 

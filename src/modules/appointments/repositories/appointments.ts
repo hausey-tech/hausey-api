@@ -63,6 +63,7 @@ export class AppointmentsRepository implements IAppointmentsRepository {
       where: {
         patientId,
         date,
+        status: 'awaiting',
       },
     });
   }
