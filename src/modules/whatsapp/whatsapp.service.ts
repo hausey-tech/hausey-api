@@ -1,9 +1,9 @@
 import { injectable } from 'tsyringe';
 import axios from 'axios';
 
-const accountSid = `ACac401000d19daba8dd35008f984c0c85`;
-const authToken = `174da56ba644619deb0012ab18491c08`;
-const twilioNumber = 'whatsapp:+14155238886'; // Número do sandbox do Twilio
+const accountSid = process.env.TWILIO_ACCOUNT_SID_CALL;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
+const twilioNumber = 'whatsapp:+14155238886';
 
 @injectable()
 export class WhatsappService {
