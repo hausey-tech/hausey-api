@@ -66,7 +66,7 @@ export class CreatePagarmePixOrderService {
           },
         ],
       });
-      console.log('data', data);
+      console.log('data', data.charges[0].last_transaction);
       return {
         qrCode: data.charges[0].last_transaction?.qr_code,
         expiresAt: data.charges[0].last_transaction?.expires_at,
