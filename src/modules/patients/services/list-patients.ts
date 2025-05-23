@@ -85,8 +85,8 @@ export class ListPatientsService {
       throw new AppError('Invalid limit value');
     }
 
-    const skip = (Number(page) - 1) * Number(perPage);
-    const take = Number(perPage);
+    // const skip = (Number(page) - 1) * Number(perPage);
+    // const take = Number(perPage);
 
     if (professionalId) {
       const appointments = await this.appointmentsRepository.findByProfessional(
@@ -104,14 +104,7 @@ export class ListPatientsService {
       const sellerCodeSellers =
         await this.sellerCodeSellersRepository.findBySellerId(userId);
 
-      const [patients, totalPatients] =
-        await this.patientsRepository.findBySellerIdPaginated(
-          userId,
-          skip,
-          take,
-        );
-
-      const totalPages = Math.ceil(totalPatients / take);
+      const patients = await this.patientsRepository.findBySellerId(userId);
 
       const sellerCodes = await Promise.all(
         sellerCodeSellers.map(async sellerCodeSeller => {
@@ -156,25 +149,12 @@ export class ListPatientsService {
       const validSellerCodes = sellerCodes.filter(Boolean);
 
       return {
-        patients: {
-          patients,
-          totalPages,
-          totalPatients,
-        },
+        patients,
         sellerCodesSellers: validSellerCodes,
       };
     }
 
-    const [patients, totalPatients] =
-      await this.patientsRepository.findPaginated(skip, take);
-
-    const totalPages = Math.ceil(totalPatients / take);
-
-    return {
-      patients,
-      totalPages,
-      totalPatients,
-    };
+    const patients = await this.patientsRepository.find();
 
     return patients;
   }
