@@ -3,7 +3,7 @@ import { injectable, inject } from 'tsyringe';
 import { AppError } from '../../../shared/errors/app-error';
 import { IUsersRepository } from '../contracts/repositories/users';
 import { Patient } from '../../patients/entities/patient';
-import { mailer } from '../../../shared/utils/mailer';
+import { brevo } from '../../../shared/utils/brevo';
 
 interface Props {
   userId: string;
@@ -29,7 +29,7 @@ export class NotifySellerService {
         'Paciente não encontrado, verifique o id e tente novamente!',
       );
     }
-    mailer({
+    brevo({
       to: user.email,
       subject: `🎉Parabéns! O usuário ${patient.name} Efetuou o Cadastro com seu Código!`,
       body: `

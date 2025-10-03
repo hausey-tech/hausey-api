@@ -13,7 +13,7 @@ import { Professional } from '../entities/professional';
 import { formatDate } from '../../../shared/utils/format-date';
 import { AppError } from '../../../shared/errors/app-error';
 import { WelcomeProfessionalHtmlText } from '../../../shared/utils/html-texts';
-import { sendgrid } from '../../../shared/utils/sendgrid';
+import { brevo } from '../../../shared/utils/brevo';
 
 @injectable()
 export class CreateUserAndProfessionalService {
@@ -207,10 +207,9 @@ export class CreateUserAndProfessionalService {
     } else {
       savedProfessional.memedStatus = 'Sem CRM';
     }
-    sendgrid({
+    brevo({
       to: savedProfessional.email,
       subject: `💙Boas Vindas à Hausey, Profissional!`,
-      text: 'Aqui estão suas credenciais de acesso',
       body: WelcomeProfessionalHtmlText(savedProfessional.email, password),
     });
     // mailer({

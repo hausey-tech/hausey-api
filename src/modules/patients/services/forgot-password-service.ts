@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import { AppError } from '../../../shared/errors/app-error';
 import { type IPatientsRepository } from '../contracts/repositories/patients';
 import { type IHashProvider } from '../../../shared/providers/HashProvider/entities/hash-provider';
-import { mailer } from '../../../shared/utils/mailer';
+import { brevo } from '../../../shared/utils/brevo';
 
 @injectable()
 export class ForgotPasswordService {
@@ -36,7 +36,7 @@ export class ForgotPasswordService {
     });
 
     try {
-      await mailer({
+      await brevo({
         to: patient.email,
         subject: 'Recuperação de senha',
         body: `

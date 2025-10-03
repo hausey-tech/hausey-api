@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import { surveyMonkeyInstance } from '../../utils/survey-monkey-instance';
 import { IPatientsRepository } from '../../../patients/contracts/repositories/patients';
 import { AppError } from '../../../../shared/errors/app-error';
-import { mailer } from '../../../../shared/utils/mailer';
+import { brevo } from '../../../../shared/utils/brevo';
 
 interface IProps {
   name: string;
@@ -60,7 +60,7 @@ export class HandleSurveyMonkeyWebhookService {
 
       const patientStringfied = JSON.stringify(patient);
 
-      mailer({
+      brevo({
         to: 'adm.hausey@gmail.com',
         subject: `📜Novo questionário respondido!`,
         body: `

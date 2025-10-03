@@ -4,7 +4,7 @@ import { CreateAppointmentService } from '../../appointments/services/create-app
 import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { IProfessionalsRepository } from '../../professionals/contracts/repositories/professionals';
-import { mailer } from '../../../shared/utils/mailer';
+import { brevo } from '../../../shared/utils/brevo';
 
 @injectable()
 export class CreateForwardRequest {
@@ -76,7 +76,7 @@ export class CreateForwardRequest {
 
     const patientStringfied = JSON.stringify(patient);
 
-    mailer({
+    brevo({
       to: professionalTo.email,
       subject: `📢Nova Solicitação de Encaminhamento de ${professionalFrom.name}`,
       body: `

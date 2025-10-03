@@ -2,7 +2,7 @@ import { injectable, inject } from 'tsyringe';
 import { AppError } from '../../../shared/errors/app-error';
 import { type IPatientsRepository } from '../contracts/repositories/patients';
 import { type IHashProvider } from '../../../shared/providers/HashProvider/entities/hash-provider';
-import { mailer } from '../../../shared/utils/mailer';
+import { brevo } from '../../../shared/utils/brevo';
 
 @injectable()
 export class ResetPasswordService {
@@ -37,7 +37,7 @@ export class ResetPasswordService {
       resetPasswordTokenExpiresIn: null,
     });
 
-    mailer({
+    brevo({
       to: patient.email,
       subject: 'Sua senha foi redefinida',
       body: `

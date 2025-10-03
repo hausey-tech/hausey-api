@@ -6,10 +6,10 @@ import { ICreatePatientDTO } from '../contracts/dtos/create-patient';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { IHashProvider } from '../../../shared/providers/HashProvider/entities/hash-provider';
 import { Patient } from '../entities/patient';
-import { mailer } from '../../../shared/utils/mailer';
 import { WelcomePatientHtmlText } from '../../../shared/utils/html-texts';
 import { UpdateSellerCodeService } from '../../seller-codes/services/update-seller-code';
 import { IPlansRepository } from '../../plans/contracts/repositories/plans';
+import { brevo } from '../../../shared/utils/brevo';
 
 interface Props extends Omit<ICreatePatientDTO, 'sellerId'> {
   sellerCode?: string;
@@ -98,7 +98,7 @@ export class CreatePatientService {
       planExpiresAt,
       firstPayment: true,
     });
-    mailer({
+    brevo({
       to: 'adm.hausey@gmail.com',
       subject: `📢Novo paciente cadastrado!`,
       body: `
@@ -109,7 +109,7 @@ export class CreatePatientService {
       <p>Telefone: <b>${patient.phoneNumber}</b></p>
     `,
     });
-    mailer({
+    brevo({
       to: patient.email,
       subject: `💙Boas Vindas à Hausey!`,
       body: WelcomePatientHtmlText,

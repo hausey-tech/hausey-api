@@ -9,8 +9,8 @@ import { IRolesRepository } from '../../roles/contracts/repositories/roles';
 import { ISellerCodesRepository } from '../../seller-codes/contracts/repositories/seller-codes';
 import { generateRandomCode } from '../utils/create-random-code';
 import { CreateSellerCode } from '../../seller-codes/services/create-seller-code';
-import { mailer } from '../../../shared/utils/mailer';
 import { WelcomeRepresentantHtmlText } from '../../../shared/utils/html-texts';
+import { brevo } from '../../../shared/utils/brevo';
 
 interface CreateUser {
   email: string;
@@ -123,7 +123,7 @@ export class CreateUserService {
               region,
               name: savedUser.name,
             });
-            mailer({
+            brevo({
               to: savedUser.email,
               subject: `💙Boas Vindas à Hausey!`,
               body: WelcomeRepresentantHtmlText(savedUser.email, password),
