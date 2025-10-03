@@ -11,7 +11,7 @@ import { IPatientsRepository } from '../../patients/contracts/repositories/patie
 import { IAppointmentsRepository } from '../contracts/repositories/appointments';
 
 import { createVideoRoomCode } from '../utils/create-video-room-code';
-import { sendgrid } from '../../../shared/utils/sendgrid';
+import { brevo } from '../../../shared/utils/brevo';
 // import { mailer } from '../../../shared/utils/mailer';
 
 @injectable()
@@ -159,10 +159,9 @@ export class CreateAppointmentService {
           'Log de professionals',
         );
 
-        sendgrid({
+        brevo({
           to: 'hauseydevs@gmail.com',
           subject: `📢Nova Solicitação de Plantão!`,
-          text: 'veja as informações do plantão',
           body: `
             <h2>Olá, um paciente solicitou um atendimento de plantão no app!</h2>
             <h4>Veja as informações:</h4>
@@ -192,10 +191,9 @@ export class CreateAppointmentService {
 
         professionalSlots.forEach((professionalSlot, index) => {
           setTimeout(() => {
-            sendgrid({
+            brevo({
               to: professionalSlot.email,
               subject: `📢Nova Solicitação de Plantão!`,
-              text: 'veja as informações do plantão',
               body: `
                 <h2>Olá, um paciente solicitou um atendimento de plantão no app!</h2>
                 <h4>Veja as informações:</h4>

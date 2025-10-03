@@ -1,8 +1,8 @@
 import { injectable, inject } from 'tsyringe';
 import { IPlansRepository } from '../../plans/contracts/repositories/plans';
 import { IPatientsRepository } from '../contracts/repositories/patients';
-import { mailer } from '../../../shared/utils/mailer';
 import { Patient } from '../entities/patient';
+import { brevo } from '../../../shared/utils/brevo';
 
 interface Props {
   periodEnd: number;
@@ -39,7 +39,7 @@ export class UpdatePatientPlanService {
 
     patient.planId = plan.id;
     patient.planExpiresAt = new Date(periodEnd * 1000);
-    mailer({
+    brevo({
       to: 'adm.hausey@gmail.com',
       subject: `💵Nova Compra de Assinatura Efetuada!`,
       body: `

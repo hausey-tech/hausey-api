@@ -1,9 +1,9 @@
 import { injectable, inject } from 'tsyringe';
 import { IPlansRepository } from '../../plans/contracts/repositories/plans';
 import { IPatientsRepository } from '../contracts/repositories/patients';
-import { mailer } from '../../../shared/utils/mailer';
 import { AppError } from '../../../shared/errors/app-error';
 import { Patient } from '../entities/patient';
+import { brevo } from '../../../shared/utils/brevo';
 
 interface Props {
   periodEnd: number;
@@ -44,7 +44,7 @@ export class UpdatePatientPlanPartnerService {
     const dateExpiration = new Date(periodEnd);
     dateExpiration.setHours(dateExpiration.getHours() + 3);
     patient.planExpiresAt = dateExpiration;
-    mailer({
+    brevo({
       to: 'adm.hausey@gmail.com',
       subject: `💵Nova Assinatura Ativada por parceiro!`,
       body: `
