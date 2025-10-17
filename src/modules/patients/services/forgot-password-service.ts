@@ -47,7 +47,7 @@ export class ForgotPasswordService {
       });
     } catch {
       throw new AppError(
-        'Erro ao enviar e-mail de recuperação. Por favor, entre em contato com nosso suporte!',
+        'Teste: Erro ao enviar e-mail de recuperação. Por favor, entre em contato com nosso suporte!',
       );
     }
   }
