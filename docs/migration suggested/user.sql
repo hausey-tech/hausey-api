@@ -1,0 +1,5 @@
+ALTER TABLE patients
+  ALTER COLUMN email DROP NOT NULL;
+
+  ALTER TABLE patients
+  ALTER COLUMN email DROP NOT NULL;
