@@ -15,11 +15,17 @@ export class PlansController {
   }
 
   public async create(request: Request, response: Response): Promise<Response> {
-    const { name, description, price } = request.body;
+    const { name, description, price, type, maxDependents } = request.body;
 
     const createPlanService = container.resolve(CreatePlanService);
 
-    const plan = await createPlanService.execute({ name, description, price });
+    const plan = await createPlanService.execute({
+      name,
+      description,
+      price,
+      type,
+      maxDependents,
+    });
 
     return response.json(plan);
   }

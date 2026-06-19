@@ -12,6 +12,7 @@ import { ITeamsRepository } from '../../teams/contracts/repositories/teams-repos
 import { NotifySellerService } from '../../users/services/notify-seller';
 import { IPlansRepository } from '../../plans/contracts/repositories/plans';
 import { ISellerCodesRepository } from '../../seller-codes/contracts/repositories/seller-codes';
+import { SyncDependentsPlanService } from '../../dependents/services/sync-dependents-plan';
 
 interface Props {
   name?: string;
@@ -172,6 +173,15 @@ export class UpdatePatientService {
     if (patientExists.planId) {
       await this.patientsRepository.update(id, {
         planId: null,
+      });
+
+      const syncDependentsPlanService = container.resolve(
+        SyncDependentsPlanService,
+      );
+      await syncDependentsPlanService.execute({
+        holderId: id,
+        planId: null,
+        planExpiresAt: null,
       });
     }
     const updatedPatient = await this.patientsRepository.findById(id);

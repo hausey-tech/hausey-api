@@ -1,9 +1,10 @@
-import { injectable, inject } from 'tsyringe';
+import { injectable, inject, container } from 'tsyringe';
 import { IPlansRepository } from '../../plans/contracts/repositories/plans';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { AppError } from '../../../shared/errors/app-error';
 import { Patient } from '../entities/patient';
 import { brevo } from '../../../shared/utils/brevo';
+import { SyncDependentsPlanService } from '../../dependents/services/sync-dependents-plan';
 
 interface Props {
   periodEnd: number;
@@ -61,6 +62,15 @@ export class UpdatePatientPlanPartnerService {
     });
 
     const patientUpdated = await this.patientsRepository.save(patient);
+
+    const syncDependentsPlanService = container.resolve(
+      SyncDependentsPlanService,
+    );
+    await syncDependentsPlanService.execute({
+      holderId: patientUpdated.id,
+      planId: patientUpdated.planId,
+      planExpiresAt: patientUpdated.planExpiresAt,
+    });
 
     return patientUpdated;
   }

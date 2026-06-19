@@ -3,6 +3,8 @@ import { Column, Entity, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../shared/typeorm/entities/base';
 import { PlanRegion } from './plan-region';
 
+export type PlanType = 'individual' | 'family';
+
 @Entity('plans')
 export class Plan extends BaseEntity {
   @Column('varchar')
@@ -19,6 +21,12 @@ export class Plan extends BaseEntity {
 
   @Column('int', { nullable: true })
   sellerPart: number | null;
+
+  @Column('varchar', { length: 20, default: 'individual' })
+  type: PlanType;
+
+  @Column('int', { name: 'max_dependents', default: 0 })
+  maxDependents: number;
 
   @OneToMany(() => PlanRegion, planRegion => planRegion.plan)
   regions: PlanRegion[];

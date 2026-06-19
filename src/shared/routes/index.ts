@@ -52,6 +52,7 @@ import { pagarmeRouter } from '../../modules/integrations/routes/pagarme.routes'
 import { teamsRouter } from '../../modules/teams/routes/teams.routes';
 import { teamResumeRouter } from '../../modules/team-resumes/routes/team-resumes';
 import { sellersRouter } from '../../modules/seller-code-sellers/routes/sellers.routes';
+import { dependentsRouter } from '../../modules/dependents/routes/dependents';
 
 export const routes = Router();
 
@@ -92,6 +93,7 @@ routes.use('/plans', plansRouter);
 routes.use('/addresses', addressesRouter);
 routes.use('/medical-records', medicalRecordsRouter);
 routes.use('/teams', teamsRouter);
+routes.use('/dependents', dependentsRouter);
 routes.get('/health-check', (req, res) => {
   fs.readFile(
     pathJS.join(__dirname, '../../../buildtime.txt'),

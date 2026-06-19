@@ -20,3 +20,4 @@ export * from './create-patient';
 export * from './patient-session';
 export * from './memed-user';
 export * from './create-memed-user';
+export * from './patient-dependent';

@@ -457,6 +457,99 @@ Webhook separado: POST /v1/integrations/stripe/webhook/pt
 
 ---
 
+## 11. Plano Familiar e Dependentes (Jun 2026)
+
+### Novos campos em `plans`
+
+| Campo TS | Coluna DB | Tipo | Descrição |
+|---|---|---|---|
+| `type` | `type` | varchar(20), default `'individual'` | `'individual'` ou `'family'` |
+| `maxDependents` | `max_dependents` | int, default `0` | Limite de dependentes do plano familiar |
+
+### Tabela `patient_dependents` — `src/modules/dependents/entities/patient-dependent.ts`
+
+| Campo TS | Coluna DB | Tipo | Descrição |
+|---|---|---|---|
+| `holderId` | `holder_id` | uuid, FK patients CASCADE | Titular do plano |
+| `dependentPatientId` | `dependent_patient_id` | uuid, FK patients SET NULL, nullable | Conta Patient do dependente |
+| `hasAppAccess` | `has_app_access` | boolean | Tipo de acesso |
+| `email` | `email` | varchar, nullable | Email para convite (com acesso ao app) |
+| `inviteToken` | `invite_token` | varchar, nullable | Token de convite |
+| `inviteExpiresAt` | `invite_expires_at` | timestamp, nullable | Expiração do convite |
+| `status` | `status` | varchar(15) | `'pending'` \| `'active'` \| `'removed'` |
+
+### Módulo `dependents` — `src/modules/dependents/`
+
+| Serviço | Arquivo | Papel |
+|---|---|---|
+| `AddDependentService` | `services/add-dependent.ts` | Valida gating, cria dependente com ou sem app |
+| `ListDependentsService` | `services/list-dependents.ts` | Lista dependentes do titular |
+| `RemoveDependentService` | `services/remove-dependent.ts` | Remove vínculo e revoga plano do dependente |
+| `AcceptInviteService` | `services/accept-invite.ts` | Aceita convite via token |
+| `ResendInviteService` | `services/resend-invite.ts` | Reenvia email de convite |
+| `GetHolderByDependentService` | `services/get-holder-by-dependent.ts` | Retorna titular e irmãos a partir do dependente |
+| `SyncDependentsPlanService` | `services/sync-dependents-plan.ts` | Espelha planId/planExpiresAt do titular em todos os dependentes ativos |
+
+### Endpoints `/v1/dependents`
+
+| Método | Rota | Auth | Descrição |
+|---|---|---|---|
+| `POST` | `/dependents` | Sim | Adicionar dependente |
+| `GET` | `/dependents` | Sim | Listar dependentes do titular |
+| `DELETE` | `/dependents/:id` | Sim | Remover dependente |
+| `POST` | `/dependents/accept-invite` | **Não** | Aceitar convite (via token) |
+| `POST` | `/dependents/:id/resend-invite` | Sim | Reenviar convite |
+| `GET` | `/dependents/holder/:dependentPatientId` | Sim | Titular + irmãos por ID do dependente |
+
+### Sincronização do plano titular → dependentes
+
+`SyncDependentsPlanService` é chamado após cada atualização de plano do titular:
+
+- `UpdatePatientPlanService` (Stripe US/PT — `invoice.paid`)
+- `UpdateSubscriptionByWebhookService` (Pagarme — `order.paid` / `invoice.paid`)
+- `UpdatePatientPlanPartnerService` (ativação por parceiro)
+- `UpdatePatientService.removePlanId` (remoção de plano — revoga dependentes)
+
+### Auth com `dependentsAccess`
+
+O `POST /v1/sessions` para `role=patient` agora retorna:
+
+```json
+{
+  "accessToken": "<jwt>",
+  "refreshToken": "<jwt>",
+  "patient": { ... },
+  "dependentsAccess": [
+    {
+      "dependentPatientId": "uuid",
+      "name": "Nome do Dependente",
+      "accessToken": "<jwt-do-dependente>",
+      "refreshToken": "<jwt-do-dependente>"
+    }
+  ]
+}
+```
+
+`dependentsAccess` só é populado para dependentes **sem acesso ao app** (`hasAppAccess=false`) e está ausente/vazio para titulares sem dependentes.
+
+### Gating para adicionar dependente
+
+Para adicionar dependente, o titular precisa ter:
+1. `sellerId` não nulo (vinculado a empresa)
+2. Assinatura ativa (`planId != null AND planExpiresAt > now()`)
+3. Plano com `type='family'`
+4. Número de dependentes ativos `< maxDependents` do plano
+
+### Migrations geradas (não rodadas)
+
+| Migration | Descrição |
+|---|---|
+| `1750291201000-MakePatientEmailNullable.ts` | `email` nullable em `patients` |
+| `1750291202000-AddFamilyPlanFields.ts` | `type` + `max_dependents` em `plans` |
+| `1750291203000-CreatePatientDependents.ts` | Cria tabela `patient_dependents` |
+
+---
+
 ## 10. Lacunas e Pontos de Atenção
 
 Itens identificados que **precisarão ser considerados** na implementação do plano familiar:
@@ -497,10 +590,17 @@ Webhooks que atualizam assinatura:
   Stripe PT  → invoice.paid → (mesmo fluxo, stripePTInstance)
   Pagarme    → order.paid / invoice.paid → UpdateSubscriptionByWebhookService
 
-Falta hoje (para plano familiar):
-  ✗ Tabela de dependentes
+Implementado (plano familiar — Jun 2026):
+  ✓ Tabela patient_dependents (migration 1750291203000)
+  ✓ Plan.type (individual|family) + Plan.maxDependents (migration 1750291202000)
+  ✓ email nullable em patients (migration 1750291201000)
+  ✓ Módulo src/modules/dependents/ com todos os serviços
+  ✓ SyncDependentsPlanService integrado em todos os webhooks e remove-plan
+  ✓ dependentsAccess no retorno do login do titular
+  ✓ Auto-link de convites pendentes no cadastro (POST /patients)
+
+Ainda pendente (fora do escopo desta implementação):
   ✗ Guard centralizado de assinante ativo (titular OU dependente)
-  ✗ Lógica de upgrade/downgrade de plano
-  ✗ Webhooks para cancelamento/falha
-  ✗ E-mails de convite e notificação de dependentes
+  ✗ Lógica de upgrade/downgrade de plano (endpoint dedicado)
+  ✗ Webhooks para cancelamento/falha de pagamento
 ```

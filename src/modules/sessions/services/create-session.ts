@@ -14,6 +14,14 @@ import { Patient } from '../../patients/entities/patient';
 import { ICreateSessionDTO } from '../contracts/dtos/create-session';
 import { IUsersRepository } from '../../users/contracts/repositories/users';
 import { User } from '../../users/entities/user';
+import { IPatientDependentsRepository } from '../../dependents/contracts/repositories/patient-dependents';
+
+interface IDependentAccess {
+  dependentPatientId: string;
+  name: string | null;
+  accessToken: string;
+  refreshToken: string;
+}
 
 interface IRoles {
   professional?: Professional;
@@ -23,6 +31,7 @@ interface IRoles {
 interface IResponse extends IRoles {
   accessToken: string;
   refreshToken: string;
+  dependentsAccess?: IDependentAccess[];
 }
 
 @injectable()
@@ -39,6 +48,9 @@ export class CreateSessionService {
 
     @inject('HashProvider')
     private hashProvider: IHashProvider,
+
+    @inject('PatientDependentsRepository')
+    private dependentsRepository: IPatientDependentsRepository,
   ) {}
 
   public async execute(payload: ICreateSessionDTO): Promise<IResponse> {
@@ -139,10 +151,38 @@ export class CreateSessionService {
       expiresIn: refreshExpiresIn,
     });
 
+    let dependentsAccess: IDependentAccess[] | undefined;
+
+    if (role === 'patient') {
+      const noAppDependents =
+        await this.dependentsRepository.findActiveByHolderId(id);
+      const filtered = noAppDependents.filter(
+        dep => !dep.hasAppAccess && dep.dependentPatientId,
+      );
+
+      if (filtered.length > 0) {
+        dependentsAccess = filtered.map(dep => ({
+          dependentPatientId: dep.dependentPatientId,
+          name: dep.name,
+          accessToken: sign(
+            { id: dep.dependentPatientId, role: 'patient' },
+            secret,
+            { expiresIn },
+          ),
+          refreshToken: sign(
+            { id: dep.dependentPatientId, role: 'patient' },
+            secret,
+            { expiresIn: refreshExpiresIn },
+          ),
+        }));
+      }
+    }
+
     return {
       accessToken,
       refreshToken,
       ...data,
+      ...(dependentsAccess ? { dependentsAccess } : {}),
     };
   }
 }
