@@ -41,6 +41,7 @@ export class UpdatePatientPlanPartnerService {
     }
 
     patient.planId = plan.id;
+    patient.isPro = plan?.isPro ?? false;
     const dateExpiration = new Date(periodEnd);
     dateExpiration.setHours(dateExpiration.getHours() + 3);
     patient.planExpiresAt = dateExpiration;

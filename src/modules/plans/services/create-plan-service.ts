@@ -8,6 +8,8 @@ interface Props {
   name: string;
   description: string;
   price: number;
+  isPro?: boolean;
+  type?: 'Individual' | 'Familiar';
 }
 
 @injectable()
@@ -17,7 +19,13 @@ export class CreatePlanService {
     private plansRepository: IPlansRepository,
   ) {}
 
-  public async execute({ name, description, price }: Props): Promise<Plan> {
+  public async execute({
+    name,
+    description,
+    price,
+    isPro,
+    type,
+  }: Props): Promise<Plan> {
     const planExists = await this.plansRepository.findByName(name);
 
     if (planExists) {
@@ -38,6 +46,8 @@ export class CreatePlanService {
       name,
       description,
       price,
+      isPro: isPro ?? false,
+      type,
     });
 
     plan.stripePriceId = planId;

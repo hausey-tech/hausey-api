@@ -20,6 +20,12 @@ export class Plan extends BaseEntity {
   @Column('int', { nullable: true })
   sellerPart: number | null;
 
+  @Column('boolean', { name: 'is_pro', default: false })
+  isPro: boolean;
+
+  @Column('varchar', { nullable: true })
+  type: 'Individual' | 'Familiar' | null;
+
   @OneToMany(() => PlanRegion, planRegion => planRegion.plan)
   regions: PlanRegion[];
 }

@@ -101,6 +101,7 @@ export class CreateSubscription {
     }
 
     patient.planId = plan.id;
+    patient.isPro = plan?.isPro ?? false;
     patient.stripeCustomerId = customerId;
     patient.planExpiresAt = new Date(subscription.current_period_end * 1000);
 
