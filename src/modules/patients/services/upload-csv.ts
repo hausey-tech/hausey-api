@@ -8,6 +8,7 @@ import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { ICreatePatientDTO } from '../contracts/dtos/create-patient';
 import { IHashProvider } from '../../../shared/providers/HashProvider/entities/hash-provider';
+import { IPlansRepository } from '../../plans/contracts/repositories/plans';
 
 @injectable()
 export class UploadPatientCsv {
@@ -23,6 +24,9 @@ export class UploadPatientCsv {
 
     @inject('AddressesRepository')
     private addressesRepository: IAddressesRepository,
+
+    @inject('PlansRepository')
+    private plansRepository: IPlansRepository,
   ) {}
 
   public async execute(file: any, sellerId: any): Promise<string> {
@@ -110,6 +114,9 @@ export class UploadPatientCsv {
                   );
                 }
 
+                const planId = 'efe8d3ec-f3a2-432b-8a10-d7ef75e5adc2';
+                const plan = await this.plansRepository.findById(planId);
+
                 const patientDto: ICreatePatientDTO = {
                   name,
                   email,
@@ -122,7 +129,8 @@ export class UploadPatientCsv {
                   firstPayment: true,
                   region,
                   language,
-                  planId: 'efe8d3ec-f3a2-432b-8a10-d7ef75e5adc2',
+                  planId,
+                  isPro: plan?.isPro ?? false,
                 };
 
                 const patient = await this.patientsRepository.create(

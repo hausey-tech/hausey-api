@@ -128,6 +128,7 @@ export class CreateCheckoutSession {
       throw new AppError(err.raw.message, err.statusCode);
     }
     patient.planId = plan.id;
+    patient.isPro = plan?.isPro ?? false;
     patient.stripeCustomerId = customerId;
 
     await this.patientsRepository.save(patient);

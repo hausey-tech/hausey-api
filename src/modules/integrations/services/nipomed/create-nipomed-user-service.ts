@@ -19,16 +19,16 @@ export class CreateNipomedUserService {
 
   public async execute({ patient, expiresAt }: IProps): Promise<void> {
     try {
-      if (
-        patient.planId === '938ef52c-bd6a-4e21-a6e5-e2eba8b5e60f' &&
-        patient.address
-      ) {
+      if (patient.isPro && patient.address) {
+        const tipoPlano =
+          patient.plan?.type === 'Familiar' ? 'FAMILIAR' : 'INDIVIDUAL';
+
         await nipomedInstance.post('', {
           token: process.env.NIPOMED_TOKEN,
           clientes: [
             {
               StatusRegistro: '1',
-              TipoPlano: 'INDIVIDUAL',
+              TipoPlano: tipoPlano,
               TipoAssociado: 'TITULAR',
               Matricula: patient.document?.replace(/\D/g, ''),
               Nome: patient.name?.trim(),

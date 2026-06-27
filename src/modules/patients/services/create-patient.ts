@@ -46,6 +46,7 @@ export class CreatePatientService {
     let sellerId: string;
     let planId: string;
     let planExpiresAt: Date;
+    let isPro: boolean;
     if (sellerCode) {
       const updateSellerCodeService = container.resolve(
         UpdateSellerCodeService,
@@ -61,6 +62,7 @@ export class CreatePatientService {
         );
         if (plan) {
           planId = plan.id;
+          isPro = plan?.isPro ?? false;
         }
         planExpiresAt = addYears(new Date(), 2);
       }
@@ -93,6 +95,7 @@ export class CreatePatientService {
           password: hashedPassword,
           sellerId,
           planId,
+          isPro,
           planExpiresAt,
         });
       }
@@ -103,6 +106,7 @@ export class CreatePatientService {
       password: hashedPassword,
       sellerId,
       planId,
+      isPro,
       planExpiresAt,
       firstPayment: true,
     });

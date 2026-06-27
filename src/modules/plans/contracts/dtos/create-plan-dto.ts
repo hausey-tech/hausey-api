@@ -6,4 +6,5 @@ export interface ICreatePlanDTO {
   price: number;
   type?: PlanType;
   maxDependents?: number;
+  isPro?: boolean;
 }

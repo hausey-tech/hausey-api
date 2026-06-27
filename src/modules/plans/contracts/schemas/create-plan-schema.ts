@@ -13,6 +13,7 @@ export const CreatePlanSchema = {
       then: Joi.object({
         maxDependents: Joi.number().integer().min(1).required(),
       }),
+      isPro: Joi.boolean(),
     }),
   [Segments.QUERY]: Joi.object().keys({
     regions: Joi.string(),

@@ -1,5 +1,4 @@
 import { injectable, inject, container } from 'tsyringe';
-import { isBefore } from 'date-fns';
 import { Logger } from 'pino';
 import { CreatePagarmeCardOrderService } from '../../integrations/services/pagarme/create-pagarme-card-order-service';
 import { CreatePagarmeSubscriptionService } from '../../integrations/services/pagarme/create-pagarme-subscription-service';
@@ -8,6 +7,7 @@ import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { IPlansRepository } from '../../plans/contracts/repositories/plans';
 import { CancelPagarmeCustomerSubscriptionsService } from '../../integrations/services/pagarme/cancel-pagarme-customer-subscriptions-service';
+import { isPatientPlanActive } from '../../../shared/utils/plan';
 
 interface IProps {
   patientId: string;
@@ -60,7 +60,7 @@ export class CreatePatientCardSubscriptionService {
         'Paciente não possui conta de pagamento, entre em contato com o suporte!',
       );
     }
-    if (patient.planExpiresAt && isBefore(new Date(), patient.planExpiresAt)) {
+    if (isPatientPlanActive(patient)) {
       throw new AppError('Paciente já possui assinatura vigente!');
     }
     const plan = await this.plansRepository.findyByPriceId(planId);
@@ -177,6 +177,7 @@ export class CreatePatientCardSubscriptionService {
       );
       await this.patientsRepository.update(patient.id, {
         planId: plan.id,
+        isPro: plan?.isPro ?? false,
         firstPayment: false,
         planExpiresAt: result,
       });
@@ -193,6 +194,7 @@ export class CreatePatientCardSubscriptionService {
       });
       await this.patientsRepository.update(patient.id, {
         planId: plan.id,
+        isPro: plan?.isPro ?? false,
         firstPayment: false,
         planExpiresAt: result,
       });
