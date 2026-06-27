@@ -39,6 +39,7 @@ export class UpdatePatientPlanService {
     }
 
     patient.planId = plan.id;
+    patient.isPro = plan?.isPro ?? false;
     patient.planExpiresAt = new Date(periodEnd * 1000);
     brevo({
       to: 'adm.hausey@gmail.com',

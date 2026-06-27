@@ -50,6 +50,7 @@ export class PatientsRepository implements IPatientsRepository {
   public async findBySellerId(sellerId: string): Promise<Patient[]> {
     return this.ormRepository.find({
       where: { sellerId },
+      relations: ['plan'],
       select: [
         'id',
         'createdAt',
@@ -62,6 +63,7 @@ export class PatientsRepository implements IPatientsRepository {
         'planId',
         'region',
         'planExpiresAt',
+        'isPro',
       ],
     });
   }
@@ -75,6 +77,7 @@ export class PatientsRepository implements IPatientsRepository {
       where: { sellerId },
       skip,
       take: limit,
+      relations: ['plan'],
       select: [
         'id',
         'createdAt',
@@ -87,6 +90,7 @@ export class PatientsRepository implements IPatientsRepository {
         'planId',
         'region',
         'planExpiresAt',
+        'isPro',
       ],
     });
 
@@ -98,6 +102,7 @@ export class PatientsRepository implements IPatientsRepository {
       where: {
         sellerId,
       },
+      relations: ['plan'],
       select: [
         'id',
         'createdAt',
@@ -111,6 +116,7 @@ export class PatientsRepository implements IPatientsRepository {
         'planId',
         'region',
         'planExpiresAt',
+        'isPro',
       ],
     });
     return patients;

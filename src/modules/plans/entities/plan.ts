@@ -28,6 +28,9 @@ export class Plan extends BaseEntity {
   @Column('int', { name: 'max_dependents', default: 0 })
   maxDependents: number;
 
+  @Column('boolean', { name: 'is_pro', default: false })
+  isPro: boolean;
+
   @OneToMany(() => PlanRegion, planRegion => planRegion.plan)
   regions: PlanRegion[];
 }
