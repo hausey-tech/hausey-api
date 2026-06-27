@@ -8,12 +8,12 @@ export const CreatePlanSchema = {
       price: Joi.number().required(),
       type: Joi.string().valid('individual', 'family').default('individual'),
       maxDependents: Joi.number().integer().min(0).default(0),
+      isPro: Joi.boolean().default(false),
     })
     .when(Joi.object({ type: 'family' }).unknown(), {
       then: Joi.object({
         maxDependents: Joi.number().integer().min(1).required(),
       }),
-      isPro: Joi.boolean(),
     }),
   [Segments.QUERY]: Joi.object().keys({
     regions: Joi.string(),
