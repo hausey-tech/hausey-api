@@ -44,3 +44,9 @@ export const GetHolderByDependentSchema = {
     dependentPatientId: Joi.string().uuid().required(),
   }),
 };
+
+export const ListDependentsByHolderSchema = {
+  [Segments.PARAMS]: Joi.object().keys({
+    holderId: Joi.string().uuid().required(),
+  }),
+};

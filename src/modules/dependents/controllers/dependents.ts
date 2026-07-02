@@ -7,6 +7,7 @@ import { RemoveDependentService } from '../services/remove-dependent';
 import { AcceptInviteService } from '../services/accept-invite';
 import { ResendInviteService } from '../services/resend-invite';
 import { GetHolderByDependentService } from '../services/get-holder-by-dependent';
+import { ListDependentsByHolderService } from '../services/list-dependents-by-holder';
 
 export class DependentsController {
   public async add(request: Request, response: Response): Promise<Response> {
@@ -91,6 +92,21 @@ export class DependentsController {
     const result = await getHolderByDependentService.execute(
       dependentPatientId,
     );
+
+    return response.json(result);
+  }
+
+  public async listByHolder(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { holderId } = request.params;
+
+    const listDependentsByHolderService = container.resolve(
+      ListDependentsByHolderService,
+    );
+
+    const result = await listDependentsByHolderService.execute(holderId);
 
     return response.json(result);
   }

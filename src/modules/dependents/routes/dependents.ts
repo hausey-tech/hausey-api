@@ -7,6 +7,7 @@ import {
   AcceptInviteSchema,
   AddDependentSchema,
   GetHolderByDependentSchema,
+  ListDependentsByHolderSchema,
   RemoveDependentSchema,
   ResendInviteSchema,
 } from '../celebrate-schemas/dependents';
@@ -46,4 +47,10 @@ dependentsRouter.get(
   '/holder/:dependentPatientId',
   celebrate(GetHolderByDependentSchema),
   dependentsController.getHolderByDependent,
+);
+
+dependentsRouter.get(
+  '/admin/:holderId',
+  celebrate(ListDependentsByHolderSchema),
+  dependentsController.listByHolder,
 );
