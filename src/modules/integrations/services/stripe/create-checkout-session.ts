@@ -12,6 +12,8 @@ interface Props {
   patientId: string;
   priceId: string;
   coupon?: string;
+  successUrl?: string;
+  cancelUrl?: string;
 }
 
 @injectable()
@@ -34,6 +36,8 @@ export class CreateCheckoutSession {
   public async execute({
     patientId,
     priceId,
+    successUrl,
+    cancelUrl,
   }: Props): Promise<Stripe.Response<Stripe.Checkout.Session>> {
     const patient = await this.patientsRepository.findById(patientId);
 
@@ -92,10 +96,10 @@ export class CreateCheckoutSession {
       if (patient.region === 'pt') {
         sessionParams = {
           customer: customerId,
-          success_url: 'https://hausey.com.br/app',
+          success_url: successUrl ?? 'https://hausey.com.br/app',
           line_items: [{ price: priceId, quantity: 1 }],
           mode: 'subscription',
-          cancel_url: 'https://hausey.com.br/app',
+          cancel_url: cancelUrl ?? 'https://hausey.com.br/app',
           discounts: [{ promotion_code: promoCodeId }],
         };
         session = await stripePTInstance.checkout.sessions.create(
@@ -104,10 +108,10 @@ export class CreateCheckoutSession {
       } else {
         sessionParams = {
           customer: customerId,
-          success_url: 'https://hausey.com.br/app',
+          success_url: successUrl ?? 'https://hausey.com.br/app',
           line_items: [{ price: priceId, quantity: 1 }],
           mode: 'subscription',
-          cancel_url: 'https://hausey.com.br/app',
+          cancel_url: cancelUrl ?? 'https://hausey.com.br/app',
           discounts: [{ promotion_code: promoCodeId }],
         };
         this.logger.info(
