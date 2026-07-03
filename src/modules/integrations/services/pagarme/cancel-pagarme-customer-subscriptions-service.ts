@@ -1,6 +1,8 @@
-import { container, injectable } from 'tsyringe';
+import { container, injectable, inject } from 'tsyringe';
 import { pagarmeInstance } from '../../utils/pagarme-instance';
 import { CreateErrorService } from '../../../errors/service/create-error-service';
+import { IPatientsRepository } from '../../../patients/contracts/repositories/patients';
+import { DeactivateAllDependentsService } from '../../../dependents/services/deactivate-all-dependents';
 
 interface IProps {
   customerId: string;
@@ -8,6 +10,11 @@ interface IProps {
 
 @injectable()
 export class CancelPagarmeCustomerSubscriptionsService {
+  constructor(
+    @inject('PatientsRepository')
+    private patientsRepository: IPatientsRepository,
+  ) {}
+
   public async execute({ customerId }: IProps): Promise<void> {
     try {
       const { data } = await pagarmeInstance.get(
@@ -23,6 +30,22 @@ export class CancelPagarmeCustomerSubscriptionsService {
             });
           }),
         );
+      }
+
+      const patient = await this.patientsRepository.findByCustomerId(
+        customerId,
+      );
+
+      if (patient) {
+        await this.patientsRepository.update(patient.id, {
+          isPro: false,
+          planExpiresAt: null,
+        });
+
+        const deactivateAllDependentsService = container.resolve(
+          DeactivateAllDependentsService,
+        );
+        await deactivateAllDependentsService.execute({ holderId: patient.id });
       }
     } catch (error) {
       const createErrorService = container.resolve(CreateErrorService);
