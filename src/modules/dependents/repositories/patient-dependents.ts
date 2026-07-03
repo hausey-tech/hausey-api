@@ -1,4 +1,4 @@
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { PostgresDataSource } from '../../../shared/typeorm';
 import { IPatientDependentsRepository } from '../contracts/repositories/patient-dependents';
 import { PatientDependent } from '../entities/patient-dependent';
@@ -41,6 +41,15 @@ export class PatientDependentsRepository
     return this.ormRepository.find({
       where: { holderId, status: 'active' },
       relations: ['dependentPatient'],
+    });
+  }
+
+  public async findActiveByDependentPatientIds(
+    ids: string[],
+  ): Promise<PatientDependent[]> {
+    return this.ormRepository.find({
+      where: { dependentPatientId: In(ids), status: 'active' },
+      relations: ['holder'],
     });
   }
 
