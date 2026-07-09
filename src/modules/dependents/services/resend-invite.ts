@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { addDays } from 'date-fns';
+import { addHours } from 'date-fns';
 import { inject, injectable } from 'tsyringe';
 import { AppError } from '../../../shared/errors/app-error';
 import { brevo } from '../../../shared/utils/brevo';
@@ -49,7 +49,7 @@ export class ResendInviteService {
     const holder = await this.patientsRepository.findById(holderId);
 
     const inviteToken = crypto.randomBytes(32).toString('hex');
-    const inviteExpiresAt = addDays(new Date(), 7);
+    const inviteExpiresAt = addHours(new Date(), 24);
 
     dependent.inviteToken = inviteToken;
     dependent.inviteExpiresAt = inviteExpiresAt;
@@ -64,10 +64,11 @@ export class ResendInviteService {
         <p><b>${
           holder?.name ?? 'Seu familiar'
         }</b> renovou seu convite para o plano familiar Hausey.</p>
-        <p>Crie sua conta usando este email e seu acesso será ativado automaticamente.</p>
+        <p>Faça login ou crie sua conta usando este email para aceitar o convite.</p>
+        <p>O convite expira em 24 horas.</p>
         <p><a href="${
           process.env.APP_URL ?? 'https://app.hausey.com'
-        }/cadastro?invite=${inviteToken}">Criar minha conta</a></p>
+        }/cadastro?invite=${inviteToken}">Aceitar convite</a></p>
       `,
     });
 

@@ -45,6 +45,9 @@ export class PatientDependent {
   cpf: string | null;
 
   @Column('varchar', { nullable: true })
+  sex: 'M' | 'F' | null;
+
+  @Column('varchar', { nullable: true })
   email: string | null;
 
   @Column('varchar', { name: 'invite_token', nullable: true })

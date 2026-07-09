@@ -8,18 +8,20 @@ import { AcceptInviteService } from '../services/accept-invite';
 import { ResendInviteService } from '../services/resend-invite';
 import { GetHolderByDependentService } from '../services/get-holder-by-dependent';
 import { ListDependentsByHolderService } from '../services/list-dependents-by-holder';
+import { GenerateDependentAccessTokenService } from '../services/generate-dependent-access-token';
+import { GetInvitePreviewService } from '../services/get-invite-preview';
 
 export class DependentsController {
   public async add(request: Request, response: Response): Promise<Response> {
     const holderId = request.user.id;
-    const { hasAppAccess, email, name, birthdate, cpf } = request.body;
+    const { hasAppAccess, email, name, birthdate, cpf, sex } = request.body;
 
     const addDependentService = container.resolve(AddDependentService);
 
     const dependent = await addDependentService.execute({
       holderId,
       hasAppAccess,
-      ...(hasAppAccess ? { email } : { name, birthdate, cpf }),
+      ...(hasAppAccess ? { email } : { name, birthdate, cpf, sex }),
     } as Parameters<typeof addDependentService.execute>[0]);
 
     return response.status(201).json(dependent);
@@ -44,6 +46,21 @@ export class DependentsController {
     await removeDependentService.execute({ dependentId: id, holderId });
 
     return response.status(204).send();
+  }
+
+  public async previewInvite(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { token } = request.params;
+
+    const getInvitePreviewService = container.resolve(GetInvitePreviewService);
+
+    const preview = await getInvitePreviewService.execute({
+      inviteToken: token,
+    });
+
+    return response.json(preview);
   }
 
   public async acceptInvite(
@@ -92,6 +109,25 @@ export class DependentsController {
     const result = await getHolderByDependentService.execute(
       dependentPatientId,
     );
+
+    return response.json(result);
+  }
+
+  public async generateAccessToken(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const holderId = request.user.id;
+    const { id } = request.params;
+
+    const generateDependentAccessTokenService = container.resolve(
+      GenerateDependentAccessTokenService,
+    );
+
+    const result = await generateDependentAccessTokenService.execute({
+      dependentId: id,
+      holderId,
+    });
 
     return response.json(result);
   }

@@ -1,5 +1,5 @@
 import crypto from 'crypto';
-import { addDays, isBefore } from 'date-fns';
+import { addHours, isBefore } from 'date-fns';
 import { inject, injectable } from 'tsyringe';
 import { AppError } from '../../../shared/errors/app-error';
 import { brevo } from '../../../shared/utils/brevo';
@@ -79,28 +79,8 @@ export class AddDependentService {
     holderId: string,
     holder: Awaited<ReturnType<IPatientsRepository['findById']>>,
   ): Promise<PatientDependent> {
-    const existingPatient = await this.patientsRepository.findByEmail(email);
-
-    if (existingPatient) {
-      const dependent = await this.dependentsRepository.create({
-        holderId,
-        dependentPatientId: existingPatient.id,
-        hasAppAccess: true,
-        email,
-        name: existingPatient.name,
-        status: 'active',
-      });
-
-      await this.patientsRepository.update(existingPatient.id, {
-        planId: holder.planId,
-        planExpiresAt: holder.planExpiresAt?.toISOString(),
-      });
-
-      return dependent;
-    }
-
     const inviteToken = crypto.randomBytes(32).toString('hex');
-    const inviteExpiresAt = addDays(new Date(), 7);
+    const inviteExpiresAt = addHours(new Date(), 24);
 
     const dependent = await this.dependentsRepository.create({
       holderId,
@@ -119,11 +99,11 @@ export class AddDependentService {
         <p><b>${
           holder.name
         }</b> te convidou para fazer parte do plano familiar Hausey.</p>
-        <p>Crie sua conta usando este email e seu acesso será ativado automaticamente.</p>
-        <p>O convite expira em 7 dias.</p>
+        <p>Faça login ou crie sua conta usando este email para aceitar o convite.</p>
+        <p>O convite expira em 24 horas.</p>
         <p><a href="${
           process.env.APP_URL ?? 'https://app.hausey.com'
-        }/cadastro?invite=${inviteToken}">Criar minha conta</a></p>
+        }/cadastro?invite=${inviteToken}">Aceitar convite</a></p>
       `,
     });
 
@@ -134,21 +114,20 @@ export class AddDependentService {
     data: Extract<IAddDependentDTO, { hasAppAccess: false }>,
     holder: Awaited<ReturnType<IPatientsRepository['findById']>>,
   ): Promise<PatientDependent> {
-    if (data.cpf) {
-      const patientWithCpf = await this.patientsRepository.findByDocument(
-        data.cpf,
+    const patientWithCpf = await this.patientsRepository.findByDocument(
+      data.cpf,
+    );
+    if (patientWithCpf) {
+      throw new AppError(
+        'Já existe um usuário com este CPF, verifique e tente novamente!',
       );
-      if (patientWithCpf) {
-        throw new AppError(
-          'Já existe um usuário com este CPF, verifique e tente novamente!',
-        );
-      }
     }
 
     const dependentPatient = await this.patientsRepository.create({
       name: data.name,
       birthdate: data.birthdate,
       document: data.cpf,
+      sex: data.sex,
       planId: holder.planId,
       planExpiresAt: holder.planExpiresAt,
       sellerId: holder.sellerId,
@@ -165,6 +144,7 @@ export class AddDependentService {
       name: data.name,
       birthdate: data.birthdate,
       cpf: data.cpf,
+      sex: data.sex,
       status: 'active',
     });
 

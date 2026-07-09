@@ -6,7 +6,9 @@ import { DependentsController } from '../controllers/dependents';
 import {
   AcceptInviteSchema,
   AddDependentSchema,
+  GenerateDependentAccessTokenSchema,
   GetHolderByDependentSchema,
+  GetInvitePreviewSchema,
   ListDependentsByHolderSchema,
   RemoveDependentSchema,
   ResendInviteSchema,
@@ -14,6 +16,12 @@ import {
 
 export const dependentsRouter = Router();
 const dependentsController = new DependentsController();
+
+dependentsRouter.get(
+  '/invite/:token',
+  celebrate(GetInvitePreviewSchema),
+  dependentsController.previewInvite,
+);
 
 dependentsRouter.post(
   '/accept-invite',
@@ -41,6 +49,12 @@ dependentsRouter.post(
   '/:id/resend-invite',
   celebrate(ResendInviteSchema),
   dependentsController.resendInvite,
+);
+
+dependentsRouter.post(
+  '/:id/access-token',
+  celebrate(GenerateDependentAccessTokenSchema),
+  dependentsController.generateAccessToken,
 );
 
 dependentsRouter.get(
