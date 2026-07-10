@@ -177,7 +177,6 @@ export class CreatePatientCardSubscriptionService {
       );
       await this.patientsRepository.update(patient.id, {
         planId: plan.id,
-        isPro: plan?.isPro ?? false,
         firstPayment: false,
         planExpiresAt: result,
       });
@@ -194,7 +193,6 @@ export class CreatePatientCardSubscriptionService {
       });
       await this.patientsRepository.update(patient.id, {
         planId: plan.id,
-        isPro: plan?.isPro ?? false,
         firstPayment: false,
         planExpiresAt: result,
       });

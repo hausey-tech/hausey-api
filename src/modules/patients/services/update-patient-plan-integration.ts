@@ -5,6 +5,7 @@ import { AppError } from '../../../shared/errors/app-error';
 import { Patient } from '../entities/patient';
 import { brevo } from '../../../shared/utils/brevo';
 import { SyncDependentsPlanService } from '../../dependents/services/sync-dependents-plan';
+import { UpdatePatientIsProService } from './update-patient-is-pro';
 
 interface Props {
   periodEnd: number;
@@ -42,7 +43,6 @@ export class UpdatePatientPlanPartnerService {
     }
 
     patient.planId = plan.id;
-    patient.isPro = plan?.isPro ?? false;
     const dateExpiration = new Date(periodEnd);
     dateExpiration.setHours(dateExpiration.getHours() + 3);
     patient.planExpiresAt = dateExpiration;
@@ -62,7 +62,12 @@ export class UpdatePatientPlanPartnerService {
     `,
     });
 
-    const patientUpdated = await this.patientsRepository.save(patient);
+    await this.patientsRepository.save(patient);
+
+    const updatePatientIsProService = container.resolve(
+      UpdatePatientIsProService,
+    );
+    const patientUpdated = await updatePatientIsProService.execute(patient);
 
     const syncDependentsPlanService = container.resolve(
       SyncDependentsPlanService,

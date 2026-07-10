@@ -11,6 +11,7 @@ import { UpdateSellerCodeService } from '../../seller-codes/services/update-sell
 import { IPlansRepository } from '../../plans/contracts/repositories/plans';
 import { brevo } from '../../../shared/utils/brevo';
 import { IPatientDependentsRepository } from '../../dependents/contracts/repositories/patient-dependents';
+import { UpdatePatientIsProService } from './update-patient-is-pro';
 
 interface Props extends Omit<ICreatePatientDTO, 'sellerId'> {
   sellerCode?: string;
@@ -46,7 +47,6 @@ export class CreatePatientService {
     let sellerId: string;
     let planId: string;
     let planExpiresAt: Date;
-    let isPro: boolean;
     if (sellerCode) {
       const updateSellerCodeService = container.resolve(
         UpdateSellerCodeService,
@@ -62,7 +62,6 @@ export class CreatePatientService {
         );
         if (plan) {
           planId = plan.id;
-          isPro = plan?.isPro ?? false;
         }
         planExpiresAt = addYears(new Date(), 2);
       }
@@ -95,7 +94,6 @@ export class CreatePatientService {
           password: hashedPassword,
           sellerId,
           planId,
-          isPro,
           planExpiresAt,
         });
       }
@@ -106,7 +104,6 @@ export class CreatePatientService {
       password: hashedPassword,
       sellerId,
       planId,
-      isPro,
       planExpiresAt,
       firstPayment: true,
     });
@@ -136,7 +133,10 @@ export class CreatePatientService {
       await this.linkPendingInvites(email, savedPatient.id);
     }
 
-    return savedPatient;
+    const updatePatientIsProService = container.resolve(
+      UpdatePatientIsProService,
+    );
+    return updatePatientIsProService.execute(savedPatient);
   }
 
   private async linkPendingInvites(

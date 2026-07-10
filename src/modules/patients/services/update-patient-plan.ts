@@ -4,6 +4,7 @@ import { IPatientsRepository } from '../contracts/repositories/patients';
 import { Patient } from '../entities/patient';
 import { brevo } from '../../../shared/utils/brevo';
 import { SyncDependentsPlanService } from '../../dependents/services/sync-dependents-plan';
+import { UpdatePatientIsProService } from './update-patient-is-pro';
 
 interface Props {
   periodEnd: number;
@@ -39,7 +40,6 @@ export class UpdatePatientPlanService {
     }
 
     patient.planId = plan.id;
-    patient.isPro = plan?.isPro ?? false;
     patient.planExpiresAt = new Date(periodEnd * 1000);
     brevo({
       to: 'adm.hausey@gmail.com',
@@ -57,7 +57,12 @@ export class UpdatePatientPlanService {
     `,
     });
 
-    const updatedPatient = await this.patientsRepository.save(patient);
+    await this.patientsRepository.save(patient);
+
+    const updatePatientIsProService = container.resolve(
+      UpdatePatientIsProService,
+    );
+    const updatedPatient = await updatePatientIsProService.execute(patient);
 
     const syncDependentsPlanService = container.resolve(
       SyncDependentsPlanService,

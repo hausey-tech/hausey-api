@@ -130,7 +130,7 @@ export class UploadPatientCsv {
                   region,
                   language,
                   planId,
-                  isPro: plan?.isPro ?? false,
+                  isPro: !!plan.id,
                 };
 
                 const patient = await this.patientsRepository.create(

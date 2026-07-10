@@ -10,7 +10,6 @@ interface Props {
   price: number;
   type?: PlanType;
   maxDependents?: number;
-  isPro?: boolean;
 }
 
 @injectable()
@@ -26,7 +25,6 @@ export class CreatePlanService {
     price,
     type,
     maxDependents,
-    isPro,
   }: Props): Promise<Plan> {
     const planExists = await this.plansRepository.findByName(name);
 
@@ -50,7 +48,6 @@ export class CreatePlanService {
       price,
       type,
       maxDependents,
-      isPro: isPro ?? false,
     });
 
     plan.stripePriceId = planId;

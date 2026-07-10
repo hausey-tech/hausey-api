@@ -7,6 +7,7 @@ import { stripeInstance, stripePTInstance } from '../../utils/stripe-instance';
 import { CreateCustomer } from './create-customer';
 import { CreatePaymentMethod } from './create-payment-method';
 import { Patient } from '../../../patients/entities/patient';
+import { UpdatePatientIsProService } from '../../../patients/services/update-patient-is-pro';
 
 interface Card {
   number: string;
@@ -101,10 +102,14 @@ export class CreateSubscription {
     }
 
     patient.planId = plan.id;
-    patient.isPro = plan?.isPro ?? false;
     patient.stripeCustomerId = customerId;
     patient.planExpiresAt = new Date(subscription.current_period_end * 1000);
 
-    return this.patientsRepository.save(patient);
+    await this.patientsRepository.save(patient);
+
+    const updatePatientIsProService = container.resolve(
+      UpdatePatientIsProService,
+    );
+    return updatePatientIsProService.execute(patient);
   }
 }

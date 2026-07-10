@@ -21,7 +21,7 @@ export class CreateNipomedUserService {
     try {
       if (patient.isPro && patient.address) {
         const tipoPlano =
-          patient.plan?.type === 'Familiar' ? 'FAMILIAR' : 'INDIVIDUAL';
+          patient.plan?.type === 'family' ? 'FAMILIAR' : 'INDIVIDUAL';
 
         await nipomedInstance.post('', {
           token: process.env.NIPOMED_TOKEN,

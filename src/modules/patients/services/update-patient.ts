@@ -76,7 +76,6 @@ export class UpdatePatientService {
     let sellerId: string;
     let planId: string;
     let planExpiresAt: string;
-    let isPro: boolean;
     let plan: Plan;
     if (sellerCode) {
       const updateSellerCodeService = container.resolve(
@@ -99,7 +98,6 @@ export class UpdatePatientService {
         }
         if (plan) {
           planId = plan.id;
-          isPro = plan.isPro ?? false;
         }
         planExpiresAt = addYears(new Date(), 2).toISOString();
       }
@@ -146,7 +144,6 @@ export class UpdatePatientService {
       planId,
       planExpiresAt,
       firstPayment,
-      isPro,
     });
 
     const updatedUser = await this.patientsRepository.findById(id);
