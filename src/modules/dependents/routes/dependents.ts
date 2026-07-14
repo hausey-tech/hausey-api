@@ -29,6 +29,8 @@ dependentsRouter.post(
   dependentsController.add,
 );
 
+dependentsRouter.get('/family', dependentsController.getFamily);
+
 dependentsRouter.get('/', dependentsController.list);
 
 dependentsRouter.delete(

@@ -52,12 +52,15 @@ export class DependentsController {
   }
 
   public async remove(request: Request, response: Response): Promise<Response> {
-    const holderId = request.user.id;
+    const requesterPatientId = request.user.id;
     const { id } = request.params;
 
     const removeDependentService = container.resolve(RemoveDependentService);
 
-    await removeDependentService.execute({ dependentId: id, holderId });
+    await removeDependentService.execute({
+      dependentId: id,
+      requesterPatientId,
+    });
 
     return response.status(204).send();
   }

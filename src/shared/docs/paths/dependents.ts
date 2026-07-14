@@ -74,6 +74,8 @@ export const dependentsPath = {
     delete: {
       tags: ['Dependents'],
       summary: 'Remover dependente',
+      description:
+        'Titular pode remover qualquer dependente da família. Dependente com acesso ao app pode remover a si mesmo (o id do vínculo em patient_dependents). Revoga planId, planExpiresAt e isPro do dependente.',
       security,
       parameters: [
         {
@@ -185,6 +187,26 @@ export const dependentsPath = {
         },
         401: { $ref: '#/components/unauthorized' },
         404: { $ref: '#/components/notFound' },
+      },
+    },
+  },
+  family: {
+    get: {
+      tags: ['Dependents'],
+      summary: 'Obter família do paciente autenticado',
+      description:
+        'Retorna o contexto familiar do usuário logado. Se for dependente, retorna o titular e todos os membros. Se for titular, retorna a si mesmo e seus dependentes.',
+      security,
+      responses: {
+        200: {
+          description: 'Contexto familiar do paciente',
+          content: {
+            'application/json': {
+              schema: { $ref: '#/schemas/familyByPatient' },
+            },
+          },
+        },
+        401: { $ref: '#/components/unauthorized' },
       },
     },
   },
