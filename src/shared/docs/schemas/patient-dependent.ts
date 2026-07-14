@@ -37,3 +37,24 @@ export const addDependentWithoutAppSchema = {
     cpf: { type: 'string' },
   },
 };
+
+export const familyByPatientSchema = {
+  type: 'object',
+  properties: {
+    role: {
+      type: 'string',
+      enum: ['holder', 'dependent'],
+    },
+    holder: {
+      type: 'object',
+      nullable: true,
+      description: 'Dados do titular do plano familiar',
+    },
+    members: {
+      type: 'array',
+      items: { $ref: '#/schemas/patientDependent' },
+      description:
+        'Membros da família (dependentes do titular, inclusive o próprio usuário se for dependente)',
+    },
+  },
+};

@@ -29,12 +29,6 @@ export class AddDependentService {
       throw new AppError('Titular não encontrado.');
     }
 
-    if (!holder.sellerId) {
-      throw new AppError(
-        'Plano familiar disponível apenas para usuários vinculados a empresas.',
-      );
-    }
-
     if (!holder.planId || !holder.planExpiresAt) {
       throw new AppError('Titular não possui assinatura ativa.');
     }
@@ -149,6 +143,7 @@ export class AddDependentService {
       name: data.name,
       birthdate: data.birthdate,
       document: data.cpf,
+      sex: data.sex,
       planId: holder.planId,
       planExpiresAt: holder.planExpiresAt,
       sellerId: holder.sellerId,

@@ -31,6 +31,7 @@ import {
   memedUserSchema,
   createMemedUserSchema,
   patientDependentSchema,
+  familyByPatientSchema,
 } from './schemas';
 import { badRequest, unauthorized, notFound, serverError } from './components';
 import { updatePatientPlanSchema } from './schemas/update-patient-plan';
@@ -113,6 +114,7 @@ export default {
     '/dependents/{id}': dependentsPath.dependentId,
     '/dependents/{id}/resend-invite': dependentsPath.dependentId.resendInvite,
     '/dependents/accept-invite': dependentsPath.acceptInvite,
+    '/dependents/family': dependentsPath.family,
     '/dependents/holder/{dependentPatientId}': dependentsPath.holderByDependent,
   },
   schemas: {
@@ -140,6 +142,7 @@ export default {
     memedUser: memedUserSchema,
     createMemedUser: createMemedUserSchema,
     patientDependent: patientDependentSchema,
+    familyByPatient: familyByPatientSchema,
   },
   components: {
     securitySchemes: {

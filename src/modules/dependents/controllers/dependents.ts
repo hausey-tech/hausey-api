@@ -7,18 +7,20 @@ import { RemoveDependentService } from '../services/remove-dependent';
 import { AcceptInviteService } from '../services/accept-invite';
 import { ResendInviteService } from '../services/resend-invite';
 import { GetHolderByDependentService } from '../services/get-holder-by-dependent';
+import { ListDependentsByHolderService } from '../services/list-dependents-by-holder';
+import { GetFamilyByPatientService } from '../services/get-family-by-patient';
 
 export class DependentsController {
   public async add(request: Request, response: Response): Promise<Response> {
     const holderId = request.user.id;
-    const { hasAppAccess, email, name, birthdate, cpf } = request.body;
+    const { hasAppAccess, email, name, birthdate, cpf, sex } = request.body;
 
     const addDependentService = container.resolve(AddDependentService);
 
     const dependent = await addDependentService.execute({
       holderId,
       hasAppAccess,
-      ...(hasAppAccess ? { email } : { name, birthdate, cpf }),
+      ...(hasAppAccess ? { email } : { name, birthdate, cpf, sex }),
     } as Parameters<typeof addDependentService.execute>[0]);
 
     return response.status(201).json(dependent);
@@ -34,13 +36,31 @@ export class DependentsController {
     return response.json(dependents);
   }
 
+  public async getFamily(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const patientId = request.user.id;
+
+    const getFamilyByPatientService = container.resolve(
+      GetFamilyByPatientService,
+    );
+
+    const family = await getFamilyByPatientService.execute(patientId);
+
+    return response.json(family);
+  }
+
   public async remove(request: Request, response: Response): Promise<Response> {
-    const holderId = request.user.id;
+    const requesterPatientId = request.user.id;
     const { id } = request.params;
 
     const removeDependentService = container.resolve(RemoveDependentService);
 
-    await removeDependentService.execute({ dependentId: id, holderId });
+    await removeDependentService.execute({
+      dependentId: id,
+      requesterPatientId,
+    });
 
     return response.status(204).send();
   }
@@ -91,6 +111,21 @@ export class DependentsController {
     const result = await getHolderByDependentService.execute(
       dependentPatientId,
     );
+
+    return response.json(result);
+  }
+
+  public async listByHolder(
+    request: Request,
+    response: Response,
+  ): Promise<Response> {
+    const { holderId } = request.params;
+
+    const listDependentsByHolderService = container.resolve(
+      ListDependentsByHolderService,
+    );
+
+    const result = await listDependentsByHolderService.execute(holderId);
 
     return response.json(result);
   }

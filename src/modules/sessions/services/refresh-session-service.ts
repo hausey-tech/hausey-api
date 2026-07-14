@@ -13,6 +13,8 @@ import { Patient } from '../../patients/entities/patient';
 import { IUsersRepository } from '../../users/contracts/repositories/users';
 import { User } from '../../users/entities/user';
 import { IRefreshSessionDTO } from '../contracts/dtos/refresh-session-dto';
+import { IDependentAccess } from '../../dependents/contracts/dtos/dependent-access-dto';
+import { BuildDependentsAccessService } from '../../dependents/services/build-dependents-access';
 
 interface IRoles {
   professional?: Professional;
@@ -22,6 +24,7 @@ interface IRoles {
 interface IResponse extends IRoles {
   accessToken: string;
   refreshToken: string;
+  dependentsAccess?: IDependentAccess[];
 }
 
 @injectable()
@@ -35,6 +38,9 @@ export class RefreshSessionService {
 
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+
+    @inject(BuildDependentsAccessService)
+    private buildDependentsAccessService: BuildDependentsAccessService,
   ) {}
 
   public async execute({ id, role }: IRefreshSessionDTO): Promise<IResponse> {
@@ -86,10 +92,16 @@ export class RefreshSessionService {
       expiresIn: refreshExpiresIn,
     });
 
+    const dependentsAccess =
+      role === 'patient'
+        ? await this.buildDependentsAccessService.execute(id)
+        : undefined;
+
     return {
       accessToken,
       refreshToken,
       ...data,
+      ...(role === 'patient' ? { dependentsAccess } : {}),
     };
   }
 }

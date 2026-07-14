@@ -7,6 +7,7 @@ export interface IPatientDependentsRepository {
     dependentPatientId: string,
   ): Promise<PatientDependent | null>;
   findActiveByHolderId(holderId: string): Promise<PatientDependent[]>;
+  findActiveByDependentPatientIds(ids: string[]): Promise<PatientDependent[]>;
   findPendingByEmail(email: string): Promise<PatientDependent[]>;
   findByInviteToken(token: string): Promise<PatientDependent | null>;
   countActiveByHolderId(holderId: string): Promise<number>;

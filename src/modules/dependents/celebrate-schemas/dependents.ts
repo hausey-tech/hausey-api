@@ -14,8 +14,21 @@ export const AddDependentSchema = {
         then: Joi.string().required(),
         otherwise: Joi.string().optional(),
       }),
-      birthdate: Joi.string().optional(),
-      cpf: Joi.string().optional(),
+      birthdate: Joi.when('hasAppAccess', {
+        is: false,
+        then: Joi.string().required(),
+        otherwise: Joi.forbidden(),
+      }),
+      cpf: Joi.when('hasAppAccess', {
+        is: false,
+        then: Joi.string().required(),
+        otherwise: Joi.forbidden(),
+      }),
+      sex: Joi.when('hasAppAccess', {
+        is: false,
+        then: Joi.string().valid('M', 'F').required(),
+        otherwise: Joi.forbidden(),
+      }),
     })
     .options({ allowUnknown: false }),
 };
@@ -42,5 +55,11 @@ export const ResendInviteSchema = {
 export const GetHolderByDependentSchema = {
   [Segments.PARAMS]: Joi.object().keys({
     dependentPatientId: Joi.string().uuid().required(),
+  }),
+};
+
+export const ListDependentsByHolderSchema = {
+  [Segments.PARAMS]: Joi.object().keys({
+    holderId: Joi.string().uuid().required(),
   }),
 };

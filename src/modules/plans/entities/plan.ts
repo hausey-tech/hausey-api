@@ -28,6 +28,9 @@ export class Plan extends BaseEntity {
   @Column('int', { name: 'max_dependents', default: 0 })
   maxDependents: number;
 
+  @Column('int', { name: 'access_level', default: 10 })
+  accessLevel: number;
+
   @OneToMany(() => PlanRegion, planRegion => planRegion.plan)
   regions: PlanRegion[];
 }

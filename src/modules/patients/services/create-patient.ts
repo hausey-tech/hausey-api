@@ -11,6 +11,7 @@ import { UpdateSellerCodeService } from '../../seller-codes/services/update-sell
 import { IPlansRepository } from '../../plans/contracts/repositories/plans';
 import { brevo } from '../../../shared/utils/brevo';
 import { IPatientDependentsRepository } from '../../dependents/contracts/repositories/patient-dependents';
+import { UpdatePatientIsProService } from './update-patient-is-pro';
 
 interface Props extends Omit<ICreatePatientDTO, 'sellerId'> {
   sellerCode?: string;
@@ -132,7 +133,10 @@ export class CreatePatientService {
       await this.linkPendingInvites(email, savedPatient.id);
     }
 
-    return savedPatient;
+    const updatePatientIsProService = container.resolve(
+      UpdatePatientIsProService,
+    );
+    return updatePatientIsProService.execute(savedPatient);
   }
 
   private async linkPendingInvites(

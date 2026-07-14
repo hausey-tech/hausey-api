@@ -1,12 +1,12 @@
 import { injectable, inject, container } from 'tsyringe';
 
-import { isBefore } from 'date-fns';
 import { CreateNipomedUserService } from '../../integrations/services/nipomed/create-nipomed-user-service';
 import { IAddressesRepository } from '../contracts/repositories/IAddressesRepository';
 import { IPatientsRepository } from '../../patients/contracts/repositories/patients';
 import { ICreateAddressDTO } from '../contracts/dtos/ICreateAddressDTO';
 import { AppError } from '../../../shared/errors/app-error';
 import { Address } from '../entities/Address';
+import { isPatientPlanActive } from '../../../shared/utils/plan';
 
 @injectable()
 export class CreateAddressService {
@@ -39,11 +39,7 @@ export class CreateAddressService {
 
     const address = await this.addressesRepository.create(payload);
 
-    if (
-      !patient.nipomed &&
-      patient.planExpiresAt &&
-      isBefore(new Date(), patient.planExpiresAt)
-    ) {
+    if (!patient.nipomed && isPatientPlanActive(patient)) {
       const createNipomedUserService = container.resolve(
         CreateNipomedUserService,
       );
