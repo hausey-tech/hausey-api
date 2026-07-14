@@ -14,7 +14,6 @@
     "migration:run": "yarn typeorm migration:run -d ./src/shared/typeorm",
     "migration:show": "yarn typeorm migration:show -d ./src/shared/typeorm",
     "migration:revert": "yarn typeorm migration:revert -d ./src/shared/typeorm",
-    "seed:family-plans": "ts-node-dev -r tsconfig-paths/register --transpile-only ./scripts/seed-family-plans.ts",
     "prepare": "husky install",
     "pre-commit": "yarn lint-staged"
   },
