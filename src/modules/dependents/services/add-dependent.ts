@@ -3,11 +3,13 @@ import { addDays, isBefore } from 'date-fns';
 import { inject, injectable } from 'tsyringe';
 import { AppError } from '../../../shared/errors/app-error';
 import { brevo } from '../../../shared/utils/brevo';
+import { isEcHolder } from '../../../config/brand';
 import { IPatientsRepository } from '../../patients/contracts/repositories/patients';
 import { IPlansRepository } from '../../plans/contracts/repositories/plans';
 import { IPatientDependentsRepository } from '../contracts/repositories/patient-dependents';
 import { IAddDependentDTO } from '../contracts/dtos/add-dependent-dto';
 import { PatientDependent } from '../entities/patient-dependent';
+import { buildInviteEmail } from '../utils/build-invite-email';
 
 @injectable()
 export class AddDependentService {
@@ -105,21 +107,14 @@ export class AddDependentService {
       status: 'pending',
     });
 
-    await brevo({
-      to: email,
-      subject: 'Você foi convidado para o plano familiar Hausey!',
-      body: `
-        <h2>Olá!</h2>
-        <p><b>${
-          holder.name
-        }</b> te convidou para fazer parte do plano familiar Hausey.</p>
-        <p>Crie sua conta usando este email e seu acesso será ativado automaticamente.</p>
-        <p>O convite expira em 7 dias.</p>
-        <p><a href="${
-          process.env.APP_URL ?? 'https://app.hausey.com'
-        }/cadastro?invite=${inviteToken}">Criar minha conta</a></p>
-      `,
+    const { senderName, subject, body } = buildInviteEmail({
+      isEc: isEcHolder(holder.sellerId),
+      holderName: holder.name,
+      inviteToken,
+      kind: 'new',
     });
+
+    await brevo({ to: email, senderName, subject, body });
 
     return dependent;
   }

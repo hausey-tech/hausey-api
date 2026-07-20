@@ -3,9 +3,11 @@ import { addDays } from 'date-fns';
 import { inject, injectable } from 'tsyringe';
 import { AppError } from '../../../shared/errors/app-error';
 import { brevo } from '../../../shared/utils/brevo';
+import { isEcHolder } from '../../../config/brand';
 import { IPatientsRepository } from '../../patients/contracts/repositories/patients';
 import { IPatientDependentsRepository } from '../contracts/repositories/patient-dependents';
 import { PatientDependent } from '../entities/patient-dependent';
+import { buildInviteEmail } from '../utils/build-invite-email';
 
 interface Props {
   dependentId: string;
@@ -56,20 +58,14 @@ export class ResendInviteService {
 
     const saved = await this.dependentsRepository.save(dependent);
 
-    await brevo({
-      to: dependent.email,
-      subject: 'Novo convite para o plano familiar Hausey',
-      body: `
-        <h2>Olá!</h2>
-        <p><b>${
-          holder?.name ?? 'Seu familiar'
-        }</b> renovou seu convite para o plano familiar Hausey.</p>
-        <p>Crie sua conta usando este email e seu acesso será ativado automaticamente.</p>
-        <p><a href="${
-          process.env.APP_URL ?? 'https://app.hausey.com'
-        }/cadastro?invite=${inviteToken}">Criar minha conta</a></p>
-      `,
+    const { senderName, subject, body } = buildInviteEmail({
+      isEc: isEcHolder(holder?.sellerId),
+      holderName: holder?.name ?? 'Seu familiar',
+      inviteToken,
+      kind: 'resend',
     });
+
+    await brevo({ to: dependent.email, senderName, subject, body });
 
     return saved;
   }
