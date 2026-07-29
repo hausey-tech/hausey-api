@@ -31,33 +31,37 @@ export class AddDependentService {
       throw new AppError('Titular não encontrado.');
     }
 
-    if (!holder.planId || !holder.planExpiresAt) {
-      throw new AppError('Titular não possui assinatura ativa.');
-    }
+    const isEc = isEcHolder(holder.sellerId);
 
-    if (!isBefore(new Date(), new Date(holder.planExpiresAt))) {
-      throw new AppError('A assinatura do titular está expirada.');
-    }
+    if (!isEc) {
+      if (!holder.planId || !holder.planExpiresAt) {
+        throw new AppError('Titular não possui assinatura ativa.');
+      }
 
-    const plan = await this.plansRepository.findById(holder.planId);
+      if (!isBefore(new Date(), new Date(holder.planExpiresAt))) {
+        throw new AppError('A assinatura do titular está expirada.');
+      }
 
-    if (!plan) {
-      throw new AppError('Plano do titular não encontrado.');
-    }
+      const plan = await this.plansRepository.findById(holder.planId);
 
-    if (plan.type !== 'family') {
-      throw new AppError(
-        'O plano atual não suporta dependentes. Faça upgrade para um plano familiar.',
-      );
-    }
+      if (!plan) {
+        throw new AppError('Plano do titular não encontrado.');
+      }
 
-    const activeDependentsCount =
-      await this.dependentsRepository.countActiveByHolderId(holder.id);
+      if (plan.type !== 'family') {
+        throw new AppError(
+          'O plano atual não suporta dependentes. Faça upgrade para um plano familiar.',
+        );
+      }
 
-    if (activeDependentsCount >= plan.maxDependents) {
-      throw new AppError(
-        `Limite de dependentes atingido para este plano (máximo: ${plan.maxDependents}).`,
-      );
+      const activeDependentsCount =
+        await this.dependentsRepository.countActiveByHolderId(holder.id);
+
+      if (activeDependentsCount >= plan.maxDependents) {
+        throw new AppError(
+          `Limite de dependentes atingido para este plano (máximo: ${plan.maxDependents}).`,
+        );
+      }
     }
 
     if (data.hasAppAccess === true) {
