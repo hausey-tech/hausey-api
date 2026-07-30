@@ -1,14 +1,15 @@
 export interface ICreatePatientDTO {
-  email: string;
-  password: string;
+  email?: string | null;
+  password?: string;
   name: string;
   document?: string;
   birthdate?: string;
-  phoneNumber: string;
+  phoneNumber?: string;
   sex?: 'M' | 'F';
   planId?: string;
-  sellerId: string;
-  planExpiresAt?: Date;
+  sellerId?: string;
+  planExpiresAt?: Date | string;
+  isPro?: boolean;
   firstPayment?: boolean;
   language?: string;
   region?: string;

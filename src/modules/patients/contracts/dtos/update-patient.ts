@@ -4,8 +4,9 @@ export interface IUpdatePatientDTO {
   birthdate?: string;
   phoneNumber?: string;
   sex?: 'M' | 'F';
-  planId?: string;
-  planExpiresAt?: string;
+  planId?: string | null;
+  planExpiresAt?: string | null;
+  isPro?: boolean;
   sellerId?: string;
   fcmToken?: string;
   responsibleTeamId?: string;

@@ -17,7 +17,10 @@ export class PlansRepository implements IPlansRepository {
 
   public async find(options?: FindOptionsWhere<Plan>): Promise<Plan[]> {
     console.log('options', options);
-    return this.ormRepository.find({ where: options });
+    return this.ormRepository.find({
+      where: options,
+      relations: { regions: true },
+    });
   }
 
   public async findByName(name: string): Promise<Plan | null> {

@@ -4,6 +4,7 @@ import { AppError } from '../../../shared/errors/app-error';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { IPagarmeWebhookDTO } from '../../integrations/contracts/dtos/pagarme/pagarme-webhook-dto';
 import { CreateNipomedUserService } from '../../integrations/services/nipomed/create-nipomed-user-service';
+import { SyncDependentsPlanService } from '../../dependents/services/sync-dependents-plan';
 
 @injectable()
 export class UpdateSubscriptionByWebhookService {
@@ -27,21 +28,28 @@ export class UpdateSubscriptionByWebhookService {
       const createNipomedUserService = container.resolve(
         CreateNipomedUserService,
       );
+      const syncDependentsPlanService = container.resolve(
+        SyncDependentsPlanService,
+      );
+
       if (charge.payment_method === 'pix') {
         const item = data.items[0];
+        const pixExpiresAt = addMonths(
+          new Date(charge.paid_at),
+          item.quantity,
+        ).toISOString();
         await this.patientsRepository.update(patient.id, {
           planId: item.code,
-          planExpiresAt: addMonths(
-            new Date(charge.paid_at),
-            item.quantity,
-          ).toISOString(),
+          planExpiresAt: pixExpiresAt,
         });
         createNipomedUserService.execute({
           patient,
-          expiresAt: addMonths(
-            new Date(charge.paid_at),
-            item.quantity,
-          ).toISOString(),
+          expiresAt: pixExpiresAt,
+        });
+        await syncDependentsPlanService.execute({
+          holderId: patient.id,
+          planId: item.code,
+          planExpiresAt: pixExpiresAt,
         });
       } else {
         await this.patientsRepository.update(patient.id, {
@@ -50,6 +58,11 @@ export class UpdateSubscriptionByWebhookService {
         createNipomedUserService.execute({
           patient,
           expiresAt: data.cycle.end_at,
+        });
+        await syncDependentsPlanService.execute({
+          holderId: patient.id,
+          planId: patient.planId,
+          planExpiresAt: data.cycle.end_at,
         });
       }
     }

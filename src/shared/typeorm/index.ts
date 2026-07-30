@@ -10,7 +10,8 @@ export const PostgresDataSource = new DataSource({
   entities: [`${rootPath}/modules/**/entities/*.{ts,js}`],
   migrations: [`${rootPath}/shared/typeorm/migrations/*.{ts,js}`],
   namingStrategy: new SnakeNamingStrategy(),
-  ssl: {
-    rejectUnauthorized: false,
-  },
+  ssl:
+    process.env.NODE_ENV === 'production'
+      ? { rejectUnauthorized: false }
+      : false,
 });

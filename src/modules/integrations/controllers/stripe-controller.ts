@@ -49,13 +49,15 @@ export class StripeController {
     request: Request,
     response: Response,
   ): Promise<Response> {
-    const { patientId, priceId } = request.body;
+    const { patientId, priceId, successUrl, cancelUrl } = request.body;
 
     const createSession = container.resolve(CreateCheckoutSession);
 
     const session = await createSession.execute({
       patientId,
       priceId,
+      successUrl,
+      cancelUrl,
     });
     return response.json(session);
   }

@@ -1,10 +1,12 @@
 import { Repository, In } from 'typeorm';
+import { container } from 'tsyringe';
 
 import { PostgresDataSource } from '../../../shared/typeorm';
 import { ICreatePatientDTO } from '../contracts/dtos/create-patient';
 import { IUpdatePatientDTO } from '../contracts/dtos/update-patient';
 import { IPatientsRepository } from '../contracts/repositories/patients';
 import { Patient } from '../entities/patient';
+import { UpdatePatientIsProService } from '../services/update-patient-is-pro';
 
 export class PatientsRepository implements IPatientsRepository {
   private ormRepository: Repository<Patient>;
@@ -24,6 +26,18 @@ export class PatientsRepository implements IPatientsRepository {
       'patientGroups.patientGroupTypes.grouptype',
       'seller.sellerCode.discounts',
     ];
+  }
+
+  private async syncIsPro(patient: Patient | null): Promise<Patient | null> {
+    if (!patient) {
+      return null;
+    }
+
+    const updatePatientIsProService = container.resolve(
+      UpdatePatientIsProService,
+    );
+
+    return updatePatientIsProService.execute(patient);
   }
 
   findByName(name: string): Promise<Patient[] | null> {
@@ -50,6 +64,7 @@ export class PatientsRepository implements IPatientsRepository {
   public async findBySellerId(sellerId: string): Promise<Patient[]> {
     return this.ormRepository.find({
       where: { sellerId },
+      relations: ['plan'],
       select: [
         'id',
         'createdAt',
@@ -62,6 +77,7 @@ export class PatientsRepository implements IPatientsRepository {
         'planId',
         'region',
         'planExpiresAt',
+        'isPro',
       ],
     });
   }
@@ -75,6 +91,7 @@ export class PatientsRepository implements IPatientsRepository {
       where: { sellerId },
       skip,
       take: limit,
+      relations: ['plan'],
       select: [
         'id',
         'createdAt',
@@ -87,6 +104,7 @@ export class PatientsRepository implements IPatientsRepository {
         'planId',
         'region',
         'planExpiresAt',
+        'isPro',
       ],
     });
 
@@ -98,6 +116,7 @@ export class PatientsRepository implements IPatientsRepository {
       where: {
         sellerId,
       },
+      relations: ['plan'],
       select: [
         'id',
         'createdAt',
@@ -111,6 +130,7 @@ export class PatientsRepository implements IPatientsRepository {
         'planId',
         'region',
         'planExpiresAt',
+        'isPro',
       ],
     });
     return patients;
@@ -150,10 +170,12 @@ export class PatientsRepository implements IPatientsRepository {
   }
 
   public async findById(id: string): Promise<Patient | null> {
-    return this.ormRepository.findOne({
+    const patient = await this.ormRepository.findOne({
       where: { id },
       relations: this.relations,
     });
+
+    return this.syncIsPro(patient);
   }
 
   public async findByIds(
@@ -172,10 +194,12 @@ export class PatientsRepository implements IPatientsRepository {
   }
 
   public async findByEmail(email: string): Promise<Patient | null> {
-    return this.ormRepository.findOne({
+    const patient = await this.ormRepository.findOne({
       where: { email },
       relations: this.relations,
     });
+
+    return this.syncIsPro(patient);
   }
 
   public async findByEmailWithDeleted(email: string): Promise<Patient | null> {
@@ -187,24 +211,30 @@ export class PatientsRepository implements IPatientsRepository {
   }
 
   public async findByDocument(document: string): Promise<Patient | null> {
-    return this.ormRepository.findOne({
+    const patient = await this.ormRepository.findOne({
       where: { document },
       relations: this.relations,
     });
+
+    return this.syncIsPro(patient);
   }
 
   public async findByPhoneNumber(phoneNumber: string): Promise<Patient | null> {
-    return this.ormRepository.findOne({
+    const patient = await this.ormRepository.findOne({
       where: { phoneNumber },
       relations: this.relations,
     });
+
+    return this.syncIsPro(patient);
   }
 
   public async findByCustomerId(customerId: string): Promise<Patient | null> {
-    return this.ormRepository.findOne({
+    const patient = await this.ormRepository.findOne({
       where: { stripeCustomerId: customerId },
       relations: ['address'],
     });
+
+    return this.syncIsPro(patient);
   }
 
   public async restore(

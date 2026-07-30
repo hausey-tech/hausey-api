@@ -3,8 +3,8 @@ import { Column } from 'typeorm';
 import { BaseEntity } from './base';
 
 export abstract class UserEntity extends BaseEntity {
-  @Column('varchar')
-  email: string;
+  @Column('varchar', { nullable: true })
+  email: string | null;
 
   @Column('varchar', { nullable: true })
   password: string;

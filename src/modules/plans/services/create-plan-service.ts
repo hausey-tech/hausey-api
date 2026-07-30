@@ -2,12 +2,14 @@ import { injectable, inject, container } from 'tsyringe';
 import { AppError } from '../../../shared/errors/app-error';
 import { CreatePagarmePlanService } from '../../integrations/services/pagarme/create-pagarme-plan-service';
 import { IPlansRepository } from '../contracts/repositories/plans';
-import { Plan } from '../entities/plan';
+import { Plan, PlanType } from '../entities/plan';
 
 interface Props {
   name: string;
   description: string;
   price: number;
+  type?: PlanType;
+  maxDependents?: number;
 }
 
 @injectable()
@@ -17,7 +19,13 @@ export class CreatePlanService {
     private plansRepository: IPlansRepository,
   ) {}
 
-  public async execute({ name, description, price }: Props): Promise<Plan> {
+  public async execute({
+    name,
+    description,
+    price,
+    type,
+    maxDependents,
+  }: Props): Promise<Plan> {
     const planExists = await this.plansRepository.findByName(name);
 
     if (planExists) {
@@ -38,6 +46,8 @@ export class CreatePlanService {
       name,
       description,
       price,
+      type,
+      maxDependents,
     });
 
     plan.stripePriceId = planId;

@@ -4,9 +4,15 @@ interface Props {
   to: string;
   subject: string;
   body: string;
+  senderName?: string;
 }
 
-export const brevo = async ({ to, subject, body }: Props): Promise<void> => {
+export const brevo = async ({
+  to,
+  subject,
+  body,
+  senderName = 'Hausey',
+}: Props): Promise<void> => {
   const client = new SibApiV3Sdk.TransactionalEmailsApi();
 
   client.setApiKey(
@@ -15,7 +21,7 @@ export const brevo = async ({ to, subject, body }: Props): Promise<void> => {
   );
 
   const sendSmtpEmail: SibApiV3Sdk.SendSmtpEmail = {
-    sender: { name: 'Hausey', email: process.env.EMAIL_USER },
+    sender: { name: senderName, email: process.env.EMAIL_USER },
     to: [{ email: to }],
     subject,
     htmlContent: body,

@@ -14,6 +14,8 @@ import { Patient } from '../../patients/entities/patient';
 import { ICreateSessionDTO } from '../contracts/dtos/create-session';
 import { IUsersRepository } from '../../users/contracts/repositories/users';
 import { User } from '../../users/entities/user';
+import { IDependentAccess } from '../../dependents/contracts/dtos/dependent-access-dto';
+import { BuildDependentsAccessService } from '../../dependents/services/build-dependents-access';
 
 interface IRoles {
   professional?: Professional;
@@ -23,6 +25,7 @@ interface IRoles {
 interface IResponse extends IRoles {
   accessToken: string;
   refreshToken: string;
+  dependentsAccess?: IDependentAccess[];
 }
 
 @injectable()
@@ -39,6 +42,9 @@ export class CreateSessionService {
 
     @inject('HashProvider')
     private hashProvider: IHashProvider,
+
+    @inject(BuildDependentsAccessService)
+    private buildDependentsAccessService: BuildDependentsAccessService,
   ) {}
 
   public async execute(payload: ICreateSessionDTO): Promise<IResponse> {
@@ -139,10 +145,16 @@ export class CreateSessionService {
       expiresIn: refreshExpiresIn,
     });
 
+    const dependentsAccess =
+      role === 'patient'
+        ? await this.buildDependentsAccessService.execute(id)
+        : undefined;
+
     return {
       accessToken,
       refreshToken,
       ...data,
+      ...(role === 'patient' ? { dependentsAccess } : {}),
     };
   }
 }

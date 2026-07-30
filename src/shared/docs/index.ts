@@ -5,6 +5,7 @@ import {
   programsPath,
   patientsPath,
   integrationsPath,
+  dependentsPath,
 } from './paths';
 import {
   errorSchema,
@@ -29,6 +30,8 @@ import {
   patientSessionSchema,
   memedUserSchema,
   createMemedUserSchema,
+  patientDependentSchema,
+  familyByPatientSchema,
 } from './schemas';
 import { badRequest, unauthorized, notFound, serverError } from './components';
 import { updatePatientPlanSchema } from './schemas/update-patient-plan';
@@ -68,6 +71,9 @@ export default {
     {
       name: 'Programs',
     },
+    {
+      name: 'Dependents',
+    },
   ],
   paths: {
     '/sessions': sessionsPath,
@@ -104,6 +110,12 @@ export default {
     },
     '/integrations/memed/users/{token}': integrationsPath.memed.users,
     '/integrations/s3/files/{key}': integrationsPath.s3,
+    '/dependents': dependentsPath,
+    '/dependents/{id}': dependentsPath.dependentId,
+    '/dependents/{id}/resend-invite': dependentsPath.dependentId.resendInvite,
+    '/dependents/accept-invite': dependentsPath.acceptInvite,
+    '/dependents/family': dependentsPath.family,
+    '/dependents/holder/{dependentPatientId}': dependentsPath.holderByDependent,
   },
   schemas: {
     base: baseSchema,
@@ -129,6 +141,8 @@ export default {
     patientSession: patientSessionSchema,
     memedUser: memedUserSchema,
     createMemedUser: createMemedUserSchema,
+    patientDependent: patientDependentSchema,
+    familyByPatient: familyByPatientSchema,
   },
   components: {
     securitySchemes: {

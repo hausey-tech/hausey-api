@@ -60,6 +60,11 @@ import { ProgramSpecialtyDiscountsRepository } from '../../modules/programs/repo
 import { IPlansRepository } from '../../modules/plans/contracts/repositories/plans';
 import { PlansRepository } from '../../modules/plans/repositories/plans';
 
+import { IPatientDependentsRepository } from '../../modules/dependents/contracts/repositories/patient-dependents';
+import { PatientDependentsRepository } from '../../modules/dependents/repositories/patient-dependents';
+import { IWebhookEventsRepository } from '../../modules/integrations/contracts/repositories/webhook-events';
+import { WebhookEventsRepository } from '../../modules/integrations/repositories/webhook-events';
+
 import { IPlanSpecialtyDiscountsRepository } from '../../modules/plans/contracts/repositories/plan-specialty-discounts';
 import { PlanSpecialtyDiscountsRepository } from '../../modules/plans/repositories/plan-specialty-discounts';
 
@@ -274,6 +279,16 @@ container.registerSingleton<ISellerCodeDiscountsRepository>(
 container.registerSingleton<ISellerCodeSellersRepository>(
   'SellerCodeSellersRepository',
   SellerCodeSellersRepository,
+);
+
+container.registerSingleton<IPatientDependentsRepository>(
+  'PatientDependentsRepository',
+  PatientDependentsRepository,
+);
+
+container.registerSingleton<IWebhookEventsRepository>(
+  'WebhookEventsRepository',
+  WebhookEventsRepository,
 );
 
 container.registerInstance('Logger', logger);

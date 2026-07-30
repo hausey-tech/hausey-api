@@ -87,4 +87,7 @@ export class Patient extends UserEntity {
 
   @Column('boolean', { default: false, name: 'first_payment' })
   firstPayment: boolean;
+
+  @Column('boolean', { name: 'is_pro', default: false })
+  isPro: boolean;
 }

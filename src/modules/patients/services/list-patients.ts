@@ -6,8 +6,10 @@ import { ISellerCodeSellersRepository } from '../../seller-code-sellers/contract
 import { ISellerCodesRepository } from '../../seller-codes/contracts/repositories/seller-codes';
 import { IAppointmentsRepository } from '../../appointments/contracts/repositories/appointments';
 import { IPatientsRepository } from '../contracts/repositories/patients';
+import { IPatientDependentsRepository } from '../../dependents/contracts/repositories/patient-dependents';
 import { Patient } from '../entities/patient';
 import { SellerCode } from '../../seller-codes/entities/seller-code';
+import { annotatePatientsWithFamilyRole } from './utils/annotate-patient-role';
 
 interface PatientsPaginatedResponse {
   patients: Array<Patient>;
@@ -42,6 +44,9 @@ export class ListPatientsService {
 
     @inject('SellerCodesRepository')
     private sellerCodesRepository: ISellerCodesRepository,
+
+    @inject('PatientDependentsRepository')
+    private patientDependentsRepository: IPatientDependentsRepository,
 
     @inject('Logger')
     private logger: Logger,
@@ -111,6 +116,16 @@ export class ListPatientsService {
           take,
         );
 
+      const dependentRows =
+        await this.patientDependentsRepository.findActiveByDependentPatientIds(
+          patients.map(patient => patient.id),
+        );
+
+      const annotatedPatients = annotatePatientsWithFamilyRole(
+        patients,
+        dependentRows,
+      );
+
       const totalPages = Math.ceil(totalPatients / take);
 
       const sellerCodes = await Promise.all(
@@ -157,7 +172,7 @@ export class ListPatientsService {
 
       return {
         patients: {
-          patients,
+          patients: annotatedPatients,
           totalPages,
           totalPatients,
         },
@@ -168,14 +183,22 @@ export class ListPatientsService {
     const [patients, totalPatients] =
       await this.patientsRepository.findPaginated(skip, take);
 
+    const dependentRows =
+      await this.patientDependentsRepository.findActiveByDependentPatientIds(
+        patients.map(patient => patient.id),
+      );
+
+    const annotatedPatients = annotatePatientsWithFamilyRole(
+      patients,
+      dependentRows,
+    );
+
     const totalPages = Math.ceil(totalPatients / take);
 
     return {
-      patients,
+      patients: annotatedPatients,
       totalPages,
       totalPatients,
     };
-
-    return patients;
   }
 }
